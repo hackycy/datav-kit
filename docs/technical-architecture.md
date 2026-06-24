@@ -21,8 +21,9 @@
 - 提供一套可直接用于数据大屏的 Web Components 装饰组件。
 - 提供 Vue 和 React 包装层，让框架用户获得自然的类型提示、属性传递和事件绑定体验。
 - 支持按需引入、自动注册和完整包注册三种使用方式。
-- 支持 CSS 变量、主题包和组件级属性共同控制视觉效果。
-- 支持 SVG、CSS、Canvas 三类渲染实现，组件按视觉复杂度选择技术。
+- 默认不要求用户额外引入 CSS，组件自带必要结构样式。
+- 支持 attribute/property、CSS 变量和可选主题包共同控制视觉效果。
+- SVG 作为装饰组件主渲染方案，Canvas 只用于粒子、噪声等 SVG 不适合的动态背景。
 - 支持响应式尺寸、`ResizeObserver` 自动重绘、`devicePixelRatio` 高清适配。
 - 支持文档站、交互式 playground、视觉回归测试。
 
@@ -68,14 +69,28 @@ export abstract class DatavElement extends LitElement {
 }
 ```
 
-### 3.3 渲染技术选择
+### 3.3 SVG-first 渲染策略
+
+装饰类组件默认走 SVG-first。边框、角标、线条、环形装饰、扫描、流光等组件都应该优先在组件内部生成 inline SVG，并通过 attribute/property 控制颜色、速度、密度、反转、透明度等视觉参数。
+
+这样做的好处：
+
+- 用户无需引入额外 CSS，安装后注册组件即可使用。
+- SVG 天然矢量缩放，适合 1080p、2K、4K 等大屏分辨率。
+- `path`、`polyline`、`rect`、`circle`、`linearGradient`、`filter`、`mask` 能覆盖绝大多数科幻装饰形态。
+- SVG 内置动画元素和 CSS animation 都可使用，简单流光不必进入 Canvas。
+- 属性驱动生成 SVG，比维护大量静态 CSS class 更直观。
+
+组件内部仍可以有 Shadow DOM 样式，但这些样式随 JS 一起打包，不要求用户手动 import。
+
+### 3.4 渲染技术选择
 
 组件内部根据效果选择实现：
 
 | 类型 | 推荐技术 | 适用场景 |
 | --- | --- | --- |
-| 静态边框、标题栏、角标 | SVG + CSS | 清晰、可缩放、易主题化 |
-| 扫描线、流光、脉冲、呼吸 | SVG + CSS animation | 轻量动画 |
+| 静态边框、标题栏、角标 | Inline SVG | 清晰、可缩放、免外部 CSS |
+| 扫描线、流光、脉冲、呼吸 | SVG animate / CSS animation | 轻量动画 |
 | 粒子、星云、噪声、复杂背景 | Canvas 2D | 大量动态点线面 |
 | 3D 透视、空间网格、能量场 | 可选 Three.js 子包 | 非首版，避免核心包变重 |
 | 布局适配容器 | DOM + CSS transform | 设计稿缩放、全屏适配 |
@@ -170,12 +185,12 @@ dv-corner-marker
 
 ### 4.3 `@datav-kit/themes`
 
-主题令牌与预设视觉风格。
+主题令牌与预设视觉风格。该包是可选增强包，不是组件运行的必需依赖。
 
 职责：
 
-- CSS 变量。
-- 主题 CSS 文件。
+- CSS 变量预设。
+- 主题 CSS 文件，可选引入。
 - 主题 metadata。
 - 颜色、光效、动画曲线、阴影、线宽、透明度等设计令牌。
 
@@ -364,13 +379,36 @@ ScanLine
 原则：
 
 - 简单值用 attribute，例如 `color="#18f0ff"`。
-- 复杂值用 property，例如 `palette={['#18f0ff', '#2b7cff']}`。
+- 复杂值优先用 property，例如 `palette = ['#18f0ff', '#2b7cff']`。
+- 需要兼容纯 HTML 时，复杂值提供字符串 attribute 兜底，例如 `colors="#18f0ff,#2b7cff"`。
 - 布尔属性要兼容 HTML 写法，例如 `<dv-scan-line animated />`。
 - 尺寸默认读取宿主元素实际尺寸，避免强制用户传 `width`、`height`。
+- 大部分视觉差异通过属性表达，避免要求用户覆盖内部样式。
+
+Web Component attribute 示例：
+
+```html
+<dv-decoration-line
+  colors="#18f0ff,#2b7cff"
+  speed="1.2"
+  density="0.7"
+  animated
+></dv-decoration-line>
+```
+
+JavaScript property 示例：
+
+```ts
+const el = document.querySelector('dv-decoration-line')
+
+el.colors = ['#18f0ff', '#2b7cff']
+el.speed = 1.2
+el.animated = true
+```
 
 ### 6.3 样式设计
 
-所有可主题化值优先使用 CSS 变量：
+组件必须自带基础样式，使用者不引入 CSS 也能得到完整视觉效果。所有可主题化值优先有属性默认值，并允许 CSS 变量覆盖：
 
 ```css
 :host {
@@ -380,6 +418,12 @@ ScanLine
   position: relative;
   box-sizing: border-box;
 }
+```
+
+属性优先级建议：
+
+```txt
+显式 attribute/property > CSS 变量 > 组件默认值
 ```
 
 Shadow DOM 内部使用 `part` 暴露关键节点：
@@ -473,15 +517,15 @@ ctx.scale(ratio, ratio)
 | 组件 | 渲染 | 说明 |
 | --- | --- | --- |
 | `dv-fit-screen` | DOM | 大屏适配容器 |
-| `dv-border-glow` | SVG/CSS | 发光边框 |
-| `dv-border-circuit` | SVG/CSS | 电路线框边框 |
-| `dv-corner-marker` | SVG/CSS | 四角装饰 |
-| `dv-decoration-line` | SVG/CSS | 流光线条 |
-| `dv-decoration-ring` | SVG/CSS | 旋转环形装饰 |
-| `dv-scan-line` | CSS/SVG | 横向/纵向扫描线 |
-| `dv-energy-grid` | SVG/CSS | 科技网格背景 |
+| `dv-border-glow` | SVG | 发光边框 |
+| `dv-border-circuit` | SVG | 电路线框边框 |
+| `dv-corner-marker` | SVG | 四角装饰 |
+| `dv-decoration-line` | SVG | 流光线条 |
+| `dv-decoration-ring` | SVG | 旋转环形装饰 |
+| `dv-scan-line` | SVG | 横向/纵向扫描线 |
+| `dv-energy-grid` | SVG | 科技网格背景 |
 | `dv-digital-rain` | Canvas | 数字雨背景 |
-| `dv-hud-panel` | DOM/SVG | HUD 信息面板容器 |
+| `dv-hud-panel` | DOM + SVG | HUD 信息面板容器 |
 
 ### 8.2 二期组件
 
@@ -510,15 +554,20 @@ ctx.scale(ratio, ratio)
 
 ```ts
 import { register } from '@datav-kit/elements'
-import '@datav-kit/themes/cyber-blue.css'
 
 register()
 ```
 
 ```html
 <dv-fit-screen width="1920" height="1080">
-  <dv-border-glow color="#18f0ff"></dv-border-glow>
+  <dv-border-glow colors="#18f0ff,#2b7cff"></dv-border-glow>
 </dv-fit-screen>
+```
+
+如果需要全局主题，再额外引入主题 CSS：
+
+```ts
+import '@datav-kit/themes/cyber-blue.css'
 ```
 
 ### 9.2 按需注册
@@ -534,7 +583,6 @@ defineBorderGlow()
 ```ts
 import DatavKit from '@datav-kit/vue'
 import { createApp } from 'vue'
-import '@datav-kit/themes/cyber-blue.css'
 
 createApp(App).use(DatavKit).mount('#app')
 ```
@@ -581,12 +629,22 @@ dist/
 建议：
 
 - `@datav-kit/core`、`@datav-kit/shared` 可以 `sideEffects: false`。
+- `@datav-kit/elements` 的组件内部样式随 JS 打包，不要求外部 CSS。
 - `@datav-kit/elements` 如果存在自动注册入口，需要用 `sideEffects` 白名单保护：
 
 ```json
 {
   "sideEffects": [
-    "./dist/auto-register.mjs",
+    "./dist/auto-register.mjs"
+  ]
+}
+```
+
+- `@datav-kit/themes` 作为可选 CSS 包，需要保留 CSS side effects：
+
+```json
+{
+  "sideEffects": [
     "*.css"
   ]
 }
@@ -879,6 +937,23 @@ export function canUseDOM() {
 - 类型和属性反射更稳定。
 - 后续仍可对少量性能敏感组件手写 HTMLElement 或 Canvas renderer。
 
+### ADR-004：装饰组件采用 SVG-first，主题 CSS 可选
+
+结论：装饰组件默认使用 inline SVG 生成视觉结构，必要样式内置在组件中，不要求用户引入全局 CSS；主题 CSS 只作为全局视觉预设。
+
+理由：
+
+- DataV 类装饰组件主要是矢量线框、点阵、渐变、发光、扫描和路径动画，SVG 表达力足够。
+- SVG 对大屏缩放友好，不依赖位图资源。
+- 属性驱动 SVG 生成更适合 Web Components，可直接从 attribute/property 映射到图形参数。
+- 免 CSS 引入能降低使用门槛，更接近原 DataV 使用体验。
+
+代价：
+
+- 每个组件需要认真设计属性模型，避免把所有视觉细节都塞进单一配置对象。
+- 高复杂度动态背景仍需 Canvas，否则 SVG DOM 节点过多会影响性能。
+- 主题系统需要保持“可选”，不能让组件依赖主题 CSS 才能正常显示。
+
 ## 20. 下一步建议
 
 建议按以下顺序落地：
@@ -886,5 +961,6 @@ export function canUseDOM() {
 1. 先完成 monorepo 包重命名和基础包创建。
 2. 实现 `@datav-kit/core` 的 `DatavElement`、注册工具、ResizeController。
 3. 实现 `dv-fit-screen`，把大屏适配能力打通。
-4. 实现 `dv-border-glow` 和 `dv-digital-rain`，分别验证 SVG/CSS 与 Canvas 两条渲染路径。
+4. 实现 `dv-border-glow` 和 `dv-decoration-line`，先验证 SVG-first 和属性驱动模型。
 5. 再生成 Vue/React wrapper，验证跨框架使用体验。
+6. 最后实现 `dv-digital-rain`，验证 Canvas 动态背景路径。
