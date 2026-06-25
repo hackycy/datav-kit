@@ -3,6 +3,7 @@ import { css, html } from 'lit'
 import { property, state } from 'lit/decorators.js'
 
 export type FitScreenMode = 'contain' | 'cover' | 'fill' | 'scroll'
+export type FitScreenTarget = 'viewport' | 'host'
 
 interface ViewportState {
   width: number
@@ -42,6 +43,12 @@ export class FitScreenElement extends DatavElement {
       --dv-viewport-height: 0px;
     }
 
+    :host(:not([fit-target])),
+    :host([fit-target="viewport"]) {
+      width: 100vw;
+      height: 100vh;
+    }
+
     .viewport {
       position: absolute;
       inset: 0;
@@ -72,6 +79,9 @@ export class FitScreenElement extends DatavElement {
   @property()
   align = 'center center'
 
+  @property({ attribute: 'fit-target', reflect: true })
+  fitTarget: FitScreenTarget = 'viewport'
+
   @property({ type: Boolean, attribute: 'auto-fullscreen' })
   autoFullscreen = false
 
@@ -89,9 +99,9 @@ export class FitScreenElement extends DatavElement {
     super.connectedCallback()
   }
 
-  override updated(changed: Map<PropertyKey, unknown>): void {
+  override willUpdate(changed: Map<PropertyKey, unknown>): void {
     if (
-      (changed.has('width') || changed.has('height') || changed.has('mode') || changed.has('align'))
+      (changed.has('width') || changed.has('height') || changed.has('mode') || changed.has('align') || changed.has('fitTarget'))
       && this.viewport.width > 0
       && this.viewport.height > 0
     ) {
@@ -155,10 +165,13 @@ export class FitScreenElement extends DatavElement {
   }
 
   private computeViewport(viewportWidth: number, viewportHeight: number, designWidth: number, designHeight: number, dpr: number): ViewportState {
-    if (this.mode === 'scroll') {
+    const safeViewportWidth = Math.max(viewportWidth, 0)
+    const safeViewportHeight = Math.max(viewportHeight, 0)
+
+    if (safeViewportWidth === 0 || safeViewportHeight === 0) {
       return {
-        width: viewportWidth,
-        height: viewportHeight,
+        width: safeViewportWidth,
+        height: safeViewportHeight,
         dpr,
         scaleX: 1,
         scaleY: 1,
@@ -167,8 +180,20 @@ export class FitScreenElement extends DatavElement {
       }
     }
 
-    const scaleX = viewportWidth / designWidth || 1
-    const scaleY = viewportHeight / designHeight || 1
+    if (this.mode === 'scroll') {
+      return {
+        width: safeViewportWidth,
+        height: safeViewportHeight,
+        dpr,
+        scaleX: 1,
+        scaleY: 1,
+        offsetX: 0,
+        offsetY: 0,
+      }
+    }
+
+    const scaleX = safeViewportWidth / designWidth
+    const scaleY = safeViewportHeight / designHeight
     const scale = this.mode === 'cover' ? Math.max(scaleX, scaleY) : Math.min(scaleX, scaleY)
     const nextScaleX = this.mode === 'fill' ? scaleX : scale
     const nextScaleY = this.mode === 'fill' ? scaleY : scale
@@ -177,13 +202,13 @@ export class FitScreenElement extends DatavElement {
     const { horizontal, vertical } = this.parseAlign()
 
     return {
-      width: viewportWidth,
-      height: viewportHeight,
+      width: safeViewportWidth,
+      height: safeViewportHeight,
       dpr,
       scaleX: nextScaleX,
       scaleY: nextScaleY,
-      offsetX: this.resolveOffset(viewportWidth, renderedWidth, horizontal),
-      offsetY: this.resolveOffset(viewportHeight, renderedHeight, vertical),
+      offsetX: this.resolveOffset(safeViewportWidth, renderedWidth, horizontal),
+      offsetY: this.resolveOffset(safeViewportHeight, renderedHeight, vertical),
     }
   }
 

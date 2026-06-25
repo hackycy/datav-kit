@@ -1,0 +1,16 @@
+{
+  "name": "@datav-kit/docs",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "vitepress build .",
+    "dev": "vitepress dev . --host 127.0.0.1",
+    "preview": "vitepress preview . --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@datav-kit/elements": "workspace:*",
+    "@datav-kit/themes": "workspace:*",
+    "vitepress": "catalog:docs",
+    "vue": "catalog:docs"
+  }
+}

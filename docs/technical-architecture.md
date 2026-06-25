@@ -12,7 +12,7 @@
 - 装饰优先：不做复杂图表、坐标系、数据分析类能力，聚焦边框、扫描线、流光、标题栏、动态背景、粒子纹理、HUD 面板等大屏视觉装饰。
 - 大屏适配优先：提供比例缩放、全屏容器、设计稿坐标系、高清屏渲染优化等能力。
 - 视觉升级：相比传统 DataV 装饰组件，强化科幻感、动态质感、可主题化和可组合性。
-- 可维护：使用 monorepo 拆分核心、元素、主题、框架包装、文档和示例，避免单包不断膨胀。
+- 可维护：使用 monorepo 拆分核心、元素、主题、框架包装和文档站，避免单包不断膨胀。
 
 ## 2. 目标与非目标
 
@@ -25,7 +25,7 @@
 - 支持 attribute/property、CSS 变量和可选主题包共同控制视觉效果。
 - SVG 作为装饰组件主渲染方案，Canvas 只用于粒子、噪声等 SVG 不适合的动态背景。
 - 支持响应式尺寸、`ResizeObserver` 自动重绘、`devicePixelRatio` 高清适配。
-- 支持文档站、交互式 playground、视觉回归测试。
+- 支持 VitePress 文档站，并在文档中直接提供组件演示和代码示例。
 
 ### 2.2 非目标
 
@@ -43,7 +43,7 @@
 - 包管理：pnpm workspace
 - 构建编排：Turborepo
 - 单包构建：tsdown
-- 文档站：VitePress 或 Vite + 自研 demo shell
+- 文档站：VitePress
 - 测试：Vitest
 - 代码规范：ESLint
 
@@ -112,11 +112,6 @@ datav-kit/
     shared/
     cli/
   docs/
-  playground/
-  examples/
-    vanilla/
-    vue/
-    react/
 ```
 
 ### 4.1 `@datav-kit/core`
@@ -323,7 +318,7 @@ Platform
 ```txt
 vue/react -> elements -> core -> shared
 elements -> themes only through CSS variables or theme metadata
-docs/playground/examples -> all public packages
+docs -> all public packages
 ```
 
 禁止：
@@ -476,11 +471,14 @@ dispatchDatavEvent(this, 'dv-resize', {
 | `height` | number | `1080` | 设计稿高度 |
 | `mode` | `'contain' \| 'cover' \| 'fill' \| 'scroll'` | `'contain'` | 缩放模式 |
 | `align` | string | `'center center'` | 对齐方式 |
-| `auto-fullscreen` | boolean | `false` | 是否挂载后尝试全屏 |
+| `fit-target` | `'viewport' \| 'host'` | `'viewport'` | 适配目标，默认作为整页大屏壳，也可嵌入宿主容器 |
+| `auto-fullscreen` | boolean | `false` | 兼容字段；全屏必须由用户手势触发 |
 
 实现要点：
 
-- 使用 `ResizeObserver` 监听容器。
+- 默认使用 `fit-target="viewport"` 作为整页大屏壳，组件尺寸为 `100vw / 100vh`。
+- 使用 `fit-target="host"` 时作为嵌入式适配容器，尺寸跟随宿主布局。
+- 使用 `ResizeObserver` 监听当前组件盒模型。
 - 计算 scale、offset、viewport。
 - 使用 CSS transform 缩放内部画布。
 - 暴露 CSS 变量 `--dv-scale`、`--dv-viewport-width`、`--dv-viewport-height`。
@@ -699,42 +697,40 @@ dist/
 
 ## 12. 文档与示例
 
-文档站结构：
+VitePress 文档站结构：
 
 ```txt
 docs/
+  index.md
   guide/
     introduction.md
     installation.md
     theming.md
     screen-fit.md
-    framework-adapters.md
+    component-authoring.md
   components/
+    fit-screen.md
     border-glow.md
-    digital-rain.md
-  examples/
-    command-center.md
-    industrial-dashboard.md
+  reference/
+    architecture-contracts.md
 ```
 
 每个组件文档包含：
 
 - 基础用法。
+- 文档内实时演示。
 - 属性表。
 - CSS 变量表。
 - `::part` 表。
 - 事件表。
-- Vue 示例。
-- React 示例。
 - 性能注意事项。
 
-Playground 要支持：
+文档演示要求：
 
 - 切换主题。
-- 调整尺寸。
-- 调整属性。
-- 查看 Vanilla/Vue/React 代码。
-- 暂停/恢复动画。
+- 展示核心属性组合。
+- 提供可复制的 HTML / TypeScript 代码块。
+- 演示代码直接来自当前 Web Components 包，不维护额外演示应用。
 
 ## 13. 开发工作流
 
@@ -743,8 +739,8 @@ Playground 要支持：
 1. 在 `packages/elements/src/<component>/` 创建组件。
 2. 定义元素类、样式、metadata、注册函数。
 3. 导出单组件入口。
-4. 增加 Vue/React wrapper。
-5. 增加文档 demo。
+4. 增加 VitePress 组件文档和文档内 demo。
+5. 按需补充 Vue/React wrapper。
 6. 增加单元测试。
 7. 更新组件索引。
 
@@ -834,7 +830,7 @@ export function canUseDOM() {
 
 - 重命名占位包。
 - 建立 `core`、`elements`、`themes`、`vue`、`react` 包。
-- 建立 docs 和 playground。
+- 建立 VitePress docs。
 - 配置统一 build、lint、typecheck。
 
 ### M1：Web Components 核心闭环
@@ -856,7 +852,7 @@ export function canUseDOM() {
 
 - 完成 Vue plugin 和按需组件。
 - 完成 React wrapper。
-- 完成 Vue/React examples。
+- 完成 Vue/React 文档用法页面。
 - 补充 Nuxt/Next 使用文档。
 
 ### M4：发布准备

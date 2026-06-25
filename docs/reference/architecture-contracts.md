@@ -1,4 +1,4 @@
-# datav-kit architecture contracts
+# Architecture Contracts
 
 This file records the implementation contracts that package code must follow.
 

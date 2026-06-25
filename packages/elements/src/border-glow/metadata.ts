@@ -43,6 +43,12 @@ export const borderGlowMetadata = {
       attribute: true,
       description: 'Whether the border dash animation is enabled.',
     },
+    paused: {
+      type: 'boolean',
+      default: false,
+      attribute: true,
+      description: 'Whether animation is paused even when animated is enabled.',
+    },
     duration: {
       type: 'number',
       default: 2400,

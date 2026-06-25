@@ -29,6 +29,12 @@ export const fitScreenMetadata = {
       attribute: true,
       description: 'Horizontal and vertical alignment.',
     },
+    fitTarget: {
+      type: 'string',
+      default: 'viewport',
+      attribute: 'fit-target',
+      description: 'Sizing target: viewport for full-page dashboards, host for embedded layouts.',
+    },
     autoFullscreen: {
       type: 'boolean',
       default: false,

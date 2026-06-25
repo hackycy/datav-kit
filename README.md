@@ -21,7 +21,13 @@ pnpm test
 pnpm lint
 ```
 
-Architecture contracts live in [docs/architecture-contracts.md](./docs/architecture-contracts.md).
+Run the VitePress documentation site:
+
+```bash
+pnpm docs:dev
+```
+
+Architecture contracts live in [docs/reference/architecture-contracts.md](./docs/reference/architecture-contracts.md).
 
 ## License
 

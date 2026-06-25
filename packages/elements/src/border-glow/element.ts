@@ -75,6 +75,9 @@ export class BorderGlowElement extends DatavElement {
   @property({ type: Boolean })
   animated = true
 
+  @property({ type: Boolean })
+  paused = false
+
   @property({ type: Number })
   duration = 2400
 
@@ -92,7 +95,7 @@ export class BorderGlowElement extends DatavElement {
     const duration = Math.max(resolveNumberValue(this.duration, 2400), 1)
     const strokeOpacity = 0.38 + intensity * 0.58
     const glowDeviation = 2 + intensity * 5
-    const animationClass = this.animated ? 'animated' : ''
+    const animationClass = this.animated && !this.paused ? 'animated' : ''
 
     return html`
       <div part="frame" class="frame" style=${`--dv-border-duration: ${duration}ms`}>
