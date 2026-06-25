@@ -29,5 +29,5 @@ The first usable loop is intentionally small: `dv-fit-screen` handles dashboard 
 
 - [Installation](/guide/installation) for package setup and registration.
 - [Screen Fit](/guide/screen-fit) for scaling behavior.
-- [Border Glow](/components/border-glow) for SVG border decoration.
+- [Border Glow](/components/borders/border-glow) for SVG border decoration.
 - [Component Authoring](/guide/component-authoring) for the required file layout and checklist.

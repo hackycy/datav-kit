@@ -709,8 +709,11 @@ docs/
     screen-fit.md
     component-authoring.md
   components/
-    fit-screen.md
-    border-glow.md
+    borders/
+      border-glow.md
+    tools/
+      fit-screen.md
+    buttons/
   reference/
     architecture-contracts.md
 ```
