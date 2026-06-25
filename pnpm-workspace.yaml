@@ -26,7 +26,6 @@ catalogs:
   runtime:
     lit: ^3.3.3
   testing:
-    '@playwright/test': ^1.61.1
     happy-dom: ^20.10.6
     tinyexec: ^1.1.1
     vitest: ^4.1.5

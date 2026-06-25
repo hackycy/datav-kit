@@ -15,6 +15,14 @@
       "types": "./dist/register.d.mts",
       "import": "./dist/register.mjs"
     },
+    "./fit-screen": {
+      "types": "./dist/fit-screen/index.d.mts",
+      "import": "./dist/fit-screen/index.mjs"
+    },
+    "./border-glow": {
+      "types": "./dist/border-glow/index.d.mts",
+      "import": "./dist/border-glow/index.mjs"
+    },
     "./package.json": "./package.json"
   },
   "main": "./dist/index.mjs",
@@ -27,10 +35,11 @@
     "build": "tsdown",
     "dev": "tsdown --watch",
     "lint": "eslint src test",
-    "test": "vitest run",
+    "test": "pnpm build && vitest run",
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@datav-kit/core": "workspace:*"
+    "@datav-kit/core": "workspace:*",
+    "lit": "catalog:runtime"
   }
 }

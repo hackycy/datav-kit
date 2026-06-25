@@ -1,2 +1,8 @@
+export { BorderGlowElement } from './border-glow/element'
+export { borderGlowMetadata } from './border-glow/metadata'
+export { defineBorderGlow } from './border-glow/register'
+export { FitScreenElement } from './fit-screen/element'
+export { fitScreenMetadata } from './fit-screen/metadata'
+export { defineFitScreen } from './fit-screen/register'
 export { elementMetadata, type ElementMetadata } from './metadata'
 export { datavElementRegistrations, register } from './register'

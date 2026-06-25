@@ -1,5 +1,32 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit'
+import { toBooleanAttribute, toNumber } from '@datav-kit/shared'
 import { LitElement } from 'lit'
+
+export type DatavPropType = 'string' | 'number' | 'boolean' | 'array' | 'object'
+
+export interface DatavPropMetadata {
+  type: DatavPropType
+  attribute?: string | boolean
+  default?: unknown
+  cssVariable?: string
+  reflect?: boolean
+  description?: string
+}
+
+export interface DatavEventMetadata {
+  name: string
+  detail?: string
+  description?: string
+}
+
+export interface DatavElementMetadata {
+  tagName: `dv-${string}`
+  className: string
+  description?: string
+  props: Record<string, DatavPropMetadata>
+  events: DatavEventMetadata[]
+  parts: string[]
+}
 
 export interface DatavEventInit<TDetail> {
   detail: TDetail
@@ -13,6 +40,13 @@ export interface DatavElementRegistration {
   element: CustomElementConstructor
 }
 
+export interface ConditionalExportEntry {
+  types: string
+  import: string
+}
+
+export type ConditionalExports = Record<string, ConditionalExportEntry | string>
+
 export interface ResizeState {
   width: number
   height: number
@@ -23,8 +57,75 @@ export interface ResizeState {
 export type ResizeCallback = (state: ResizeState) => void
 export type MotionFrameCallback = (time: number, delta: number) => void
 
+export interface ResolvedValueOptions<TValue> {
+  explicit?: TValue | null
+  cssVariable?: string
+  host?: Element
+  fallback: TValue
+  transform?: (value: string) => TValue
+}
+
+export interface FullscreenResult {
+  ok: boolean
+  reason?: 'unsupported' | 'denied'
+}
+
 export function canUseDOM(): boolean {
   return typeof window !== 'undefined' && typeof customElements !== 'undefined'
+}
+
+export function canUseFullscreen(target: Element = document.documentElement): boolean {
+  return canUseDOM() && typeof target.requestFullscreen === 'function'
+}
+
+export async function requestDatavFullscreen(target: Element = document.documentElement): Promise<FullscreenResult> {
+  if (!canUseFullscreen(target))
+    return { ok: false, reason: 'unsupported' }
+
+  try {
+    await target.requestFullscreen()
+    return { ok: true }
+  }
+  catch {
+    return { ok: false, reason: 'denied' }
+  }
+}
+
+export function createConditionalExports(entries: string[]): ConditionalExports {
+  return entries.reduce<ConditionalExports>((exports, entry) => {
+    const key = entry === 'index' ? '.' : `./${entry}`
+    const file = entry === 'index' ? 'index' : entry
+
+    exports[key] = {
+      types: `./dist/${file}.d.mts`,
+      import: `./dist/${file}.mjs`,
+    }
+
+    return exports
+  }, {
+    './package.json': './package.json',
+  })
+}
+
+export function resolveThemeValue<TValue>(options: ResolvedValueOptions<TValue>): TValue {
+  if (options.explicit !== undefined && options.explicit !== null && options.explicit !== '')
+    return options.explicit
+
+  if (options.host && options.cssVariable && typeof getComputedStyle !== 'undefined') {
+    const value = getComputedStyle(options.host).getPropertyValue(options.cssVariable).trim()
+    if (value)
+      return options.transform ? options.transform(value) : value as TValue
+  }
+
+  return options.fallback
+}
+
+export function resolveNumberValue(value: unknown, fallback: number): number {
+  return toNumber(value, fallback)
+}
+
+export function resolveBooleanValue(value: unknown): boolean {
+  return toBooleanAttribute(value)
 }
 
 export function defineDatavElement(tagName: string, element: CustomElementConstructor): boolean {

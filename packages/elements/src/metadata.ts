@@ -1,9 +1,10 @@
-export interface ElementMetadata {
-  tagName: string
-  className: string
-  props: Record<string, unknown>
-  events: string[]
-  parts: string[]
-}
+import type { DatavElementMetadata } from '@datav-kit/core'
+import { borderGlowMetadata } from './border-glow/metadata'
+import { fitScreenMetadata } from './fit-screen/metadata'
 
-export const elementMetadata: ElementMetadata[] = []
+export type ElementMetadata = DatavElementMetadata
+
+export const elementMetadata: ElementMetadata[] = [
+  fitScreenMetadata,
+  borderGlowMetadata,
+]

@@ -21,6 +21,8 @@ pnpm test
 pnpm lint
 ```
 
+Architecture contracts live in [docs/architecture-contracts.md](./docs/architecture-contracts.md).
+
 ## License
 
 [MIT](./LICENSE) License © [hackycy](https://github.com/hackycy)

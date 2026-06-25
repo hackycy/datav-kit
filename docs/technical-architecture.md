@@ -44,7 +44,7 @@
 - 构建编排：Turborepo
 - 单包构建：tsdown
 - 文档站：VitePress 或 Vite + 自研 demo shell
-- 测试：Vitest、Playwright
+- 测试：Vitest
 - 代码规范：ESLint
 
 当前仓库已经具备 `pnpm-workspace.yaml`、`turbo.json`、`tsdown`、`vitest`、`typescript` 等基础，可以在现有 starter 上逐步扩展。
@@ -687,18 +687,7 @@ dist/
 - resize 后重新渲染。
 - 事件 detail 正确。
 
-### 11.3 视觉回归
-
-使用 Playwright：
-
-- 文档 demo 页面截图。
-- 关键主题截图。
-- 1280x720、1920x1080、3840x2160 三种尺寸。
-- light/dark 或不同主题。
-
-视觉组件必须做截图基线，否则后续很容易出现“代码没坏，视觉坏了”的情况。
-
-### 11.4 性能测试
+### 11.3 性能测试
 
 关键指标：
 
@@ -756,7 +745,7 @@ Playground 要支持：
 3. 导出单组件入口。
 4. 增加 Vue/React wrapper。
 5. 增加文档 demo。
-6. 增加单元测试和截图测试。
+6. 增加单元测试。
 7. 更新组件索引。
 
 建议目录：
@@ -836,7 +825,7 @@ export function canUseDOM() {
 | Shadow DOM 样式不易覆盖 | 用户自定义受限 | CSS variables + `::part` |
 | Canvas 动画在 4K 大屏性能差 | 掉帧、发热 | DPR 上限、可见性暂停、质量参数 |
 | 组件数量扩张导致维护困难 | 文档和测试跟不上 | metadata 驱动、MVP 控制数量 |
-| 视觉同质化 | 缺少差异化 | 主题系统、动效规范、截图评审 |
+| 视觉同质化 | 缺少差异化 | 主题系统、动效规范、视觉评审 |
 | 自动注册影响 tree shaking | 包体变大 | 单组件入口 + 显式注册 |
 
 ## 17. 里程碑
@@ -862,7 +851,6 @@ export function canUseDOM() {
 - 完成 8 到 10 个首版组件。
 - 完成主题包。
 - 完成文档站基础页面。
-- 完成 Playwright 截图测试。
 
 ### M3：框架适配
 
