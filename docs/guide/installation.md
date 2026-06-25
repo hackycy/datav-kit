@@ -18,11 +18,11 @@ register()
 Or register one element at a time:
 
 ```ts
-import { defineBorderGlow } from '@datav-kit/elements/border-glow'
+import { defineBorderBox8 } from '@datav-kit/elements/border-box-8'
 import { defineFitScreen } from '@datav-kit/elements/fit-screen'
 
 defineFitScreen()
-defineBorderGlow()
+defineBorderBox8()
 ```
 
 Registration is guarded for SSR. Importing modules is allowed on the server, but defining custom elements only happens when browser APIs are available.

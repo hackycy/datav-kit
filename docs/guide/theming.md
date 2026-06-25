@@ -12,27 +12,27 @@ Values resolve in this order:
 2. CSS variable on the host.
 3. Component fallback.
 
-For example, `dv-border-glow` can use explicit colors:
+For example, `dv-border-box-8` can use explicit colors:
 
 ```html
-<dv-border-glow colors="#18f0ff,#f3ff5c"></dv-border-glow>
+<dv-border-box-8 colors="#235fa7,#4fd2dd"></dv-border-box-8>
 ```
 
 Or inherit variables from a theme scope:
 
 ```html
 <section class="dv-theme-cyber-blue">
-  <dv-border-glow></dv-border-glow>
+  <dv-border-box-8></dv-border-box-8>
 </section>
 ```
 
 <div class="theme-grid">
   <div class="theme-card dv-theme-cyber-blue">
     <strong>cyber-blue</strong>
-    <dv-border-glow style="display:block;height:120px"></dv-border-glow>
+    <dv-border-box-8 style="display:block;height:120px"></dv-border-box-8>
   </div>
   <div class="theme-card dv-theme-neon-magenta">
     <strong>neon-magenta</strong>
-    <dv-border-glow style="display:block;height:120px"></dv-border-glow>
+    <dv-border-box-8 style="display:block;height:120px"></dv-border-box-8>
   </div>
 </div>

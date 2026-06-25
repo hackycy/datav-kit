@@ -1,9 +1,9 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
-export const borderGlowMetadata = {
-  tagName: 'dv-border-glow',
-  className: 'BorderGlowElement',
-  description: 'A glowing SVG border container for dashboard panels.',
+export const borderBox8Metadata = {
+  tagName: 'dv-border-box-8',
+  className: 'BorderBox8Element',
+  description: 'Animated numbered border box inspired by DataV BorderBox8.',
   props: {
     color: {
       type: 'string',
@@ -17,7 +17,7 @@ export const borderGlowMetadata = {
       default: '',
       attribute: 'secondary-color',
       cssVariable: '--dv-color-secondary',
-      description: 'Secondary gradient color.',
+      description: 'Secondary border color.',
     },
     colors: {
       type: 'string',
@@ -25,36 +25,29 @@ export const borderGlowMetadata = {
       attribute: true,
       description: 'Comma-separated primary and secondary colors.',
     },
-    intensity: {
-      type: 'number',
-      default: 0.8,
+    reverse: {
+      type: 'boolean',
+      default: false,
       attribute: true,
-      description: 'Glow intensity from 0 to 1.',
+      description: 'Reverses the path direction used by the moving highlight.',
     },
-    radius: {
+    duration: {
       type: 'number',
-      default: 16,
+      default: 3,
       attribute: true,
-      description: 'Corner radius in pixels.',
+      description: 'Animation duration in seconds.',
     },
     animated: {
       type: 'boolean',
       default: true,
       attribute: true,
-      description: 'Whether the border dash animation is enabled.',
+      description: 'Enables the moving highlight.',
     },
     paused: {
       type: 'boolean',
       default: false,
       attribute: true,
-      description: 'Whether animation is paused even when animated is enabled.',
-    },
-    duration: {
-      type: 'number',
-      default: 2400,
-      attribute: true,
-      cssVariable: '--dv-motion-duration',
-      description: 'Animation duration in milliseconds.',
+      description: 'Pauses the moving highlight while retaining the border.',
     },
   },
   events: [

@@ -133,8 +133,8 @@ Web Components 核心基础能力，不包含具体业务组件。
 示例 API：
 
 ```ts
-defineDatavElement('dv-border-glow', BorderGlowElement)
-registerDatavElements([BorderGlowElement, DigitalRainElement])
+defineDatavElement('dv-border-box-8', BorderBox8Element)
+registerDatavElements([BorderBox8Element, DigitalRainElement])
 ```
 
 ### 4.2 `@datav-kit/elements`
@@ -152,7 +152,7 @@ registerDatavElements([BorderGlowElement, DigitalRainElement])
 
 ```txt
 dv-fit-screen
-dv-border-glow
+dv-border-box-8
 dv-border-circuit
 dv-decoration-line
 dv-decoration-ring
@@ -170,7 +170,7 @@ dv-corner-marker
 {
   "exports": {
     ".": "./dist/index.mjs",
-    "./border-glow": "./dist/border-glow.mjs",
+    "./border-box-8": "./dist/border-box-8.mjs",
     "./digital-rain": "./dist/digital-rain.mjs",
     "./register": "./dist/register.mjs",
     "./package.json": "./package.json"
@@ -205,8 +205,8 @@ dv-corner-marker
   --dv-color-primary: #18f0ff;
   --dv-color-secondary: #2b7cff;
   --dv-color-accent: #f3ff5c;
-  --dv-glow-soft: 0 0 12px rgba(24, 240, 255, 0.55);
-  --dv-glow-strong: 0 0 24px rgba(24, 240, 255, 0.85);
+  --dv-box-8-soft: 0 0 12px rgba(24, 240, 255, 0.55);
+  --dv-box-8-strong: 0 0 24px rgba(24, 240, 255, 0.85);
   --dv-line-width: 1px;
   --dv-motion-duration: 2400ms;
 }
@@ -219,7 +219,7 @@ Vue 适配包。
 职责：
 
 - 安装插件 `app.use(DatavKit)`。
-- 导出 Vue 组件包装，例如 `DvBorderGlow`。
+- 导出 Vue 组件包装，例如 `DvBorderBox8`。
 - 处理对象/数组属性传递。
 - 提供 Vue 类型提示。
 - 支持局部注册和全局注册。
@@ -228,12 +228,12 @@ Vue 适配包。
 
 ```vue
 <script setup lang="ts">
-import { DvBorderGlow, DvFitScreen } from '@datav-kit/vue'
+import { DvBorderBox8, DvFitScreen } from '@datav-kit/vue'
 </script>
 
 <template>
   <DvFitScreen :width="1920" :height="1080">
-    <DvBorderGlow color="#18f0ff" />
+    <DvBorderBox8 color="#18f0ff" />
   </DvFitScreen>
 </template>
 ```
@@ -244,7 +244,7 @@ React 适配包。
 
 职责：
 
-- 导出 React 组件包装，例如 `BorderGlow`、`FitScreen`。
+- 导出 React 组件包装，例如 `BorderBox8`、`FitScreen`。
 - 处理 Custom Element 属性、ref、事件绑定。
 - 提供完整 TypeScript 类型。
 - 避免 React 对自定义元素复杂属性支持差异导致的体验问题。
@@ -252,12 +252,12 @@ React 适配包。
 使用示例：
 
 ```tsx
-import { BorderGlow, FitScreen } from '@datav-kit/react'
+import { BorderBox8, FitScreen } from '@datav-kit/react'
 
 export function Screen() {
   return (
     <FitScreen width={1920} height={1080}>
-      <BorderGlow color="#18f0ff" intensity={0.8} />
+      <BorderBox8 colors="#235fa7,#4fd2dd" duration={3} />
     </FitScreen>
   )
 }
@@ -334,7 +334,7 @@ docs -> all public packages
 Custom Element 使用 `dv-` 前缀：
 
 ```txt
-dv-border-glow
+dv-border-box-8
 dv-fit-screen
 dv-scan-line
 ```
@@ -342,7 +342,7 @@ dv-scan-line
 TypeScript 类名：
 
 ```txt
-BorderGlowElement
+BorderBox8Element
 FitScreenElement
 ScanLineElement
 ```
@@ -350,7 +350,7 @@ ScanLineElement
 Vue 组件名：
 
 ```txt
-DvBorderGlow
+DvBorderBox8
 DvFitScreen
 DvScanLine
 ```
@@ -358,7 +358,7 @@ DvScanLine
 React 组件名：
 
 ```txt
-BorderGlow
+BorderBox8
 FitScreen
 ScanLine
 ```
@@ -408,7 +408,7 @@ el.animated = true
 ```css
 :host {
   --dv-border-color: var(--dv-color-primary);
-  --dv-border-glow: var(--dv-glow-soft);
+  --dv-border-highlight-color: var(--dv-color-secondary);
   display: block;
   position: relative;
   box-sizing: border-box;
@@ -431,7 +431,7 @@ Shadow DOM 内部使用 `part` 暴露关键节点：
 用户可通过：
 
 ```css
-dv-border-glow::part(frame) {
+dv-border-box-8::part(frame) {
   filter: brightness(1.2);
 }
 ```
@@ -515,7 +515,7 @@ ctx.scale(ratio, ratio)
 | 组件 | 渲染 | 说明 |
 | --- | --- | --- |
 | `dv-fit-screen` | DOM | 大屏适配容器 |
-| `dv-border-glow` | SVG | 发光边框 |
+| `dv-border-box-8` | SVG | 编号边框 |
 | `dv-border-circuit` | SVG | 电路线框边框 |
 | `dv-corner-marker` | SVG | 四角装饰 |
 | `dv-decoration-line` | SVG | 流光线条 |
@@ -558,7 +558,7 @@ register()
 
 ```html
 <dv-fit-screen width="1920" height="1080">
-  <dv-border-glow colors="#18f0ff,#2b7cff"></dv-border-glow>
+  <dv-border-box-8 colors="#18f0ff,#2b7cff"></dv-border-box-8>
 </dv-fit-screen>
 ```
 
@@ -571,9 +571,9 @@ import '@datav-kit/themes/cyber-blue.css'
 ### 9.2 按需注册
 
 ```ts
-import { defineBorderGlow } from '@datav-kit/elements/border-glow'
+import { defineBorderBox8 } from '@datav-kit/elements/border-box-8'
 
-defineBorderGlow()
+defineBorderBox8()
 ```
 
 ### 9.3 Vue
@@ -588,10 +588,10 @@ createApp(App).use(DatavKit).mount('#app')
 ### 9.4 React
 
 ```tsx
-import { BorderGlow } from '@datav-kit/react'
+import { BorderBox8 } from '@datav-kit/react'
 
 export function App() {
-  return <BorderGlow color="#18f0ff" />
+  return <BorderBox8 color="#18f0ff" />
 }
 ```
 
@@ -710,7 +710,7 @@ docs/
     component-authoring.md
   components/
     borders/
-      border-glow.md
+      border-box-8.md
     tools/
       fit-screen.md
     buttons/
@@ -750,10 +750,10 @@ docs/
 建议目录：
 
 ```txt
-packages/elements/src/border-glow/
-  border-glow.element.ts
-  border-glow.styles.ts
-  border-glow.metadata.ts
+packages/elements/src/border-box-8/
+  border-box-8.element.ts
+  border-box-8.styles.ts
+  border-box-8.metadata.ts
   define.ts
   index.ts
 ```
@@ -763,20 +763,20 @@ packages/elements/src/border-glow/
 metadata 是文档、包装层、类型生成的核心。
 
 ```ts
-export const borderGlowMeta = {
-  tagName: 'dv-border-glow',
-  className: 'BorderGlowElement',
-  vueName: 'DvBorderGlow',
-  reactName: 'BorderGlow',
+export const borderBox8Meta = {
+  tagName: 'dv-border-box-8',
+  className: 'BorderBox8Element',
+  vueName: 'DvBorderBox8',
+  reactName: 'BorderBox8',
   props: {
     color: {
       type: 'string',
       default: 'var(--dv-color-primary)',
       attribute: true,
     },
-    intensity: {
+    duration: {
       type: 'number',
-      default: 0.8,
+      default: 3,
       attribute: true,
     },
   },
@@ -948,6 +948,6 @@ export function canUseDOM() {
 1. 先完成 monorepo 包重命名和基础包创建。
 2. 实现 `@datav-kit/core` 的 `DatavElement`、注册工具、ResizeController。
 3. 实现 `dv-fit-screen`，把大屏适配能力打通。
-4. 实现 `dv-border-glow` 和 `dv-decoration-line`，先验证 SVG-first 和属性驱动模型。
+4. 实现 `dv-border-box-8` 和 `dv-decoration-line`，先验证 SVG-first 和属性驱动模型。
 5. 再生成 Vue/React wrapper，验证跨框架使用体验。
 6. 最后实现 `dv-digital-rain`，验证 Canvas 动态背景路径。

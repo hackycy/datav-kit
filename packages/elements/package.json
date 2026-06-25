@@ -19,9 +19,9 @@
       "types": "./dist/fit-screen/index.d.mts",
       "import": "./dist/fit-screen/index.mjs"
     },
-    "./border-glow": {
-      "types": "./dist/border-glow/index.d.mts",
-      "import": "./dist/border-glow/index.mjs"
+    "./border-box-8": {
+      "types": "./dist/border-box-8/index.d.mts",
+      "import": "./dist/border-box-8/index.mjs"
     },
     "./package.json": "./package.json"
   },

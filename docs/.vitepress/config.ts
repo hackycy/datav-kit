@@ -7,7 +7,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/introduction' },
-      { text: 'Components', link: '/components/borders/border-glow' },
+      { text: 'Components', link: '/components/borders/border-box-8' },
       { text: 'Reference', link: '/reference/architecture-contracts' },
     ],
     sidebar: {
@@ -27,7 +27,7 @@ export default defineConfig({
         {
           text: 'Border Components',
           items: [
-            { text: 'Border Glow', link: '/components/borders/border-glow' },
+            { text: 'Border Box 8', link: '/components/borders/border-box-8' },
           ],
         },
         {

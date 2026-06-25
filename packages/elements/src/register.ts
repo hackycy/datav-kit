@@ -1,6 +1,6 @@
 import type { DatavElementRegistration } from '@datav-kit/core'
 import { registerDatavElements } from '@datav-kit/core'
-import { BorderGlowElement } from './border-glow/element'
+import { BorderBox8Element } from './border-box-8/element'
 import { FitScreenElement } from './fit-screen/element'
 
 export const datavElementRegistrations: DatavElementRegistration[] = [
@@ -9,8 +9,8 @@ export const datavElementRegistrations: DatavElementRegistration[] = [
     element: FitScreenElement,
   },
   {
-    tagName: 'dv-border-glow',
-    element: BorderGlowElement,
+    tagName: 'dv-border-box-8',
+    element: BorderBox8Element,
   },
 ]
 
