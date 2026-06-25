@@ -100,7 +100,7 @@ export class BorderBox1Element extends DatavElement {
     const height = Math.max(this.size.height, 1)
     const path = this.createPath(width, height)
     const duration = Math.max(resolveNumberValue(this.duration, 3), 0.1)
-    const showAnimation = this.animated && !this.paused
+    const showAnimation = this.animated && !this.paused && this.size.width > 0 && this.size.height > 0
 
     return html`
       <div part="frame" class="frame">
