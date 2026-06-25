@@ -1,9 +1,9 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
-export const borderBox8Metadata = {
-  tagName: 'dv-border-box-8',
-  className: 'BorderBox8Element',
-  description: 'Animated numbered border box inspired by DataV BorderBox8.',
+export const borderBox1Metadata = {
+  tagName: 'dv-border-box-1',
+  className: 'BorderBox1Element',
+  description: 'Animated numbered border box inspired by DataV BorderBox1.',
   props: {
     color: {
       type: 'string',

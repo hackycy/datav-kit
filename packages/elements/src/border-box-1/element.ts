@@ -2,7 +2,7 @@ import { DatavElement, ResizeController, resolveNumberValue, resolveThemeValue }
 import { css, html, svg } from 'lit'
 import { property, state } from 'lit/decorators.js'
 
-let borderBox8Id = 0
+let borderBox1Id = 0
 
 interface BorderBoxSize {
   width: number
@@ -14,7 +14,7 @@ const defaultSize: BorderBoxSize = {
   height: 0,
 }
 
-export class BorderBox8Element extends DatavElement {
+export class BorderBox1Element extends DatavElement {
   static override styles = css`
     :host {
       display: block;
@@ -79,9 +79,9 @@ export class BorderBox8Element extends DatavElement {
   @state()
   private size = defaultSize
 
-  private readonly pathId = `dv-border-box-8-path-${++borderBox8Id}`
-  private readonly gradientId = `dv-border-box-8-gradient-${borderBox8Id}`
-  private readonly maskId = `dv-border-box-8-mask-${borderBox8Id}`
+  private readonly pathId = `dv-border-box-1-path-${++borderBox1Id}`
+  private readonly gradientId = `dv-border-box-1-gradient-${borderBox1Id}`
+  private readonly maskId = `dv-border-box-1-mask-${borderBox1Id}`
 
   private readonly resizeController = new ResizeController(this, (state) => {
     this.size = {
@@ -91,7 +91,7 @@ export class BorderBox8Element extends DatavElement {
   })
 
   override firstUpdated(): void {
-    this.emit('dv-ready', { tagName: 'dv-border-box-8' })
+    this.emit('dv-ready', { tagName: 'dv-border-box-1' })
   }
 
   override render(): unknown {
@@ -99,7 +99,6 @@ export class BorderBox8Element extends DatavElement {
     const width = Math.max(this.size.width, 1)
     const height = Math.max(this.size.height, 1)
     const path = this.createPath(width, height)
-    const length = Math.max((width + height - 5) * 2, 1)
     const duration = Math.max(resolveNumberValue(this.duration, 3), 0.1)
     const showAnimation = this.animated && !this.paused
 
@@ -107,13 +106,13 @@ export class BorderBox8Element extends DatavElement {
       <div part="frame" class="frame">
         <svg part="graphic" width=${String(width)} height=${String(height)} aria-hidden="true">
           <defs>
-            <path id=${this.pathId} d=${path}></path>
-            <linearGradient id=${this.gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color=${primary} stop-opacity="1"></stop>
-              <stop offset="100%" stop-color=${secondary} stop-opacity="1"></stop>
-            </linearGradient>
+            <path id=${this.pathId} d=${path} fill="transparent"></path>
+            <radialGradient id=${this.gradientId} cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#fff" stop-opacity="1"></stop>
+              <stop offset="100%" stop-color="#fff" stop-opacity="0"></stop>
+            </radialGradient>
             <mask id=${this.maskId}>
-              <circle r="150" fill=${`url(#${this.gradientId})`}>
+              <circle cx="0" cy="0" r="150" fill=${`url(#${this.gradientId})`}>
                 ${showAnimation
                   ? svg`
                     <animateMotion
@@ -128,24 +127,15 @@ export class BorderBox8Element extends DatavElement {
             </mask>
           </defs>
           ${svg`
-            <polygon
-              points=${`2.5,2.5 ${width - 2.5},2.5 ${width - 2.5},${height - 2.5} 2.5,${height - 2.5}`}
-              fill="transparent"
-              stroke=${primary}
-              stroke-width="1"
-            ></polygon>
             <use
               href=${`#${this.pathId}`}
-              fill="none"
-              stroke=${secondary}
-              stroke-width="3"
-              stroke-dasharray=${`10, ${length}`}
+              stroke=${primary}
+              stroke-width="1"
             ></use>
             <use
               href=${`#${this.pathId}`}
-              fill="none"
-              stroke=${`url(#${this.gradientId})`}
-              stroke-width="1"
+              stroke=${secondary}
+              stroke-width="3"
               mask=${`url(#${this.maskId})`}
             ></use>
           `}

@@ -19,9 +19,9 @@
       "types": "./dist/fit-screen/index.d.mts",
       "import": "./dist/fit-screen/index.mjs"
     },
-    "./border-box-8": {
-      "types": "./dist/border-box-8/index.d.mts",
-      "import": "./dist/border-box-8/index.mjs"
+    "./border-box-1": {
+      "types": "./dist/border-box-1/index.d.mts",
+      "import": "./dist/border-box-1/index.mjs"
     },
     "./package.json": "./package.json"
   },

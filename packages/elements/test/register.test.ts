@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox8, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -45,25 +45,25 @@ describe('@datav-kit/elements', () => {
   it('exposes MVP metadata and registers elements once', () => {
     expect(elementMetadata.map(meta => meta.tagName)).toEqual([
       'dv-fit-screen',
-      'dv-border-box-8',
+      'dv-border-box-1',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-8']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-8']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1']))
   })
 
   it('supports single-element registration helpers', () => {
     expect(defineFitScreen()).toBe(false)
-    expect(defineBorderBox8()).toBe(false)
+    expect(defineBorderBox1()).toBe(false)
   })
 
-  it('maps border-box-8 attributes to element properties and renders SVG', async () => {
+  it('maps border-box-1 attributes to element properties and renders SVG', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-8')
+    const element = document.createElement('dv-border-box-1')
     element.setAttribute('colors', '#fff,#f3ff5c')
     element.setAttribute('duration', '5')
     element.setAttribute('reverse', '')
@@ -80,10 +80,10 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector('path')?.getAttribute('d')).toContain('177.5')
   })
 
-  it('resolves border-box-8 colors from CSS variables and supports paused animation', async () => {
+  it('resolves border-box-1 colors from CSS variables and supports paused animation', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-8') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dv-border-box-1') as HTMLElement & { updateComplete: Promise<boolean> }
     element.style.setProperty('--dv-color-primary', '#123456')
     element.style.setProperty('--dv-color-secondary', '#abcdef')
     element.setAttribute('paused', '')
@@ -93,11 +93,12 @@ describe('@datav-kit/elements', () => {
     emitResize(320, 180)
     await element.updateComplete
 
-    const stops = [...(element.shadowRoot?.querySelectorAll('stop') ?? [])]
+    const strokes = [...(element.shadowRoot?.querySelectorAll('use') ?? [])]
+      .map(use => use.getAttribute('stroke'))
     const animateMotion = element.shadowRoot?.querySelector('animateMotion')
 
-    expect(stops.map(stop => stop.getAttribute('stop-color'))).toContain('#123456')
-    expect(stops.map(stop => stop.getAttribute('stop-color'))).toContain('#abcdef')
+    expect(strokes).toContain('#123456')
+    expect(strokes).toContain('#abcdef')
     expect(animateMotion).toBeNull()
   })
 

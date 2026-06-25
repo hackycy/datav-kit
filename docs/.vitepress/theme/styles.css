@@ -5,14 +5,15 @@
 }
 
 .datav-demo {
+  display: grid;
+  place-items: center;
   position: relative;
   overflow: hidden;
   min-height: 360px;
+  padding: 24px;
   margin: 24px 0;
   border: 1px solid rgba(24, 240, 255, 0.2);
-  background:
-    radial-gradient(circle at 20% 20%, rgba(24, 240, 255, 0.18), transparent 32%),
-    linear-gradient(135deg, #06111f 0%, #050813 54%, #111827 100%);
+  background: #050813;
 }
 
 .datav-demo dv-fit-screen {
@@ -27,14 +28,16 @@
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
+.datav-demo > .datav-panel {
+  width: 100%;
+  max-width: 720px;
+}
+
 .datav-panel__content {
   display: grid;
   height: 100%;
   box-sizing: border-box;
   padding: 32px;
-  background:
-    linear-gradient(135deg, rgba(24, 240, 255, 0.13), rgba(43, 124, 255, 0.08)),
-    rgba(4, 15, 28, 0.74);
   place-content: center;
   text-align: center;
 }

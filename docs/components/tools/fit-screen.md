@@ -4,20 +4,20 @@
 
 <div class="datav-demo">
   <dv-fit-screen fit-target="host" width="1280" height="720" mode="contain" align="center center">
-    <dv-border-box-8 class="datav-panel" colors="#235fa7,#4fd2dd">
+    <dv-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd">
       <div class="datav-panel__content">
         <p class="datav-panel__title">Contain Mode</p>
         <p class="datav-panel__meta">1280 x 720 design canvas</p>
       </div>
-    </dv-border-box-8>
+    </dv-border-box-1>
   </dv-fit-screen>
 </div>
 
 ```html
 <dv-fit-screen fit-target="host" width="1280" height="720" mode="contain" align="center center">
-  <dv-border-box-8>
+  <dv-border-box-1>
     <section>Contain Mode</section>
-  </dv-border-box-8>
+  </dv-border-box-1>
 </dv-fit-screen>
 ```
 

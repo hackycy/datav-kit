@@ -1,22 +1,20 @@
-# Border Box 8
+# Border Box 1
 
-`dv-border-box-8` is the first numbered border component. It renders a rectangular SVG border with a moving highlight around the edge.
+`dv-border-box-1` is the first numbered border component. It renders a rectangular SVG border with a moving highlight around the edge.
 
 <div class="datav-demo">
-  <dv-fit-screen fit-target="host" width="1280" height="720" mode="contain">
-    <dv-border-box-8 class="datav-panel" colors="#235fa7,#4fd2dd" duration="3">
-      <div class="datav-panel__content">
-        <p class="datav-panel__title">Border Box 8</p>
-        <p class="datav-panel__meta">numbered SVG border with animated edge highlight</p>
-      </div>
-    </dv-border-box-8>
-  </dv-fit-screen>
+  <dv-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd" duration="3">
+    <div class="datav-panel__content">
+      <p class="datav-panel__title">Border Box 1</p>
+      <p class="datav-panel__meta">numbered SVG border with animated edge highlight</p>
+    </div>
+  </dv-border-box-1>
 </div>
 
 ```html
-<dv-border-box-8 colors="#235fa7,#4fd2dd" duration="3">
-  <section>Border Box 8</section>
-</dv-border-box-8>
+<dv-border-box-1 colors="#235fa7,#4fd2dd" duration="3">
+  <section>Border Box 1</section>
+</dv-border-box-1>
 ```
 
 ## Props

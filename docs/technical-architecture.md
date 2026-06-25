@@ -133,8 +133,8 @@ Web Components 核心基础能力，不包含具体业务组件。
 示例 API：
 
 ```ts
-defineDatavElement('dv-border-box-8', BorderBox8Element)
-registerDatavElements([BorderBox8Element, DigitalRainElement])
+defineDatavElement('dv-border-box-1', BorderBox1Element)
+registerDatavElements([BorderBox1Element, DigitalRainElement])
 ```
 
 ### 4.2 `@datav-kit/elements`
@@ -152,7 +152,7 @@ registerDatavElements([BorderBox8Element, DigitalRainElement])
 
 ```txt
 dv-fit-screen
-dv-border-box-8
+dv-border-box-1
 dv-border-circuit
 dv-decoration-line
 dv-decoration-ring
@@ -170,7 +170,7 @@ dv-corner-marker
 {
   "exports": {
     ".": "./dist/index.mjs",
-    "./border-box-8": "./dist/border-box-8.mjs",
+    "./border-box-1": "./dist/border-box-1.mjs",
     "./digital-rain": "./dist/digital-rain.mjs",
     "./register": "./dist/register.mjs",
     "./package.json": "./package.json"
@@ -219,7 +219,7 @@ Vue 适配包。
 职责：
 
 - 安装插件 `app.use(DatavKit)`。
-- 导出 Vue 组件包装，例如 `DvBorderBox8`。
+- 导出 Vue 组件包装，例如 `DvBorderBox1`。
 - 处理对象/数组属性传递。
 - 提供 Vue 类型提示。
 - 支持局部注册和全局注册。
@@ -228,12 +228,12 @@ Vue 适配包。
 
 ```vue
 <script setup lang="ts">
-import { DvBorderBox8, DvFitScreen } from '@datav-kit/vue'
+import { DvBorderBox1, DvFitScreen } from '@datav-kit/vue'
 </script>
 
 <template>
   <DvFitScreen :width="1920" :height="1080">
-    <DvBorderBox8 color="#18f0ff" />
+    <DvBorderBox1 color="#18f0ff" />
   </DvFitScreen>
 </template>
 ```
@@ -244,7 +244,7 @@ React 适配包。
 
 职责：
 
-- 导出 React 组件包装，例如 `BorderBox8`、`FitScreen`。
+- 导出 React 组件包装，例如 `BorderBox1`、`FitScreen`。
 - 处理 Custom Element 属性、ref、事件绑定。
 - 提供完整 TypeScript 类型。
 - 避免 React 对自定义元素复杂属性支持差异导致的体验问题。
@@ -252,12 +252,12 @@ React 适配包。
 使用示例：
 
 ```tsx
-import { BorderBox8, FitScreen } from '@datav-kit/react'
+import { BorderBox1, FitScreen } from '@datav-kit/react'
 
 export function Screen() {
   return (
     <FitScreen width={1920} height={1080}>
-      <BorderBox8 colors="#235fa7,#4fd2dd" duration={3} />
+      <BorderBox1 colors="#235fa7,#4fd2dd" duration={3} />
     </FitScreen>
   )
 }
@@ -334,7 +334,7 @@ docs -> all public packages
 Custom Element 使用 `dv-` 前缀：
 
 ```txt
-dv-border-box-8
+dv-border-box-1
 dv-fit-screen
 dv-scan-line
 ```
@@ -342,7 +342,7 @@ dv-scan-line
 TypeScript 类名：
 
 ```txt
-BorderBox8Element
+BorderBox1Element
 FitScreenElement
 ScanLineElement
 ```
@@ -350,7 +350,7 @@ ScanLineElement
 Vue 组件名：
 
 ```txt
-DvBorderBox8
+DvBorderBox1
 DvFitScreen
 DvScanLine
 ```
@@ -358,7 +358,7 @@ DvScanLine
 React 组件名：
 
 ```txt
-BorderBox8
+BorderBox1
 FitScreen
 ScanLine
 ```
@@ -431,7 +431,7 @@ Shadow DOM 内部使用 `part` 暴露关键节点：
 用户可通过：
 
 ```css
-dv-border-box-8::part(frame) {
+dv-border-box-1::part(frame) {
   filter: brightness(1.2);
 }
 ```
@@ -515,7 +515,7 @@ ctx.scale(ratio, ratio)
 | 组件 | 渲染 | 说明 |
 | --- | --- | --- |
 | `dv-fit-screen` | DOM | 大屏适配容器 |
-| `dv-border-box-8` | SVG | 编号边框 |
+| `dv-border-box-1` | SVG | 编号边框 |
 | `dv-border-circuit` | SVG | 电路线框边框 |
 | `dv-corner-marker` | SVG | 四角装饰 |
 | `dv-decoration-line` | SVG | 流光线条 |
@@ -558,7 +558,7 @@ register()
 
 ```html
 <dv-fit-screen width="1920" height="1080">
-  <dv-border-box-8 colors="#18f0ff,#2b7cff"></dv-border-box-8>
+  <dv-border-box-1 colors="#18f0ff,#2b7cff"></dv-border-box-1>
 </dv-fit-screen>
 ```
 
@@ -571,9 +571,9 @@ import '@datav-kit/themes/cyber-blue.css'
 ### 9.2 按需注册
 
 ```ts
-import { defineBorderBox8 } from '@datav-kit/elements/border-box-8'
+import { defineBorderBox1 } from '@datav-kit/elements/border-box-1'
 
-defineBorderBox8()
+defineBorderBox1()
 ```
 
 ### 9.3 Vue
@@ -588,10 +588,10 @@ createApp(App).use(DatavKit).mount('#app')
 ### 9.4 React
 
 ```tsx
-import { BorderBox8 } from '@datav-kit/react'
+import { BorderBox1 } from '@datav-kit/react'
 
 export function App() {
-  return <BorderBox8 color="#18f0ff" />
+  return <BorderBox1 color="#18f0ff" />
 }
 ```
 
@@ -710,7 +710,7 @@ docs/
     component-authoring.md
   components/
     borders/
-      border-box-8.md
+      border-box-1.md
     tools/
       fit-screen.md
     buttons/
@@ -750,10 +750,10 @@ docs/
 建议目录：
 
 ```txt
-packages/elements/src/border-box-8/
-  border-box-8.element.ts
-  border-box-8.styles.ts
-  border-box-8.metadata.ts
+packages/elements/src/border-box-1/
+  border-box-1.element.ts
+  border-box-1.styles.ts
+  border-box-1.metadata.ts
   define.ts
   index.ts
 ```
@@ -763,11 +763,11 @@ packages/elements/src/border-box-8/
 metadata 是文档、包装层、类型生成的核心。
 
 ```ts
-export const borderBox8Meta = {
-  tagName: 'dv-border-box-8',
-  className: 'BorderBox8Element',
-  vueName: 'DvBorderBox8',
-  reactName: 'BorderBox8',
+export const borderBox1Meta = {
+  tagName: 'dv-border-box-1',
+  className: 'BorderBox1Element',
+  vueName: 'DvBorderBox1',
+  reactName: 'BorderBox1',
   props: {
     color: {
       type: 'string',
@@ -948,6 +948,6 @@ export function canUseDOM() {
 1. 先完成 monorepo 包重命名和基础包创建。
 2. 实现 `@datav-kit/core` 的 `DatavElement`、注册工具、ResizeController。
 3. 实现 `dv-fit-screen`，把大屏适配能力打通。
-4. 实现 `dv-border-box-8` 和 `dv-decoration-line`，先验证 SVG-first 和属性驱动模型。
+4. 实现 `dv-border-box-1` 和 `dv-decoration-line`，先验证 SVG-first 和属性驱动模型。
 5. 再生成 Vue/React wrapper，验证跨框架使用体验。
 6. 最后实现 `dv-digital-rain`，验证 Canvas 动态背景路径。
