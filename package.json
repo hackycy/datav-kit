@@ -1,16 +1,17 @@
 {
+  "name": "datav-kit",
   "type": "module",
   "version": "0.0.0",
   "private": true,
   "packageManager": "pnpm@11.6.0",
   "author": "hackycy <hackycy@outlook.com>",
   "license": "MIT",
-  "homepage": "https://github.com/hackycy/pkg-placeholder#readme",
+  "homepage": "https://github.com/hackycy/datav-kit#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hackycy/pkg-placeholder.git"
+    "url": "git+https://github.com/hackycy/datav-kit.git"
   },
-  "bugs": "https://github.com/hackycy/pkg-placeholder/issues",
+  "bugs": "https://github.com/hackycy/datav-kit/issues",
   "keywords": [],
   "sideEffects": false,
   "scripts": {
@@ -19,8 +20,8 @@
     "lint": "eslint --cache .",
     "prepublishOnly": "pnpm build",
     "release": "bumpp -r",
-    "test": "pnpm test",
-    "typecheck": "tsc",
+    "test": "turbo test",
+    "typecheck": "turbo typecheck",
     "prepare": "simple-git-hooks",
     "open:packages": "npx open-packages-on-npm",
     "catalog": "pnpx codemod pnpm/catalog"
@@ -29,9 +30,11 @@
     "@antfu/eslint-config": "catalog:cli",
     "@antfu/ni": "catalog:cli",
     "@antfu/utils": "catalog:inlined",
+    "@playwright/test": "catalog:testing",
     "@types/node": "catalog:types",
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",
+    "happy-dom": "catalog:testing",
     "lint-staged": "catalog:cli",
     "publint": "catalog:cli",
     "simple-git-hooks": "catalog:cli",

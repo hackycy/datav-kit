@@ -1,0 +1,37 @@
+{
+  "name": "@datav-kit/themes",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Optional CSS variable themes for datav-kit.",
+  "author": "hackycy <hackycy@outlook.com>",
+  "license": "MIT",
+  "sideEffects": [
+    "*.css",
+    "./dist/*.css"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./cyber-blue.css": "./dist/cyber-blue.css",
+    "./neon-magenta.css": "./dist/neon-magenta.css",
+    "./matrix-green.css": "./dist/matrix-green.css",
+    "./solar-gold.css": "./dist/solar-gold.css",
+    "./ice-white.css": "./dist/ice-white.css",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown && mkdir -p dist && cp src/*.css dist/ && publint",
+    "dev": "tsdown --watch",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  }
+}

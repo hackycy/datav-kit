@@ -1,32 +1,26 @@
-# pkg-placeholder
+# datav-kit
 
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![License][license-src]][license-href]
+Framework-agnostic visual decoration components for data dashboards, built on Web Components.
 
-_description_
+The project is currently in its foundation phase. The first packages are:
 
-## Note for Developers
+- `@datav-kit/shared`: framework-agnostic utilities.
+- `@datav-kit/core`: Web Components primitives, registration helpers, events, and lifecycle controllers.
+- `@datav-kit/elements`: public Web Components entrypoints.
+- `@datav-kit/themes`: optional CSS variable themes.
 
-This starter recommands using [npm Trusted Publisher](https://github.com/e18e/ecosystem-issues/issues/201), where the release is done on CI to ensure the security of the packages.
+Vue and React adapters are planned, but intentionally not part of the current foundation work.
 
-To do so, you need to run `pnpm publish` manually for the very first time to create the package on npm, and then go to `https://www.npmjs.com/package/<your-package-name>/access` to set the connection to your GitHub repo.
+## Development
 
-Then for the future releases, you can run `pnpm run release` to do the release and the GitHub Actions will take care of the release process.
-
-## Agents
-
-- [andrej-karpathy-skills-claude.md](https://github.com/multica-ai/andrej-karpathy-skills)
+```bash
+pnpm install
+pnpm build
+pnpm typecheck
+pnpm test
+pnpm lint
+```
 
 ## License
 
 [MIT](./LICENSE) License © [hackycy](https://github.com/hackycy)
-
-<!-- Badges -->
-
-[npm-version-src]: https://img.shields.io/npm/v/pkg-placeholder?style=flat&colorA=080f12&colorB=1fa669
-[npm-version-href]: https://npmjs.com/package/pkg-placeholder
-[npm-downloads-src]: https://img.shields.io/npm/dm/pkg-placeholder?style=flat&colorA=080f12&colorB=1fa669
-[npm-downloads-href]: https://npmjs.com/package/pkg-placeholder
-[license-src]: https://img.shields.io/github/license/hackycy/pkg-placeholder.svg?style=flat&colorA=080f12&colorB=1fa669
-[license-href]: https://github.com/hackycy/pkg-placeholder/blob/main/LICENSE

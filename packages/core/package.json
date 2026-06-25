@@ -1,0 +1,33 @@
+{
+  "name": "@datav-kit/core",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Core Web Components primitives for datav-kit.",
+  "author": "hackycy <hackycy@outlook.com>",
+  "license": "MIT",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@datav-kit/shared": "workspace:*",
+    "lit": "catalog:runtime"
+  }
+}

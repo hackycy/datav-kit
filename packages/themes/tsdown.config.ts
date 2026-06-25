@@ -5,6 +5,4 @@ export default defineConfig({
     'src/index.ts',
   ],
   dts: true,
-  exports: true,
-  publint: true,
 })

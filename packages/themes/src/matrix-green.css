@@ -1,0 +1,11 @@
+:root,
+.dv-theme-matrix-green {
+  --dv-color-primary: #32ff7e;
+  --dv-color-secondary: #00b86b;
+  --dv-color-accent: #d7ff5f;
+  --dv-color-surface: rgba(3, 20, 12, 0.72);
+  --dv-glow-soft: 0 0 12px rgba(50, 255, 126, 0.48);
+  --dv-glow-strong: 0 0 24px rgba(50, 255, 126, 0.78);
+  --dv-line-width: 1px;
+  --dv-motion-duration: 2600ms;
+}

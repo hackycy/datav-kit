@@ -1,0 +1,36 @@
+{
+  "name": "@datav-kit/elements",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "Web Components entrypoints for datav-kit elements.",
+  "author": "hackycy <hackycy@outlook.com>",
+  "license": "MIT",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./register": {
+      "types": "./dist/register.d.mts",
+      "import": "./dist/register.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@datav-kit/core": "workspace:*"
+  }
+}

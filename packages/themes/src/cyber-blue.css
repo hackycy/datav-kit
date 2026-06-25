@@ -1,0 +1,11 @@
+:root,
+.dv-theme-cyber-blue {
+  --dv-color-primary: #18f0ff;
+  --dv-color-secondary: #2b7cff;
+  --dv-color-accent: #f3ff5c;
+  --dv-color-surface: rgba(4, 15, 28, 0.72);
+  --dv-glow-soft: 0 0 12px rgba(24, 240, 255, 0.55);
+  --dv-glow-strong: 0 0 24px rgba(24, 240, 255, 0.85);
+  --dv-line-width: 1px;
+  --dv-motion-duration: 2400ms;
+}
