@@ -1,8 +1,10 @@
+import process from 'node:process'
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: 'datav-kit',
   description: 'Framework-agnostic Web Components for data dashboard decoration.',
+  base: process.env.VITEPRESS_BASE || '/',
   cleanUrls: true,
   themeConfig: {
     nav: [
