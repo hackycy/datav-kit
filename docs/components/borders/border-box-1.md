@@ -41,6 +41,8 @@
 | --- | --- |
 | `--dv-color-primary` | Primary fallback color. |
 | `--dv-color-secondary` | Secondary fallback color. |
+| `--dv-border-box-padding` | Shared override for automatic content inset across border boxes. |
+| `--dv-border-box-1-padding` | Component-specific override for automatic content inset. |
 
 ## Parts
 

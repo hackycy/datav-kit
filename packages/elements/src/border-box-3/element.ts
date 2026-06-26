@@ -1,12 +1,29 @@
-import { DatavElement, resolveNumberValue, resolveThemeValue } from '@datav-kit/core'
+import { DatavElement, ResizeController, resolveNumberValue, resolveThemeValue } from '@datav-kit/core'
 import { css, html, svg } from 'lit'
-import { property } from 'lit/decorators.js'
+import { property, state } from 'lit/decorators.js'
+import { createBorderBoxContentPadding } from '../border-box-content-padding'
 
 let borderBox3Id = 0
 
 const defaultSvgWidth = 1672
 const defaultSvgHeight = 941
 const defaultViewBox = '48 60 1576 820'
+const contentViewBox = {
+  x: 48,
+  y: 60,
+  width: 1576,
+  height: 820,
+}
+const contentRect = {
+  x: 110,
+  y: 132,
+  width: 1452,
+  height: 677,
+}
+const defaultSize = {
+  width: 0,
+  height: 0,
+}
 
 export class BorderBox3Element extends DatavElement {
   static override styles = css`
@@ -40,7 +57,7 @@ export class BorderBox3Element extends DatavElement {
       box-sizing: border-box;
       width: 100%;
       height: 100%;
-      padding: var(--dv-border-box-3-padding, 72px 92px);
+      padding: var(--dv-border-box-3-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
     }
 
     .glow-layer {
@@ -63,6 +80,9 @@ export class BorderBox3Element extends DatavElement {
   @property({ type: Number, attribute: 'glow-intensity' })
   glowIntensity = 1
 
+  @state()
+  private size = defaultSize
+
   private readonly instanceId = ++borderBox3Id
   private readonly softGlowId = `dv-border-box-3-soft-glow-${this.instanceId}`
   private readonly hardGlowId = `dv-border-box-3-hard-glow-${this.instanceId}`
@@ -77,6 +97,13 @@ export class BorderBox3Element extends DatavElement {
   private readonly topCenterId = `dv-border-box-3-top-center-${this.instanceId}`
   private readonly leftSideId = `dv-border-box-3-left-side-${this.instanceId}`
 
+  private readonly resizeController = new ResizeController(this, (state) => {
+    this.size = {
+      width: Math.max(state.width, 0),
+      height: Math.max(state.height, 0),
+    }
+  })
+
   override firstUpdated(): void {
     this.emit('dv-ready', { tagName: 'dv-border-box-3' })
   }
@@ -84,6 +111,14 @@ export class BorderBox3Element extends DatavElement {
   override render(): unknown {
     const [primary, secondary, accent] = this.resolveColors()
     const glowIntensity = Math.max(resolveNumberValue(this.glowIntensity, 1), 0)
+    const contentPadding = createBorderBoxContentPadding({
+      hostWidth: this.size.width,
+      hostHeight: this.size.height,
+      viewBox: contentViewBox,
+      contentRect,
+      minBlock: 16,
+      minInline: 20,
+    })
 
     return html`
       <div part="frame" class="frame">
@@ -177,7 +212,7 @@ export class BorderBox3Element extends DatavElement {
           ${this.renderFrame(primary, secondary, accent)}
         </svg>
       </div>
-      <div part="content" class="content">
+      <div part="content" class="content" style=${`--dv-border-box-auto-padding: ${contentPadding}`}>
         <slot></slot>
       </div>
     `

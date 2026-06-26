@@ -66,6 +66,36 @@ Visual values resolve in this order:
 
 Use `resolveThemeValue()` for values that support CSS variable fallback.
 
+## Decorative Container Content Areas
+
+Border boxes and similar decorative container elements must treat the content area as a first-class implementation contract.
+
+Each SVG-backed decorative container should define:
+
+- `viewBox`: the SVG coordinate system used for rendering the frame.
+- `contentRect`: the safe rectangle, in the same SVG coordinate system, where slotted content may be placed.
+
+The default content padding must be derived by mapping `contentRect` from SVG coordinates to the host element's measured size:
+
+```txt
+top    = (contentRect.y - viewBox.y) / viewBox.height * hostHeight
+right  = (viewBox.right - contentRect.right) / viewBox.width * hostWidth
+bottom = (viewBox.bottom - contentRect.bottom) / viewBox.height * hostHeight
+left   = (contentRect.x - viewBox.x) / viewBox.width * hostWidth
+```
+
+Do not use fixed large padding or generic width/height ratios as the default content-area model. Those values may be used only as minimum guards or explicit CSS-variable overrides.
+
+CSS variable precedence for border-box content inset is:
+
+```txt
+--dv-border-box-N-padding
+> --dv-border-box-padding
+> computed safe-area padding
+```
+
+The computed value may be stored in an internal CSS variable such as `--dv-border-box-auto-padding`, but it is not a public authoring contract.
+
 ## Fullscreen
 
 Fullscreen must be requested from a user gesture. Components may expose methods such as `requestFullscreenMode()`, but they must not automatically call `requestFullscreen()` on mount.

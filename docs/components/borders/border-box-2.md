@@ -40,7 +40,8 @@
 | `--dv-color-primary` | Primary fallback color. |
 | `--dv-color-secondary` | Secondary fallback color. |
 | `--dv-color-accent` | Accent fallback color. |
-| `--dv-border-box-2-padding` | Content inset inside the frame. |
+| `--dv-border-box-padding` | Shared override for automatic content inset across border boxes. |
+| `--dv-border-box-2-padding` | Component-specific override for automatic content inset. |
 | `--dv-border-box-2-glow-opacity` | Static glow layer opacity. |
 
 ## Parts

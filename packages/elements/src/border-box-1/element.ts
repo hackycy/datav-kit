@@ -1,6 +1,7 @@
 import { DatavElement, ResizeController, resolveNumberValue, resolveThemeValue } from '@datav-kit/core'
 import { css, html, svg } from 'lit'
 import { property, state } from 'lit/decorators.js'
+import { createBorderBoxContentPadding } from '../border-box-content-padding'
 
 let borderBox1Id = 0
 
@@ -46,6 +47,7 @@ export class BorderBox1Element extends DatavElement {
       box-sizing: border-box;
       width: 100%;
       height: 100%;
+      padding: var(--dv-border-box-1-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -101,6 +103,24 @@ export class BorderBox1Element extends DatavElement {
     const path = this.createPath(width, height)
     const duration = Math.max(resolveNumberValue(this.duration, 3), 0.1)
     const showAnimation = this.animated && !this.paused && this.size.width > 0 && this.size.height > 0
+    const contentPadding = createBorderBoxContentPadding({
+      hostWidth: width,
+      hostHeight: height,
+      viewBox: {
+        x: 0,
+        y: 0,
+        width,
+        height,
+      },
+      contentRect: {
+        x: 8,
+        y: 8,
+        width: Math.max(width - 16, 0),
+        height: Math.max(height - 16, 0),
+      },
+      minBlock: 8,
+      minInline: 8,
+    })
 
     return html`
       <div part="frame" class="frame">
@@ -141,7 +161,7 @@ export class BorderBox1Element extends DatavElement {
           `}
         </svg>
       </div>
-      <div part="content" class="content">
+      <div part="content" class="content" style=${`--dv-border-box-auto-padding: ${contentPadding}`}>
         <slot></slot>
       </div>
     `
