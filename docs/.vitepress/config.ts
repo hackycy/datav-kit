@@ -36,6 +36,7 @@ export default defineConfig({
           text: 'Tool Components',
           items: [
             { text: 'Fit Screen', link: '/components/tools/fit-screen' },
+            { text: 'Count To', link: '/components/tools/count-to' },
           ],
         },
         {

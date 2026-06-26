@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { FitScreenElement } from '../src/index'
+import type { CountToElement, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineCountTo, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -39,6 +39,8 @@ describe('@datav-kit/elements', () => {
 
   afterEach(() => {
     document.body.replaceChildren()
+    vi.useRealTimers()
+    vi.restoreAllMocks()
     vi.unstubAllGlobals()
   })
 
@@ -48,13 +50,14 @@ describe('@datav-kit/elements', () => {
       'dv-border-box-1',
       'dv-border-box-2',
       'dv-border-box-3',
+      'dv-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -68,6 +71,120 @@ describe('@datav-kit/elements', () => {
     expect(defineBorderBox1()).toBe(false)
     expect(defineBorderBox2()).toBe(false)
     expect(defineBorderBox3()).toBe(false)
+    expect(defineCountTo()).toBe(false)
+  })
+
+  it('maps count-to attributes and formats the disabled target value', async () => {
+    register()
+
+    const element = document.createElement('dv-count-to') as CountToElement
+    element.setAttribute('start-val', '100')
+    element.setAttribute('end-val', '12345.678')
+    element.setAttribute('decimals', '2')
+    element.setAttribute('separator', ' ')
+    element.setAttribute('decimal', ',')
+    element.setAttribute('prefix', '$')
+    element.setAttribute('suffix', 'k')
+    element.setAttribute('disabled', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(element).toHaveProperty('startVal', 100)
+    expect(element).toHaveProperty('endVal', 12345.678)
+    expect(element.shadowRoot?.querySelector('[part="prefix"]')?.textContent).toBe('$')
+    expect(element.shadowRoot?.querySelector('[part="integer"]')?.textContent).toBe('12 345')
+    expect(element.shadowRoot?.querySelector('[part="decimal"]')?.textContent).toBe(',68')
+    expect(element.shadowRoot?.querySelector('[part="suffix"]')?.textContent).toBe('k')
+  })
+
+  it('clamps count-to decimal places to avoid invalid toFixed ranges', async () => {
+    register()
+
+    const element = document.createElement('dv-count-to') as CountToElement
+    element.setAttribute('end-val', '1.234567890123456789012345')
+    element.setAttribute('decimals', '999')
+    element.setAttribute('disabled', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelector('[part="decimal"]')?.textContent).toHaveLength(21)
+  })
+
+  it('renders count-to target immediately when reduced motion is preferred', async () => {
+    vi.stubGlobal('matchMedia', vi.fn(() => ({
+      matches: true,
+      media: '(prefers-reduced-motion: reduce)',
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })))
+
+    register()
+
+    const element = document.createElement('dv-count-to') as CountToElement
+    const started = vi.fn()
+
+    element.setAttribute('end-val', '100')
+    element.addEventListener('dv-started', started)
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(started).not.toHaveBeenCalled()
+    expect(element.shadowRoot?.querySelector('[part="integer"]')?.textContent).toBe('100')
+  })
+
+  it('emits count-to lifecycle events when animation runs', async () => {
+    vi.useFakeTimers()
+
+    let now = 0
+    vi.spyOn(window.performance, 'now').mockImplementation(() => now)
+    vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+      return window.setTimeout(() => {
+        now += 16
+        callback(now)
+      }, 0)
+    })
+    vi.spyOn(window, 'cancelAnimationFrame').mockImplementation((id) => {
+      window.clearTimeout(id)
+    })
+
+    register()
+
+    const element = document.createElement('dv-count-to') as CountToElement
+    const started = vi.fn()
+    const finished = vi.fn()
+
+    element.setAttribute('end-val', '100')
+    element.setAttribute('duration', '16')
+    element.setAttribute('delay', '10')
+    element.addEventListener('dv-started', started)
+    element.addEventListener('dv-finished', finished)
+    document.body.append(element)
+    await element.updateComplete
+
+    vi.advanceTimersByTime(10)
+    await Promise.resolve()
+    vi.runOnlyPendingTimers()
+    await element.updateComplete
+
+    expect(started).toHaveBeenCalledWith(expect.objectContaining({
+      detail: expect.objectContaining({
+        from: 0,
+        to: 100,
+        duration: 16,
+        delay: 10,
+      }),
+    }))
+    expect(finished).toHaveBeenCalledWith(expect.objectContaining({
+      detail: { value: 100 },
+    }))
+    expect(element.shadowRoot?.querySelector('[part="integer"]')?.textContent).toBe('100')
   })
 
   it('maps border-box-1 attributes to element properties and renders SVG', async () => {

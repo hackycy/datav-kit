@@ -170,7 +170,7 @@ Vue、React 等适配包只包装 Custom Elements，不重写组件实现。
 | 渲染技术 | 适用边界 |
 | --- | --- |
 | Inline SVG | 线框、边框、角标、渐变、流光、扫描、路径动画 |
-| DOM + CSS transform | 适配容器、布局缩放、内容承载 |
+| DOM + CSS transform / text | 适配容器、布局缩放、内容承载、数字指标 |
 | Canvas 2D | 大量粒子、噪声、数字雨等高频动态背景 |
 | 独立 3D 扩展 | 透视场景、空间网格、复杂三维效果 |
 
