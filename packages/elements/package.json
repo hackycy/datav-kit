@@ -2,7 +2,7 @@
   "name": "@datav-kit/elements",
   "type": "module",
   "version": "0.0.0",
-  "description": "Web Components entrypoints for datav-kit elements.",
+  "description": "Web Components entrypoint for datav-kit elements.",
   "author": "hackycy <hackycy@outlook.com>",
   "license": "MIT",
   "sideEffects": false,
@@ -10,18 +10,6 @@
     ".": {
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
-    },
-    "./register": {
-      "types": "./dist/register.d.mts",
-      "import": "./dist/register.mjs"
-    },
-    "./fit-screen": {
-      "types": "./dist/fit-screen/index.d.mts",
-      "import": "./dist/fit-screen/index.mjs"
-    },
-    "./border-box-1": {
-      "types": "./dist/border-box-1/index.d.mts",
-      "import": "./dist/border-box-1/index.mjs"
     },
     "./package.json": "./package.json"
   },

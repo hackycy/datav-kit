@@ -1,5 +1,6 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 import { borderBox1Metadata } from './border-box-1/metadata'
+import { borderBox2Metadata } from './border-box-2/metadata'
 import { fitScreenMetadata } from './fit-screen/metadata'
 
 export type ElementMetadata = DatavElementMetadata
@@ -7,4 +8,5 @@ export type ElementMetadata = DatavElementMetadata
 export const elementMetadata: ElementMetadata[] = [
   fitScreenMetadata,
   borderBox1Metadata,
+  borderBox2Metadata,
 ]

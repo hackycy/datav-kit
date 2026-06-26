@@ -2,7 +2,7 @@
 
 Framework-agnostic Web Components for data dashboard decoration.
 
-The first usable loop is intentionally small: `dv-fit-screen` handles dashboard scale behavior, and `dv-border-box-1` starts the numbered border series. The docs site registers the current Web Components package directly, so every demo on this site is a live usage example rather than a separate demo application.
+The first usable loop is intentionally small: `dv-fit-screen` handles dashboard scale behavior, and `dv-border-box-1` plus `dv-border-box-2` start the numbered border series. The docs site registers the current Web Components package directly, so every demo on this site is a live usage example rather than a separate demo application.
 
 ## Live Demo
 
@@ -26,4 +26,5 @@ The first usable loop is intentionally small: `dv-fit-screen` handles dashboard 
 - [Installation](/guide/installation) for package setup and registration.
 - [Screen Fit](/guide/screen-fit) for scaling behavior.
 - [Border Box 1](/components/borders/border-box-1) for SVG border decoration.
+- [Border Box 2](/components/borders/border-box-2) for the layered cyber frame border.
 - [Component Authoring](/guide/component-authoring) for the required file layout and checklist.

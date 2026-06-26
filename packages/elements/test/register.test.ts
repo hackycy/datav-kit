@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -46,18 +46,23 @@ describe('@datav-kit/elements', () => {
     expect(elementMetadata.map(meta => meta.tagName)).toEqual([
       'dv-fit-screen',
       'dv-border-box-1',
+      'dv-border-box-2',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2']))
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
   })
 
   it('supports single-element registration helpers', () => {
     expect(defineFitScreen()).toBe(false)
     expect(defineBorderBox1()).toBe(false)
+    expect(defineBorderBox2()).toBe(false)
   })
 
   it('maps border-box-1 attributes to element properties and renders SVG', async () => {
@@ -100,6 +105,61 @@ describe('@datav-kit/elements', () => {
     expect(strokes).toContain('#123456')
     expect(strokes).toContain('#abcdef')
     expect(animateMotion).toBeNull()
+  })
+
+  it('maps border-box-2 public attributes and keeps SVG reference geometry internal', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-2')
+    element.setAttribute('colors', '#18f0ff,#2b7cff,#20c8ff')
+    element.setAttribute('width', '800')
+    element.setAttribute('height', '450')
+    element.setAttribute('view-box', '0 0 800 450')
+    element.setAttribute('glow-intensity', '1.5')
+    document.body.append(element)
+
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const paths = [...(element.shadowRoot?.querySelectorAll('path') ?? [])]
+    const circles = element.shadowRoot?.querySelectorAll('circle') ?? []
+    const blur = element.shadowRoot?.querySelector('filter feGaussianBlur')
+    const animateMotion = element.shadowRoot?.querySelector('animateMotion')
+
+    expect(element).toHaveProperty('colors', '#18f0ff,#2b7cff,#20c8ff')
+    expect(element).toHaveProperty('glowIntensity', 1.5)
+    expect(svg?.getAttribute('width')).toBe('1600')
+    expect(svg?.getAttribute('height')).toBe('900')
+    expect(svg?.getAttribute('viewBox')).toBe('48 48 1504 804')
+    expect(paths.some(path => path.getAttribute('d')?.includes('L1510 785'))).toBe(true)
+    expect(circles.length).toBeGreaterThan(10)
+    expect(blur?.getAttribute('stdDeviation')).toBe('4.5')
+    expect(animateMotion).toBeNull()
+  })
+
+  it('resolves border-box-2 colors from CSS variables and applies glow intensity', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-2') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dv-color-primary', '#102030')
+    element.style.setProperty('--dv-color-secondary', '#405060')
+    element.style.setProperty('--dv-color-accent', '#708090')
+    element.setAttribute('glow-intensity', '0.5')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const strokes = [...(element.shadowRoot?.querySelectorAll('[stroke]') ?? [])]
+      .map(node => node.getAttribute('stroke'))
+    const stopColors = [...(element.shadowRoot?.querySelectorAll('stop') ?? [])]
+      .map(node => node.getAttribute('stop-color'))
+    const blurs = [...(element.shadowRoot?.querySelectorAll('feGaussianBlur') ?? [])]
+      .map(node => node.getAttribute('stdDeviation'))
+
+    expect(strokes).toContain('#102030')
+    expect(strokes).toContain('#405060')
+    expect(stopColors).toContain('#708090')
+    expect(blurs).toEqual(['1.5', '4'])
   })
 
   it('emits resize details when fit-screen receives ResizeObserver entries', async () => {

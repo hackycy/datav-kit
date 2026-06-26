@@ -21,6 +21,10 @@
   height: 360px;
 }
 
+.datav-demo--wide {
+  min-height: 420px;
+}
+
 .datav-panel {
   width: 720px;
   height: 320px;
@@ -28,9 +32,20 @@
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
+.datav-panel--wide {
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
 .datav-demo > .datav-panel {
   width: 100%;
   max-width: 720px;
+}
+
+.datav-demo > .datav-panel--wide {
+  max-width: 960px;
 }
 
 .datav-panel__content {

@@ -169,10 +169,10 @@ dv-corner-marker
 ```json
 {
   "exports": {
-    ".": "./dist/index.mjs",
-    "./border-box-1": "./dist/border-box-1.mjs",
-    "./digital-rain": "./dist/digital-rain.mjs",
-    "./register": "./dist/register.mjs",
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
     "./package.json": "./package.json"
   }
 }
@@ -516,6 +516,7 @@ ctx.scale(ratio, ratio)
 | --- | --- | --- |
 | `dv-fit-screen` | DOM | 大屏适配容器 |
 | `dv-border-box-1` | SVG | 编号边框 |
+| `dv-border-box-2` | SVG | 分层科技边框 |
 | `dv-border-circuit` | SVG | 电路线框边框 |
 | `dv-corner-marker` | SVG | 四角装饰 |
 | `dv-decoration-line` | SVG | 流光线条 |
@@ -571,7 +572,7 @@ import '@datav-kit/themes/cyber-blue.css'
 ### 9.2 按需注册
 
 ```ts
-import { defineBorderBox1 } from '@datav-kit/elements/border-box-1'
+import { defineBorderBox1 } from '@datav-kit/elements'
 
 defineBorderBox1()
 ```
@@ -741,7 +742,7 @@ docs/
 
 1. 在 `packages/elements/src/<component>/` 创建组件。
 2. 定义元素类、样式、metadata、注册函数。
-3. 导出单组件入口。
+3. 从 `packages/elements/src/index.ts` 导出组件类、metadata 和注册函数。
 4. 增加 VitePress 组件文档和文档内 demo。
 5. 按需补充 Vue/React wrapper。
 6. 增加单元测试。
@@ -825,7 +826,7 @@ export function canUseDOM() {
 | Canvas 动画在 4K 大屏性能差 | 掉帧、发热 | DPR 上限、可见性暂停、质量参数 |
 | 组件数量扩张导致维护困难 | 文档和测试跟不上 | metadata 驱动、MVP 控制数量 |
 | 视觉同质化 | 缺少差异化 | 主题系统、动效规范、视觉评审 |
-| 自动注册影响 tree shaking | 包体变大 | 单组件入口 + 显式注册 |
+| 自动注册影响 tree shaking | 包体变大 | 根入口具名导出 + 显式注册 |
 
 ## 17. 里程碑
 

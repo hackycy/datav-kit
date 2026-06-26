@@ -18,7 +18,7 @@ The `@datav-kit/elements` package exports a single `elementMetadata` array for d
 
 ## Package Exports
 
-Published package entrypoints should use conditional exports with explicit `types` and `import` entries:
+Published element packages should expose a single root entrypoint with explicit `types` and `import` entries. Element-level APIs should be re-exported from `src/index.ts` instead of adding one package export per element:
 
 ```json
 {
@@ -27,16 +27,12 @@ Published package entrypoints should use conditional exports with explicit `type
       "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     },
-    "./fit-screen": {
-      "types": "./dist/fit-screen/index.d.mts",
-      "import": "./dist/fit-screen/index.mjs"
-    },
     "./package.json": "./package.json"
   }
 }
 ```
 
-Use `createConditionalExports()` from `@datav-kit/core` for simple one-file entrypoint templates.
+Use package subpath exports only for non-element assets that must be imported directly.
 
 ## Events
 
