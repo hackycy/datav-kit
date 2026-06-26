@@ -517,6 +517,7 @@ ctx.scale(ratio, ratio)
 | `dv-fit-screen` | DOM | 大屏适配容器 |
 | `dv-border-box-1` | SVG | 编号边框 |
 | `dv-border-box-2` | SVG | 分层科技边框 |
+| `dv-border-box-3` | SVG | 极简蓝色科技边框 |
 | `dv-border-circuit` | SVG | 电路线框边框 |
 | `dv-corner-marker` | SVG | 四角装饰 |
 | `dv-decoration-line` | SVG | 流光线条 |
@@ -712,6 +713,8 @@ docs/
   components/
     borders/
       border-box-1.md
+      border-box-2.md
+      border-box-3.md
     tools/
       fit-screen.md
     buttons/
