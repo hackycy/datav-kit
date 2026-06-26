@@ -52,7 +52,7 @@ export default defineConfig({
           text: 'Reference',
           items: [
             { text: 'Architecture Contracts', link: '/reference/architecture-contracts' },
-            { text: 'Technical Architecture', link: '/technical-architecture' },
+            { text: 'Technical Architecture', link: '/architecture' },
           ],
         },
       ],
