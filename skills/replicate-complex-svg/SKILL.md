@@ -44,13 +44,18 @@ Before implementing, read `references/svg-frame-replication.md`.
    - Make the sliced/free-size behavior the component default; do not hide correct behavior behind an auto-height or special escape attribute.
    - Scale decorative fixed modules conservatively from the stable reference dimension used by the project.
    - Fill extra width/height only in measured clean gaps between fixed modules.
-   - Compute default padding from the source content safe area; do not let padding grow unbounded with container height.
+   - Compute default padding from the source content safe area; map inline padding from host width and block padding from host height unless the project explicitly uses a uniform scale model.
+   - Ensure the content wrapper itself is constrained to the host box (`height: 100%`, `box-sizing: border-box`, and `min-height: 0` where applicable) before judging padding. A slotted child with `height: 100%` plus parent padding can otherwise push content past the bottom border even when the padding numbers look reasonable.
+   - Do not let minimum padding guards override the measured safe area in common responsive sizes; use them only as small fallback clamps for undersized hosts.
+   - When remeasuring a side, update the opposite coordinate/size together so the intended safe-area edge stays fixed.
+   - Do not let padding grow unbounded with container height.
    - Keep component-level CSS variable overrides for padding when the project provides them.
 
 6. Validate visually and structurally.
    - Compare source crops against rendered modules at source-ratio size and stretched/taller/wider sizes.
    - Inspect DOM viewBoxes, element positions, and `preserveAspectRatio` values.
-   - Use browser screenshots for corners, side extensions, and content-growth cases.
+   - Use browser screenshots and computed DOM rectangles for corners, side extensions, content-growth cases, and fixed-height non-source-ratio demos.
+   - Measure host, content wrapper, and slotted content bounding boxes; verify content wrapper overflow is zero and assigned content remains inside the intended safe area.
    - Confirm no full-frame SVG leaks underneath sliced modules.
 
 7. Update public surfaces.
@@ -63,6 +68,10 @@ Before implementing, read `references/svg-frame-replication.md`.
 - A side appears disconnected near a corner: a fixed module boundary or extension start/end is off by source-coordinate scale.
 - A diagonal or node looks smeared: a complex detail was included in a stretched strip.
 - The result looks correct only at one height: the layout still depends on a special-case mode instead of normal host sizing.
+- Padding changes appear to have no effect: a minimum padding clamp may be masking the measured value, or the docs/demo may be loading a built artifact that needs rebuilding.
+- Content crosses the bottom border even though padding looks correct: the content wrapper may be auto-height instead of host-height, so slotted `height: 100%` content plus padding expands beyond the frame.
+- Top/bottom spacing is wrong only in wide or short containers: block padding may be incorrectly scaled from width instead of height.
+- Bottom frame has a large blank gap: the bottom slice/viewBox may include transparent source margin beyond the real frame bounds.
 - Tests pass but visual fidelity is wrong: add DOM assertions for source viewBoxes and run browser screenshot checks against source crops.
 
 ## Resources

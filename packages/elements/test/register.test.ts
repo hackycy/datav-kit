@@ -498,6 +498,9 @@ describe('@datav-kit/elements', () => {
       '112 56 148 341',
       '260 56 1152 341',
       '1412 56 148 341',
+      '112 552 148 298',
+      '260 552 1152 298',
+      '1412 552 148 298',
     ]))
     expect(paths.slice(0, 5).map(path => path.id)).toEqual([
       'blue-outer-aura',
@@ -543,7 +546,7 @@ describe('@datav-kit/elements', () => {
       ['dv-border-box-2', '21.72px 21.94px 21.72px 21.94px'],
       ['dv-border-box-3', '16px 20px 16px 20px'],
       ['dv-border-box-4', '16px 20px 16px 20px'],
-      ['dv-border-box-5', '32px 22px 32px 22px'],
+      ['dv-border-box-5', '32px 22px 16px 22px'],
     ] as const
 
     for (const [tagName, expectedPadding] of cases) {
@@ -610,7 +613,20 @@ describe('@datav-kit/elements', () => {
     expect(tiles.some(tile => tile.getAttribute('style')?.includes('right: 0'))).toBe(true)
     expect(tiles.some(tile => tile.getAttribute('style')?.includes('bottom: 0'))).toBe(true)
     expect(element.shadowRoot?.querySelectorAll('svg').length).toBe(tiles.length)
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('32px 22px 32px 22px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('32px 22px 16px 22px')
+  })
+
+  it('maps border-box-5 block padding from host height', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(960, 430)
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('35.74px 37.13px 20.58px 37.13px')
   })
 
   it('emits resize details when fit-screen receives ResizeObserver entries', async () => {

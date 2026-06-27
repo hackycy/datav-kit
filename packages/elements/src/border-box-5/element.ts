@@ -17,14 +17,20 @@ const contentViewBox = {
   width: 1448,
   height: 804,
 }
+const frameBottomY = 850
+const frameViewBox = {
+  ...contentViewBox,
+  height: frameBottomY - contentViewBox.y,
+}
 const contentRect = {
-  x: 184,
-  y: 150,
-  width: 1304,
-  height: 632,
+  x: 168,
+  y: 122,
+  width: 1336,
+  height: 690,
 }
 const sliceTopHeight = 341
 const sliceBottomHeight = 298
+const sliceBottomY = frameBottomY - sliceBottomHeight
 const sliceSideWidth = 148
 const sliceMiddleX = contentViewBox.x + sliceSideWidth
 const sliceMiddleY = 397
@@ -87,6 +93,8 @@ export class BorderBox5Element extends DatavElement {
       z-index: 1;
       box-sizing: border-box;
       width: 100%;
+      height: 100%;
+      min-height: 0;
       padding: var(--dv-border-box-5-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
     }
 
@@ -219,7 +227,7 @@ export class BorderBox5Element extends DatavElement {
           style: `left: 0; bottom: 0; width: ${metrics.side}px; height: ${metrics.bottom}px`,
           svgWidth: metrics.side,
           svgHeight: metrics.bottom,
-          viewBox: `${contentViewBox.x} ${contentViewBox.y + contentViewBox.height - sliceBottomHeight} ${sliceSideWidth} ${sliceBottomHeight}`,
+          viewBox: `${contentViewBox.x} ${sliceBottomY} ${sliceSideWidth} ${sliceBottomHeight}`,
           primary,
           secondary,
           accent,
@@ -232,7 +240,7 @@ export class BorderBox5Element extends DatavElement {
           availableWidth: metrics.middleWidth,
           tileWidth: metrics.middleTileWidth,
           height: metrics.bottom,
-          viewBox: `${sliceMiddleX} ${contentViewBox.y + contentViewBox.height - sliceBottomHeight} ${sliceMiddleWidth} ${sliceBottomHeight}`,
+          viewBox: `${sliceMiddleX} ${sliceBottomY} ${sliceMiddleWidth} ${sliceBottomHeight}`,
           primary,
           secondary,
           accent,
@@ -243,7 +251,7 @@ export class BorderBox5Element extends DatavElement {
           style: `right: 0; bottom: 0; width: ${metrics.side}px; height: ${metrics.bottom}px`,
           svgWidth: metrics.side,
           svgHeight: metrics.bottom,
-          viewBox: `${contentViewBox.x + contentViewBox.width - sliceSideWidth} ${contentViewBox.y + contentViewBox.height - sliceBottomHeight} ${sliceSideWidth} ${sliceBottomHeight}`,
+          viewBox: `${contentViewBox.x + contentViewBox.width - sliceSideWidth} ${sliceBottomY} ${sliceSideWidth} ${sliceBottomHeight}`,
           primary,
           secondary,
           accent,
@@ -477,20 +485,21 @@ export class BorderBox5Element extends DatavElement {
 
   private createContentPadding(): string {
     const hostWidth = Math.max(this.size.width, 0)
-    const scale = hostWidth > 0 ? hostWidth / contentViewBox.width : 1
-    const viewBoxRight = contentViewBox.x + contentViewBox.width
-    const viewBoxBottom = contentViewBox.y + contentViewBox.height
+    const hostHeight = Math.max(this.size.height, 0)
+    const scaleX = hostWidth > 0 ? hostWidth / frameViewBox.width : 1
+    const scaleY = hostHeight > 0 ? hostHeight / frameViewBox.height : 1
+    const viewBoxRight = frameViewBox.x + frameViewBox.width
     const contentRight = contentRect.x + contentRect.width
     const contentBottom = contentRect.y + contentRect.height
-    const top = (contentRect.y - contentViewBox.y) * scale
-    const right = (viewBoxRight - contentRight) * scale
-    const bottom = (viewBoxBottom - contentBottom) * scale
-    const left = (contentRect.x - contentViewBox.x) * scale
+    const top = (contentRect.y - frameViewBox.y) * scaleY
+    const right = (viewBoxRight - contentRight) * scaleX
+    const bottom = (frameBottomY - contentBottom) * scaleY
+    const left = (contentRect.x - frameViewBox.x) * scaleX
 
     return [
       this.formatPaddingValue(Math.max(top, 32)),
       this.formatPaddingValue(Math.max(right, 22)),
-      this.formatPaddingValue(Math.max(bottom, 32)),
+      this.formatPaddingValue(Math.max(bottom, 16)),
       this.formatPaddingValue(Math.max(left, 22)),
     ].join(' ')
   }
