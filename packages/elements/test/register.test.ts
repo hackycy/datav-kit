@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { CountToElement, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineCountTo, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineCountTo, defineDecoration1, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -52,14 +52,15 @@ describe('@datav-kit/elements', () => {
       'dv-border-box-3',
       'dv-border-box-4',
       'dv-border-box-5',
+      'dv-decoration-1',
       'dv-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-decoration-1', 'dv-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-decoration-1', 'dv-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -84,6 +85,7 @@ describe('@datav-kit/elements', () => {
     expect(defineBorderBox3()).toBe(false)
     expect(defineBorderBox4()).toBe(false)
     expect(defineBorderBox5()).toBe(false)
+    expect(defineDecoration1()).toBe(false)
     expect(defineCountTo()).toBe(false)
   })
 
@@ -726,6 +728,75 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('35.74px 37.13px 20.58px 41.1px')
+  })
+
+  it('maps decoration-1 attributes and renders animated bars', async () => {
+    register()
+
+    const element = document.createElement('dv-decoration-1') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.setAttribute('colors', '#7acaec,#4fd2dd')
+    element.setAttribute('bar-width', '8')
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(300, 35)
+    await element.updateComplete
+
+    const bars = element.shadowRoot?.querySelectorAll('rect') ?? []
+    const animations = element.shadowRoot?.querySelectorAll('animate') ?? []
+
+    expect(element).toHaveProperty('colors', '#7acaec,#4fd2dd')
+    expect(element).toHaveProperty('barWidth', 8)
+    expect(element.shadowRoot?.querySelector('svg')?.getAttribute('viewBox')).toBe('0 0 300 35')
+    expect(bars).toHaveLength(40)
+    expect(bars[0]?.getAttribute('width')).toBe('8')
+    expect(animations).toHaveLength(80)
+  })
+
+  it('resolves decoration-1 colors from CSS variables and supports paused animation', async () => {
+    register()
+
+    const element = document.createElement('dv-decoration-1') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dv-color-primary', '#123456')
+    element.style.setProperty('--dv-color-secondary', '#abcdef')
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(300, 35)
+    await element.updateComplete
+
+    const fills = [...(element.shadowRoot?.querySelectorAll('rect') ?? [])]
+      .map(rect => rect.getAttribute('fill'))
+
+    expect(fills).toContain('#123456')
+    expect(fills).toContain('#abcdef')
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('omits decoration-1 animation nodes when reduced motion is preferred', async () => {
+    vi.stubGlobal('matchMedia', vi.fn(() => ({
+      matches: true,
+      media: '(prefers-reduced-motion: reduce)',
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })))
+
+    register()
+
+    const element = document.createElement('dv-decoration-1') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(300, 35)
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelectorAll('rect')).toHaveLength(40)
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
   })
 
   it('emits resize details when fit-screen receives ResizeObserver entries', async () => {

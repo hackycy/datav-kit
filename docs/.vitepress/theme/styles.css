@@ -25,6 +25,15 @@
   min-height: 420px;
 }
 
+.datav-demo--decoration {
+  min-height: 160px;
+}
+
+.datav-decoration-shell {
+  width: min(100%, 720px);
+  height: 84px;
+}
+
 .datav-panel {
   width: 720px;
   height: 320px;

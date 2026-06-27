@@ -9,7 +9,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/introduction' },
-      { text: 'Components', link: '/components/borders/border-box-1' },
+      { text: 'Components', link: '/components/decorations/decoration-1' },
       { text: 'Reference', link: '/reference/architecture-contracts' },
     ],
     sidebar: {
@@ -27,7 +27,13 @@ export default defineConfig({
       ],
       '/components/': [
         {
-          text: 'Border Components',
+          text: 'Decoration Components',
+          items: [
+            { text: 'Decoration 1', link: '/components/decorations/decoration-1' },
+          ],
+        },
+        {
+          text: 'Border',
           items: [
             { text: 'Border Box 1', link: '/components/borders/border-box-1' },
             { text: 'Border Box 2', link: '/components/borders/border-box-2' },
@@ -37,15 +43,11 @@ export default defineConfig({
           ],
         },
         {
-          text: 'Tool Components',
+          text: 'Tool',
           items: [
             { text: 'Fit Screen', link: '/components/tools/fit-screen' },
             { text: 'Count To', link: '/components/tools/count-to' },
           ],
-        },
-        {
-          text: 'Button Components',
-          items: [],
         },
       ],
       '/reference/': [
