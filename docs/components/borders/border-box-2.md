@@ -1,6 +1,6 @@
 # Border Box 2
 
-`dv-border-box-2` renders a layered neon cyber frame based on a 1600 x 900 SVG reference canvas. It uses chamfered corners, top and bottom energy bars, side tick marks, circular nodes, and configurable glow filters.
+`dv-border-box-2` renders a layered neon cyber frame based on a 1600 x 900 SVG reference canvas. It keeps corners, center energy bars, side tick marks, and circular nodes fixed while stretching only clean line segments for free-size layouts.
 
 <BorderChartDemo
   border="dv-border-box-2"
@@ -25,7 +25,6 @@
 | `accent-color` | `string` | CSS variable fallback | Accent highlight color used by gradient stops and purple detail blocks. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and accent colors. |
 | `glow-intensity` | `number` | `1` | Multiplier for SVG blur filters that create the neon glow. |
-| `auto-height` | `boolean` | `false` | Lets slotted content define the box height instead of stretching to a parent height. |
 
 ## Events
 

@@ -63,6 +63,7 @@ describe('@datav-kit/elements', () => {
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('autoHeight')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('viewBox')
@@ -241,7 +242,7 @@ describe('@datav-kit/elements', () => {
     expect(animateMotion).toBeNull()
   })
 
-  it('maps border-box-2 public attributes and keeps SVG reference geometry internal', async () => {
+  it('renders border-box-2 with fixed details and clean source extensions by default', async () => {
     register()
 
     const element = document.createElement('dv-border-box-2')
@@ -253,21 +254,49 @@ describe('@datav-kit/elements', () => {
     document.body.append(element)
 
     await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+    emitResize(800, 450)
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
 
-    const svg = element.shadowRoot?.querySelector('svg')
+    const tiles = [...(element.shadowRoot?.querySelectorAll('.tile') ?? [])]
+    const extensions = [...(element.shadowRoot?.querySelectorAll('.extension') ?? [])]
+    const svgs = [...(element.shadowRoot?.querySelectorAll('svg') ?? [])]
     const paths = [...(element.shadowRoot?.querySelectorAll('path') ?? [])]
     const circles = element.shadowRoot?.querySelectorAll('circle') ?? []
-    const blur = element.shadowRoot?.querySelector('filter feGaussianBlur')
+    const blurs = [...(element.shadowRoot?.querySelectorAll('feGaussianBlur') ?? [])]
+      .map(node => node.getAttribute('stdDeviation'))
     const animateMotion = element.shadowRoot?.querySelector('animateMotion')
 
     expect(element).toHaveProperty('colors', '#18f0ff,#2b7cff,#20c8ff')
     expect(element).toHaveProperty('glowIntensity', 1.5)
-    expect(svg?.getAttribute('width')).toBe('1600')
-    expect(svg?.getAttribute('height')).toBe('900')
-    expect(svg?.getAttribute('viewBox')).toBe('48 48 1504 804')
+
+    expect(tiles).toHaveLength(8)
+    expect(extensions).toHaveLength(8)
+    expect(svgs).toHaveLength(16)
+    expect(svgs.some(svg => svg.getAttribute('viewBox') === '48 48 1504 804')).toBe(false)
+    expect(tiles.some(tile => tile.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(false)
+    expect(extensions.every(extension => extension.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(true)
+    expect(svgs.map(svg => svg.getAttribute('viewBox'))).toEqual(expect.arrayContaining([
+      '48 48 477 210',
+      '575 88 455 70',
+      '1075 48 477 210',
+      '48 290 132 306',
+      '1420 290 132 306',
+      '48 642 477 210',
+      '575 750 455 70',
+      '1075 642 477 210',
+      '525 88 50 70',
+      '1030 88 45 70',
+      '525 750 50 70',
+      '1030 750 45 70',
+      '48 258 132 32',
+      '48 596 132 46',
+      '1420 258 132 32',
+      '1420 596 132 46',
+    ]))
+    expect(tiles.some(tile => tile.getAttribute('style')?.includes('right: 0'))).toBe(true)
     expect(paths.some(path => path.getAttribute('d')?.includes('L1510 785'))).toBe(true)
     expect(circles.length).toBeGreaterThan(10)
-    expect(blur?.getAttribute('stdDeviation')).toBe('4.5')
+    expect(blurs.slice(0, 2)).toEqual(['4.5', '12'])
     expect(animateMotion).toBeNull()
   })
 
@@ -293,7 +322,7 @@ describe('@datav-kit/elements', () => {
     expect(strokes).toContain('#102030')
     expect(strokes).toContain('#405060')
     expect(stopColors).toContain('#708090')
-    expect(blurs).toEqual(['1.5', '4'])
+    expect(blurs.slice(0, 2)).toEqual(['1.5', '4'])
   })
 
   it('maps border-box-3 public attributes and keeps SVG reference geometry internal', async () => {
@@ -561,6 +590,20 @@ describe('@datav-kit/elements', () => {
     }
   })
 
+  it('maps border-box-2 block padding from host height without masking safe area', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-2') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(960, 430)
+    await element.updateComplete
+
+    expect(element).not.toHaveProperty('autoHeight')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('51.88px 70.21px 51.88px 70.21px')
+  })
+
   it('maps border-box-4 block padding from host height without masking safe area', async () => {
     register()
 
@@ -592,7 +635,6 @@ describe('@datav-kit/elements', () => {
 
     const cases = [
       ['dv-border-box-1', '8px 8px 8px 8px'],
-      ['dv-border-box-2', '14px 21.94px 14px 21.94px'],
     ] as const
 
     for (const [tagName, expectedPadding] of cases) {

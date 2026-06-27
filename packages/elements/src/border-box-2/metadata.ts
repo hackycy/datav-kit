@@ -38,12 +38,6 @@ export const borderBox2Metadata = {
       attribute: 'glow-intensity',
       description: 'Multiplier for SVG blur filters that create the neon glow.',
     },
-    autoHeight: {
-      type: 'boolean',
-      default: false,
-      attribute: 'auto-height',
-      description: 'Lets slotted content define the box height instead of stretching to a parent height.',
-    },
   },
   events: [
     {
