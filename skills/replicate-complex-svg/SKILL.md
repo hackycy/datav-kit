@@ -20,12 +20,15 @@ Before implementing, read `references/svg-frame-replication.md`.
 2. Analyze the source SVG before coding.
    - Record root `width`, `height`, and `viewBox`.
    - Identify the real frame bounds and content safe area from coordinates, not visual guesses.
+   - For each side, identify whether it has a fixed center/special module before choosing extension strips.
    - Use `scripts/crop_svg_viewbox.py` or equivalent root-viewBox crops to inspect candidate regions.
-   - Create crops for each corner, each side, each detail module, and each possible extension strip.
+   - Create crops for each corner, each side, each side center module, each detail module, and each possible extension strip.
 
 3. Classify geometry.
    - Treat corners, diagonal joints, nodes, circles, bright blocks, tick clusters, notches, and complex ornaments as fixed modules.
+   - Treat side center modules and side marker clusters as fixed unless the source proves they are plain straight linework.
    - Use extension/stretch only on clean straight source regions whose linework is stable along the stretch axis.
+   - If a side has a fixed center module, stretch only the plain strip between the corner and center module on each side of that module.
    - Reject tile repetition when the source is not visually periodic; prefer dynamic-length straight extension strips.
    - If a strip contains a diagonal transition or node, it is not an extension strip.
 
@@ -38,8 +41,9 @@ Before implementing, read `references/svg-frame-replication.md`.
 
 5. Compute responsive layout from geometry.
    - Let host CSS/content determine size.
+   - Make the sliced/free-size behavior the component default; do not hide correct behavior behind an auto-height or special escape attribute.
    - Scale decorative fixed modules conservatively from the stable reference dimension used by the project.
-   - Fill extra width/height only between fixed modules.
+   - Fill extra width/height only in measured clean gaps between fixed modules.
    - Compute default padding from the source content safe area; do not let padding grow unbounded with container height.
    - Keep component-level CSS variable overrides for padding when the project provides them.
 

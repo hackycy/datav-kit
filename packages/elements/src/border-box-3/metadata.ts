@@ -3,7 +3,7 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const borderBox3Metadata = {
   tagName: 'dv-border-box-3',
   className: 'BorderBox3Element',
-  description: 'Minimal futuristic blue border based on a cropped 1672 x 941 SVG reference.',
+  description: 'Minimal futuristic blue border rebuilt from fixed SVG detail slices and one-axis extension strips.',
   props: {
     color: {
       type: 'string',
@@ -37,12 +37,6 @@ export const borderBox3Metadata = {
       default: 1,
       attribute: 'glow-intensity',
       description: 'Multiplier for SVG blur filters that create the restrained neon glow.',
-    },
-    autoHeight: {
-      type: 'boolean',
-      default: false,
-      attribute: 'auto-height',
-      description: 'Lets slotted content define the box height instead of stretching to a parent height.',
     },
   },
   events: [

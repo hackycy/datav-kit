@@ -1,6 +1,6 @@
 # Border Box 3
 
-`dv-border-box-3` renders a restrained futuristic blue frame based on a cropped 1672 x 941 SVG reference canvas. It uses mirrored precision corners, top and bottom center modules, side ticks, small node lights, and configurable low-intensity glow filters.
+`dv-border-box-3` renders a restrained futuristic blue frame rebuilt from the 1672 x 941 SVG reference canvas. It keeps corners, center modules, side ticks, and node lights as fixed SVG slices, while clean edge strips extend on one axis to adapt freely to the host size.
 
 <BorderChartDemo
   border="dv-border-box-3"
@@ -25,7 +25,6 @@
 | `accent-color` | `string` | CSS variable fallback | Accent highlight color used by nodes and fine hairlines. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and accent colors. |
 | `glow-intensity` | `number` | `1` | Multiplier for SVG blur filters that create the restrained neon glow. |
-| `auto-height` | `boolean` | `false` | Lets slotted content define the box height instead of stretching to a parent height. |
 
 ## Events
 

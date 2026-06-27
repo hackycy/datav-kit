@@ -66,6 +66,7 @@ describe('@datav-kit/elements', () => {
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('autoHeight')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('viewBox')
@@ -307,8 +308,12 @@ describe('@datav-kit/elements', () => {
     document.body.append(element)
 
     await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+    emitResize(800, 450)
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
 
-    const svg = element.shadowRoot?.querySelector('svg')
+    const tiles = [...(element.shadowRoot?.querySelectorAll('.tile') ?? [])]
+    const extensions = [...(element.shadowRoot?.querySelectorAll('.extension') ?? [])]
+    const svgs = [...(element.shadowRoot?.querySelectorAll('svg') ?? [])]
     const paths = [...(element.shadowRoot?.querySelectorAll('path') ?? [])]
     const uses = element.shadowRoot?.querySelectorAll('use') ?? []
     const circles = element.shadowRoot?.querySelectorAll('circle') ?? []
@@ -318,13 +323,34 @@ describe('@datav-kit/elements', () => {
 
     expect(element).toHaveProperty('colors', '#57b9ff,#168cff,#9ae7ff')
     expect(element).toHaveProperty('glowIntensity', 1.25)
-    expect(svg?.getAttribute('width')).toBe('1672')
-    expect(svg?.getAttribute('height')).toBe('941')
-    expect(svg?.getAttribute('viewBox')).toBe('48 60 1576 820')
+    expect(tiles).toHaveLength(8)
+    expect(extensions).toHaveLength(8)
+    expect(svgs).toHaveLength(16)
+    expect(svgs.some(svg => svg.getAttribute('viewBox') === '48 60 1576 820')).toBe(false)
+    expect(tiles.some(tile => tile.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(false)
+    expect(extensions.every(extension => extension.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(true)
+    expect(svgs.map(svg => svg.getAttribute('viewBox'))).toEqual(expect.arrayContaining([
+      '48 60 300 204',
+      '585 88 502 32',
+      '1324 60 300 204',
+      '48 264 48 410',
+      '1576 264 48 410',
+      '48 674 300 206',
+      '585 821 502 38',
+      '1324 674 300 206',
+      '348 88 237 34',
+      '1087 88 237 34',
+      '348 821 237 38',
+      '1087 821 237 38',
+      '58 228 26 30',
+      '58 690 26 42',
+      '1588 228 26 30',
+      '1588 690 26 42',
+    ]))
     expect(paths.some(path => path.getAttribute('d')?.includes('L1604 162V779L1523 849'))).toBe(true)
     expect(uses.length).toBeGreaterThanOrEqual(8)
     expect(circles.length).toBeGreaterThan(10)
-    expect(blurs).toEqual(['2.75', '8.125', '1.5', '5.75', '15', '7.5'])
+    expect(blurs.slice(0, 6)).toEqual(['2.75', '8.125', '1.5', '5.75', '15', '7.5'])
     expect(animateMotion).toBeNull()
   })
 
@@ -350,7 +376,7 @@ describe('@datav-kit/elements', () => {
     expect(strokes).toContain('#112233')
     expect(strokes).toContain('#445566')
     expect(stopColors).toContain('#778899')
-    expect(blurs).toEqual(['1.1', '3.25', '0.6', '2.3', '6', '3'])
+    expect(blurs.slice(0, 6)).toEqual(['1.1', '3.25', '0.6', '2.3', '6', '3'])
   })
 
   it('renders border-box-4 with fixed details and source edge extensions by default', async () => {
@@ -538,7 +564,6 @@ describe('@datav-kit/elements', () => {
     const cases = [
       ['dv-border-box-1', '8px 8px 8px 8px'],
       ['dv-border-box-2', '14px 21.94px 14px 21.94px'],
-      ['dv-border-box-3', '16px 20px 16px 20px'],
     ] as const
 
     for (const [tagName, expectedPadding] of cases) {
@@ -553,6 +578,20 @@ describe('@datav-kit/elements', () => {
       expect(element).toHaveProperty('autoHeight', true)
       expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe(expectedPadding)
     }
+  })
+
+  it('uses content-driven height for border-box-3 by default', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(300, 180)
+    await element.updateComplete
+
+    expect(element).not.toHaveProperty('autoHeight')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('16px 20px 16px 20px')
   })
 
   it('renders border-box-5 as a tiled free border by default', async () => {

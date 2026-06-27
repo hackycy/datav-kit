@@ -120,6 +120,7 @@
   height: 100%;
   min-height: 0;
   box-sizing: border-box;
+  padding: 16px;
 }
 
 .datav-chart-header {
