@@ -42,15 +42,15 @@ const fixedSlices = {
   topRight: { x: 1358, y: 60, width: 266, height: 340 },
   leftSide: { x: 48, y: 150, width: 120, height: 585 },
   rightMiddle: { x: 1500, y: 400, width: 124, height: 335 },
-  bottomLeft: { x: 48, y: 735, width: 370, height: 145 },
-  bottomDetail: { x: 780, y: 815, width: 460, height: 65 },
-  bottomRight: { x: 1320, y: 735, width: 304, height: 145 },
+  bottomLeft: { x: 48, y: 735, width: 370, height: 130 },
+  bottomDetail: { x: 780, y: 815, width: 460, height: 50 },
+  bottomRight: { x: 1320, y: 735, width: 304, height: 130 },
 } satisfies Record<string, BorderBox4Rect>
 const extensionSlices = {
   topLeading: { x: 514, y: 72, width: 232, height: 44 },
   topTrailing: { x: 1106, y: 72, width: 252, height: 48 },
-  bottomLeading: { x: 418, y: 844, width: 362, height: 36 },
-  bottomTrailing: { x: 1240, y: 844, width: 80, height: 36 },
+  bottomLeading: { x: 418, y: 844, width: 362, height: 21 },
+  bottomTrailing: { x: 1240, y: 844, width: 80, height: 21 },
   leftLower: { x: 70, y: 651, width: 32, height: 84 },
   rightLower: { x: 1582, y: 600, width: 42, height: 60 },
 } satisfies Record<string, BorderBox4Rect>
@@ -103,6 +103,8 @@ export class BorderBox4Element extends DatavElement {
       z-index: 1;
       box-sizing: border-box;
       width: 100%;
+      height: 100%;
+      min-height: 0;
       padding: var(--dv-border-box-4-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
     }
 
@@ -608,21 +610,23 @@ export class BorderBox4Element extends DatavElement {
 
   private createContentPadding(): string {
     const hostWidth = Math.max(this.size.width, 0)
-    const scale = hostWidth > 0 ? hostWidth / frameViewBox.width : 1
+    const hostHeight = Math.max(this.size.height, 0)
+    const inlineScale = hostWidth > 0 ? hostWidth / frameViewBox.width : 1
+    const blockScale = hostHeight > 0 ? hostHeight / frameViewBox.height : 1
     const frameRight = frameViewBox.x + frameViewBox.width
     const frameBottom = frameViewBox.y + frameViewBox.height
     const contentRight = contentRect.x + contentRect.width
     const contentBottom = contentRect.y + contentRect.height
-    const top = (contentRect.y - frameViewBox.y) * scale
-    const right = (frameRight - contentRight) * scale
-    const bottom = (frameBottom - contentBottom) * scale
-    const left = (contentRect.x - frameViewBox.x) * scale
+    const top = (contentRect.y - frameViewBox.y) * blockScale
+    const right = (frameRight - contentRight) * inlineScale
+    const bottom = (frameBottom - contentBottom) * blockScale
+    const left = (contentRect.x - frameViewBox.x) * inlineScale
 
     return [
-      this.formatPaddingValue(Math.max(top, 16)),
-      this.formatPaddingValue(Math.max(right, 20)),
-      this.formatPaddingValue(Math.max(bottom, 16)),
-      this.formatPaddingValue(Math.max(left, 20)),
+      this.formatPaddingValue(this.clampPadding(top, 4)),
+      this.formatPaddingValue(this.clampPadding(right, 4)),
+      this.formatPaddingValue(this.clampPadding(bottom, 4)),
+      this.formatPaddingValue(this.clampPadding(left, 4)),
     ].join(' ')
   }
 
@@ -648,6 +652,10 @@ export class BorderBox4Element extends DatavElement {
 
   private round(value: number): number {
     return Number(value.toFixed(2))
+  }
+
+  private clampPadding(value: number, fallback: number): number {
+    return Math.max(value, fallback)
   }
 
   private formatPaddingValue(value: number): string {

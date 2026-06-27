@@ -417,13 +417,13 @@ describe('@datav-kit/elements', () => {
       '1358 60 266 340',
       '48 150 120 585',
       '1500 400 124 335',
-      '48 735 370 145',
-      '780 815 460 65',
-      '1320 735 304 145',
+      '48 735 370 130',
+      '780 815 460 50',
+      '1320 735 304 130',
       '514 72 232 44',
       '1106 72 252 48',
-      '418 844 362 36',
-      '1240 844 80 36',
+      '418 844 362 21',
+      '1240 844 80 21',
       '70 651 32 84',
       '1582 600 42 60',
     ]))
@@ -431,7 +431,7 @@ describe('@datav-kit/elements', () => {
     expect(tiles.some(tile => tile.getAttribute('style')?.includes('bottom: 0'))).toBe(true)
     expect(element.shadowRoot?.querySelector('#cyan-dynamic-line-core')).toBeNull()
     expect(extensions.some(extension => extension.getAttribute('style')?.includes('width: 117.75999999999999px'))).toBe(true)
-    expect(extensions.some(extension => extension.getAttribute('style')?.includes('height: 33.75999999999999px'))).toBe(true)
+    expect(extensions.some(extension => extension.getAttribute('style')?.includes('height: 10.66px'))).toBe(true)
     expect(paths.slice(4, 8).map(path => path.id)).toEqual([
       'cyan-outer-glow',
       'cyan-soft-glow',
@@ -442,7 +442,7 @@ describe('@datav-kit/elements', () => {
     expect(paths.some(path => path.getAttribute('d')?.includes('M809,868L839,868L839,867L810,867'))).toBe(true)
     expect(blurs.slice(0, 3)).toEqual(['5.25', '2.625', '1.0625'])
     expect(animateMotion).toBeNull()
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('37.56px 32.49px 37.56px 32.49px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('40.61px 32.49px 40.61px 32.49px')
   })
 
   it('resolves border-box-4 colors from CSS variables and applies glow intensity', async () => {
@@ -545,7 +545,7 @@ describe('@datav-kit/elements', () => {
       ['dv-border-box-1', '8px 8px 8px 8px'],
       ['dv-border-box-2', '21.72px 21.94px 21.72px 21.94px'],
       ['dv-border-box-3', '16px 20px 16px 20px'],
-      ['dv-border-box-4', '16px 20px 16px 20px'],
+      ['dv-border-box-4', '16.24px 12.18px 16.24px 12.18px'],
       ['dv-border-box-5', '32px 22px 16px 22px'],
     ] as const
 
@@ -559,6 +559,19 @@ describe('@datav-kit/elements', () => {
 
       expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe(expectedPadding)
     }
+  })
+
+  it('maps border-box-4 block padding from host height without masking safe area', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-4') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(960, 430)
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('38.8px 38.98px 38.8px 38.98px')
   })
 
   it('supports content-driven height across border box variants', async () => {
