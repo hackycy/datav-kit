@@ -364,9 +364,9 @@ describe('@datav-kit/elements', () => {
       '1324 60 300 204',
       '48 264 48 410',
       '1576 264 48 410',
-      '48 674 300 195',
+      '48 674 300 206',
       '585 821 502 38',
-      '1324 674 300 195',
+      '1324 674 300 206',
       '348 88 237 34',
       '1087 88 237 34',
       '348 821 237 38',
@@ -381,6 +381,29 @@ describe('@datav-kit/elements', () => {
     expect(circles.length).toBeGreaterThan(10)
     expect(blurs.slice(0, 6)).toEqual(['2.75', '8.125', '1.5', '5.75', '15', '7.5'])
     expect(animateMotion).toBeNull()
+  })
+
+  it('aligns border-box-3 lower corner slices with bottom edge extensions', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(1576, 820)
+    await element.updateComplete
+
+    const bottomLeft = element.shadowRoot?.querySelector<HTMLElement>('[data-slice="bottom-left"]')
+    const bottomLeading = element.shadowRoot?.querySelector<HTMLElement>('[data-slice="bottom-leading"]')
+    const bottomTrailing = element.shadowRoot?.querySelector<HTMLElement>('[data-slice="bottom-trailing"]')
+    const bottomRight = element.shadowRoot?.querySelector<HTMLElement>('[data-slice="bottom-right"]')
+
+    expect(bottomLeft?.querySelector('svg')?.getAttribute('viewBox')).toBe('48 674 300 206')
+    expect(bottomRight?.querySelector('svg')?.getAttribute('viewBox')).toBe('1324 674 300 206')
+    expect(bottomLeft?.getAttribute('style')).toContain('height: 206px')
+    expect(bottomRight?.getAttribute('style')).toContain('height: 206px')
+    expect(bottomLeading?.getAttribute('style')).toContain('bottom: 21px')
+    expect(bottomTrailing?.getAttribute('style')).toContain('bottom: 21px')
   })
 
   it('resolves border-box-3 colors from CSS variables and applies glow intensity', async () => {

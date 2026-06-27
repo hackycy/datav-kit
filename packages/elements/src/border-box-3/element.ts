@@ -27,9 +27,9 @@ const fixedSlices = {
   topRight: { x: 1324, y: 60, width: 300, height: 204 },
   leftDetail: { x: 48, y: 264, width: 48, height: 410 },
   rightDetail: { x: 1576, y: 264, width: 48, height: 410 },
-  bottomLeft: { x: 48, y: 674, width: 300, height: 195 },
+  bottomLeft: { x: 48, y: 674, width: 300, height: 206 },
   bottomCenter: { x: 585, y: 821, width: 502, height: 38 },
-  bottomRight: { x: 1324, y: 674, width: 300, height: 195 },
+  bottomRight: { x: 1324, y: 674, width: 300, height: 206 },
 } satisfies Record<string, typeof contentViewBox>
 const extensionSlices = {
   topLeading: { x: 348, y: 88, width: 237, height: 34 },
