@@ -2,14 +2,13 @@
 
 `dv-border-box-1` is the first numbered border component. It renders a rectangular SVG border with a moving highlight around the edge.
 
-<div class="datav-demo">
-  <dv-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd" duration="3">
-    <div class="datav-panel__content">
-      <p class="datav-panel__title">Border Box 1</p>
-      <p class="datav-panel__meta">numbered SVG border with animated edge highlight</p>
-    </div>
-  </dv-border-box-1>
-</div>
+<BorderChartDemo
+  border="dv-border-box-1"
+  colors="#235fa7,#4fd2dd"
+  accent="#4fd2dd"
+  title="Border Box 1"
+  subtitle="animated edge highlight around a live telemetry panel"
+/>
 
 ```html
 <dv-border-box-1 colors="#235fa7,#4fd2dd" duration="3">

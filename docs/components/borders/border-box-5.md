@@ -2,14 +2,13 @@
 
 `dv-border-box-5` renders a layered electric-blue HUD frame adapted from the provided 1672 x 941 vector SVG material. It preserves the five visible frame layers as inline SVG paths while leaving the background to the host application.
 
-<div class="datav-demo datav-demo--wide">
-  <dv-border-box-5 class="datav-panel datav-panel--auto" colors="#24d9ff,#008cff,#bffcff" glow-intensity="1">
-    <div class="datav-panel__content datav-panel__content--auto">
-      <p class="datav-panel__title">Border Box 5</p>
-      <p class="datav-panel__meta">layered electric-blue HUD frame from vector SVG material</p>
-    </div>
-  </dv-border-box-5>
-</div>
+<BorderChartDemo
+  border="dv-border-box-5"
+  colors="#24d9ff,#008cff,#bffcff"
+  accent="#24d9ff"
+  title="Border Box 5"
+  subtitle="layered electric-blue HUD frame with responsive chart content"
+/>
 
 ```html
 <dv-border-box-5 colors="#24d9ff,#008cff,#bffcff" glow-intensity="1">

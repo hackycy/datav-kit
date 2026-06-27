@@ -1,15 +1,14 @@
 # Border Box 4
 
-`dv-border-box-4` renders a dense neon HUD frame adapted from the provided 1672 x 941 vector SVG material. It keeps the original frame language as inline SVG linework while leaving the background to the host application.
+`dv-border-box-4` renders a dense neon HUD frame adapted from the provided 1672 x 941 vector SVG material. It keeps the original ornate corners and detail modules as inline SVG linework, then extends the edge sections from source-clipped straight strips so the border follows normal CSS layout sizes without stretching the whole SVG.
 
-<div class="datav-demo datav-demo--wide">
-  <dv-border-box-4 class="datav-panel datav-panel--wide" colors="#36d9ff,#1ecfff,#c9fbff" glow-intensity="1">
-    <div class="datav-panel__content">
-      <p class="datav-panel__title">Border Box 4</p>
-      <p class="datav-panel__meta">dense neon HUD frame from vector SVG material</p>
-    </div>
-  </dv-border-box-4>
-</div>
+<BorderChartDemo
+  border="dv-border-box-4"
+  colors="#36d9ff,#1ecfff,#c9fbff"
+  accent="#36d9ff"
+  title="Border Box 4"
+  subtitle="source-clipped HUD frame adapting around ECharts content"
+/>
 
 ```html
 <dv-border-box-4 colors="#36d9ff,#1ecfff,#c9fbff" glow-intensity="1">
@@ -26,7 +25,6 @@
 | `accent-color` | `string` | CSS variable fallback | Hot highlight color used by nodes, strokes, and HUD ticks. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and accent colors. |
 | `glow-intensity` | `number` | `1` | Multiplier for SVG blur filters that create the layered neon glow. |
-| `auto-height` | `boolean` | `false` | Lets slotted content define the box height instead of stretching to a parent height. |
 
 ## Events
 

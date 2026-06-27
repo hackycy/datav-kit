@@ -2,14 +2,13 @@
 
 `dv-border-box-3` renders a restrained futuristic blue frame based on a cropped 1672 x 941 SVG reference canvas. It uses mirrored precision corners, top and bottom center modules, side ticks, small node lights, and configurable low-intensity glow filters.
 
-<div class="datav-demo datav-demo--wide">
-  <dv-border-box-3 class="datav-panel datav-panel--wide" colors="#57b9ff,#168cff,#9ae7ff" glow-intensity="1">
-    <div class="datav-panel__content">
-      <p class="datav-panel__title">Border Box 3</p>
-      <p class="datav-panel__meta">minimal SVG futuristic frame with fine blue glints</p>
-    </div>
-  </dv-border-box-3>
-</div>
+<BorderChartDemo
+  border="dv-border-box-3"
+  colors="#57b9ff,#168cff,#9ae7ff"
+  accent="#57b9ff"
+  title="Border Box 3"
+  subtitle="restrained futuristic frame around dense dashboard data"
+/>
 
 ```html
 <dv-border-box-3 colors="#57b9ff,#168cff,#9ae7ff" glow-intensity="1">

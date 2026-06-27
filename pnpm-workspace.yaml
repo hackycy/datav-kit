@@ -20,6 +20,7 @@ catalogs:
     typescript: ^5.9.3
     vite: ^7.3.2
   docs:
+    echarts: ^6.1.0
     vitepress: 2.0.0-alpha.17
     vue: ^3.5.38
   inlined:

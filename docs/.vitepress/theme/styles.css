@@ -88,6 +88,132 @@
   font-size: 14px;
 }
 
+.datav-chart-demo {
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+  min-height: calc(var(--datav-chart-height) + 48px);
+  padding: 24px;
+  margin: 24px 0;
+  border: 1px solid rgba(24, 240, 255, 0.2);
+  background:
+    linear-gradient(rgba(34, 211, 238, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.06) 1px, transparent 1px),
+    #050813;
+  background-size: 32px 32px;
+}
+
+.datav-chart-shell {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  height: var(--datav-chart-height);
+  color: #e9fbff;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.datav-chart-content {
+  display: grid;
+  grid-template-rows: auto auto minmax(180px, 1fr);
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.datav-chart-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.datav-chart-header h3 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.datav-chart-header p {
+  margin: 6px 0 0;
+  color: rgba(233, 251, 255, 0.62);
+  font-size: 12px;
+}
+
+.datav-chart-status {
+  flex: 0 0 auto;
+  padding: 3px 8px;
+  border: 1px solid rgba(54, 217, 255, 0.48);
+  color: #c9fbff;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  background: rgba(54, 217, 255, 0.1);
+}
+
+.datav-chart-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.datav-chart-metric {
+  min-width: 0;
+  padding: 8px 12px;
+  border: 1px solid rgba(94, 234, 255, 0.18);
+  background: rgba(2, 11, 24, 0.56);
+}
+
+.datav-chart-metric span,
+.datav-chart-metric em {
+  display: block;
+  color: rgba(233, 251, 255, 0.62);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.datav-chart-metric strong {
+  display: block;
+  margin: 3px 0;
+  color: #f4fdff;
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+.datav-chart {
+  min-height: 0;
+  width: 100%;
+  height: min(220px, 100%);
+}
+
+@media (max-width: 640px) {
+  .datav-chart-demo {
+    padding: 14px;
+    min-height: 708px;
+  }
+
+  .datav-chart-shell {
+    height: 680px;
+  }
+
+  .datav-chart-header {
+    display: grid;
+  }
+
+  .datav-chart-status {
+    justify-self: start;
+  }
+
+  .datav-chart-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .datav-chart-content {
+    grid-template-rows: auto auto minmax(180px, 1fr);
+  }
+}
+
 .theme-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

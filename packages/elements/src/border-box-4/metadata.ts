@@ -3,7 +3,7 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const borderBox4Metadata = {
   tagName: 'dv-border-box-4',
   className: 'BorderBox4Element',
-  description: 'Dense neon HUD frame adapted from the provided 1672 x 941 vector SVG material.',
+  description: 'Dense neon HUD frame adapted from the provided 1672 x 941 vector SVG material, rendered as fixed details plus source-clipped edge extensions.',
   props: {
     color: {
       type: 'string',
@@ -37,12 +37,6 @@ export const borderBox4Metadata = {
       default: 1,
       attribute: 'glow-intensity',
       description: 'Multiplier for SVG blur filters that create the layered neon glow.',
-    },
-    autoHeight: {
-      type: 'boolean',
-      default: false,
-      attribute: 'auto-height',
-      description: 'Lets slotted content define the box height instead of stretching to a parent height.',
     },
   },
   events: [

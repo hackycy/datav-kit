@@ -2,14 +2,13 @@
 
 `dv-border-box-2` renders a layered neon cyber frame based on a 1600 x 900 SVG reference canvas. It uses chamfered corners, top and bottom energy bars, side tick marks, circular nodes, and configurable glow filters.
 
-<div class="datav-demo datav-demo--wide">
-  <dv-border-box-2 class="datav-panel datav-panel--wide" colors="#0af2ff,#168cff,#7c4dff" glow-intensity="1">
-    <div class="datav-panel__content">
-      <p class="datav-panel__title">Border Box 2</p>
-      <p class="datav-panel__meta">layered SVG cyber frame with neon glow details</p>
-    </div>
-  </dv-border-box-2>
-</div>
+<BorderChartDemo
+  border="dv-border-box-2"
+  colors="#0af2ff,#168cff,#7c4dff"
+  accent="#0af2ff"
+  title="Border Box 2"
+  subtitle="layered cyber frame with chart content and neon detail nodes"
+/>
 
 ```html
 <dv-border-box-2 colors="#0af2ff,#168cff,#7c4dff" glow-intensity="1">
