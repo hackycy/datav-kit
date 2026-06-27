@@ -41,18 +41,19 @@ const fixedSlices = {
   topDetail: { x: 746, y: 74, width: 360, height: 72 },
   topRight: { x: 1358, y: 60, width: 266, height: 340 },
   leftSide: { x: 48, y: 150, width: 120, height: 585 },
-  rightMiddle: { x: 1500, y: 400, width: 124, height: 335 },
-  bottomLeft: { x: 48, y: 735, width: 370, height: 130 },
-  bottomDetail: { x: 780, y: 815, width: 460, height: 50 },
-  bottomRight: { x: 1320, y: 735, width: 304, height: 130 },
+  rightMiddle: { x: 1500, y: 392, width: 124, height: 208 },
+  bottomLeft: { x: 48, y: 735, width: 370, height: 145 },
+  bottomDetail: { x: 676, y: 845, width: 547, height: 35 },
+  bottomRight: { x: 1266, y: 735, width: 358, height: 145 },
 } satisfies Record<string, BorderBox4Rect>
 const extensionSlices = {
-  topLeading: { x: 514, y: 72, width: 232, height: 44 },
+  topLeading: { x: 509, y: 72, width: 237, height: 44 },
   topTrailing: { x: 1106, y: 72, width: 252, height: 48 },
-  bottomLeading: { x: 418, y: 844, width: 362, height: 21 },
-  bottomTrailing: { x: 1240, y: 844, width: 80, height: 21 },
+  bottomLeading: { x: 418, y: 844, width: 258, height: 36 },
+  bottomTrailing: { x: 1223, y: 844, width: 43, height: 36 },
   leftLower: { x: 70, y: 651, width: 32, height: 84 },
-  rightLower: { x: 1582, y: 600, width: 42, height: 60 },
+  rightLower: { x: 1582, y: 600, width: 42, height: 135 },
+  rightLine: { x: 1592, y: 186, width: 8, height: 549 },
 } satisfies Record<string, BorderBox4Rect>
 const defaultSize = {
   width: 0,
@@ -171,6 +172,7 @@ export class BorderBox4Element extends DatavElement {
     return html`
       <div part="frame" class="frame frame--flex">
         ${this.renderExtensionStrips(primary, secondary, accent, glowIntensity, metrics)}
+        ${this.renderRightEdgeReset(primary, secondary, accent, glowIntensity, metrics)}
         ${this.renderFixedTile({
           name: 'top-left',
           rect: fixedSlices.topLeft,
@@ -255,6 +257,26 @@ export class BorderBox4Element extends DatavElement {
     `
   }
 
+  private renderRightEdgeReset(
+    primary: string,
+    secondary: string,
+    accent: string,
+    glowIntensity: number,
+    metrics: ReturnType<BorderBox4Element['createSliceMetrics']>,
+  ): unknown {
+    return this.renderExtensionStrip({
+      name: 'right-edge-reset',
+      rect: extensionSlices.rightLine,
+      style: `right: ${metrics.rightLineRight}px; top: ${metrics.rightLineTop}px; width: ${metrics.rightLineWidth}px; height: ${metrics.rightLineHeight}px`,
+      width: metrics.rightLineWidth,
+      height: metrics.rightLineHeight,
+      primary,
+      secondary,
+      accent,
+      glowIntensity,
+    })
+  }
+
   private renderExtensionStrips(
     primary: string,
     secondary: string,
@@ -266,7 +288,7 @@ export class BorderBox4Element extends DatavElement {
       ${this.renderExtensionStrip({
         name: 'top-leading',
         rect: extensionSlices.topLeading,
-        style: `left: ${metrics.topLeftWidth}px; top: ${metrics.topLeadingTop}px; width: ${metrics.topLeadingWidth}px; height: ${metrics.topLeadingHeight}px`,
+        style: `left: ${metrics.topLeadingLeft}px; top: ${metrics.topLeadingTop}px; width: ${metrics.topLeadingWidth}px; height: ${metrics.topLeadingHeight}px`,
         width: metrics.topLeadingWidth,
         height: metrics.topLeadingHeight,
         primary,
@@ -513,6 +535,7 @@ export class BorderBox4Element extends DatavElement {
     bottomDetailLeft: number
     bottomRightWidth: number
     topLeadingTop: number
+    topLeadingLeft: number
     topLeadingWidth: number
     topLeadingHeight: number
     topTrailingLeft: number
@@ -531,6 +554,10 @@ export class BorderBox4Element extends DatavElement {
     rightLowerTop: number
     rightLowerWidth: number
     rightLowerHeight: number
+    rightLineRight: number
+    rightLineTop: number
+    rightLineWidth: number
+    rightLineHeight: number
   } {
     const scale = this.size.width > 0 ? this.size.width / frameViewBox.width : 1
     const hostWidth = Math.max(this.size.width, 0)
@@ -542,7 +569,7 @@ export class BorderBox4Element extends DatavElement {
     const topLeftWidth = this.scaleValue(fixedSlices.topLeft.width, scale)
     const topRightWidth = this.scaleValue(fixedSlices.topRight.width, scale)
     const leftSourceHeight = this.scaleValue(fixedSlices.leftSide.height, scale)
-    const rightMiddleHeight = this.scaleValue(fixedSlices.rightMiddle.height, scale)
+    const rightMiddleSourceHeight = this.scaleValue(fixedSlices.rightMiddle.height, scale)
     const bottomDetailWidth = this.scaleValue(fixedSlices.bottomDetail.width, scale)
     const bottomLeftWidth = this.scaleValue(fixedSlices.bottomLeft.width, scale)
     const bottomRightWidth = this.scaleValue(fixedSlices.bottomRight.width, scale)
@@ -560,9 +587,14 @@ export class BorderBox4Element extends DatavElement {
     const bottomTop = Math.max(hostHeight - bottomHeight, 0)
     const topTrailingLeft = topDetailLeft + topDetailWidth
     const bottomTrailingLeft = bottomDetailLeft + bottomDetailWidth
-    const leftLowerTop = leftSideTop + leftSourceHeight
     const rightMiddleTop = this.sourceY(fixedSlices.rightMiddle.y, scale)
+    const leftSideHeight = Math.min(leftSourceHeight, Math.max(bottomTop - leftSideTop, 0))
+    const rightMiddleHeight = Math.min(rightMiddleSourceHeight, Math.max(bottomTop - rightMiddleTop, 0))
+    const leftLowerTop = leftSideTop + leftSideHeight
     const rightLowerTop = rightMiddleTop + rightMiddleHeight
+    const topLeadingLeft = this.sourceX(extensionSlices.topLeading.x, scale)
+    const rightLineTop = this.sourceY(186, scale)
+    const rightLineWidth = this.scaleValue(extensionSlices.rightLine.width, scale)
 
     return {
       scale,
@@ -577,7 +609,7 @@ export class BorderBox4Element extends DatavElement {
       topRightWidth,
       leftSideWidth: this.scaleValue(fixedSlices.leftSide.width, scale),
       leftSideTop,
-      leftSideHeight: Math.min(leftSourceHeight, Math.max(hostHeight - topHeight - bottomHeight, 0)),
+      leftSideHeight,
       rightMiddleTop,
       rightMiddleWidth: this.scaleValue(fixedSlices.rightMiddle.width, scale),
       rightMiddleHeight,
@@ -587,7 +619,8 @@ export class BorderBox4Element extends DatavElement {
       bottomDetailLeft,
       bottomRightWidth,
       topLeadingTop: this.sourceY(extensionSlices.topLeading.y, scale),
-      topLeadingWidth: Math.max(topDetailLeft - topLeftWidth, 0),
+      topLeadingLeft,
+      topLeadingWidth: Math.max(topDetailLeft - topLeadingLeft, 0),
       topLeadingHeight: this.scaleValue(extensionSlices.topLeading.height, scale),
       topTrailingLeft,
       topTrailingTop: this.sourceY(extensionSlices.topTrailing.y, scale),
@@ -605,6 +638,10 @@ export class BorderBox4Element extends DatavElement {
       rightLowerTop,
       rightLowerWidth: this.scaleValue(extensionSlices.rightLower.width, scale),
       rightLowerHeight: Math.max(bottomTop - rightLowerTop, 0),
+      rightLineRight: this.sourceRight(extensionSlices.rightLine.x + extensionSlices.rightLine.width, scale),
+      rightLineTop,
+      rightLineWidth,
+      rightLineHeight: Math.max(bottomTop - rightLineTop, 0),
     }
   }
 

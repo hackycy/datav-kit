@@ -458,8 +458,8 @@ describe('@datav-kit/elements', () => {
     expect(element).toHaveProperty('glowIntensity', 1.25)
 
     expect(tiles).toHaveLength(8)
-    expect(extensions).toHaveLength(6)
-    expect(svgs).toHaveLength(14)
+    expect(extensions).toHaveLength(7)
+    expect(svgs).toHaveLength(15)
     expect(svgs.some(svg => svg.getAttribute('viewBox') === '48 60 1576 820')).toBe(false)
     expect(tiles.some(tile => tile.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(false)
     expect(extensions.every(extension => extension.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(true)
@@ -468,22 +468,30 @@ describe('@datav-kit/elements', () => {
       '746 74 360 72',
       '1358 60 266 340',
       '48 150 120 585',
-      '1500 400 124 335',
-      '48 735 370 130',
-      '780 815 460 50',
-      '1320 735 304 130',
-      '514 72 232 44',
+      '1500 392 124 208',
+      '48 735 370 145',
+      '676 845 547 35',
+      '1266 735 358 145',
+      '509 72 237 44',
       '1106 72 252 48',
-      '418 844 362 21',
-      '1240 844 80 21',
+      '418 844 258 36',
+      '1223 844 43 36',
       '70 651 32 84',
-      '1582 600 42 60',
+      '1582 600 42 135',
+      '1592 186 8 549',
+    ]))
+    expect(svgs.some(svg => svg.getAttribute('viewBox')?.endsWith('145'))).toBe(true)
+    expect(svgs.map(svg => svg.getAttribute('viewBox'))).toEqual(expect.arrayContaining([
+      '1500 392 124 208',
+      '1582 600 42 135',
+      '1266 735 358 145',
     ]))
     expect(tiles.some(tile => tile.getAttribute('style')?.includes('right: 0'))).toBe(true)
     expect(tiles.some(tile => tile.getAttribute('style')?.includes('bottom: 0'))).toBe(true)
+    expect(element.shadowRoot?.querySelector('[data-extension="right-edge-reset"]')?.getAttribute('style')).toContain('right: 12.18px')
     expect(element.shadowRoot?.querySelector('#cyan-dynamic-line-core')).toBeNull()
-    expect(extensions.some(extension => extension.getAttribute('style')?.includes('width: 117.75999999999999px'))).toBe(true)
-    expect(extensions.some(extension => extension.getAttribute('style')?.includes('height: 10.66px'))).toBe(true)
+    expect(element.shadowRoot?.querySelector('[data-extension="top-leading"]')?.getAttribute('style')).toContain('left: 234.01px')
+    expect(extensions.some(extension => extension.getAttribute('style')?.includes('height: 18.27px'))).toBe(true)
     expect(paths.slice(4, 8).map(path => path.id)).toEqual([
       'cyan-outer-glow',
       'cyan-soft-glow',
