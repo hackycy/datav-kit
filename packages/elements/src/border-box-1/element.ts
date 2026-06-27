@@ -28,6 +28,10 @@ export class BorderBox1Element extends DatavElement {
       color: var(--dv-color-primary, #235fa7);
     }
 
+    :host([auto-height]) {
+      height: auto;
+    }
+
     .frame {
       position: absolute;
       inset: 0;
@@ -48,6 +52,10 @@ export class BorderBox1Element extends DatavElement {
       width: 100%;
       height: 100%;
       padding: var(--dv-border-box-1-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
+    }
+
+    :host([auto-height]) .content {
+      height: auto;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -78,6 +86,9 @@ export class BorderBox1Element extends DatavElement {
   @property({ type: Boolean })
   paused = false
 
+  @property({ type: Boolean, attribute: 'auto-height', reflect: true })
+  autoHeight = false
+
   @state()
   private size = defaultSize
 
@@ -105,7 +116,7 @@ export class BorderBox1Element extends DatavElement {
     const showAnimation = this.animated && !this.paused && this.size.width > 0 && this.size.height > 0
     const contentPadding = createBorderBoxContentPadding({
       hostWidth: width,
-      hostHeight: height,
+      hostHeight: this.autoHeight ? 0 : height,
       viewBox: {
         x: 0,
         y: 0,

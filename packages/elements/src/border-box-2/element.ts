@@ -62,6 +62,10 @@ export class BorderBox2Element extends DatavElement {
       color: var(--dv-color-primary, #0af2ff);
     }
 
+    :host([auto-height]) {
+      height: auto;
+    }
+
     .frame {
       position: absolute;
       inset: 0;
@@ -84,6 +88,10 @@ export class BorderBox2Element extends DatavElement {
       padding: var(--dv-border-box-2-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
     }
 
+    :host([auto-height]) .content {
+      height: auto;
+    }
+
     .outer-line {
       opacity: var(--dv-border-box-2-glow-opacity, 1);
     }
@@ -103,6 +111,9 @@ export class BorderBox2Element extends DatavElement {
 
   @property({ type: Number, attribute: 'glow-intensity' })
   glowIntensity = 1
+
+  @property({ type: Boolean, attribute: 'auto-height', reflect: true })
+  autoHeight = false
 
   @state()
   private size = defaultSize
@@ -131,7 +142,7 @@ export class BorderBox2Element extends DatavElement {
     const glowIntensity = Math.max(resolveNumberValue(this.glowIntensity, 1), 0)
     const contentPadding = createBorderBoxContentPadding({
       hostWidth: this.size.width,
-      hostHeight: this.size.height,
+      hostHeight: this.autoHeight ? 0 : this.size.height,
       viewBox: contentViewBox,
       contentRect,
       minBlock: 14,

@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { CountToElement, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineCountTo, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineCountTo, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -51,14 +51,15 @@ describe('@datav-kit/elements', () => {
       'dv-border-box-2',
       'dv-border-box-3',
       'dv-border-box-4',
+      'dv-border-box-5',
       'dv-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -68,6 +69,9 @@ describe('@datav-kit/elements', () => {
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-5')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-5')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-5')?.props).not.toHaveProperty('viewBox')
   })
 
   it('supports single-element registration helpers', () => {
@@ -76,6 +80,7 @@ describe('@datav-kit/elements', () => {
     expect(defineBorderBox2()).toBe(false)
     expect(defineBorderBox3()).toBe(false)
     expect(defineBorderBox4()).toBe(false)
+    expect(defineBorderBox5()).toBe(false)
     expect(defineCountTo()).toBe(false)
   })
 
@@ -406,6 +411,71 @@ describe('@datav-kit/elements', () => {
     expect(blurs).toEqual(['2.1', '1.05', '0.425'])
   })
 
+  it('maps border-box-5 public attributes and keeps SVG reference geometry internal', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-5')
+    element.setAttribute('colors', '#24d9ff,#008cff,#bffcff')
+    element.setAttribute('width', '800')
+    element.setAttribute('height', '450')
+    element.setAttribute('view-box', '0 0 800 450')
+    element.setAttribute('glow-intensity', '1.25')
+    document.body.append(element)
+
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+    emitResize(800, 450)
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+
+    const svgs = [...(element.shadowRoot?.querySelectorAll('svg') ?? [])]
+    const paths = [...(element.shadowRoot?.querySelectorAll('path') ?? [])]
+    const blurs = [...(element.shadowRoot?.querySelectorAll('feGaussianBlur') ?? [])]
+      .map(node => node.getAttribute('stdDeviation'))
+    const animateMotion = element.shadowRoot?.querySelector('animateMotion')
+
+    expect(element).toHaveProperty('colors', '#24d9ff,#008cff,#bffcff')
+    expect(element).toHaveProperty('glowIntensity', 1.25)
+    expect(svgs.length).toBeGreaterThan(3)
+    expect(svgs.map(svg => svg.getAttribute('viewBox'))).toEqual(expect.arrayContaining([
+      '112 56 148 341',
+      '260 56 1152 341',
+      '1412 56 148 341',
+    ]))
+    expect(paths.slice(0, 5).map(path => path.id)).toEqual([
+      'blue-outer-aura',
+      'blue-soft-halo',
+      'blue-electric-body',
+      'cyan-stroke',
+      'white-hot-core',
+    ])
+    expect(paths.some(path => path.getAttribute('d')?.includes('M1123 819L1119 819L1109 828L1114 828'))).toBe(true)
+    expect(paths.some(path => path.getAttribute('d')?.includes('M1110 837L953 837L952 836L923 836'))).toBe(true)
+    expect(blurs.slice(0, 4)).toEqual(['9.375', '4.75', '1.75', '0.4375'])
+    expect(animateMotion).toBeNull()
+  })
+
+  it('resolves border-box-5 colors from CSS variables and applies glow intensity', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dv-color-primary', '#1a2a3a')
+    element.style.setProperty('--dv-color-secondary', '#4a5a6a')
+    element.style.setProperty('--dv-color-accent', '#7a8a9a')
+    element.setAttribute('glow-intensity', '0.5')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const fills = [...(element.shadowRoot?.querySelectorAll('path') ?? [])]
+      .map(node => node.getAttribute('fill'))
+    const blurs = [...(element.shadowRoot?.querySelectorAll('feGaussianBlur') ?? [])]
+      .map(node => node.getAttribute('stdDeviation'))
+
+    expect(fills).toContain('#1a2a3a')
+    expect(fills).toContain('#4a5a6a')
+    expect(fills).toContain('#7a8a9a')
+    expect(blurs.slice(0, 4)).toEqual(['3.75', '1.9', '0.7', '0.175'])
+  })
+
   it('uses responsive content padding across border box variants', async () => {
     register()
 
@@ -414,6 +484,7 @@ describe('@datav-kit/elements', () => {
       ['dv-border-box-2', '21.72px 21.94px 21.72px 21.94px'],
       ['dv-border-box-3', '16px 20px 16px 20px'],
       ['dv-border-box-4', '16.24px 20px 16.24px 20px'],
+      ['dv-border-box-5', '32px 22px 32px 22px'],
     ] as const
 
     for (const [tagName, expectedPadding] of cases) {
@@ -426,6 +497,49 @@ describe('@datav-kit/elements', () => {
 
       expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe(expectedPadding)
     }
+  })
+
+  it('supports content-driven height across border box variants', async () => {
+    register()
+
+    const cases = [
+      ['dv-border-box-1', '8px 8px 8px 8px'],
+      ['dv-border-box-2', '14px 21.94px 14px 21.94px'],
+      ['dv-border-box-3', '16px 20px 16px 20px'],
+      ['dv-border-box-4', '16px 20px 16px 20px'],
+    ] as const
+
+    for (const [tagName, expectedPadding] of cases) {
+      const element = document.createElement(tagName) as HTMLElement & { updateComplete: Promise<boolean> }
+      element.setAttribute('auto-height', '')
+      document.body.append(element)
+      await element.updateComplete
+
+      emitResize(300, 180)
+      await element.updateComplete
+
+      expect(element).toHaveProperty('autoHeight', true)
+      expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe(expectedPadding)
+    }
+  })
+
+  it('renders border-box-5 as a tiled free border by default', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(300, 180)
+    await element.updateComplete
+
+    const tiles = [...(element.shadowRoot?.querySelectorAll('.tile') ?? [])]
+
+    expect(tiles.length).toBeGreaterThan(8)
+    expect(tiles.some(tile => tile.getAttribute('style')?.includes('right: 0'))).toBe(true)
+    expect(tiles.some(tile => tile.getAttribute('style')?.includes('bottom: 0'))).toBe(true)
+    expect(element.shadowRoot?.querySelectorAll('svg').length).toBe(tiles.length)
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('32px 22px 32px 22px')
   })
 
   it('emits resize details when fit-screen receives ResizeObserver entries', async () => {

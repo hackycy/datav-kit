@@ -1,30 +1,30 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
-export const borderBox3Metadata = {
-  tagName: 'dv-border-box-3',
-  className: 'BorderBox3Element',
-  description: 'Minimal futuristic blue border based on a cropped 1672 x 941 SVG reference.',
+export const borderBox5Metadata = {
+  tagName: 'dv-border-box-5',
+  className: 'BorderBox5Element',
+  description: 'Layered electric-blue neon HUD frame adapted from the provided 1672 x 941 vector SVG material.',
   props: {
     color: {
       type: 'string',
       default: '',
       attribute: true,
       cssVariable: '--dv-color-primary',
-      description: 'Primary blue line and glint color.',
+      description: 'Primary cyan stroke and electric body color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
       cssVariable: '--dv-color-secondary',
-      description: 'Secondary dim blue frame color.',
+      description: 'Secondary blue halo and outer aura color.',
     },
     accentColor: {
       type: 'string',
       default: '',
       attribute: 'accent-color',
       cssVariable: '--dv-color-accent',
-      description: 'Accent highlight color used by nodes and fine hairlines.',
+      description: 'White-hot highlight color used by the brightest core layer.',
     },
     colors: {
       type: 'string',
@@ -36,13 +36,7 @@ export const borderBox3Metadata = {
       type: 'number',
       default: 1,
       attribute: 'glow-intensity',
-      description: 'Multiplier for SVG blur filters that create the restrained neon glow.',
-    },
-    autoHeight: {
-      type: 'boolean',
-      default: false,
-      attribute: 'auto-height',
-      description: 'Lets slotted content define the box height instead of stretching to a parent height.',
+      description: 'Multiplier for SVG blur filters that create the layered neon glow.',
     },
   },
   events: [

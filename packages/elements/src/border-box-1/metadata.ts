@@ -49,6 +49,12 @@ export const borderBox1Metadata = {
       attribute: true,
       description: 'Pauses the moving highlight while retaining the border.',
     },
+    autoHeight: {
+      type: 'boolean',
+      default: false,
+      attribute: 'auto-height',
+      description: 'Lets slotted content define the box height instead of stretching to a parent height.',
+    },
   },
   events: [
     {

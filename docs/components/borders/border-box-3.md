@@ -26,6 +26,7 @@
 | `accent-color` | `string` | CSS variable fallback | Accent highlight color used by nodes and fine hairlines. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and accent colors. |
 | `glow-intensity` | `number` | `1` | Multiplier for SVG blur filters that create the restrained neon glow. |
+| `auto-height` | `boolean` | `false` | Lets slotted content define the box height instead of stretching to a parent height. |
 
 ## Events
 

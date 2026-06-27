@@ -39,12 +39,24 @@
   aspect-ratio: 16 / 9;
 }
 
+.datav-panel--auto {
+  width: 100%;
+  max-width: 960px;
+  height: auto;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+
 .datav-demo > .datav-panel {
   width: 100%;
   max-width: 720px;
 }
 
 .datav-demo > .datav-panel--wide {
+  max-width: 960px;
+}
+
+.datav-demo > .datav-panel--auto {
   max-width: 960px;
 }
 
@@ -55,6 +67,13 @@
   padding: 32px;
   place-content: center;
   text-align: center;
+}
+
+.datav-panel__content--auto {
+  height: auto;
+  min-height: 0;
+  place-content: start;
+  text-align: left;
 }
 
 .datav-panel__title {

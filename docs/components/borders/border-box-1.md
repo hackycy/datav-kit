@@ -28,6 +28,7 @@
 | `duration` | `number` | `3` | Animation duration in seconds. |
 | `animated` | `boolean` | `true` | Enables the moving highlight. |
 | `paused` | `boolean` | `false` | Pauses the moving highlight while retaining the border. |
+| `auto-height` | `boolean` | `false` | Lets slotted content define the box height instead of stretching to a parent height. |
 
 ## Events
 

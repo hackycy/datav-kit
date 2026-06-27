@@ -26,6 +26,7 @@
 | `accent-color` | `string` | CSS variable fallback | Hot highlight color used by nodes, strokes, and HUD ticks. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and accent colors. |
 | `glow-intensity` | `number` | `1` | Multiplier for SVG blur filters that create the layered neon glow. |
+| `auto-height` | `boolean` | `false` | Lets slotted content define the box height instead of stretching to a parent height. |
 
 ## Events
 
