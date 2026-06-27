@@ -23,9 +23,9 @@ const frameViewBox = {
   height: frameBottomY - contentViewBox.y,
 }
 const contentRect = {
-  x: 168,
+  x: 174,
   y: 122,
-  width: 1336,
+  width: 1330,
   height: 690,
 }
 const sliceTopHeight = 341

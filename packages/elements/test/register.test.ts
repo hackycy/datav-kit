@@ -652,7 +652,7 @@ describe('@datav-kit/elements', () => {
     emitResize(960, 430)
     await element.updateComplete
 
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('35.74px 37.13px 20.58px 37.13px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('35.74px 37.13px 20.58px 41.1px')
   })
 
   it('emits resize details when fit-screen receives ResizeObserver entries', async () => {
