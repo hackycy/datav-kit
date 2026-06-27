@@ -30,6 +30,7 @@ export default defineConfig({
           text: 'Decoration Components',
           items: [
             { text: 'Decoration 1', link: '/components/decorations/decoration-1' },
+            { text: 'Decoration 2', link: '/components/decorations/decoration-2' },
           ],
         },
         {
