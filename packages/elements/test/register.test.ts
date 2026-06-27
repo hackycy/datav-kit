@@ -335,9 +335,9 @@ describe('@datav-kit/elements', () => {
       '1324 60 300 204',
       '48 264 48 410',
       '1576 264 48 410',
-      '48 674 300 206',
+      '48 674 300 195',
       '585 821 502 38',
-      '1324 674 300 206',
+      '1324 674 300 195',
       '348 88 237 34',
       '1087 88 237 34',
       '348 821 237 38',
@@ -544,7 +544,7 @@ describe('@datav-kit/elements', () => {
     const cases = [
       ['dv-border-box-1', '8px 8px 8px 8px'],
       ['dv-border-box-2', '21.72px 21.94px 21.72px 21.94px'],
-      ['dv-border-box-3', '16px 20px 16px 20px'],
+      ['dv-border-box-3', '15.8px 11.8px 15.59px 11.8px'],
       ['dv-border-box-4', '16.24px 12.18px 16.24px 12.18px'],
       ['dv-border-box-5', '32px 22px 16px 22px'],
     ] as const
@@ -572,6 +572,19 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('38.8px 38.98px 38.8px 38.98px')
+  })
+
+  it('maps border-box-3 block padding from host height without masking safe area', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(960, 430)
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('37.76px 37.77px 37.23px 37.77px')
   })
 
   it('supports content-driven height across border box variants', async () => {
@@ -607,7 +620,7 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     expect(element).not.toHaveProperty('autoHeight')
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('16px 20px 16px 20px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('15.8px 11.8px 15.59px 11.8px')
   })
 
   it('renders border-box-5 as a tiled free border by default', async () => {

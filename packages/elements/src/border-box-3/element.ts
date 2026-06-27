@@ -27,9 +27,9 @@ const fixedSlices = {
   topRight: { x: 1324, y: 60, width: 300, height: 204 },
   leftDetail: { x: 48, y: 264, width: 48, height: 410 },
   rightDetail: { x: 1576, y: 264, width: 48, height: 410 },
-  bottomLeft: { x: 48, y: 674, width: 300, height: 206 },
+  bottomLeft: { x: 48, y: 674, width: 300, height: 195 },
   bottomCenter: { x: 585, y: 821, width: 502, height: 38 },
-  bottomRight: { x: 1324, y: 674, width: 300, height: 206 },
+  bottomRight: { x: 1324, y: 674, width: 300, height: 195 },
 } satisfies Record<string, typeof contentViewBox>
 const extensionSlices = {
   topLeading: { x: 348, y: 88, width: 237, height: 34 },
@@ -101,6 +101,9 @@ export class BorderBox3Element extends DatavElement {
       z-index: 1;
       box-sizing: border-box;
       width: 100%;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
       padding: var(--dv-border-box-3-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
     }
 
@@ -158,11 +161,11 @@ export class BorderBox3Element extends DatavElement {
     const metrics = this.createSliceMetrics()
     const contentPadding = createBorderBoxContentPadding({
       hostWidth: this.size.width,
-      hostHeight: 0,
+      hostHeight: this.size.height,
       viewBox: contentViewBox,
       contentRect,
-      minBlock: 16,
-      minInline: 20,
+      minBlock: 4,
+      minInline: 4,
     })
 
     return html`
