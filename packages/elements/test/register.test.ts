@@ -768,11 +768,13 @@ describe('@datav-kit/elements', () => {
     expect(element).toHaveProperty('glowIntensity', 1.25)
     expect(svgs.length).toBeGreaterThan(9)
     expect(svgs.map(svg => svg.getAttribute('viewBox'))).toEqual(expect.arrayContaining([
+      '356 52 245 24',
       '40 29 330 220',
+      '601 53 20 22',
       '621 70 236 28',
       '1195 45 445 200',
-      '78 396 16 337',
-      '1594 319 10 195',
+      '65 396 29 337',
+      '1594 319 46 236',
       '50 740 310 157',
       '716 850 390 47',
       '1364 726 276 171',
@@ -795,6 +797,10 @@ describe('@datav-kit/elements', () => {
     ])
     expect(paths.some(path => path.getAttribute('d')?.includes('M 40 98 L 40 223 L 49 232'))).toBe(true)
     expect(paths.some(path => path.getAttribute('d')?.includes('M 1595 383 L 1595 389'))).toBe(true)
+    expect(svgs.map(svg => svg.getAttribute('viewBox'))).toEqual(expect.arrayContaining([
+      '65 733 29 10',
+      '1594 555 46 171',
+    ]))
     expect(blurs.slice(0, 3)).toEqual(['1.875', '3', '0.6875'])
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('34.74px 32px 31.62px 32px')
   })

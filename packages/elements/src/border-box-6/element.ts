@@ -45,20 +45,22 @@ const contentRect: BorderBox6Rect = {
 }
 const fixedSlices = {
   topLeft: { x: 40, y: 29, width: 330, height: 220 },
+  topUpperJoin: { x: 601, y: 53, width: 20, height: 22 },
   topCenter: { x: 621, y: 70, width: 236, height: 28 },
   topRight: { x: 1195, y: 45, width: 445, height: 200 },
-  leftMarker: { x: 78, y: 396, width: 16, height: 337 },
-  rightMarker: { x: 1594, y: 319, width: 10, height: 195 },
+  leftMarker: { x: 65, y: 396, width: 29, height: 337 },
+  rightMarker: { x: 1594, y: 319, width: 46, height: 236 },
   bottomLeft: { x: 50, y: 740, width: 310, height: 157 },
   bottomStep: { x: 716, y: 850, width: 390, height: 47 },
   bottomHatch: { x: 1130, y: 850, width: 280, height: 47 },
   bottomRight: { x: 1364, y: 726, width: 276, height: 171 },
 } satisfies Record<string, BorderBox6Rect>
 const extensionSlices = {
+  topUpper: { x: 356, y: 52, width: 245, height: 24 },
   topLeading: { x: 356, y: 74, width: 265, height: 18 },
   topMain: { x: 855, y: 85, width: 340, height: 12 },
   leftUpper: { x: 67, y: 249, width: 20, height: 147 },
-  leftLower: { x: 65, y: 584, width: 29, height: 104 },
+  leftLower: { x: 65, y: 733, width: 29, height: 10 },
   rightUpper: { x: 1610, y: 238, width: 30, height: 81 },
   rightLower: { x: 1594, y: 555, width: 46, height: 171 },
   bottomLeading: { x: 360, y: 880, width: 361, height: 17 },
@@ -193,6 +195,16 @@ export class BorderBox6Element extends DatavElement {
           scale: metrics.scale,
         })}
         ${this.renderFixedTile({
+          name: 'top-upper-join',
+          rect: fixedSlices.topUpperJoin,
+          style: `left: ${metrics.topUpperJoinLeft}px; top: ${metrics.topUpperJoinTop}px; width: ${metrics.topUpperJoinWidth}px; height: ${metrics.topUpperJoinHeight}px`,
+          primary,
+          secondary,
+          accent,
+          glowIntensity,
+          scale: metrics.scale,
+        })}
+        ${this.renderFixedTile({
           name: 'top-center',
           rect: fixedSlices.topCenter,
           style: `left: ${metrics.topCenterLeft}px; top: ${metrics.topCenterTop}px; width: ${metrics.topCenterWidth}px; height: ${metrics.topCenterHeight}px`,
@@ -284,6 +296,17 @@ export class BorderBox6Element extends DatavElement {
     metrics: ReturnType<BorderBox6Element['createSliceMetrics']>,
   ): unknown {
     return html`
+      ${this.renderExtensionStrip({
+        name: 'top-upper',
+        rect: extensionSlices.topUpper,
+        style: `left: ${metrics.topUpperLeft}px; top: ${metrics.topUpperTop}px; width: ${metrics.topUpperWidth}px; height: ${metrics.topUpperHeight}px`,
+        width: metrics.topUpperWidth,
+        height: metrics.topUpperHeight,
+        primary,
+        secondary,
+        accent,
+        glowIntensity,
+      })}
       ${this.renderExtensionStrip({
         name: 'top-leading',
         rect: extensionSlices.topLeading,
@@ -529,6 +552,10 @@ export class BorderBox6Element extends DatavElement {
     scale: number
     topLeftWidth: number
     topLeftHeight: number
+    topUpperJoinLeft: number
+    topUpperJoinTop: number
+    topUpperJoinWidth: number
+    topUpperJoinHeight: number
     topCenterLeft: number
     topCenterTop: number
     topCenterWidth: number
@@ -555,6 +582,10 @@ export class BorderBox6Element extends DatavElement {
     bottomHatchHeight: number
     bottomRightWidth: number
     bottomRightHeight: number
+    topUpperLeft: number
+    topUpperTop: number
+    topUpperWidth: number
+    topUpperHeight: number
     topLeadingLeft: number
     topLeadingTop: number
     topLeadingWidth: number
@@ -592,6 +623,7 @@ export class BorderBox6Element extends DatavElement {
     const hostWidth = Math.max(this.size.width, 0)
     const hostHeight = Math.max(this.size.height, 0)
     const topLeftWidth = this.scaleValue(fixedSlices.topLeft.width, scale)
+    const topUpperJoinWidth = this.scaleValue(fixedSlices.topUpperJoin.width, scale)
     const topCenterWidth = this.scaleValue(fixedSlices.topCenter.width, scale)
     const topRightWidth = this.scaleValue(fixedSlices.topRight.width, scale)
     const bottomLeftWidth = this.scaleValue(fixedSlices.bottomLeft.width, scale)
@@ -614,12 +646,17 @@ export class BorderBox6Element extends DatavElement {
       topLeftWidth + this.scaleValue(22, scale),
       Math.max(hostWidth - topRightWidth - topCenterWidth - this.scaleValue(22, scale), topLeftWidth),
     )
-    const topMainLeft = topCenterLeft + topCenterWidth
+    const topUpperJoinLeft = Math.max(topCenterLeft - topUpperJoinWidth, 0)
+    const topMainSourceLeft = this.sourceX(extensionSlices.topMain.x, scale)
 
     return {
       scale,
       topLeftWidth,
       topLeftHeight: this.scaleValue(fixedSlices.topLeft.height, scale),
+      topUpperJoinLeft,
+      topUpperJoinTop: this.sourceY(fixedSlices.topUpperJoin.y, scale),
+      topUpperJoinWidth,
+      topUpperJoinHeight: this.scaleValue(fixedSlices.topUpperJoin.height, scale),
       topCenterLeft,
       topCenterTop: this.sourceY(fixedSlices.topCenter.y, scale),
       topCenterWidth,
@@ -646,28 +683,32 @@ export class BorderBox6Element extends DatavElement {
       bottomHatchHeight: this.scaleValue(fixedSlices.bottomHatch.height, scale),
       bottomRightWidth,
       bottomRightHeight: this.scaleValue(fixedSlices.bottomRight.height, scale),
+      topUpperLeft: this.sourceX(extensionSlices.topUpper.x, scale),
+      topUpperTop: this.sourceY(extensionSlices.topUpper.y, scale),
+      topUpperWidth: Math.max(topUpperJoinLeft - this.sourceX(extensionSlices.topUpper.x, scale), 0),
+      topUpperHeight: this.scaleValue(extensionSlices.topUpper.height, scale),
       topLeadingLeft: this.sourceX(extensionSlices.topLeading.x, scale),
       topLeadingTop: this.sourceY(extensionSlices.topLeading.y, scale),
       topLeadingWidth: Math.max(topCenterLeft - this.sourceX(extensionSlices.topLeading.x, scale), 0),
       topLeadingHeight: this.scaleValue(extensionSlices.topLeading.height, scale),
-      topMainLeft,
+      topMainLeft: topMainSourceLeft,
       topMainTop: this.sourceY(extensionSlices.topMain.y, scale),
-      topMainWidth: Math.max(hostWidth - topRightWidth - topMainLeft, 0),
+      topMainWidth: Math.max(hostWidth - topRightWidth - topMainSourceLeft, 0),
       topMainHeight: this.scaleValue(extensionSlices.topMain.height, scale),
       leftUpperLeft: this.sourceX(extensionSlices.leftUpper.x, scale),
       leftUpperTop: this.sourceY(extensionSlices.leftUpper.y, scale),
       leftUpperWidth: this.scaleValue(extensionSlices.leftUpper.width, scale),
       leftUpperHeight: Math.max(this.sourceY(fixedSlices.leftMarker.y, scale) - this.sourceY(extensionSlices.leftUpper.y, scale), 0),
       leftLowerLeft: this.sourceX(extensionSlices.leftLower.x, scale),
-      leftLowerTop: this.sourceY(fixedSlices.leftMarker.y + fixedSlices.leftMarker.height, scale),
+      leftLowerTop: this.sourceY(extensionSlices.leftLower.y, scale),
       leftLowerWidth: this.scaleValue(extensionSlices.leftLower.width, scale),
-      leftLowerHeight: Math.max(bottomTop - this.sourceY(fixedSlices.leftMarker.y + fixedSlices.leftMarker.height, scale), 0),
+      leftLowerHeight: Math.max(bottomTop - this.sourceY(extensionSlices.leftLower.y, scale), 0),
       rightUpperTop: this.sourceY(extensionSlices.rightUpper.y, scale),
       rightUpperWidth: this.scaleValue(extensionSlices.rightUpper.width, scale),
       rightUpperHeight: Math.max(this.sourceY(fixedSlices.rightMarker.y, scale) - this.sourceY(extensionSlices.rightUpper.y, scale), 0),
-      rightLowerTop: this.sourceY(fixedSlices.rightMarker.y + fixedSlices.rightMarker.height, scale),
+      rightLowerTop: this.sourceY(extensionSlices.rightLower.y, scale),
       rightLowerWidth: this.scaleValue(extensionSlices.rightLower.width, scale),
-      rightLowerHeight: Math.max(bottomTop - this.sourceY(fixedSlices.rightMarker.y + fixedSlices.rightMarker.height, scale), 0),
+      rightLowerHeight: Math.max(bottomTop - this.sourceY(extensionSlices.rightLower.y, scale), 0),
       bottomLeadingLeft: bottomLeftWidth,
       bottomLeadingWidth: Math.max(bottomStepLeft - bottomLeftWidth, 0),
       bottomLeadingHeight: this.scaleValue(extensionSlices.bottomLeading.height, scale),
