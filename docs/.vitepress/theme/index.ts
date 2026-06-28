@@ -1,3 +1,4 @@
+import type { Theme } from 'vitepress'
 import { register } from '@datav-kit/elements'
 import DefaultTheme from 'vitepress/theme'
 import BorderChartDemo from './components/BorderChartDemo.vue'
@@ -16,4 +17,4 @@ export default {
   enhanceApp({ app }) {
     app.component('BorderChartDemo', BorderChartDemo)
   },
-}
+} satisfies Theme
