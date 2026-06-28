@@ -2,7 +2,7 @@
 
 Framework-agnostic Web Components for data dashboard decoration.
 
-The first usable loop is intentionally small: `dv-fit-screen` handles dashboard scale behavior, `dv-count-to` renders animated metrics, and `dv-border-box-1` through `dv-border-box-5` start the numbered border series. The docs site registers the current Web Components package directly, so every demo on this site is a live usage example rather than a separate demo application.
+The first usable loop is intentionally small: `dv-fit-screen` handles dashboard scale behavior, `dv-count-to` renders animated metrics, and `dv-border-box-1` through `dv-border-box-6` start the numbered border series. The docs site registers the current Web Components package directly, so every demo on this site is a live usage example rather than a separate demo application.
 
 ## Live Demo
 
@@ -31,4 +31,5 @@ The first usable loop is intentionally small: `dv-fit-screen` handles dashboard 
 - [Border Box 3](/components/borders/border-box-3) for the minimal futuristic blue frame border.
 - [Border Box 4](/components/borders/border-box-4) for the dense neon HUD frame border.
 - [Border Box 5](/components/borders/border-box-5) for the layered electric-blue HUD frame border.
+- [Border Box 6](/components/borders/border-box-6) for the high-precision cyan HUD frame border.
 - [Component Authoring](/guide/component-authoring) for the required file layout and checklist.

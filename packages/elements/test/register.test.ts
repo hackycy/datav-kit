@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { CountToElement, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineCountTo, defineDecoration1, defineDecoration2, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineCountTo, defineDecoration1, defineDecoration2, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -52,6 +52,7 @@ describe('@datav-kit/elements', () => {
       'dv-border-box-3',
       'dv-border-box-4',
       'dv-border-box-5',
+      'dv-border-box-6',
       'dv-decoration-1',
       'dv-decoration-2',
       'dv-count-to',
@@ -60,8 +61,8 @@ describe('@datav-kit/elements', () => {
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -77,6 +78,9 @@ describe('@datav-kit/elements', () => {
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-5')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-5')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-5')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-6')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-6')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-6')?.props).not.toHaveProperty('viewBox')
   })
 
   it('supports single-element registration helpers', () => {
@@ -86,6 +90,7 @@ describe('@datav-kit/elements', () => {
     expect(defineBorderBox3()).toBe(false)
     expect(defineBorderBox4()).toBe(false)
     expect(defineBorderBox5()).toBe(false)
+    expect(defineBorderBox6()).toBe(false)
     expect(defineDecoration1()).toBe(false)
     expect(defineDecoration2()).toBe(false)
     expect(defineCountTo()).toBe(false)
@@ -730,6 +735,99 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('35.74px 37.13px 20.58px 41.1px')
+  })
+
+  it('maps border-box-6 public attributes and renders source-clipped slices', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-6')
+    element.setAttribute('colors', '#04b9f2,#102132,#00b7f0')
+    element.setAttribute('width', '800')
+    element.setAttribute('height', '450')
+    element.setAttribute('view-box', '0 0 800 450')
+    element.setAttribute('glow-intensity', '1.25')
+    document.body.append(element)
+
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+    emitResize(800, 450)
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+
+    const svgs = [...(element.shadowRoot?.querySelectorAll('svg') ?? [])]
+    const fixedSvgs = [...(element.shadowRoot?.querySelectorAll('.tile svg') ?? [])]
+    const extensionSvgs = [...(element.shadowRoot?.querySelectorAll('.extension svg') ?? [])]
+    const paths = [...(element.shadowRoot?.querySelectorAll('path') ?? [])]
+    const blurs = [...(element.shadowRoot?.querySelectorAll('feGaussianBlur') ?? [])]
+      .map(node => node.getAttribute('stdDeviation'))
+
+    expect(element).toHaveProperty('colors', '#04b9f2,#102132,#00b7f0')
+    expect(element).toHaveProperty('glowIntensity', 1.25)
+    expect(svgs.length).toBeGreaterThan(9)
+    expect(svgs.map(svg => svg.getAttribute('viewBox'))).toEqual(expect.arrayContaining([
+      '40 29 330 220',
+      '621 70 236 28',
+      '1195 45 445 200',
+      '78 396 16 337',
+      '1594 319 10 195',
+      '50 740 310 157',
+      '716 850 390 47',
+      '1364 726 276 171',
+    ]))
+    expect(fixedSvgs.every(svg => svg.getAttribute('preserveAspectRatio') !== 'none')).toBe(true)
+    expect(extensionSvgs.some(svg => svg.getAttribute('preserveAspectRatio') === 'none')).toBe(true)
+    expect(element.shadowRoot?.querySelector('svg[viewBox="0 0 1672 941"]')).toBeNull()
+    expect(paths.slice(0, 11).map(path => path.id)).toEqual([
+      'dark-mist',
+      'dark-halo',
+      'dark-body',
+      'dark-contour',
+      'dark-core',
+      'cyan-mist',
+      'cyan-halo',
+      'cyan-body',
+      'cyan-core',
+      'solid-dark',
+      'solid-cyan',
+    ])
+    expect(paths.some(path => path.getAttribute('d')?.includes('M 40 98 L 40 223 L 49 232'))).toBe(true)
+    expect(paths.some(path => path.getAttribute('d')?.includes('M 1595 383 L 1595 389'))).toBe(true)
+    expect(blurs.slice(0, 3)).toEqual(['1.875', '3', '0.6875'])
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('34.74px 32px 31.62px 32px')
+  })
+
+  it('resolves border-box-6 colors from CSS variables and applies glow intensity', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-6') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dv-color-primary', '#112233')
+    element.style.setProperty('--dv-color-secondary', '#445566')
+    element.style.setProperty('--dv-color-accent', '#778899')
+    element.setAttribute('glow-intensity', '0.5')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const fills = [...(element.shadowRoot?.querySelectorAll('path') ?? [])]
+      .map(node => node.getAttribute('fill'))
+    const blurs = [...(element.shadowRoot?.querySelectorAll('feGaussianBlur') ?? [])]
+      .map(node => node.getAttribute('stdDeviation'))
+
+    expect(fills).toContain('#112233')
+    expect(fills).toContain('#445566')
+    expect(fills).toContain('#778899')
+    expect(blurs.slice(0, 3)).toEqual(['0.75', '1.2', '0.275'])
+  })
+
+  it('maps border-box-6 block padding from host height', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-6') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(960, 430)
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('33.19px 38.4px 30.22px 38.4px')
   })
 
   it('maps decoration-1 attributes and renders animated bars', async () => {
