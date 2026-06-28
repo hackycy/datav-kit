@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { CountToElement, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineCountTo, defineDecoration1, defineDecoration2, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineCountTo, defineDecoration1, defineDecoration2, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -56,6 +56,7 @@ describe('@datav-kit/elements', () => {
       'dv-border-box-7',
       'dv-border-box-8',
       'dv-border-box-9',
+      'dv-border-box-10',
       'dv-decoration-1',
       'dv-decoration-2',
       'dv-count-to',
@@ -64,8 +65,8 @@ describe('@datav-kit/elements', () => {
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -93,6 +94,9 @@ describe('@datav-kit/elements', () => {
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-9')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-9')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-9')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-10')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-10')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-10')?.props).not.toHaveProperty('viewBox')
   })
 
   it('supports single-element registration helpers', () => {
@@ -106,6 +110,7 @@ describe('@datav-kit/elements', () => {
     expect(defineBorderBox7()).toBe(false)
     expect(defineBorderBox8()).toBe(false)
     expect(defineBorderBox9()).toBe(false)
+    expect(defineBorderBox10()).toBe(false)
     expect(defineDecoration1()).toBe(false)
     expect(defineDecoration2()).toBe(false)
     expect(defineCountTo()).toBe(false)
@@ -631,6 +636,7 @@ describe('@datav-kit/elements', () => {
       ['dv-border-box-3', '15.8px 11.8px 15.59px 11.8px'],
       ['dv-border-box-4', '16.24px 12.18px 16.24px 12.18px'],
       ['dv-border-box-5', '32px 22px 16px 22px'],
+      ['dv-border-box-10', '15px 15px 15px 15px'],
     ] as const
 
     for (const [tagName, expectedPadding] of cases) {
@@ -1123,6 +1129,91 @@ describe('@datav-kit/elements', () => {
     expect(lines.filter(line => line.getAttribute('stroke-width') === '2').every(line => line.getAttribute('stroke') === '#235fa7')).toBe(true)
     expect(lines.filter(line => line.getAttribute('stroke-width') === '5').every(line => line.getAttribute('stroke') === '#4fd2dd')).toBe(true)
     expect(frame?.style.getPropertyValue('--dv-border-box-9-box-shadow').trim()).toBe('inset 0 0 40px #235fa7')
+  })
+
+  it('maps border-box-10 public attributes and recreates BorderBox12 geometry', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-10')
+    element.setAttribute('colors', '#334455,#ddeeff')
+    element.setAttribute('background-color', 'rgba(5, 18, 46, 0.22)')
+    element.setAttribute('width', '800')
+    element.setAttribute('height', '450')
+    element.setAttribute('view-box', '0 0 800 450')
+    document.body.append(element)
+
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+    emitResize(320, 180)
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+
+    const panel = element.shadowRoot?.querySelector('.panel')
+    const outline = element.shadowRoot?.querySelector('.outline')
+    const corners = [...(element.shadowRoot?.querySelectorAll('[data-corner]') ?? [])]
+    const flood = element.shadowRoot?.querySelector('feFlood')
+    const animation = element.shadowRoot?.querySelector('animate')
+
+    expect(element).toHaveProperty('colors', '#334455,#ddeeff')
+    expect(element).toHaveProperty('backgroundColor', 'rgba(5, 18, 46, 0.22)')
+    expect(element).not.toHaveProperty('viewBox')
+    expect(panel?.getAttribute('width')).toBe('320')
+    expect(panel?.getAttribute('height')).toBe('180')
+    expect(outline?.getAttribute('fill')).toBe('rgba(5, 18, 46, 0.22)')
+    expect(outline?.getAttribute('stroke')).toBe('#334455')
+    expect(outline?.getAttribute('stroke-width')).toBe('2')
+    expect(outline?.getAttribute('d')).toBe('M15 5 L 305 5 Q 315 5, 315 15 L 315 165 Q 315 175, 305 175 L 15 175 Q 5 175, 5 165 L 5 15 Q 5 5, 15 5')
+    expect(corners.map(corner => corner.getAttribute('data-corner'))).toEqual(['left-top', 'right-top', 'right-bottom', 'left-bottom'])
+    expect(corners.map(corner => corner.getAttribute('d'))).toEqual([
+      'M 20 5 L 15 5 Q 5 5 5 15 L 5 20',
+      'M 300 5 L 305 5 Q 315 5 315 15 L 315 20',
+      'M 300 175 L 305 175 Q 315 175 315 165 L 315 160',
+      'M 20 175 L 15 175 Q 5 175 5 165 L 5 160',
+    ])
+    expect(corners.every(corner => corner.getAttribute('stroke') === '#ddeeff')).toBe(true)
+    expect(corners.every(corner => corner.getAttribute('filter')?.startsWith('url(#dv-border-box-10-glow-'))).toBe(true)
+    expect(flood?.getAttribute('flood-color')).toBe('rgba(221, 238, 255, 0.7)')
+    expect(animation?.getAttribute('values')).toBe('rgba(221, 238, 255, 0.7);rgba(221, 238, 255, 0.3);rgba(221, 238, 255, 0.7)')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('15px 15px 15px 15px')
+  })
+
+  it('resolves border-box-10 colors from CSS variables and supports paused glow', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-10') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dv-color-primary', '#112233')
+    element.style.setProperty('--dv-color-secondary', '#ddeeff')
+    element.style.setProperty('--dv-border-box-10-background', 'rgba(1, 2, 3, 0.4)')
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const outline = element.shadowRoot?.querySelector('.outline')
+    const corners = [...(element.shadowRoot?.querySelectorAll('[data-corner]') ?? [])]
+    const flood = element.shadowRoot?.querySelector('feFlood')
+
+    expect(outline?.getAttribute('stroke')).toBe('#112233')
+    expect(outline?.getAttribute('fill')).toBe('rgba(1, 2, 3, 0.4)')
+    expect(corners.every(corner => corner.getAttribute('stroke') === '#ddeeff')).toBe(true)
+    expect(flood?.getAttribute('flood-color')).toBe('rgba(221, 238, 255, 0.7)')
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('uses datav-kit colors as border-box-10 defaults', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-10') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const outline = element.shadowRoot?.querySelector('.outline')
+    const corners = [...(element.shadowRoot?.querySelectorAll('[data-corner]') ?? [])]
+    const flood = element.shadowRoot?.querySelector('feFlood')
+
+    expect(outline?.getAttribute('stroke')).toBe('#235fa7')
+    expect(corners.every(corner => corner.getAttribute('stroke') === '#4fd2dd')).toBe(true)
+    expect(flood?.getAttribute('flood-color')).toBe('rgba(79, 210, 221, 0.7)')
   })
 
   it('maps decoration-1 attributes and renders animated bars', async () => {
