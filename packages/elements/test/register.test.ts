@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { CountToElement, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineCountTo, defineDecoration1, defineDecoration2, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineCountTo, defineDecoration1, defineDecoration2, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -54,6 +54,7 @@ describe('@datav-kit/elements', () => {
       'dv-border-box-5',
       'dv-border-box-6',
       'dv-border-box-7',
+      'dv-border-box-8',
       'dv-decoration-1',
       'dv-decoration-2',
       'dv-count-to',
@@ -62,8 +63,8 @@ describe('@datav-kit/elements', () => {
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -85,6 +86,9 @@ describe('@datav-kit/elements', () => {
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-7')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-7')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-7')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-8')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-8')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-8')?.props).not.toHaveProperty('viewBox')
   })
 
   it('supports single-element registration helpers', () => {
@@ -96,6 +100,7 @@ describe('@datav-kit/elements', () => {
     expect(defineBorderBox5()).toBe(false)
     expect(defineBorderBox6()).toBe(false)
     expect(defineBorderBox7()).toBe(false)
+    expect(defineBorderBox8()).toBe(false)
     expect(defineDecoration1()).toBe(false)
     expect(defineDecoration2()).toBe(false)
     expect(defineCountTo()).toBe(false)
@@ -939,6 +944,64 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector('.panel polygon')?.getAttribute('fill')).toBe('rgba(1, 2, 3, 0.4)')
     expect(element.shadowRoot?.querySelector('.corner polygon')?.getAttribute('fill')).toBe('#ddeeff')
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')?.style.getPropertyValue('--dv-border-box-7-box-shadow')).toBe('inset 0 0 25px 3px #112233')
+  })
+
+  it('maps border-box-8 public attributes and recreates BorderBox1 geometry', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-8')
+    element.setAttribute('colors', '#4fd2dd,#235fa7')
+    element.setAttribute('background-color', 'rgba(5, 18, 46, 0.32)')
+    document.body.append(element)
+
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+    emitResize(320, 180)
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+
+    const panel = element.shadowRoot?.querySelector('.panel')
+    const corners = [...(element.shadowRoot?.querySelectorAll('.corner') ?? [])]
+    const cornerPolygons = [...(element.shadowRoot?.querySelectorAll('.corner polygon') ?? [])]
+    const animations = [...(element.shadowRoot?.querySelectorAll('animate') ?? [])]
+
+    expect(element).toHaveProperty('colors', '#4fd2dd,#235fa7')
+    expect(element).toHaveProperty('backgroundColor', 'rgba(5, 18, 46, 0.32)')
+    expect(element).not.toHaveProperty('viewBox')
+    expect(panel?.getAttribute('width')).toBe('320')
+    expect(panel?.getAttribute('height')).toBe('180')
+    expect(element.shadowRoot?.querySelectorAll('.panel polygon')).toHaveLength(1)
+    expect(element.shadowRoot?.querySelector('.panel polygon')?.getAttribute('points')).toBe('10,27 10,153 13,156 13,159 24,169 38,169 41,172 73,172 75,170 81,170 85,174 235,174 239,170 245,170 247,172 279,172 282,169 310,153 310,27 307,25 307,21 296,11 282,11 279,8 247,8 245,10 239,10 235,6 85,6 81,10 75,10 73,8 41,8 38,11 24,11 13,21 13,24')
+    expect(element.shadowRoot?.querySelector('.panel polygon')?.getAttribute('fill')).toBe('rgba(5, 18, 46, 0.32)')
+    expect(corners).toHaveLength(4)
+    expect(corners.every(corner => corner.getAttribute('viewBox') === '0 0 150 150')).toBe(true)
+    expect(cornerPolygons.map(polygon => polygon.getAttribute('points'))).toEqual(expect.arrayContaining([
+      '6,66 6,18 12,12 18,12 24,6 27,6 30,9 36,9 39,6 84,6 81,9 75,9 73.2,7 40.8,7 37.8,10.2 24,10.2 12,21 12,24 9,27 9,51 7.8,54 7.8,63',
+      '27.599999999999998,4.8 38.4,4.8 35.4,7.8 30.599999999999998,7.8',
+      '9,54 9,63 7.199999999999999,66 7.199999999999999,75 7.8,78 7.8,110 8.4,110 8.4,66 9.6,66 9.6,54',
+    ]))
+    expect(animations).toHaveLength(12)
+    expect(animations.map(animation => animation.getAttribute('dur'))).toEqual(expect.arrayContaining(['0.5s', '1s']))
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('18px 18px 18px 18px')
+  })
+
+  it('resolves border-box-8 colors from CSS variables and supports paused animation', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-8') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dv-color-primary', '#112233')
+    element.style.setProperty('--dv-color-secondary', '#ddeeff')
+    element.style.setProperty('--dv-border-box-8-background', 'rgba(1, 2, 3, 0.4)')
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const fills = [...(element.shadowRoot?.querySelectorAll('.corner polygon') ?? [])]
+      .map(node => node.getAttribute('fill'))
+
+    expect(fills).toContain('#112233')
+    expect(fills).toContain('#ddeeff')
+    expect(element.shadowRoot?.querySelector('.panel polygon')?.getAttribute('fill')).toBe('rgba(1, 2, 3, 0.4)')
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
   })
 
   it('maps decoration-1 attributes and renders animated bars', async () => {
