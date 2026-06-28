@@ -951,11 +951,23 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')?.style.getPropertyValue('--dv-border-box-7-box-shadow')).toBe('inset 0 0 25px 3px #112233')
   })
 
+  it('uses datav-kit colors as border-box-7 defaults', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-7') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelector('.corner polygon')?.getAttribute('fill')).toBe('#4fd2dd')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')?.style.getPropertyValue('--dv-border-box-7-box-shadow')).toBe('inset 0 0 25px 3px #235fa7')
+  })
+
   it('maps border-box-8 public attributes and recreates BorderBox1 geometry', async () => {
     register()
 
     const element = document.createElement('dv-border-box-8')
-    element.setAttribute('colors', '#4fd2dd,#235fa7')
+    element.setAttribute('colors', '#235fa7,#4fd2dd')
     element.setAttribute('background-color', 'rgba(5, 18, 46, 0.32)')
     document.body.append(element)
 
@@ -968,7 +980,7 @@ describe('@datav-kit/elements', () => {
     const cornerPolygons = [...(element.shadowRoot?.querySelectorAll('.corner polygon') ?? [])]
     const animations = [...(element.shadowRoot?.querySelectorAll('animate') ?? [])]
 
-    expect(element).toHaveProperty('colors', '#4fd2dd,#235fa7')
+    expect(element).toHaveProperty('colors', '#235fa7,#4fd2dd')
     expect(element).toHaveProperty('backgroundColor', 'rgba(5, 18, 46, 0.32)')
     expect(element).not.toHaveProperty('viewBox')
     expect(panel?.getAttribute('width')).toBe('320')
@@ -1007,6 +1019,22 @@ describe('@datav-kit/elements', () => {
     expect(fills).toContain('#ddeeff')
     expect(element.shadowRoot?.querySelector('.panel polygon')?.getAttribute('fill')).toBe('rgba(1, 2, 3, 0.4)')
     expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('uses datav-kit colors as border-box-8 defaults', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-8') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const fills = [...(element.shadowRoot?.querySelectorAll('.corner polygon') ?? [])]
+      .map(node => node.getAttribute('fill'))
+
+    expect(fills).toContain('#235fa7')
+    expect(fills).toContain('#4fd2dd')
   })
 
   it('maps border-box-9 public attributes and recreates BorderBox7 geometry', async () => {
@@ -1079,6 +1107,22 @@ describe('@datav-kit/elements', () => {
     expect(lines.filter(line => line.getAttribute('stroke-width') === '5').every(line => line.getAttribute('stroke') === '#ddeeff')).toBe(true)
     expect(frame?.style.getPropertyValue('--dv-border-box-9-box-shadow').trim()).toBe('inset 0 0 40px #112233')
     expect(frame?.style.getPropertyValue('--dv-border-box-9-background').trim()).toBe('rgba(1, 2, 3, 0.4)')
+  })
+
+  it('uses datav-kit colors as border-box-9 defaults', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-9') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const lines = [...(element.shadowRoot?.querySelectorAll('polyline') ?? [])]
+    const frame = element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')
+
+    expect(lines.filter(line => line.getAttribute('stroke-width') === '2').every(line => line.getAttribute('stroke') === '#235fa7')).toBe(true)
+    expect(lines.filter(line => line.getAttribute('stroke-width') === '5').every(line => line.getAttribute('stroke') === '#4fd2dd')).toBe(true)
+    expect(frame?.style.getPropertyValue('--dv-border-box-9-box-shadow').trim()).toBe('inset 0 0 40px #235fa7')
   })
 
   it('maps decoration-1 attributes and renders animated bars', async () => {

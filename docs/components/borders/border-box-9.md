@@ -4,14 +4,14 @@
 
 <BorderChartDemo
   border="dv-border-box-9"
-  colors="#8080804d,#80808080"
-  accent="rgba(180, 210, 255, 0.78)"
+  colors="#235fa7,#4fd2dd"
+  accent="#4fd2dd"
   title="Border Box 9"
   subtitle="DataV BorderBox7-style glowing corner frame"
 />
 
 ```html
-<dv-border-box-9 colors="#8080804d,#80808080" background-color="rgba(5, 18, 46, 0.22)">
+<dv-border-box-9 colors="#235fa7,#4fd2dd" background-color="rgba(5, 18, 46, 0.22)">
   <section>Border Box 9</section>
 </dv-border-box-9>
 ```

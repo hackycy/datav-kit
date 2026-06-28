@@ -4,14 +4,14 @@
 
 <BorderChartDemo
   border="dv-border-box-7"
-  colors="#1d48c4,#d3e1f8"
-  accent="#d3e1f8"
+  colors="#235fa7,#4fd2dd"
+  accent="#4fd2dd"
   title="Border Box 7"
   subtitle="chamfered glow panel with fixed mirrored corner ornaments"
 />
 
 ```html
-<dv-border-box-7 colors="#1d48c4,#d3e1f8">
+<dv-border-box-7 colors="#235fa7,#4fd2dd">
   <section>Border Box 7</section>
 </dv-border-box-7>
 ```

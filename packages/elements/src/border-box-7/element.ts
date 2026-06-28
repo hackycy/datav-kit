@@ -25,7 +25,7 @@ export class BorderBox7Element extends DatavElement {
       min-height: 0;
       box-sizing: border-box;
       border-radius: var(--dv-border-box-7-radius, 6px);
-      color: var(--dv-color-primary, #1d48c4);
+      color: var(--dv-color-primary, #235fa7);
       overflow: hidden;
     }
 
@@ -191,13 +191,13 @@ export class BorderBox7Element extends DatavElement {
       explicit: this.color,
       cssVariable: '--dv-color-primary',
       host: this,
-      fallback: '#1d48c4',
+      fallback: '#235fa7',
     })
     const secondary = colors[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
       cssVariable: '--dv-color-secondary',
       host: this,
-      fallback: '#d3e1f8',
+      fallback: '#4fd2dd',
     })
     const background = resolveThemeValue({
       explicit: this.backgroundColor,
