@@ -1,4 +1,4 @@
-# datav-kit
+# DataV Kit
 
 Framework-agnostic Web Components for data dashboard decoration.
 

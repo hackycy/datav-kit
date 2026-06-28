@@ -2,7 +2,7 @@ import process from 'node:process'
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'datav-kit',
+  title: 'DataV Kit',
   description: 'Framework-agnostic Web Components for data dashboard decoration.',
   base: process.env.VITEPRESS_BASE || '/',
   cleanUrls: true,
@@ -27,7 +27,7 @@ export default defineConfig({
       ],
       '/components/': [
         {
-          text: 'Decoration Components',
+          text: 'Decoration',
           items: [
             { text: 'Decoration 1', link: '/components/decorations/decoration-1' },
             { text: 'Decoration 2', link: '/components/decorations/decoration-2' },
@@ -42,6 +42,7 @@ export default defineConfig({
             { text: 'Border Box 4', link: '/components/borders/border-box-4' },
             { text: 'Border Box 5', link: '/components/borders/border-box-5' },
             { text: 'Border Box 6', link: '/components/borders/border-box-6' },
+            { text: 'Border Box 7', link: '/components/borders/border-box-7' },
           ],
         },
         {
