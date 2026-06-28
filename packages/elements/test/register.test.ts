@@ -775,8 +775,11 @@ describe('@datav-kit/elements', () => {
       '1195 45 445 200',
       '65 396 29 337',
       '1594 319 46 236',
+      '1581 555 59 75',
+      '1581 665 59 75',
       '50 740 310 157',
       '716 850 390 47',
+      '1130 850 280 47',
       '1364 726 276 171',
     ]))
     expect(fixedSvgs.every(svg => svg.getAttribute('preserveAspectRatio') !== 'none')).toBe(true)
@@ -799,7 +802,7 @@ describe('@datav-kit/elements', () => {
     expect(paths.some(path => path.getAttribute('d')?.includes('M 1595 383 L 1595 389'))).toBe(true)
     expect(svgs.map(svg => svg.getAttribute('viewBox'))).toEqual(expect.arrayContaining([
       '65 733 29 10',
-      '1594 555 46 171',
+      '1581 630 59 35',
     ]))
     expect(blurs.slice(0, 3)).toEqual(['1.875', '3', '0.6875'])
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('34.74px 32px 31.62px 32px')
@@ -826,6 +829,49 @@ describe('@datav-kit/elements', () => {
     expect(fills).toContain('#445566')
     expect(fills).toContain('#778899')
     expect(blurs.slice(0, 3)).toEqual(['0.75', '1.2', '0.275'])
+  })
+
+  it('keeps border-box-6 source-ratio right side on the original slice set', async () => {
+    register()
+
+    const element = document.createElement('dv-border-box-6') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(800, 434)
+    await element.updateComplete
+
+    const viewBoxes = [...(element.shadowRoot?.querySelectorAll('svg') ?? [])].map(svg => svg.getAttribute('viewBox'))
+    const rightLowerTop = element.shadowRoot?.querySelector<HTMLElement>('[data-slice="right-lower-top"]')
+    const rightLowerMiddle = element.shadowRoot?.querySelector<HTMLElement>('[data-extension="right-lower-middle"]')
+    const rightLowerBottom = element.shadowRoot?.querySelector<HTMLElement>('[data-slice="right-lower-bottom"]')
+
+    expect(viewBoxes).toEqual(expect.arrayContaining([
+      '1610 238 30 81',
+      '1581 555 59 75',
+      '1581 630 59 35',
+      '1581 665 59 75',
+    ]))
+    expect(element.shadowRoot?.querySelector('[data-extension="right-lower-extra"]')).toBeNull()
+    expect(rightLowerTop?.querySelector('svg')?.getAttribute('preserveAspectRatio')).not.toBe('none')
+    expect(rightLowerMiddle?.querySelector('svg')?.getAttribute('preserveAspectRatio')).toBe('none')
+    expect(rightLowerBottom?.querySelector('svg')?.getAttribute('preserveAspectRatio')).not.toBe('none')
+    expect(rightLowerTop?.style.top).toBe('263px')
+    expect(rightLowerTop?.style.height).toBe('37.5px')
+    expect(rightLowerMiddle?.style.top).toBe('300.5px')
+    expect(rightLowerMiddle?.style.height).toBe('17.5px')
+    expect(rightLowerBottom?.style.top).toBe('318px')
+    expect(rightLowerBottom?.style.height).toBe('37.5px')
+
+    emitResize(800, 600)
+    await element.updateComplete
+
+    expect(rightLowerTop?.style.top).toBe('263px')
+    expect(rightLowerTop?.style.height).toBe('37.5px')
+    expect(rightLowerMiddle?.style.top).toBe('300.5px')
+    expect(rightLowerMiddle?.style.height).toBe('183.5px')
+    expect(rightLowerBottom?.style.top).toBe('484px')
+    expect(rightLowerBottom?.style.height).toBe('37.5px')
   })
 
   it('maps border-box-6 block padding from host height', async () => {
