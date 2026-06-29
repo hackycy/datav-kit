@@ -18,8 +18,8 @@ Use it before designing a new border, then read the nearest component source/doc
 | `dv-border-box-8` | Dynamic polygon panel with corner ornaments | Four mirrored corner modules | Live polygon background and fixed animated corner ornaments | Hybrid live host polygon plus fixed 150 x 150 corners | Host-derived content rectangle | Fast corner fill animation | Avoid four identical animated corner ornaments as the main identity. |
 | `dv-border-box-9` | Rounded glowing corner frame | Rounded rectangle symmetry | Host border, inset shadow, two rounded corner line layers | Live host geometry | Host-derived content rectangle | Static | Avoid simple rounded glow panel for complex original borders. |
 | `dv-border-box-10` | Rounded outline panel with corner glows | Full rounded symmetry | Primary rounded outline and four corner glow filters | Live host geometry | Host-derived content rectangle | Animated corner glow color | Avoid rounded outline plus four glow corners as a new complex topology. |
-| `dv-border-box-11` | High-density cyber command-console frame on 1600 x 900 canvas | Mirrored corner/side family with dense modules | Corner armor, centered docks, side sensor racks, hatch marks, nodes, scan lights | Source-coordinate fixed slices plus extension strips | Measured source content rectangle with large inset | Rail scan and node pulse | Avoid heavy armor language, centered docks, symmetric side racks, and dense edge noise unless explicitly requested. |
-| `dv-border-box-12` | Asymmetric split-bus trace frame on 1600 x 900 canvas | Left/top-biased with quiet return rails | Upper-left command bus, left side bus, offset status dock, checksum strip, small corner terminals, sparse nodes | Source-coordinate fixed slices plus extension strips | Measured source content rectangle with left/top emphasis | Short rail charge and subtle pulse | Avoid repeating the split-bus trace frame, left/top command spine, and offset checksum strip as the next original topology. |
+| `dv-border-box-11` | Failed style: high-density cyber command-console armor on 1600 x 900 canvas | Mirrored corner/side family with dense modules | Corner armor, centered docks, side sensor racks, hatch marks, nodes, scan lights | Source-coordinate fixed slices plus extension strips | Measured source content rectangle with large inset | Rail scan and node pulse | Treat as a failed design family. Reject heavy armor language, centered docks, symmetric side racks, dense edge noise, and bulky content insets. |
+| `dv-border-box-12` | Failed style: asymmetric split-bus trace frame on 1600 x 900 canvas | Left/top-biased with quiet return rails | Upper-left command bus, left side bus, offset status dock, checksum strip, small corner terminals, sparse nodes | Source-coordinate fixed slices plus extension strips | Measured source content rectangle with left/top emphasis | Short rail charge and subtle pulse | Treat as a failed design family. Reject split-bus trace identity, left/top command spine, offset status dock, checksum strip, and decorative sparse-trace grammar. |
 
 ## Next Design Pressure
 
@@ -27,6 +27,8 @@ The next original border should change several high-level dimensions at once:
 
 - Avoid centered top/bottom energy docks as the primary rhythm.
 - Avoid four mirrored corner armor blocks as the identity.
+- Avoid high-density cyber command-console armor in the style of `dv-border-box-11`.
+- Avoid asymmetric split-bus trace layouts in the style of `dv-border-box-12`.
 - Avoid rounded DataV replica panels.
-- Prefer an off-axis rail system, split rail, circuit trace, floating node rail, diagonal lattice, or another border-native topology with generous content corners.
+- Prefer a border-native topology with generous content corners that is not armor-led, dock-led, label-led, or dependent on a left/top command spine.
 - Prefer source-coordinate fixed modules plus clean extension strips unless a live-size exception is documented.
