@@ -38,4 +38,5 @@ The first usable loop is intentionally small: `dv-fit-screen` handles dashboard 
 - [Border Box 10](/components/borders/border-box-10) for the DataV Vue3 BorderBox12-style rounded glow frame.
 - [Border Box 11](/components/borders/border-box-11) for the high-density cyber command-console frame.
 - [Decoration 3](/components/decorations/decoration-3) for the DataV Vue3 Decoration5-style angular line decoration.
+- [Decoration 4](/components/decorations/decoration-4) for the DataV Vue3 Decoration11-style diamond panel decoration.
 - [Component Authoring](/guide/component-authoring) for the required file layout and checklist.

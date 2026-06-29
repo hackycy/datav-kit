@@ -4,12 +4,12 @@
 
 <div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 360px; --datav-decoration-height: 40px;">
   <div class="datav-decoration-shell">
-    <dv-decoration-3 colors="#3f96a5,#7acaec" duration="1.2"></dv-decoration-3>
+    <dv-decoration-3 duration="1.2"></dv-decoration-3>
   </div>
 </div>
 
 ```html
-<dv-decoration-3 colors="#3f96a5,#7acaec" duration="1.2"></dv-decoration-3>
+<dv-decoration-3 duration="1.2"></dv-decoration-3>
 ```
 
 ## Props

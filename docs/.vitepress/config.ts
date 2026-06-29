@@ -32,6 +32,7 @@ export default defineConfig({
             { text: 'Decoration 1', link: '/components/decorations/decoration-1' },
             { text: 'Decoration 2', link: '/components/decorations/decoration-2' },
             { text: 'Decoration 3', link: '/components/decorations/decoration-3' },
+            { text: 'Decoration 4', link: '/components/decorations/decoration-4' },
           ],
         },
         {
