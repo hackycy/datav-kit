@@ -4,6 +4,8 @@
 
 Create original high-density HUD/cyber border boxes that feel native to `datav-kit`. The goal is not "draw a border", but to design a responsive SVG frame with fixed visual identity modules, stretch-safe edge strips, neon lighting, and safe content geometry.
 
+Original means newly designed. Existing borders teach implementation discipline, density, and slicing strategy; they must not become a repeated shape library where every result keeps the same outline and only changes color.
+
 ## Project Contract
 
 - Use Web Components and Lit through `DatavElement`.
@@ -27,6 +29,26 @@ Read these before creating a new border:
 - `packages/elements/src/border-box-content-padding.ts`: content safe-area padding helper.
 - `docs/components/borders/border-box-2.md`, `border-box-3.md`, and `border-box-6.md`: public docs tone and prop tables.
 
+## Originality Gate
+
+Before writing code, describe the new border in a short design brief. The brief must answer:
+
+- What is the new silhouette, and how does it differ from `border-box-2`?
+- Which modules are fixed, and why are they visually unique to this design?
+- Which strips stretch, and why are those strips free of ornaments that would smear?
+- What is the dominant visual rhythm: heavy top command rail, asymmetric side spine, bottom dock, broken corner armor, radial node system, or another clear idea?
+- What new light behavior appears beyond a color swap: traveling glint, split halo, layered underglow, isolated white-hot nodes, scan ticks, or pulsing hatch marks?
+
+Reject these "new" designs even if they pass the complexity script:
+
+- The outer and inner paths are recognizably the `border-box-2` chamfered frame.
+- The layout is still four large corners, two centered bars, and two symmetric side nodes with only colors or stroke widths changed.
+- The top and bottom modules keep the same center-energy-bar proportion and placement as `border-box-2`.
+- The new component copies the previous slice map, then adds small ticks or extra glow as decoration.
+- The design brief cannot identify at least three geometry-level differences from the nearest existing border.
+
+When in doubt, change structure first: silhouette, corner mass, module count, asymmetry, slice topology, and content safe area are stronger originality signals than palette.
+
 ## Design Grammar
 
 Use a reference canvas, usually `1600 x 900` or `1672 x 941`, and design in source coordinates first.
@@ -49,6 +71,24 @@ Avoid these weak outputs:
 - A single full-size SVG stretched to every host size.
 - Decorative nodes placed in stretch regions where they smear as the host grows.
 - One hue at one opacity everywhere; complex HUD borders need contrast between dim structure, main chroma, and white-hot accents.
+
+## Creative Reference Cases
+
+Use these as starting prompts, not templates. A generated border may borrow one or two ideas from a case, but it should still invent its own paths, slices, proportions, and details.
+
+### Case 6: Offset Reactor Dock
+
+Create a frame that feels like an off-center reactor dock or launch-bay console, not a symmetric picture frame.
+
+- Canvas: `1672 x 941`, with a generous `contentRect` such as `x: 142`, `y: 124`, `width: 1388`, `height: 690`.
+- Silhouette: heavy stepped top-left armor, a long thin top command rail, a recessed right-side vertical spine, and a bottom dock that rises into the content area with two shallow trapezoid hatches.
+- Fixed modules: oversized top-left control block, compact top-right antenna bracket, right-side stacked capsule lights, bottom-left diagonal brace, bottom-center reactor hatch, bottom-right small lock plate, and at least two isolated node clusters.
+- Extension strips: split the top into three different rails instead of one repeated straight line; use a short left vertical strip, a long right vertical strip, and two bottom strips around the center hatch.
+- Ornament rhythm: dense detail on one corner and the bottom dock, sparse hairlines elsewhere, with intentional asymmetry.
+- Light behavior: dim blue structural underlay, cyan primary rails, amber or magenta accent hatch lights, and small white-hot node glints. Add one optional moving scan highlight only along a clean rail.
+- Must avoid: the `border-box-2` eight-module symmetry, matching corner brackets, centered top/bottom energy bars, and identical left/right side nodes.
+
+This case is useful when the request asks for more creativity. It gives the agent permission to change the frame's massing, not just draw another cyan rectangle.
 
 ## Complexity Budget
 
