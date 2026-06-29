@@ -10,8 +10,6 @@ import { BorderBox7Element } from './border-box-7/element'
 import { BorderBox8Element } from './border-box-8/element'
 import { BorderBox9Element } from './border-box-9/element'
 import { BorderBox10Element } from './border-box-10/element'
-import { BorderBox11Element } from './border-box-11/element'
-import { BorderBox12Element } from './border-box-12/element'
 import { CountToElement } from './count-to/element'
 import { Decoration1Element } from './decoration-1/element'
 import { Decoration2Element } from './decoration-2/element'
@@ -63,14 +61,6 @@ export const datavElementRegistrations: DatavElementRegistration[] = [
   {
     tagName: 'dv-border-box-10',
     element: BorderBox10Element,
-  },
-  {
-    tagName: 'dv-border-box-11',
-    element: BorderBox11Element,
-  },
-  {
-    tagName: 'dv-border-box-12',
-    element: BorderBox12Element,
   },
   {
     tagName: 'dv-decoration-1',

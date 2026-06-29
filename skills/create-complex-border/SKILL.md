@@ -77,7 +77,7 @@ Complete the branches in this order. Each branch depends on the decisions above 
 2. Define dashboard story: command-center hero, geo/city cockpit, operations nerve center, energy/grid monitor, financial pulse board, industrial digital twin, or abstract cyber showcase.
 3. Define first-read promise: first, second, and third visual read at dashboard distance.
 4. Read the inventory, pick the nearest existing border by shape family, and list do-not-repeat items.
-5. Generate candidate concepts: 3 for `original`, 2 for `variant`, 3 for `repair/redesign` unless user direction is explicit. Reject candidates that match the known failed style families in `failure-taxonomy.md`, especially `dv-border-box-11` high-density command-console armor and `dv-border-box-12` split-bus trace grammar.
+5. Generate candidate concepts: 3 for `original`, 2 for `variant`, 3 for `repair/redesign` unless user direction is explicit. Reject candidates that match the known failed style families in `failure-taxonomy.md`, especially high-density command-console armor and split-bus trace grammar.
 6. Select one concept using structure, beauty, dashboard usefulness, safe area, and distance from the nearest existing border.
 7. Define geometry: outer contour, corner grammar, side logic, top/bottom rhythm, fixed modules, extension strips, and source canvas.
 8. Define content safe area from actual inward reach of modules, glow, and motion. Redesign geometry if padding would squeeze dashboard content.
