@@ -68,6 +68,29 @@ def extract_arc_radii(text: str) -> list[tuple[float, float]]:
     return radii
 
 
+def has_fixed_safe_inset_risk(text: str) -> bool:
+    """Detect guessed padding constants used with live-size inward geometry."""
+    if "contentSafeInset" not in text:
+        return False
+
+    inset_numbers: list[float] = []
+    inset_match = re.search(
+        r"contentSafeInset\s*=\s*\{(?P<body>.*?)\}",
+        text,
+        flags=re.DOTALL,
+    )
+    if inset_match:
+        inset_numbers.extend(float(value) for value in re.findall(r":\s*(\d+(?:\.\d+)?)", inset_match.group("body")))
+
+    has_small_inset = bool(inset_numbers) and max(inset_numbers) <= 48
+    dynamic_inward_geometry = (
+        "createGeometry" in text
+        and any(token in text for token in ("top + 64", "top + 74", "bottom - 64", "bottom - 74", "left + 64", "left + 74", "right - 64", "right - 74"))
+    )
+
+    return has_small_inset and dynamic_inward_geometry
+
+
 def extract_path_command_signature(text: str) -> str:
     signature_parts: list[str] = []
     for block in extract_path_blocks(text):
@@ -188,6 +211,11 @@ def audit(path: Path) -> tuple[list[Check], list[str]]:
         warnings.append("Animation found without prefers-reduced-motion handling.")
     if "fixedSlices" not in text and visible_primitives < 45:
         warnings.append("No fixedSlices constant found; ensure fixed modules are still explicit and not just a live-size outline.")
+    if has_fixed_safe_inset_risk(text):
+        warnings.append(
+            "Fixed safe-inset risk: contentSafeInset is a small constant while live-size geometry appears to reach farther inward. "
+            "Measure the deepest fixed ornament/glow, verify content corners in screenshots, and redraw inward-reaching corners if padding would squeeze the dashboard area."
+        )
 
     canvas_size = extract_canvas_size(text)
     arc_radii = extract_arc_radii(text)

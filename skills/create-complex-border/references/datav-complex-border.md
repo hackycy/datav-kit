@@ -33,6 +33,8 @@ The skill also succeeds only when the result is still a credible Datav dashboard
 
 The border's aesthetic quality matters more than raw complexity. A technically valid frame that looks messy, cheap, overdrawn, or visually unresolved is a failed output.
 
+A border also fails when its own ornaments consume the user's usable dashboard space. Corner and side modules may be expressive, but they must not push deeply into all four content corners or force the content into an awkward inner polygon. Padding is not a cosmetic afterthought: it must be measured from the real safe area created by the final geometry and glow.
+
 ## Project Contract
 
 - Use Web Components and Lit through `DatavElement`.
@@ -141,6 +143,8 @@ Required checks:
 - Side-module discipline: side racks, spines, beacons, and scanner modules must attach to rail endpoints or plate geometry. Avoid a freestanding shape that merely touches the frame.
 - Arc/circle discipline: circular elements must be partial, bounded, and subordinate. They should read as a sensor, hinge, corner aperture, or rail terminal, not as a giant semicircle forming the whole side.
 - Content safety: no ornament may dominate or intrude so far that the content rectangle feels squeezed by a decorative object rather than protected by a frame.
+- Corner safety: diagonal corners, nodes, tabs, glow halos, and fixed plates must not collectively bite into all four content corners. A frame can have notches or inward cuts, but the content should still feel rectangularly usable and generous.
+- Padding truth: `contentRect` must represent the deepest inward reach of fixed modules and glow. A small hard-coded inset with larger visual intrusion, or a large padding value used to hide an ugly inward-reaching design, both fail this gate.
 - Layer clarity: dim construction lines go below, panel fills and rails sit in the middle, bright nodes/glints sit above, and content remains above the non-interactive frame. Do not let bright frame ornaments compete with or overlay slotted content.
 - Thumbnail test: at small size, the border should read as a futuristic frame with distinctive modules. If the first read is "big left semicircle", "random side gauge", "misaligned top/bottom lines", or "decorative portal", reject it.
 
@@ -150,6 +154,8 @@ Reject these even when primitive counts and originality checks pass:
 - A radial scanner whose center, sweep, or tick mass visually invades the content zone.
 - Top and bottom rails that appear to belong to different frames or are offset without a connector story.
 - A frame where fixed tiles and extension strips stack in a confusing order, causing rails to run under/over modules unintentionally.
+- A frame whose corner decorations reach inward on every corner, reducing useful dashboard space and making the inner content area feel pinched.
+- A frame whose padding is calculated from generic constants instead of the actual inward reach of its fixed modules, paths, and glow.
 - A border whose most memorable feature would not normally be used as a technology large-screen dashboard frame.
 - A border whose top/bottom edges look like tangled decoration rather than sleek engineered rails.
 
@@ -217,6 +223,7 @@ A complex border should include most of these traits:
 - Multiple light types: soft blur, hard neon edge, small node halo, and gradient core.
 - Asymmetry where useful: one side may have a large marker stack, the bottom may have hatch details, or a top line may have two different extension regions.
 - Enough negative space to hold dashboard content; ornament density should frame the panel, not invade the safe content rectangle.
+- A generous, deliberate safe content rectangle. Decorative mass should usually grow outward from the content area or stay within a shallow border band; repeated inward-pointing corners are rarely attractive and usually damage dashboard usability.
 - Large specialty motifs that remain subordinate to the edge system. A circle, arc, dock, or hatch may become a signature, but it must not become the whole frame identity at the expense of normal border readability.
 - A deliberate top/bottom rail composition with baseline, terminals, focal modules, secondary hairlines, and breathing room.
 
@@ -230,6 +237,8 @@ Avoid these weak outputs:
 - A repeated "four armor corners + centered top module + centered bottom dock + left/right middle rack" structure unless the user explicitly requested that family.
 - Renaming modules, nudging coordinates, or adding a beacon while the large silhouette remains the same.
 - A giant half-round side scanner, portal, or decorative wheel that makes one edge stop reading as a border.
+- A "corner spikes into content" concept where multiple diagonal rails, tabs, nodes, and glows all point inward and squeeze the content corners.
+- Treating `contentRect` as a generic padding constant. The safe area must be derived from the actual rendered frame, and the design must be redrawn if that safe area becomes too small.
 - Unexplained edge disorder: top and bottom rails that appear mixed, crossed, clipped by accident, or placed on the wrong layer.
 - Dense top/bottom linework that is complex but not beautiful: too many parallel strokes, arbitrary dashes, crowded tabs, or glow that turns the edge into visual noise.
 
@@ -318,6 +327,15 @@ This is not the only valid model. New borders may use:
 - Top-heavy or bottom-heavy layouts with different strip counts per side.
 - Sparse fixed anchors connected by long clean strips.
 
+Before coding responsive placement, write down the safe-area contract:
+
+- Maximum inward reach for each corner module.
+- Maximum inward reach for each side module, center dock, arc, animated highlight, and glow.
+- The final `contentRect` in source coordinates or host-derived coordinates.
+- The expected padding at source-ratio, wide, tall, and small demos.
+
+If that contract shows a large padding penalty at all four corners, change the visual concept. Do not accept a design that is responsive only because it sacrifices the content area.
+
 For each axis:
 
 - Compute a stable scale from the host and reference canvas.
@@ -384,6 +402,8 @@ Run `scripts/audit_border_complexity.py` against the new `element.ts`, then veri
 - No full-frame SVG sits underneath sliced modules.
 - Content padding maps to the intended safe area.
 - The content wrapper and slotted content do not cross the frame in fixed-height demos.
+- The content corners remain usable and visually open. Inspect a demo with real text/cards near all four corners; if inward geometry crowds them, the design fails even if padding technically avoids overlap.
+- The deepest visible ornament and glow are inside the planned frame band or fully represented by `contentRect`. Fixed constants that under-report intrusion are a padding bug.
 - Top and bottom border systems look coherent, connected, and ordered. Intentional broken rails still have terminals or connector modules.
 - Top and bottom edge linework has a clear hierarchy and rhythm. There is no tangled stacking, random rail crossing, crowded dock detail, or ugly line noise.
 - Side motifs attach to the frame and remain visually subordinate to the border. Any arc/circle/semicircle must pass the thumbnail test as a border module, not a pasted-on side gauge.
@@ -403,6 +423,8 @@ Run `scripts/audit_border_complexity.py` against the new `element.ts`, then veri
 - Details disappear after slicing: the tile viewBox may be too tight and clipping filter blur.
 - Right or bottom edges drift: align those slices from the corresponding host edge rather than reusing left/top placement math blindly.
 - Content overlaps the frame: recalculate `contentRect`, then inspect live host/content rectangles before changing visual paths.
+- Content does not overlap but feels cramped because every corner reaches inward: redesign the silhouette outward, remove inward corner mass, or convert the motif into shallow edge-band detail.
+- Padding is "technically" generated but wrong because `contentRect` was guessed from small constants while paths, nodes, or glows intrude farther: measure the real inward reach and either update the safe area or redraw the frame.
 - Two consecutive generated borders look like siblings with the same body shape: stop adding decoration and change the large topology.
 - The component passes primitive-count checks but fails the thumbnail test: primitive count is not originality.
 - The border depends on a centered dock because the previous one did: move the major module off-center, remove it, replace it with radial/side logic, or change the slice model.

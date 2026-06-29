@@ -22,8 +22,11 @@ Pass this gate before coding and again after screenshots:
 - Top, bottom, left, and right edges must form an intentional, attractive frame system. Broken rails are allowed, but their interruptions must be mirrored by connector modules, anchors, or terminals; accidental-looking top/bottom misalignment or messy linework is a failure.
 - The top and bottom edges need clean composition: clear primary rail, secondary hairlines, deliberate gaps, aligned terminals, and restrained detail density. Random stacked strokes, tangled rails, visually noisy docks, or unbalanced top/bottom outlines must be redesigned.
 - Large arcs, circles, lenses, and semicircles may appear only as subordinate border modules. They must not dominate one side, invade the content safe area, or make the border read as a half-round object attached to a rectangle.
+- Corners and side modules must protect the content area, not consume it. A design where many corner diagonals, plates, nodes, or rails grow inward and squeeze all four content corners is a failed border, even if the visual frame remains technically responsive.
+- The content safe area must be designed before decoration. Padding derived from a small fixed inset while ornaments extend farther inward is a failed implementation; resize math must prove that the slotted content never crosses or visually fights the fixed frame modules.
 - Fixed ornaments may sit above extension strips, but the visual hierarchy must remain clear: dim structure below, rails and plates in the middle, bright glints above, and content above the non-interactive frame.
 - Reject any concept where one side has a large unexplained semicircle, a pasted-on scanner, or a module that is not connected to the frame grammar.
+- Reject any concept whose best description is "the corners reach into the panel." Inward notches may exist only when they are rare, shallow, attractive, and accounted for by the contentRect.
 - Motion must support the dashboard instead of stealing runtime budget. Any animated border that causes visible jank, constant layout work, excessive paint, high CPU/GPU usage, or a busy full-frame redraw loop is a failed result even if it looks visually impressive.
 
 ## Workflow
@@ -51,6 +54,7 @@ Pass this gate before coding and again after screenshots:
    - Choose a reference canvas intentionally. Avoid defaulting to `1600 x 900` or `1672 x 941` when a different ratio better supports the concept.
    - Name the concept in concrete visual terms: e.g. "left-heavy orbital scanner frame with a circular beacon and broken bottom rail".
    - Define `frameViewBox` or `contentViewBox`, `contentRect`, fixed modules, extension strips, and animation paths before writing render code.
+   - Define the deepest inward reach of every fixed corner, side module, center dock, arc, and glow before approving the `contentRect`. If the required `contentRect` would squeeze normal dashboard content at the corners, redesign the frame outward or simplify the modules instead of accepting a large padding penalty.
    - Include at least five visual systems: silhouette, layered linework, fixed ornaments, light/glow behavior, and motion or interaction state.
    - Define the aesthetic thesis: why the border is beautiful, cool, and suitable for a technology large-screen dashboard. Mention top/bottom rail rhythm, focal modules, negative space, and glow hierarchy.
    - State why the shape still reads as a usable technology dashboard border and not a side illustration. Name any large arc or circular module and explain how it connects to adjacent rails.
@@ -62,6 +66,7 @@ Pass this gate before coding and again after screenshots:
    - Keep corners, center plates, side marker stacks, circles, dense tick clusters, and diagonal joins fixed.
    - Invent new fixed modules instead of reusing the same corner bracket, side node, and center energy-bar motif from a previous border.
    - Change large forms first: if the frame still has the same visual massing as a prior border, redesign the silhouette before adding small decoration.
+   - Keep inward-reaching geometry sparse and purposeful. Prefer ornament mass outside the content rectangle or along the immediate border band; avoid stacking diagonal corner rails, nodes, tabs, and glows that all point into the content area.
    - Stretch only clean straight strips along one axis.
    - Avoid one-note simple rectangles, single `polyline` frames, or generic rounded panels unless the user explicitly asks for a simple border.
    - Keep animation cheap by limiting the number of animated elements, sharing animation definitions, and animating only small foreground accents or short rail segments. Heavy glow should usually be static; if glow moves, keep the filter region tight and the animated area small.
@@ -72,6 +77,8 @@ Pass this gate before coding and again after screenshots:
    - Render extension strips with `preserveAspectRatio="none"` only for clean straight slices.
    - Never stretch the whole artwork to the host with `preserveAspectRatio="none"`.
    - Compute content padding from `contentRect` with `createBorderBoxContentPadding` or an equivalent measured safe-area function.
+   - Derive `contentRect` from the actual maximum inward reach of fixed modules and glow, not from a guessed constant such as "30px per side." The `contentRect` must preserve usable corner space at small and typical dashboard sizes.
+   - Do not solve intrusive geometry by inflating padding until content fits. If the padding needed to clear ornaments makes the four content corners feel cramped, the visual design is wrong and must be redrawn.
    - Do not reuse a previous border's fixed slice names, counts, and proportions unless the user explicitly asks for a close variant. Similar slice maps produce similar borders.
 
 7. Update public surfaces.
@@ -85,6 +92,8 @@ Pass this gate before coding and again after screenshots:
    - Use browser or DOM screenshots at source-ratio, wide, tall, and small sizes when available.
    - Judge screenshots as visual design, not only implementation. If the border does not look polished, futuristic, and desirable, redesign before finishing even when tests pass.
    - Confirm content stays inside the safe area and fixed ornamental modules do not smear.
+   - Overlay or otherwise inspect the live content rectangle against the rendered frame. If corner decorations visually bite into the slotted content area, or if the padding is smaller than the deepest fixed ornament/glow, redesign before finishing.
+   - Confirm the usable content corners remain generous. A border that forces dashboard content into an awkward rounded/octagonal inner hole because every corner reaches inward is a failed result, not a bold silhouette.
    - Confirm the four edge systems are visually coherent at source-ratio, wide, tall, and small sizes. Top/bottom rails may be split, but they must not look scrambled, layered out of order, or accidentally offset.
    - Inspect the top and bottom linework first. If those edges look cluttered, tangled, arbitrarily layered, or merely "usable", simplify the rail hierarchy and rebuild the edge modules.
    - Specifically inspect any arc, circle, or semicircle. If it reads like a large left/right half-disc attached to the frame, reduce it, break it into rail-connected arc segments, or replace it.
