@@ -15,6 +15,7 @@ import { decoration1Metadata } from './decoration-1/metadata'
 import { decoration2Metadata } from './decoration-2/metadata'
 import { decoration3Metadata } from './decoration-3/metadata'
 import { decoration4Metadata } from './decoration-4/metadata'
+import { decoration5Metadata } from './decoration-5/metadata'
 import { fitScreenMetadata } from './fit-screen/metadata'
 
 export type ElementMetadata = DatavElementMetadata
@@ -36,5 +37,6 @@ export const elementMetadata: ElementMetadata[] = [
   decoration2Metadata,
   decoration3Metadata,
   decoration4Metadata,
+  decoration5Metadata,
   countToMetadata,
 ]

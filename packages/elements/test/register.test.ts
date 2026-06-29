@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, FitScreenElement } from '../src/index'
+import type { CountToElement, Decoration5Element, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -62,14 +62,15 @@ describe('@datav-kit/elements', () => {
       'dv-decoration-2',
       'dv-decoration-3',
       'dv-decoration-4',
+      'dv-decoration-5',
       'dv-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-decoration-5', 'dv-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-decoration-5', 'dv-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -122,7 +123,29 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration2()).toBe(false)
     expect(defineDecoration3()).toBe(false)
     expect(defineDecoration4()).toBe(false)
+    expect(defineDecoration5()).toBe(false)
     expect(defineCountTo()).toBe(false)
+  })
+
+  it('renders decoration-5 with DataV Decoration8 coordinates and reverse mode', async () => {
+    register()
+
+    const element = document.createElement('dv-decoration-5') as Decoration5Element
+    element.setAttribute('reverse', '')
+    element.setAttribute('colors', '#111,#222')
+    document.body.append(element)
+
+    emitResize(360, 40)
+    await element.updateComplete
+
+    const lines = [...element.shadowRoot?.querySelectorAll('polyline') ?? []]
+
+    expect(lines).toHaveLength(3)
+    expect(lines[0].getAttribute('points')).toBe('360,0 330,20')
+    expect(lines[1].getAttribute('points')).toBe('340,0 310,20 0,20')
+    expect(lines[2].getAttribute('points')).toBe('360,37 160,37')
+    expect(lines[0].getAttribute('stroke')).toBe('#111')
+    expect(lines[2].getAttribute('stroke')).toBe('#222')
   })
 
   it('maps count-to attributes and formats the disabled target value', async () => {
