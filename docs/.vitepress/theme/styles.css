@@ -26,12 +26,13 @@
 }
 
 .datav-demo--decoration {
-  min-height: 160px;
+  min-height: calc(var(--datav-decoration-height, 40px) + 48px);
+  padding: 20px 24px;
 }
 
 .datav-decoration-shell {
-  width: min(100%, 720px);
-  height: 84px;
+  width: min(100%, var(--datav-decoration-width, 300px));
+  height: var(--datav-decoration-height, 40px);
 }
 
 .datav-panel {

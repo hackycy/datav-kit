@@ -31,6 +31,12 @@ export const decoration3Metadata = {
       attribute: true,
       description: 'Stroke dash animation duration in seconds.',
     },
+    dur: {
+      type: 'number',
+      default: 1.2,
+      attribute: true,
+      description: 'DataV-compatible alias for stroke dash animation duration in seconds.',
+    },
     animated: {
       type: 'boolean',
       default: true,

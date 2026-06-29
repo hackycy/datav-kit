@@ -2,7 +2,7 @@
 
 `dv-decoration-2` recreates the two-row dotted light decoration from DataV Vue3 `Decoration3` as a framework-agnostic Web Component. It uses a 300 x 35 SVG reference grid and scales to the host element.
 
-<div class="datav-demo datav-demo--decoration">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 300px; --datav-decoration-height: 35px;">
   <div class="datav-decoration-shell">
     <dv-decoration-2 colors="#7acaec,transparent"></dv-decoration-2>
   </div>

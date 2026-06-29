@@ -1482,6 +1482,25 @@ describe('@datav-kit/elements', () => {
     expect(animations[0]?.getAttribute('keySplines')).toBe('0.4,1,0.49,0.98')
   })
 
+  it('supports decoration-3 DataV-compatible dur attribute', async () => {
+    register()
+
+    const element = document.createElement('dv-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.setAttribute('dur', '0.8')
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(360, 40)
+    await element.updateComplete
+
+    const animations = element.shadowRoot?.querySelectorAll('animate') ?? []
+
+    expect(element).toHaveProperty('dur', 0.8)
+    expect(animations).toHaveLength(2)
+    expect([...animations].map(animation => animation.getAttribute('dur'))).toEqual(['0.8s', '0.8s'])
+    expect([...animations].map(animation => animation.getAttribute('repeatCount'))).toEqual(['indefinite', 'indefinite'])
+  })
+
   it('resolves decoration-3 colors from CSS variables and supports paused animation', async () => {
     register()
 

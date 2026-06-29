@@ -13,6 +13,7 @@ interface DecorationSize {
 }
 
 const defaultDuration = 1.2
+const strokeDashKeySplines = '0.4,1,0.49,0.98'
 const defaultSize: DecorationSize = {
   width: 0,
   height: 0,
@@ -49,6 +50,9 @@ export class Decoration3Element extends DatavElement {
   @property({ type: Number })
   duration = defaultDuration
 
+  @property({ type: Number })
+  dur = defaultDuration
+
   @property({ type: Boolean })
   animated = true
 
@@ -73,7 +77,7 @@ export class Decoration3Element extends DatavElement {
     const [primary, secondary] = this.resolveColors()
     const width = Math.max(this.size.width, 1)
     const height = Math.max(this.size.height, 1)
-    const duration = Math.max(resolveNumberValue(this.duration, defaultDuration), 0.1)
+    const duration = this.resolveDuration()
     const line1Points = createLine1Points(width, height)
     const line2Points = createLine2Points(width, height)
     const line1Length = getPolylineLength(line1Points)
@@ -98,22 +102,7 @@ export class Decoration3Element extends DatavElement {
           stroke-width="3"
           points=${pointsToString(line1Points)}
         >
-          ${showAnimation
-            ? svg`
-              <animate
-                attributeName="stroke-dasharray"
-                attributeType="XML"
-                from=${`0, ${line1Length / 2}, 0, ${line1Length / 2}`}
-                to=${`0, 0, ${line1Length}, 0`}
-                dur=${`${duration}s`}
-                begin="0s"
-                calcMode="spline"
-                keyTimes="0;1"
-                keySplines="0.4,1,0.49,0.98"
-                repeatCount="indefinite"
-              ></animate>
-            `
-            : null}
+          ${showAnimation ? createStrokeDashAnimation(line1Length, duration) : null}
         </polyline>
         <polyline
           part="line sub-line"
@@ -122,25 +111,18 @@ export class Decoration3Element extends DatavElement {
           stroke-width="2"
           points=${pointsToString(line2Points)}
         >
-          ${showAnimation
-            ? svg`
-              <animate
-                attributeName="stroke-dasharray"
-                attributeType="XML"
-                from=${`0, ${line2Length / 2}, 0, ${line2Length / 2}`}
-                to=${`0, 0, ${line2Length}, 0`}
-                dur=${`${duration}s`}
-                begin="0s"
-                calcMode="spline"
-                keyTimes="0;1"
-                keySplines="0.4,1,0.49,0.98"
-                repeatCount="indefinite"
-              ></animate>
-            `
-            : null}
+          ${showAnimation ? createStrokeDashAnimation(line2Length, duration) : null}
         </polyline>
       </svg>
     `
+  }
+
+  private resolveDuration(): number {
+    const duration = this.hasAttribute('duration') || this.duration !== defaultDuration
+      ? this.duration
+      : this.dur
+
+    return Math.max(resolveNumberValue(duration, defaultDuration), 0.1)
   }
 
   private resolveColors(): [string, string] {
@@ -188,6 +170,23 @@ function createLine2Points(width: number, height: number): DecorationPoint[] {
     { x: width * 0.3, y: height * 0.8 },
     { x: width * 0.7, y: height * 0.8 },
   ]
+}
+
+function createStrokeDashAnimation(length: number, duration: number): unknown {
+  return svg`
+    <animate
+      attributeName="stroke-dasharray"
+      attributeType="XML"
+      from=${`0, ${length / 2}, 0, ${length / 2}`}
+      to=${`0, 0, ${length}, 0`}
+      dur=${`${duration}s`}
+      begin="0s"
+      calcMode="spline"
+      keyTimes="0;1"
+      keySplines=${strokeDashKeySplines}
+      repeatCount="indefinite"
+    ></animate>
+  `
 }
 
 function pointsToString(points: DecorationPoint[]): string {
