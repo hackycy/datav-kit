@@ -189,17 +189,34 @@ def audit(path: Path) -> tuple[list[Check], list[str]]:
         or re.search(r"contentRect\.(?:x|y|width|height)", text) is not None
     )
 
+    has_fixed_module_model = (
+        "fixedSlices" in text
+        or "renderFixed" in text
+        or ("createGeometry" in text and count(r"private\s+render[A-Z]\w+\(", text) >= 4)
+    )
+    has_extension_or_live_model = (
+        "extensionSlices" in text
+        or "renderExtension" in text
+        or ("createGeometry" in text and "viewBox=${`0 0 ${width} ${height}`}" in text)
+    )
+    has_painted_or_blur_glow = (
+        blurs >= 1
+        or "haloGradient" in text
+        or "painted halo" in lower
+        or re.search(r"stroke-width=\{String\(halo", text) is not None
+    )
+
     checks: list[Check] = [
         ("datav-element", "extends DatavElement" in text, "class should extend DatavElement"),
         ("resize-controller", "ResizeController" in text, "responsive border should observe host size"),
-        ("fixed-slices", "fixedSlices" in text or "renderFixed" in text, "complex modules should be fixed"),
-        ("extension-slices", "extensionSlices" in text or "renderExtension" in text, "clean strips should extend"),
+        ("fixed-identity", has_fixed_module_model, "fixed identity modules or live-size geometry modules should be explicit"),
+        ("responsive-model", has_extension_or_live_model, "clean strips should extend or live-size geometry should recompute from host dimensions"),
         ("safe-content", has_safe_content, "content padding should use a measured safe area"),
         ("unique-svg-ids", "instanceId" in text and re.search(r"`dv-border-box-[^`]*\$\{this\.instanceId\}", text) is not None, "SVG ids should be instance-scoped"),
         ("three-color-roles", all(token in text for token in ("secondaryColor", "accentColor", "colors")), "complex neon borders should expose primary, secondary, accent, and colors"),
         ("glow-control", "glowIntensity" in text and ("resolveNumberValue" in text or "Number" in text), "glow intensity should be configurable"),
         ("svg-defs", defs >= 3, f"expected at least 3 SVG defs, found {defs}"),
-        ("blur-glow", blurs >= 1 and ("filter" in lower or "glow" in lower), f"expected blur/filter glow, found {blurs} blur nodes"),
+        ("glow-layer", has_painted_or_blur_glow, f"expected painted halo or blur/filter glow, found {blurs} blur nodes"),
         ("visual-density", visible_primitives >= 25, f"expected at least 25 visible primitives/path references, found {visible_primitives}"),
         ("parts", all(part in text for part in ('part="frame"', 'part="graphic"', 'part="content"')), "frame, graphic, and content parts should be exposed"),
     ]
@@ -209,8 +226,8 @@ def audit(path: Path) -> tuple[list[Check], list[str]]:
         warnings.append("Found preserveAspectRatio='none' on an SVG; confirm it is only used for clean extension strips.")
     if "prefers-reduced-motion" not in text and ("<animate" in text or "repeatCount=\"indefinite\"" in text):
         warnings.append("Animation found without prefers-reduced-motion handling.")
-    if "fixedSlices" not in text and visible_primitives < 45:
-        warnings.append("No fixedSlices constant found; ensure fixed modules are still explicit and not just a live-size outline.")
+    if "fixedSlices" not in text and "createGeometry" not in text:
+        warnings.append("No fixedSlices or live-size geometry model found; ensure modules are explicit and not just a decorative outline.")
     if has_fixed_safe_inset_risk(text):
         warnings.append(
             "Fixed safe-inset risk: contentSafeInset is a small constant while live-size geometry appears to reach farther inward. "

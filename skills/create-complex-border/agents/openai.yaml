@@ -1,4 +1,4 @@
 interface:
   display_name: Create Complex Border
-  short_description: Create complex neon HUD borders
-  default_prompt: Use $create-complex-border to design and implement a new complex neon HUD border component.
+  short_description: Create striking Datav screen borders
+  default_prompt: Use $create-complex-border to design and implement a striking, data-first Datav large-screen border component with strong visual hierarchy.

@@ -3,6 +3,7 @@
 ## Contents
 
 - [Purpose](#purpose)
+- [Large-Screen Strategy](#large-screen-strategy)
 - [Project Contract](#project-contract)
 - [Study Targets](#study-targets)
 - [Existing Border Shape Inventory](#existing-border-shape-inventory)
@@ -23,7 +24,7 @@
 
 ## Purpose
 
-Create original high-density HUD/cyber border boxes that feel native to `datav-kit`. The goal is not "draw a border", but to design a responsive SVG frame with fixed visual identity modules, stretch-safe edge strips, neon lighting, and safe content geometry.
+Create original polished HUD/cyber border boxes that feel native to `datav-kit`. The goal is not "draw a border", but to design a responsive SVG frame with visual identity modules, stretch-safe geometry when needed, refined lighting, and safe content geometry.
 
 Original means newly designed. Existing borders teach implementation discipline, density, and slicing strategy; they must not become a repeated shape library where every result keeps the same outline and only changes color.
 
@@ -34,6 +35,18 @@ The skill also succeeds only when the result is still a credible Datav dashboard
 The border's aesthetic quality matters more than raw complexity. A technically valid frame that looks messy, cheap, overdrawn, or visually unresolved is a failed output.
 
 A border also fails when its own ornaments consume the user's usable dashboard space. Corner and side modules may be expressive, but they must not push deeply into all four content corners or force the content into an awkward inner polygon. Padding is not a cosmetic afterthought: it must be measured from the real safe area created by the final geometry and glow.
+
+Recent failure lesson: generated borders can pass structural checks while still feeling like heavy mecha armor and causing runtime jank. Treat thick rails, bulky corner plates, repeated glow filters, long `animateMotion` paths, and high-density edge noise as warning signs, not as proof of sophistication.
+
+## Large-Screen Strategy
+
+Read `large-screen-aesthetic.md` before using this reference. A Datav border must serve a dashboard story:
+
+- Define the focal zone and first-read promise before drawing paths.
+- Let the strongest border light, asymmetry, and motion point toward important data.
+- Judge aesthetics with realistic demo content. Empty-frame screenshots are not enough.
+- Keep chart/map/KPI areas visually dominant. Border detail is atmosphere and structure, not the primary message.
+- Use technology, space, and light to create large-screen presence, but keep the data readable and central.
 
 ## Project Contract
 
@@ -112,6 +125,7 @@ Required qualities:
 - Balanced asymmetry: asymmetry is welcome only when it feels composed. Heavy modules need counterweight through rails, light, spacing, or opposite-side accents.
 - Polished neon: use dim structure, colored body, and bright core/glint layers. Avoid flat single-stroke neon and avoid glow that muddies the linework.
 - Elegant restraint: remove any stroke, tick, plate, or node that does not improve the shape, rhythm, depth, or focal hierarchy.
+- Lightweight technology: large-screen borders should feel precise, glassy, and breathable by default. Heavy armor, stacked bevels, and thick mechanical plates should appear only when the user explicitly asks for an industrial/mecha direction.
 
 Top/bottom edge composition:
 
@@ -129,6 +143,7 @@ Reject these:
 - High primitive count used to hide poor composition.
 - Top and bottom linework that looks tangled, noisy, arbitrary, or accidentally layered.
 - A design where glow makes edge disorder harder to notice instead of making the structure more beautiful.
+- A design whose first read is bulky mecha hardware instead of a refined dashboard frame.
 
 ## Border-First Quality Gate
 
@@ -213,19 +228,20 @@ Complexity is not decoration count alone. A complex border with the same silhoue
 
 Use a reference canvas and design in source coordinates first. Choose the canvas for the concept, not habit. A wide command rail may use `1600 x 900`; an ornate source-style frame may use `1672 x 941`; a square-ish scanner, vertical side panel, or dashboard tile may use a different coordinate system.
 
-A complex border should include most of these traits:
+A strong border may include many of these traits, but should not include them all at maximum intensity:
 
 - A non-rectangular silhouette with chamfers, stepped corners, notches, broken line segments, or inset plates.
-- Fixed corner modules with layered panels, diagonals, micro ticks, inner hairlines, and bright glints.
+- Fixed corner or identity modules with layered panels, diagonals, micro ticks, inner hairlines, and bright glints. Keep these shallow unless the user asks for heavy machinery.
 - Top and bottom center modules such as plates, hatches, energy bars, small bridge lines, or status tabs.
 - Side marker stacks such as dots, circles, short horizontal ticks, vertical rails, triangular arrows, barcode-like clusters, or small blocks.
-- At least three visual depth layers: dim structural shadow, colored glow halo, and bright core stroke or fill.
-- Multiple light types: soft blur, hard neon edge, small node halo, and gradient core.
+- At least three visual depth layers: dim structural shadow, colored halo or translucent rail body, and bright core stroke or fill.
+- Multiple light roles: painted halo strokes, hard neon edge, small node glints, and gradient core. SVG blur filters are optional and should be sparse.
 - Asymmetry where useful: one side may have a large marker stack, the bottom may have hatch details, or a top line may have two different extension regions.
 - Enough negative space to hold dashboard content; ornament density should frame the panel, not invade the safe content rectangle.
 - A generous, deliberate safe content rectangle. Decorative mass should usually grow outward from the content area or stay within a shallow border band; repeated inward-pointing corners are rarely attractive and usually damage dashboard usability.
 - Large specialty motifs that remain subordinate to the edge system. A circle, arc, dock, or hatch may become a signature, but it must not become the whole frame identity at the expense of normal border readability.
 - A deliberate top/bottom rail composition with baseline, terminals, focal modules, secondary hairlines, and breathing room.
+- A line-weight system that stays elegant: most strokes should be hairlines or thin rails; wide glow layers should be translucent and quiet.
 
 Avoid these weak outputs:
 
@@ -233,7 +249,7 @@ Avoid these weak outputs:
 - Four simple corner brackets plus one line per side.
 - A single full-size SVG stretched to every host size.
 - Decorative nodes placed in stretch regions where they smear as the host grows.
-- One hue at one opacity everywhere; complex HUD borders need contrast between dim structure, main chroma, and white-hot accents.
+- One hue at one opacity everywhere; HUD borders need contrast between dim structure, main chroma, and white-hot accents.
 - A repeated "four armor corners + centered top module + centered bottom dock + left/right middle rack" structure unless the user explicitly requested that family.
 - Renaming modules, nudging coordinates, or adding a beacon while the large silhouette remains the same.
 - A giant half-round side scanner, portal, or decorative wheel that makes one edge stop reading as a border.
@@ -241,6 +257,7 @@ Avoid these weak outputs:
 - Treating `contentRect` as a generic padding constant. The safe area must be derived from the actual rendered frame, and the design must be redrawn if that safe area becomes too small.
 - Unexplained edge disorder: top and bottom rails that appear mixed, crossed, clipped by accident, or placed on the wrong layer.
 - Dense top/bottom linework that is complex but not beautiful: too many parallel strokes, arbitrary dashes, crowded tabs, or glow that turns the edge into visual noise.
+- Thick corner armor, large bevel stacks, or dense rail docks that make the component read as mecha UI rather than large-screen data UI.
 
 ## Creative Reference Cases
 
@@ -299,13 +316,14 @@ Create a frame that reads as a circuit board carved around dashboard content.
 
 ## Complexity Budget
 
-Use this as a floor, not a ceiling, for a new "complex" border:
+Use this as guidance, not a scorecard. Complexity is structural distinctiveness and aesthetic control, not weight or primitive count.
 
-- At least `8` fixed modules, commonly four corners, two center modules, and two side detail modules.
-- At least `8` extension strips, commonly two per side around fixed modules.
-- At least `3` SVG definitions among filters, gradients, symbols, clip paths, and masks.
-- At least `25` visible primitives or path layers across the frame, excluding repeated boilerplate.
-- At least `2` glow filters or one multi-stage filter with more than one blur/merge layer.
+- Medium borders may use one live-size responsive SVG with carefully computed host geometry, especially for thin-rail, glass HUD, circuit-trace, or minimal pulse concepts.
+- Complex borders often use `6` or more fixed visual systems, such as corner anchors, off-axis bridge, side sensor rail, bottom bus, node field, and secondary hairlines. These systems do not all need to be separate sliced tiles.
+- Use slicing when fixed ornate modules would smear. Do not add many slices just to look complex.
+- Use at least `3` SVG definitions among gradients, symbols, clip paths, masks, or sparse filters when the design benefits from them.
+- Prefer painted halo strokes and gradients before blur filters. Use at most one small/tight blur filter by default; multiple wide filters need an explicit reason and screenshot/performance validation.
+- Use enough visible primitives to create rhythm and identity, then stop. A primitive count that makes the edge noisy or heavy is a failure.
 - At least `3` color roles: primary, secondary, and accent.
 - At least `1` measured `contentRect` and a safe-area padding calculation.
 
@@ -326,6 +344,7 @@ This is not the only valid model. New borders may use:
 - Split top rails with no centered module.
 - Top-heavy or bottom-heavy layouts with different strip counts per side.
 - Sparse fixed anchors connected by long clean strips.
+- One live-size SVG whose paths are recomputed from host width and height, when that is lighter and more visually stable than repeating sliced SVG instances.
 
 Before coding responsive placement, write down the safe-area contract:
 
@@ -354,7 +373,7 @@ Avoid copying an existing slice map. If the new `fixedSlices` and `extensionSlic
 A strong generated border usually has this order:
 
 1. Dim base shapes or shadow rails with low opacity.
-2. Wide soft glow paths or fills.
+2. Quiet painted halo paths or fills.
 3. Structural panel fills and darker contour strokes.
 4. Main colored stroke/filled trace.
 5. Bright core line, node lights, and small glints.
@@ -368,6 +387,7 @@ Layering validation:
 - Extension strips should be visually behind or integrated with fixed modules, not visibly slicing through them.
 - Fixed tiles that overlap must have explicit placement and enough transparent margin to avoid clipped glow.
 - Bright animated elements should travel on clean rails or inside fixed modules only; do not let a moving scan line cross the content area unless it is explicitly clipped to the frame.
+- Avoid long `animateMotion` paths and animated blur filters by default. Prefer CSS opacity, stroke-dash offset on short paths, or small transforms on isolated accents.
 - Content should have a higher stacking context than the frame container when the frame is decorative. If frame highlights intentionally overlay content, that must be a deliberate component feature requested by the user, not the default.
 
 ## Datav-kit Implementation Checklist
@@ -396,8 +416,9 @@ Element conventions:
 Run `scripts/audit_border_complexity.py` against the new `element.ts`, then verify manually:
 
 - The border looks beautiful, cool, polished, and premium before considering whether it merely works.
+- The border reads as refined large-screen technology, not thick mecha hardware, unless that direction was explicitly requested.
 - Fixed modules stay crisp at source-ratio, wide, tall, and small sizes.
-- Only clean extension strips grow.
+- Only clean extension strips grow, or live-size geometry recomputes cleanly without smearing.
 - Corner diagonals, side marker stacks, circles, tick clusters, center plates, and hatches never smear.
 - No full-frame SVG sits underneath sliced modules.
 - Content padding maps to the intended safe area.
@@ -410,6 +431,7 @@ Run `scripts/audit_border_complexity.py` against the new `element.ts`, then veri
 - Z-index and draw order are legible: extension strips do not incorrectly cover fixed modules, and glow layers do not obscure content.
 - Multiple component instances do not collide through duplicated SVG IDs.
 - `glow-intensity`, colors, CSS variables, and docs examples all affect visible SVG layers.
+- Motion uses few animated elements, avoids repeated expensive filters, and remains smooth during resize and normal dashboard content rendering.
 - The new screenshot remains identifiable if converted to a black-and-white silhouette.
 - The new screenshot differs from the nearest existing border in at least five geometry dimensions from the Divergence Protocol.
 - If available, run the audit script with `--compare` against existing `border-box-*` element files and review any similarity warnings.
@@ -418,8 +440,10 @@ Run `scripts/audit_border_complexity.py` against the new `element.ts`, then veri
 
 - The output looks "technology-like" but too simple: add fixed modules, center plates, side marker stacks, hairlines, glints, and multiple light layers.
 - The output is functional but not beautiful: redesign the composition before adding more primitives. Better rail rhythm beats more decoration.
+- The output feels heavy or mecha-like: reduce stroke weights, remove bulky plates, increase negative space, and replace large armor blocks with thin glass/HUD traces.
 - The border looks good at one size only: you probably stretched the full drawing or included ornaments inside an extension strip.
 - Neon looks flat: separate halo, body, and core layers instead of one bright stroke.
+- Neon causes jank or muddy edges: replace blur filters with painted translucent halo strokes and reduce animated elements.
 - Details disappear after slicing: the tile viewBox may be too tight and clipping filter blur.
 - Right or bottom edges drift: align those slices from the corresponding host edge rather than reusing left/top placement math blindly.
 - Content overlaps the frame: recalculate `contentRect`, then inspect live host/content rectangles before changing visual paths.
@@ -432,3 +456,4 @@ Run `scripts/audit_border_complexity.py` against the new `element.ts`, then veri
 - Top and bottom edges feel scrambled: redraw the edge system before adding detail. Use fewer strips, clearer anchors, and explicit layer order.
 - A side module steals the frame identity: shrink it, move it into a corner/terminal role, or balance it with stronger top/bottom structure.
 - The top/bottom edge looks busy instead of premium: remove half the small strokes, choose one dominant rail, align modules to it, and reintroduce detail only where it improves rhythm.
+- The animation looks impressive but the UI feels slower: remove long-path motion, animated filters, and repeated SVG instances before tuning timing.
