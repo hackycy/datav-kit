@@ -9,7 +9,7 @@ description: Create original complex Datav-style SVG border components and asset
 
 Use this skill to create a new complex technology-style border with the same implementation rigor as the existing ornate `border-box-2`, `border-box-3`, and `border-box-6` components. Treat the border as an engineered responsive SVG system, not a single decorative outline.
 
-The existing components are engineering references, not shape templates. A new border must have its own silhouette, module topology, ornament rhythm, and light behavior. Do not recreate the `border-box-2` outer/inner path, eight-slice layout, centered energy-bar composition, or corner geometry with only color changes.
+The existing components are engineering references, not shape templates. A new border must have its own silhouette, module topology, ornament rhythm, slice strategy, complexity level, and light behavior. A border that keeps the same large outline and module layout while changing colors, labels, small ticks, or glow details is a failed use of this skill.
 
 Before implementing, read `references/datav-complex-border.md`. If the task starts from a source SVG that must be preserved exactly, also use the sibling `replicate-complex-svg` skill first.
 
@@ -17,42 +17,71 @@ Before implementing, read `references/datav-complex-border.md`. If the task star
 
 1. Read the project context.
    - Read `docs/architecture.md`, especially the SVG-first rendering model, side-effect-free registration boundary, content safe-area rule, and theme value rules.
-   - Inspect nearby border components and docs: `packages/elements/src/border-box-2`, `border-box-3`, `border-box-6`, and `docs/components/borders/`.
+   - Inspect all existing numbered border components and docs, especially `packages/elements/src/border-box-1` through the latest `border-box-N` and `docs/components/borders/`.
+   - Build a quick shape inventory of existing borders: silhouette type, symmetry, dominant modules, slice topology, complexity level, and animation behavior.
    - Preserve Custom Elements, Lit, metadata, registration, SSR, and docs conventions.
 
-2. Define the design brief before coding.
-   - Choose a reference canvas such as `1600 x 900` or `1672 x 941`.
-   - Name the concept in concrete visual terms: e.g. "asymmetric cyan command-console frame with side marker stacks and bottom reactor hatch".
-   - Define `frameViewBox` or `contentViewBox`, `contentRect`, fixed modules, and extension strips before writing render code.
-   - Include at least four visual systems: silhouette, layered linework, fixed ornaments, and light/glow behavior.
-   - Pass the originality gate: state how the new frame differs from `border-box-2` in outline, corner construction, side modules, center modules, and slice topology. If the only meaningful difference is color, stop and redesign.
+2. Choose a creative direction before coding.
+   - If the user specifies type, complexity, animation, or density, follow it.
+   - If the user asks for options, offer several substantially different directions such as asymmetric dock, diagonal shard frame, circular radar aperture, industrial clamp, split-screen rail, circuit trench, floating corner constellation, or ultra-minimal pulse frame.
+   - If the user does not specify, choose one direction yourself and state it briefly; do not block implementation just to ask.
+   - Pick a complexity tier: simple, medium, complex, or extreme. Complex and extreme borders must change structure, not only add detail.
 
-3. Compose the SVG as layered machinery.
-   - Build from paths, symbols, mirrored modules, gradients, filters, ticks, nodes, hatches, plates, notches, short line breaks, and dim structural layers.
+3. Generate divergent concepts before coding.
+   - Produce at least three candidate concepts internally or in the visible design brief when useful.
+   - Each candidate must differ in at least four of these dimensions: outer silhouette, corner grammar, side-module logic, top/bottom module placement, symmetry, slice topology, content safe-area shape, ornament rhythm, and animation type.
+   - Select the candidate with the greatest geometric distance from the nearest existing border.
+   - Discard any candidate whose thumbnail could be described as "another chamfered rectangle with four mirrored corner armor blocks and centered top/bottom docks."
+
+4. Define the final design brief.
+   - Choose a reference canvas intentionally. Avoid defaulting to `1600 x 900` or `1672 x 941` when a different ratio better supports the concept.
+   - Name the concept in concrete visual terms: e.g. "left-heavy orbital scanner frame with a circular beacon and broken bottom rail".
+   - Define `frameViewBox` or `contentViewBox`, `contentRect`, fixed modules, extension strips, and animation paths before writing render code.
+   - Include at least five visual systems: silhouette, layered linework, fixed ornaments, light/glow behavior, and motion or interaction state.
+   - Pass the originality gate against the nearest existing border, not only `border-box-2`. State differences in outline, corner construction, side modules, center modules, slice topology, asymmetry, and animation. If the meaningful difference is only color, stroke weight, labels, or small ticks, stop and redesign.
+
+5. Compose the SVG as layered machinery.
+   - Build from paths, symbols, intentionally mirrored or intentionally non-mirrored modules, gradients, filters, ticks, nodes, hatches, plates, notches, short line breaks, and dim structural layers.
    - Keep corners, center plates, side marker stacks, circles, dense tick clusters, and diagonal joins fixed.
    - Invent new fixed modules instead of reusing the same corner bracket, side node, and center energy-bar motif from a previous border.
+   - Change large forms first: if the frame still has the same visual massing as a prior border, redesign the silhouette before adding small decoration.
    - Stretch only clean straight strips along one axis.
    - Avoid one-note simple rectangles, single `polyline` frames, or generic rounded panels unless the user explicitly asks for a simple border.
 
-4. Implement responsive slicing.
+6. Implement responsive slicing.
    - Use `ResizeController` and host dimensions.
    - Render fixed tiles with preserved aspect ratio.
    - Render extension strips with `preserveAspectRatio="none"` only for clean straight slices.
    - Never stretch the whole artwork to the host with `preserveAspectRatio="none"`.
    - Compute content padding from `contentRect` with `createBorderBoxContentPadding` or an equivalent measured safe-area function.
+   - Do not reuse a previous border's fixed slice names, counts, and proportions unless the user explicitly asks for a close variant. Similar slice maps produce similar borders.
 
-5. Update public surfaces.
+7. Update public surfaces.
    - Add or update `element.ts`, `metadata.ts`, `register.ts`, `index.ts`, package exports, aggregate metadata/register files, docs, and tests as the local package requires.
    - Expose user-facing styling through `color`, `secondary-color`, `accent-color`, `colors`, `glow-intensity`, CSS variables, and `::part()`; do not expose internal slice coordinates as public API.
 
-6. Validate quality and complexity.
+8. Validate quality, complexity, and originality.
    - Run the normal repo tests/build/lint that cover the package.
    - Run `scripts/audit_border_complexity.py <element.ts>` for quick structural checks.
+   - When possible, run `scripts/audit_border_complexity.py <element.ts> --compare packages/elements/src/border-box-*/element.ts` to flag designs that share too much path or slice topology with existing borders.
    - Use browser or DOM screenshots at source-ratio, wide, tall, and small sizes when available.
    - Confirm content stays inside the safe area and fixed ornamental modules do not smear.
-   - Compare the screenshot against `border-box-2`: if the silhouette and module positions read as the same design, revise geometry before finishing.
+   - Compare the screenshot against several existing borders. If the silhouette and module positions read as the same design with cosmetic edits, revise geometry before finishing.
+
+## Creative Controls
+
+Let users steer the design without forcing a narrow template:
+
+- Direction: asymmetric dock, radial scanner, industrial clamp, diagonal shard, circuit-board trace, glass HUD, split-rail console, floating node constellation, reactor hatch, orbital gate, minimal pulse, or custom.
+- Complexity: simple, medium, complex, extreme.
+- Symmetry: symmetric, mirrored corners only, asymmetric sides, asymmetric top/bottom, or fully irregular.
+- Motion: none, subtle pulse, traveling scan, node blink, rail charge, rotating/radar sweep, or user-specified.
+- Density: sparse, balanced, dense, or maximal.
+- Shape: rectangular-chamfered, stepped polygon, broken rails, circular/arc modules, diagonal braces, recessed side spine, protruding dock, or custom.
+
+If no controls are supplied, choose a direction that is visually far from the newest existing borders and say which one you chose.
 
 ## Resources
 
 - `references/datav-complex-border.md`: design grammar, implementation checklist, datav-kit integration notes, and failure patterns.
-- `scripts/audit_border_complexity.py`: heuristic checker for common under-complex or distorted border implementations.
+- `scripts/audit_border_complexity.py`: heuristic checker for common under-complex, distorted, or overly similar border implementations.
