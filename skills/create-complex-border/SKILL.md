@@ -79,7 +79,7 @@ Complete the branches in this order. Each branch depends on the decisions above 
 4. Read the inventory, pick the nearest existing border by shape family, and list do-not-repeat items.
 5. Generate candidate concepts: 3 for `original`, 2 for `variant`, 3 for `repair/redesign` unless user direction is explicit. Reject candidates that match the known failed style families in `failure-taxonomy.md`, especially high-density command-console armor and split-bus trace grammar.
 6. Select one concept using structure, beauty, dashboard usefulness, safe area, and distance from the nearest existing border.
-7. Define geometry: outer contour, corner grammar, side logic, top/bottom rhythm, fixed modules, extension strips, and source canvas.
+7. Define geometry: outer contour, corner grammar, side logic, top/bottom rhythm, fixed modules, extension strips, source canvas, and cross-slice continuity contracts for any rail/path that crosses slice boundaries.
 8. Define content safe area from actual inward reach of modules, glow, and motion. Redesign geometry if padding would squeeze dashboard content.
 9. Define visual language: line hierarchy, glow hierarchy, density, color roles, and motion budget.
 10. Define implementation contract: files, exports, docs, tests, inventory update, and public API.
@@ -102,6 +102,14 @@ Default to source-coordinate design with fixed modules and clean extension strip
 - every module's inward reach can be calculated;
 - wide, tall, and small containers do not change the design identity;
 - live-size geometry is simpler and more stable than slicing for this concept.
+
+For source-coordinate slices, do not assume a path is visually continuous because its SVG `d` string is continuous. A rail crossing multiple slices is continuous only when each adjacent slice maps the shared source coordinate to the same host coordinate and the slice boxes touch without gaps. Before accepting a sliced border:
+
+- Name every intended cross-slice rail in the brief.
+- Keep adjacent slices for that rail in compatible source bands. For a vertical rail, the adjacent slices must use the same source `x` origin/span or otherwise prove that the rail's source `x` maps to the same screen `x`; for a horizontal rail, prove the same for source `y`.
+- Verify tile/extension CSS placement as well as SVG viewBox values. A correct path can still break visually if one slice uses `viewBox="1140 ... 60 ..."` and the neighboring slice uses `viewBox="1110 ... 90 ..."`.
+- Add unit tests for each intentional cross-slice rail that assert compatible viewBox bands or explicit mapping math.
+- During manual browser validation, measure at least one shared coordinate across the slices with DOM geometry or visible inspection, and record the maximum alignment delta and boundary gap in `Validation Evidence`.
 
 ## Public API
 
@@ -136,14 +144,14 @@ pnpm --filter @datav-kit/elements test
 
 `audit_border_process.py` checks process artifacts. It cannot approve visual quality.
 
-Manual validation is required. Use realistic dashboard content, not an empty slot. Check source-ratio, wide, tall, and small sizes. Record conclusions in `Validation Evidence`. Do not commit screenshots, `visual-review/`, or other image evidence unless the user explicitly changes this policy.
+Manual validation is required. Use realistic dashboard content, not an empty slot. Check source-ratio, wide, tall, and small sizes. For sliced borders, include a cross-slice continuity check for each rail that appears visually continuous across fixed tiles and extension strips. Record conclusions in `Validation Evidence`. Do not commit screenshots, `visual-review/`, or other image evidence unless the user explicitly changes this policy.
 
 ## Rework Rule
 
 Let the failure type choose the rework level:
 
 - Concept, silhouette, nearest-border similarity, content crowding, symbolic motif, or weak first-read failures require returning to `Candidate Concepts` or `Selected Concept`.
-- Top/bottom rail disorder, unsafe inward reach, or responsive identity drift require returning to `Geometry`, `Content Safe Area`, or `Responsive Model`.
+- Top/bottom rail disorder, side-rail discontinuity, cross-slice coordinate mismatch, unsafe inward reach, or responsive identity drift require returning to `Geometry`, `Content Safe Area`, or `Responsive Model`.
 - Loud motion or poor performance requires returning to `Motion Budget`.
 - Color, opacity, a single node position, docs, tests, or metadata issues may be fixed locally.
 

@@ -56,6 +56,7 @@ VALIDATION_TERMS = (
     "small",
     "dashboard content",
     "safe-area",
+    "cross-slice",
 )
 
 

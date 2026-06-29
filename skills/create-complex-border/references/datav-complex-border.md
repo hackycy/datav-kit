@@ -78,6 +78,16 @@ Other valid models:
 
 Stretch only clean straight strips. Do not stretch complex corners, nodes, hatches, arcs, or identity modules.
 
+### Cross-Slice Continuity
+
+When a rail, spine, outline, or charge path appears to continue through multiple tiles/extensions, validate the coordinate mapping across slices, not just the path syntax.
+
+- For a vertical continuous rail, all participating slices should normally share the same source `x` band and rendered width. If they do not, prove the rail source `x` maps to the same host `x` in each slice.
+- For a horizontal continuous rail, all participating slices should normally share the same source `y` band and rendered height. If they do not, prove the rail source `y` maps to the same host `y` in each slice.
+- Adjacent slice boxes must touch with a measured gap near zero at source-ratio, wide, tall, and small sizes.
+- Tests should assert compatible viewBox bands for intentional cross-slice rails or include equivalent mapping checks. Browser validation should record the measured alignment delta and boundary gap.
+- Do not accept a fix that only changes an SVG `d` string when the visual discontinuity is caused by mismatched slice viewBoxes, CSS placement, `preserveAspectRatio`, or clipping.
+
 ## Tests
 
 Unit tests should cover engineering contracts, not aesthetic taste:
@@ -90,6 +100,7 @@ Unit tests should cover engineering contracts, not aesthetic taste:
 - `animated`, `paused`, and reduced-motion output;
 - unique SVG ids across instances when defs are used;
 - identifiable fixed modules and extension strips when slicing is used;
+- cross-slice continuity contracts for rails intended to read as unbroken;
 - documented live-size exception behavior when live-size geometry is used.
 
 ## Manual Validation

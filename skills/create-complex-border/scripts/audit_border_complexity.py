@@ -25,6 +25,22 @@ def extract_object_keys(name: str, text: str) -> tuple[str, ...]:
     return tuple(re.findall(r"^\s*([a-zA-Z_$][\w$-]*)\s*:", match.group("body"), flags=re.MULTILINE))
 
 
+def extract_rect_map(name: str, text: str) -> dict[str, tuple[float, float, float, float]]:
+    match = re.search(rf"const\s+{re.escape(name)}\s*=\s*\{{(?P<body>.*?)\}}\s*satisfies", text, flags=re.DOTALL)
+    if not match:
+        return {}
+
+    rects: dict[str, tuple[float, float, float, float]] = {}
+    for key, x, y, width, height in re.findall(
+        r"^\s*([a-zA-Z_$][\w$-]*)\s*:\s*\{\s*x\s*:\s*(-?\d+(?:\.\d+)?)\s*,\s*y\s*:\s*(-?\d+(?:\.\d+)?)\s*,\s*width\s*:\s*(-?\d+(?:\.\d+)?)\s*,\s*height\s*:\s*(-?\d+(?:\.\d+)?)",
+        match.group("body"),
+        flags=re.MULTILINE,
+    ):
+        rects[key] = (float(x), float(y), float(width), float(height))
+
+    return rects
+
+
 def extract_canvas_signature(text: str) -> tuple[str, str] | None:
     match = re.search(
         r"const\s+contentViewBox[^=]*=\s*\{(?P<body>.*?)\}",
@@ -171,6 +187,30 @@ def similarity_warnings(path: Path, text: str, compare_paths: list[Path]) -> lis
     return warnings
 
 
+def cross_slice_continuity_warnings(text: str) -> list[str]:
+    rects = {
+        **extract_rect_map("fixedSlices", text),
+        **extract_rect_map("extensionSlices", text),
+    }
+    warnings: list[str] = []
+
+    for side in ("right", "left"):
+        side_rects = {name: rect for name, rect in rects.items() if name.lower().startswith(side)}
+        if len(side_rects) < 2:
+            continue
+
+        widths = sorted({rect[2] for rect in side_rects.values()})
+        if len(widths) > 1:
+            members = ", ".join(f"{name}:w={rect[2]:g},x={rect[0]:g}" for name, rect in sorted(side_rects.items()))
+            warnings.append(
+                f"Cross-slice side-rail continuity risk on `{side}` slices: source widths differ ({members}). "
+                "If these slices form one vertical rail, verify the shared source x maps to the same host x, "
+                "adjacent slice boxes have ~0px gaps, and add a unit/browser validation check."
+            )
+
+    return warnings
+
+
 def audit(path: Path) -> tuple[list[Check], list[str]]:
     text = path.read_text(encoding="utf-8")
     lower = text.lower()
@@ -233,6 +273,8 @@ def audit(path: Path) -> tuple[list[Check], list[str]]:
             "Fixed safe-inset risk: contentSafeInset is a small constant while live-size geometry appears to reach farther inward. "
             "Measure the deepest fixed ornament/glow, verify content corners in screenshots, and redraw inward-reaching corners if padding would squeeze the dashboard area."
         )
+
+    warnings.extend(cross_slice_continuity_warnings(text))
 
     symbolic_motif_names = (
         "crown",

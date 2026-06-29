@@ -18,6 +18,7 @@ Use it before designing a new border, then read the nearest component source/doc
 | `dv-border-box-8` | Dynamic polygon panel with corner ornaments | Four mirrored corner modules | Live polygon background and fixed animated corner ornaments | Hybrid live host polygon plus fixed 150 x 150 corners | Host-derived content rectangle | Fast corner fill animation | Avoid four identical animated corner ornaments as the main identity. |
 | `dv-border-box-9` | Rounded glowing corner frame | Rounded rectangle symmetry | Host border, inset shadow, two rounded corner line layers | Live host geometry | Host-derived content rectangle | Static | Avoid simple rounded glow panel for complex original borders. |
 | `dv-border-box-10` | Rounded outline panel with corner glows | Full rounded symmetry | Primary rounded outline and four corner glow filters | Live host geometry | Host-derived content rectangle | Animated corner glow color | Avoid rounded outline plus four glow corners as a new complex topology. |
+| `dv-border-box-11` | Restrained enterprise status rail frame on 1200 x 640 canvas | Lightly asymmetric top-left and right-rail emphasis | Thin clipped corners, left-biased top status rail, sparse right status nodes, bottom ticks | Source-coordinate fixed modules plus clean extension strips | Measured source content rectangle | Subtle rail-charge and node pulse | Avoid another low-density top-left status rail plus right node stack as the primary identity. |
 
 ## Next Design Pressure
 
@@ -28,5 +29,6 @@ The next original border should change several high-level dimensions at once:
 - Avoid high-density cyber command-console armor.
 - Avoid asymmetric split-bus trace layouts.
 - Avoid rounded DataV replica panels.
+- Avoid repeating the `dv-border-box-11` enterprise status-rail lattice with top-left focal rail and right node stack.
 - Prefer a border-native topology with generous content corners that is not armor-led, dock-led, label-led, or dependent on a left/top command spine.
 - Prefer source-coordinate fixed modules plus clean extension strips unless a live-size exception is documented.

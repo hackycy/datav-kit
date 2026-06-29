@@ -146,6 +146,8 @@ Pass threshold: at least 5 dimensions different and at least 2 major structural 
 - Model: source-coordinate slices | live-size exception | hybrid
 - Fixed modules:
 - Extension strips:
+- Cross-slice rails:
+- Slice continuity contract:
 - What may stretch:
 - What must never stretch:
 
@@ -220,6 +222,7 @@ Do not link or commit screenshot files. Record manual checks only.
 - Tall check:
 - Small check:
 - Safe-area overlay/manual inspection:
+- Cross-slice continuity check:
 - Issues found:
 - Rework completed:
 - Final manual conclusion:
