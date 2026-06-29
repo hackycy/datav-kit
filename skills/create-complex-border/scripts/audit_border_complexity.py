@@ -43,12 +43,29 @@ def extract_canvas_signature(text: str) -> tuple[str, str] | None:
     return (width.group(1), height.group(1))
 
 
+def extract_canvas_size(text: str) -> tuple[float, float] | None:
+    signature = extract_canvas_signature(text)
+    if signature is None:
+        return None
+
+    return (float(signature[0]), float(signature[1]))
+
+
 def extract_path_blocks(text: str) -> list[str]:
     path_blocks = re.findall(r"const\s+\w*Path\s*=\s*\[(.*?)\]\.join", text, flags=re.DOTALL)
     if not path_blocks:
         path_blocks = re.findall(r"<path[^>]+\bd=(?:\$\{)?([a-zA-Z_$][\w$]*)", text)
 
     return path_blocks
+
+
+def extract_arc_radii(text: str) -> list[tuple[float, float]]:
+    radii: list[tuple[float, float]] = []
+    for block in extract_path_blocks(text):
+        for rx, ry in re.findall(r"[Aa]\s*(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)", block):
+            radii.append((abs(float(rx)), abs(float(ry))))
+
+    return radii
 
 
 def extract_path_command_signature(text: str) -> str:
@@ -171,6 +188,31 @@ def audit(path: Path) -> tuple[list[Check], list[str]]:
         warnings.append("Animation found without prefers-reduced-motion handling.")
     if "fixedSlices" not in text and visible_primitives < 45:
         warnings.append("No fixedSlices constant found; ensure fixed modules are still explicit and not just a live-size outline.")
+
+    canvas_size = extract_canvas_size(text)
+    arc_radii = extract_arc_radii(text)
+    if canvas_size is not None and arc_radii:
+        canvas_width, canvas_height = canvas_size
+        min_canvas = min(canvas_width, canvas_height)
+        large_arcs = [radius for radius in arc_radii if max(radius) >= min_canvas * 0.18]
+        dominant_arcs = [radius for radius in arc_radii if max(radius) >= min_canvas * 0.24]
+        radial_names = ("arc", "scanner", "radar", "lens", "orbit", "gate")
+        has_radial_side_module = any(name in lower for name in radial_names) and any(side in lower for side in ("left", "right"))
+
+        if dominant_arcs or (has_radial_side_module and len(large_arcs) >= 2):
+            largest = max(max(radius) for radius in arc_radii)
+            warnings.append(
+                "Large side/radial arc risk: largest arc radius is "
+                f"{largest:.0f} on a {canvas_width:.0f}x{canvas_height:.0f} canvas. "
+                "Confirm the arc is a subordinate rail-connected border module, not a dominant semicircle, side gauge, or pasted-on scanner."
+            )
+
+    if "z-index" in lower and re.search(r"\.content\s*\{(?P<body>.*?)z-index\s*:\s*1\b", text, flags=re.DOTALL):
+        if re.search(r"\.(?:tile|extension)\s*\{(?P<body>.*?)z-index\s*:\s*1\b", text, flags=re.DOTALL):
+            warnings.append(
+                "Content and frame tiles both use z-index: 1. Confirm the stacking order leaves content above decorative frame layers "
+                "and fixed modules above extension strips intentionally."
+            )
 
     return checks, warnings
 

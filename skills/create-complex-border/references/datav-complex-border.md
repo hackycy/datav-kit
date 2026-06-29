@@ -1,5 +1,26 @@
 # Datav Complex Border Creation Guide
 
+## Contents
+
+- [Purpose](#purpose)
+- [Project Contract](#project-contract)
+- [Study Targets](#study-targets)
+- [Existing Border Shape Inventory](#existing-border-shape-inventory)
+- [Divergence Protocol](#divergence-protocol)
+- [Aesthetic Quality Gate](#aesthetic-quality-gate)
+- [Border-First Quality Gate](#border-first-quality-gate)
+- [Originality Gate](#originality-gate)
+- [Creative Direction Menu](#creative-direction-menu)
+- [Complexity Tiers](#complexity-tiers)
+- [Design Grammar](#design-grammar)
+- [Creative Reference Cases](#creative-reference-cases)
+- [Complexity Budget](#complexity-budget)
+- [Responsive Model](#responsive-model)
+- [SVG Layering Pattern](#svg-layering-pattern)
+- [Datav-kit Implementation Checklist](#datav-kit-implementation-checklist)
+- [Validation Checklist](#validation-checklist)
+- [Failure Patterns](#failure-patterns)
+
 ## Purpose
 
 Create original high-density HUD/cyber border boxes that feel native to `datav-kit`. The goal is not "draw a border", but to design a responsive SVG frame with fixed visual identity modules, stretch-safe edge strips, neon lighting, and safe content geometry.
@@ -7,6 +28,10 @@ Create original high-density HUD/cyber border boxes that feel native to `datav-k
 Original means newly designed. Existing borders teach implementation discipline, density, and slicing strategy; they must not become a repeated shape library where every result keeps the same outline and only changes color.
 
 The skill succeeds only when a new border has a recognizable new large shape. Changing tick marks, colors, glow filters, module names, or animation timing while keeping the same silhouette and slice topology is not enough.
+
+The skill also succeeds only when the result is still a credible Datav dashboard border. Originality cannot come from shapes that feel like pasted-on widgets, decorative badges, giant half-discs, or side illustrations. If a novel motif makes the frame less usable, less beautiful, or less border-like, redesign it.
+
+The border's aesthetic quality matters more than raw complexity. A technically valid frame that looks messy, cheap, overdrawn, or visually unresolved is a failed output.
 
 ## Project Contract
 
@@ -73,6 +98,61 @@ Pass condition:
 - At least two differences must be major structural changes, such as a new silhouette, asymmetric massing, non-centered primary module, radial/arc element, different slice topology, or non-mirrored corner family.
 - If a small thumbnail of the new border can be confused with an existing border, redesign before coding.
 
+## Aesthetic Quality Gate
+
+Apply this gate before implementation and after screenshots. Do not accept a border just because it is usable, original, or complex; it must look beautiful and cool as a large-screen technology frame.
+
+Required qualities:
+
+- Strong first read: the silhouette should feel intentional, premium, and suitable for a cyber/HUD dashboard within one second.
+- Clear hierarchy: primary rails, secondary hairlines, panel fills, glows, nodes, ticks, and animation must have distinct visual roles. Avoid making every line equally bright or important.
+- Controlled density: complex borders need detail, but detail must cluster around modules, terminals, and focal zones. Leave calm stretches and negative space so the frame breathes.
+- Balanced asymmetry: asymmetry is welcome only when it feels composed. Heavy modules need counterweight through rails, light, spacing, or opposite-side accents.
+- Polished neon: use dim structure, colored body, and bright core/glint layers. Avoid flat single-stroke neon and avoid glow that muddies the linework.
+- Elegant restraint: remove any stroke, tick, plate, or node that does not improve the shape, rhythm, depth, or focal hierarchy.
+
+Top/bottom edge composition:
+
+- Start with one readable primary rail per edge. Add secondary rails only when they support depth or rhythm.
+- Put top/bottom docks, tabs, hatches, and energy bars on a clear baseline. If a module intentionally breaks the baseline, add terminals or brackets that explain the break.
+- Keep line groups parallel, stepped, or nested with purpose. Avoid random stacked strokes, crossing hairlines, double outlines with inconsistent offsets, and rails that appear to pass through solid plates.
+- Split rails into unequal segments only when the gaps have visual meaning: command tabs, terminals, clamps, node blocks, or light bridges.
+- Balance top and bottom as a designed pair. They may differ, but they should share a visual language and not look like pieces from two unrelated borders.
+- Inspect top/bottom at thumbnail size. If the edge reads as noise before it reads as a sleek rail system, simplify and redraw.
+
+Reject these:
+
+- A border that is only "usable" but not visually desirable.
+- A cool-looking side module attached to weak or messy top/bottom rails.
+- High primitive count used to hide poor composition.
+- Top and bottom linework that looks tangled, noisy, arbitrary, or accidentally layered.
+- A design where glow makes edge disorder harder to notice instead of making the structure more beautiful.
+
+## Border-First Quality Gate
+
+Apply this gate before choosing a concept and after visual validation.
+
+Core rule: the user's dashboard content must feel framed by a coherent and attractive technical structure. The component can be asymmetric, broken, radial, or dense, but it must not lose the visual contract or aesthetic polish of a border.
+
+Required checks:
+
+- Edge coherence: top, bottom, left, and right rails must look intentionally related. Gaps need anchors, terminals, clamps, tabs, node blocks, or clear continuation logic.
+- Top/bottom discipline: top and bottom edges may have different rhythms, but they must not look swapped, staggered by accident, ugly, cluttered, or layered in the wrong order. Avoid crossing top rails through top modules or bottom rails through bottom modules without clipping or visual hierarchy.
+- Side-module discipline: side racks, spines, beacons, and scanner modules must attach to rail endpoints or plate geometry. Avoid a freestanding shape that merely touches the frame.
+- Arc/circle discipline: circular elements must be partial, bounded, and subordinate. They should read as a sensor, hinge, corner aperture, or rail terminal, not as a giant semicircle forming the whole side.
+- Content safety: no ornament may dominate or intrude so far that the content rectangle feels squeezed by a decorative object rather than protected by a frame.
+- Layer clarity: dim construction lines go below, panel fills and rails sit in the middle, bright nodes/glints sit above, and content remains above the non-interactive frame. Do not let bright frame ornaments compete with or overlay slotted content.
+- Thumbnail test: at small size, the border should read as a futuristic frame with distinctive modules. If the first read is "big left semicircle", "random side gauge", "misaligned top/bottom lines", or "decorative portal", reject it.
+
+Reject these even when primitive counts and originality checks pass:
+
+- A large left or right half-circle that becomes the dominant silhouette without strong rail-connected terminals.
+- A radial scanner whose center, sweep, or tick mass visually invades the content zone.
+- Top and bottom rails that appear to belong to different frames or are offset without a connector story.
+- A frame where fixed tiles and extension strips stack in a confusing order, causing rails to run under/over modules unintentionally.
+- A border whose most memorable feature would not normally be used as a technology large-screen dashboard frame.
+- A border whose top/bottom edges look like tangled decoration rather than sleek engineered rails.
+
 ## Originality Gate
 
 Before writing code, describe the new border in a short design brief. The brief must answer:
@@ -137,6 +217,8 @@ A complex border should include most of these traits:
 - Multiple light types: soft blur, hard neon edge, small node halo, and gradient core.
 - Asymmetry where useful: one side may have a large marker stack, the bottom may have hatch details, or a top line may have two different extension regions.
 - Enough negative space to hold dashboard content; ornament density should frame the panel, not invade the safe content rectangle.
+- Large specialty motifs that remain subordinate to the edge system. A circle, arc, dock, or hatch may become a signature, but it must not become the whole frame identity at the expense of normal border readability.
+- A deliberate top/bottom rail composition with baseline, terminals, focal modules, secondary hairlines, and breathing room.
 
 Avoid these weak outputs:
 
@@ -147,6 +229,9 @@ Avoid these weak outputs:
 - One hue at one opacity everywhere; complex HUD borders need contrast between dim structure, main chroma, and white-hot accents.
 - A repeated "four armor corners + centered top module + centered bottom dock + left/right middle rack" structure unless the user explicitly requested that family.
 - Renaming modules, nudging coordinates, or adding a beacon while the large silhouette remains the same.
+- A giant half-round side scanner, portal, or decorative wheel that makes one edge stop reading as a border.
+- Unexplained edge disorder: top and bottom rails that appear mixed, crossed, clipped by accident, or placed on the wrong layer.
+- Dense top/bottom linework that is complex but not beautiful: too many parallel strokes, arbitrary dashes, crowded tabs, or glow that turns the edge into visual noise.
 
 ## Creative Reference Cases
 
@@ -163,6 +248,7 @@ Create a frame that feels like an off-center reactor dock or launch-bay console,
 - Ornament rhythm: dense detail on one corner and the bottom dock, sparse hairlines elsewhere, with intentional asymmetry.
 - Light behavior: dim blue structural underlay, cyan primary rails, amber or magenta accent hatch lights, and small white-hot node glints. Add one optional moving scan highlight only along a clean rail.
 - Must avoid: the `border-box-2` eight-module symmetry, matching corner brackets, centered top/bottom energy bars, and identical left/right side nodes.
+- Aesthetic rule: the top command rail and bottom dock must each have one clean dominant baseline; secondary detail should accent the baseline, not compete with it.
 
 This case is useful when the request asks for more creativity. It gives the agent permission to change the frame's massing, not just draw another cyan rectangle.
 
@@ -171,12 +257,12 @@ This case is useful when the request asks for more creativity. It gives the agen
 Create a frame where the dominant identity is a partial circular scanner mounted on one side, not corner armor.
 
 - Canvas: any ratio that leaves room for the arc, such as `1500 x 920`.
-- Silhouette: mostly open rectangular rails interrupted by a large left or right circular arc that protrudes into the border zone.
-- Fixed modules: arc lens, orbit tick cluster, two small opposite corner anchors, one off-axis status tab, and several isolated node caps.
+- Silhouette: mostly open rectangular rails interrupted by a bounded left or right arc module that stays in the border zone.
+- Fixed modules: short arc lens segments, orbit tick clusters, two small opposite corner anchors, one off-axis status tab, and several isolated node caps.
 - Extension strips: straight rail segments above and below the arc; never stretch the arc or orbit ticks.
 - Ornament rhythm: radial density around the scanner, sparse linear rails elsewhere.
 - Light behavior: slow radar sweep or pulsing arc nodes, gated by `animated`, `paused`, and reduced motion.
-- Must avoid: centered top/bottom energy bars and four mirrored corner armor blocks.
+- Must avoid: centered top/bottom energy bars, four mirrored corner armor blocks, and any half-circle that becomes the main silhouette. If the arc spans most of the side height or reads as a large semicircular cutout, split it into shorter rail-connected arc segments or choose another direction.
 
 ### Case: Diagonal Shard Lattice
 
@@ -259,6 +345,13 @@ A strong generated border usually has this order:
 
 Use `<defs>` for filters, gradients, symbols, clip paths, and reusable corner/side modules. Generate instance-specific IDs when the component can appear multiple times on a page.
 
+Layering validation:
+
+- Extension strips should be visually behind or integrated with fixed modules, not visibly slicing through them.
+- Fixed tiles that overlap must have explicit placement and enough transparent margin to avoid clipped glow.
+- Bright animated elements should travel on clean rails or inside fixed modules only; do not let a moving scan line cross the content area unless it is explicitly clipped to the frame.
+- Content should have a higher stacking context than the frame container when the frame is decorative. If frame highlights intentionally overlay content, that must be a deliberate component feature requested by the user, not the default.
+
 ## Datav-kit Implementation Checklist
 
 For a new `border-box-N` component:
@@ -284,12 +377,17 @@ Element conventions:
 
 Run `scripts/audit_border_complexity.py` against the new `element.ts`, then verify manually:
 
+- The border looks beautiful, cool, polished, and premium before considering whether it merely works.
 - Fixed modules stay crisp at source-ratio, wide, tall, and small sizes.
 - Only clean extension strips grow.
 - Corner diagonals, side marker stacks, circles, tick clusters, center plates, and hatches never smear.
 - No full-frame SVG sits underneath sliced modules.
 - Content padding maps to the intended safe area.
 - The content wrapper and slotted content do not cross the frame in fixed-height demos.
+- Top and bottom border systems look coherent, connected, and ordered. Intentional broken rails still have terminals or connector modules.
+- Top and bottom edge linework has a clear hierarchy and rhythm. There is no tangled stacking, random rail crossing, crowded dock detail, or ugly line noise.
+- Side motifs attach to the frame and remain visually subordinate to the border. Any arc/circle/semicircle must pass the thumbnail test as a border module, not a pasted-on side gauge.
+- Z-index and draw order are legible: extension strips do not incorrectly cover fixed modules, and glow layers do not obscure content.
 - Multiple component instances do not collide through duplicated SVG IDs.
 - `glow-intensity`, colors, CSS variables, and docs examples all affect visible SVG layers.
 - The new screenshot remains identifiable if converted to a black-and-white silhouette.
@@ -299,6 +397,7 @@ Run `scripts/audit_border_complexity.py` against the new `element.ts`, then veri
 ## Failure Patterns
 
 - The output looks "technology-like" but too simple: add fixed modules, center plates, side marker stacks, hairlines, glints, and multiple light layers.
+- The output is functional but not beautiful: redesign the composition before adding more primitives. Better rail rhythm beats more decoration.
 - The border looks good at one size only: you probably stretched the full drawing or included ornaments inside an extension strip.
 - Neon looks flat: separate halo, body, and core layers instead of one bright stroke.
 - Details disappear after slicing: the tile viewBox may be too tight and clipping filter blur.
@@ -307,3 +406,7 @@ Run `scripts/audit_border_complexity.py` against the new `element.ts`, then veri
 - Two consecutive generated borders look like siblings with the same body shape: stop adding decoration and change the large topology.
 - The component passes primitive-count checks but fails the thumbnail test: primitive count is not originality.
 - The border depends on a centered dock because the previous one did: move the major module off-center, remove it, replace it with radial/side logic, or change the slice model.
+- The component depends on a huge radial side feature because "radial scanner" sounded original: reduce the arc, split it, add rail-connected terminals, or choose a more border-native family.
+- Top and bottom edges feel scrambled: redraw the edge system before adding detail. Use fewer strips, clearer anchors, and explicit layer order.
+- A side module steals the frame identity: shrink it, move it into a corner/terminal role, or balance it with stronger top/bottom structure.
+- The top/bottom edge looks busy instead of premium: remove half the small strokes, choose one dominant rail, align modules to it, and reintroduce detail only where it improves rhythm.
