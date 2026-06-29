@@ -14,6 +14,7 @@ import { BorderBox11Element } from './border-box-11/element'
 import { CountToElement } from './count-to/element'
 import { Decoration1Element } from './decoration-1/element'
 import { Decoration2Element } from './decoration-2/element'
+import { Decoration3Element } from './decoration-3/element'
 import { FitScreenElement } from './fit-screen/element'
 
 export const datavElementRegistrations: DatavElementRegistration[] = [
@@ -72,6 +73,10 @@ export const datavElementRegistrations: DatavElementRegistration[] = [
   {
     tagName: 'dv-decoration-2',
     element: Decoration2Element,
+  },
+  {
+    tagName: 'dv-decoration-3',
+    element: Decoration3Element,
   },
   {
     tagName: 'dv-count-to',

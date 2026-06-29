@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { CountToElement, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -60,14 +60,15 @@ describe('@datav-kit/elements', () => {
       'dv-border-box-11',
       'dv-decoration-1',
       'dv-decoration-2',
+      'dv-decoration-3',
       'dv-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -118,6 +119,7 @@ describe('@datav-kit/elements', () => {
     expect(defineBorderBox11()).toBe(false)
     expect(defineDecoration1()).toBe(false)
     expect(defineDecoration2()).toBe(false)
+    expect(defineDecoration3()).toBe(false)
     expect(defineCountTo()).toBe(false)
   })
 
@@ -1445,6 +1447,59 @@ describe('@datav-kit/elements', () => {
       .map(rect => rect.getAttribute('fill'))
 
     expect(fills).toEqual(Array.from({ length: 50 }, () => '#123456'))
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('maps decoration-3 attributes and renders responsive angular lines', async () => {
+    register()
+
+    const element = document.createElement('dv-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.setAttribute('colors', '#3f96a5,#7acaec')
+    element.setAttribute('duration', '2.4')
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(500, 100)
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const lines = element.shadowRoot?.querySelectorAll('polyline') ?? []
+    const animations = element.shadowRoot?.querySelectorAll('animate') ?? []
+
+    expect(element).toHaveProperty('colors', '#3f96a5,#7acaec')
+    expect(element).toHaveProperty('duration', 2.4)
+    expect(svg?.getAttribute('width')).toBe('500')
+    expect(svg?.getAttribute('height')).toBe('100')
+    expect(svg?.hasAttribute('viewBox')).toBe(false)
+    expect(lines).toHaveLength(2)
+    expect(lines[0]?.getAttribute('points')).toBe('0,20 90,20 100,40 125,40 135,60 360,60 375,40 400,40 410,20 500,20')
+    expect(lines[1]?.getAttribute('points')).toBe('150,80 350,80')
+    expect(lines[0]?.getAttribute('stroke')).toBe('#3f96a5')
+    expect(lines[1]?.getAttribute('stroke')).toBe('#7acaec')
+    expect(animations).toHaveLength(2)
+    expect(animations[0]?.getAttribute('attributeName')).toBe('stroke-dasharray')
+    expect(animations[0]?.getAttribute('dur')).toBe('2.4s')
+    expect(animations[0]?.getAttribute('keySplines')).toBe('0.4,1,0.49,0.98')
+  })
+
+  it('resolves decoration-3 colors from CSS variables and supports paused animation', async () => {
+    register()
+
+    const element = document.createElement('dv-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dv-color-primary', '#123456')
+    element.style.setProperty('--dv-color-secondary', '#abcdef')
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(300, 60)
+    await element.updateComplete
+
+    const lines = [...(element.shadowRoot?.querySelectorAll('polyline') ?? [])]
+
+    expect(lines.map(line => line.getAttribute('stroke'))).toEqual(['#123456', '#abcdef'])
+    expect(lines[0]?.getAttribute('points')).toBe('0,12 54,12 60,24 75,24 81,36 216,36 225,24 240,24 246,12 300,12')
+    expect(lines[1]?.getAttribute('points')).toBe('90,48 210,48')
     expect(element.shadowRoot?.querySelector('animate')).toBeNull()
   })
 
