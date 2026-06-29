@@ -24,6 +24,7 @@ Pass this gate before coding and again after screenshots:
 - Large arcs, circles, lenses, and semicircles may appear only as subordinate border modules. They must not dominate one side, invade the content safe area, or make the border read as a half-round object attached to a rectangle.
 - Fixed ornaments may sit above extension strips, but the visual hierarchy must remain clear: dim structure below, rails and plates in the middle, bright glints above, and content above the non-interactive frame.
 - Reject any concept where one side has a large unexplained semicircle, a pasted-on scanner, or a module that is not connected to the frame grammar.
+- Motion must support the dashboard instead of stealing runtime budget. Any animated border that causes visible jank, constant layout work, excessive paint, high CPU/GPU usage, or a busy full-frame redraw loop is a failed result even if it looks visually impressive.
 
 ## Workflow
 
@@ -54,6 +55,7 @@ Pass this gate before coding and again after screenshots:
    - Define the aesthetic thesis: why the border is beautiful, cool, and suitable for a technology large-screen dashboard. Mention top/bottom rail rhythm, focal modules, negative space, and glow hierarchy.
    - State why the shape still reads as a usable technology dashboard border and not a side illustration. Name any large arc or circular module and explain how it connects to adjacent rails.
    - Pass the originality gate against the nearest existing border, not only `border-box-2`. State differences in outline, corner construction, side modules, center modules, slice topology, asymmetry, and animation. If the meaningful difference is only color, stroke weight, labels, or small ticks, stop and redesign.
+   - Define an animation performance budget when motion is requested. Prefer sparse, low-frequency SVG/CSS animations such as opacity, stroke dash offset, small transforms, or isolated highlight movement; avoid animating large filters, many independent nodes, layout-affecting attributes, full-frame masks, huge blur regions, or JavaScript-driven render loops. Decide which motion can be disabled or reduced.
 
 5. Compose the SVG as layered machinery.
    - Build from paths, symbols, intentionally mirrored or intentionally non-mirrored modules, gradients, filters, ticks, nodes, hatches, plates, notches, short line breaks, and dim structural layers.
@@ -62,6 +64,7 @@ Pass this gate before coding and again after screenshots:
    - Change large forms first: if the frame still has the same visual massing as a prior border, redesign the silhouette before adding small decoration.
    - Stretch only clean straight strips along one axis.
    - Avoid one-note simple rectangles, single `polyline` frames, or generic rounded panels unless the user explicitly asks for a simple border.
+   - Keep animation cheap by limiting the number of animated elements, sharing animation definitions, and animating only small foreground accents or short rail segments. Heavy glow should usually be static; if glow moves, keep the filter region tight and the animated area small.
 
 6. Implement responsive slicing.
    - Use `ResizeController` and host dimensions.
@@ -86,6 +89,7 @@ Pass this gate before coding and again after screenshots:
    - Inspect the top and bottom linework first. If those edges look cluttered, tangled, arbitrarily layered, or merely "usable", simplify the rail hierarchy and rebuild the edge modules.
    - Specifically inspect any arc, circle, or semicircle. If it reads like a large left/right half-disc attached to the frame, reduce it, break it into rail-connected arc segments, or replace it.
    - Compare the screenshot against several existing borders. If the silhouette and module positions read as the same design with cosmetic edits, revise geometry before finishing.
+   - Validate animation performance when motion is present. Check that the border remains smooth while resized and while dashboard content is present; reduce animated element count, blur/filter intensity, mask complexity, or motion frequency if there is visible stutter or unnecessary CPU/GPU load. Respect `prefers-reduced-motion` and provide a no-motion or reduced-motion state for costly effects.
 
 ## Creative Controls
 
@@ -95,6 +99,7 @@ Let users steer the design without forcing a narrow template:
 - Complexity: simple, medium, complex, extreme.
 - Symmetry: symmetric, mirrored corners only, asymmetric sides, asymmetric top/bottom, or fully irregular.
 - Motion: none, subtle pulse, traveling scan, node blink, rail charge, rotating/radar sweep, or user-specified.
+- Motion performance: static by default for dense/extreme designs unless the user asks for motion; when motion is requested, prefer subtle, composited-looking accents and cap animated detail so the border does not compete with dashboard rendering.
 - Density: sparse, balanced, dense, or maximal.
 - Shape: rectangular-chamfered, stepped polygon, broken rails, circular/arc modules, diagonal braces, recessed side spine, protruding dock, or custom.
 
