@@ -234,6 +234,27 @@ def audit(path: Path) -> tuple[list[Check], list[str]]:
             "Measure the deepest fixed ornament/glow, verify content corners in screenshots, and redraw inward-reaching corners if padding would squeeze the dashboard area."
         )
 
+    symbolic_motif_names = (
+        "crown",
+        "badge",
+        "shield",
+        "crest",
+        "portal",
+        "aperture",
+        "reactor",
+        "cockpit",
+        "wheel",
+        "wing",
+        "emblem",
+    )
+    found_symbolic_motifs = sorted({name for name in symbolic_motif_names if name in lower})
+    if found_symbolic_motifs:
+        warnings.append(
+            "Symbolic border motif risk: found "
+            f"{', '.join(found_symbolic_motifs)}. "
+            "Datav borders should read as line-first rail systems; redraw large object-like motifs as shallow rails, tabs, nodes, or small terminals."
+        )
+
     canvas_size = extract_canvas_size(text)
     arc_radii = extract_arc_radii(text)
     if canvas_size is not None and arc_radii:

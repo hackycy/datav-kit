@@ -28,15 +28,17 @@ Create original polished HUD/cyber border boxes that feel native to `datav-kit`.
 
 Original means newly designed. Existing borders teach implementation discipline, density, and slicing strategy; they must not become a repeated shape library where every result keeps the same outline and only changes color.
 
-The skill succeeds only when a new border has a recognizable new large shape. Changing tick marks, colors, glow filters, module names, or animation timing while keeping the same silhouette and slice topology is not enough.
+The skill succeeds only when a new border has a recognizable new frame structure. Changing tick marks, colors, glow filters, module names, or animation timing while keeping the same silhouette and slice topology is not enough.
 
-The skill also succeeds only when the result is still a credible Datav dashboard border. Originality cannot come from shapes that feel like pasted-on widgets, decorative badges, giant half-discs, or side illustrations. If a novel motif makes the frame less usable, less beautiful, or less border-like, redesign it.
+The skill also succeeds only when the result is still a credible Datav dashboard border. Originality cannot come from shapes that feel like pasted-on widgets, decorative badges, crowns, crests, shields, giant half-discs, portals, or side illustrations. If a novel motif makes the frame less usable, less beautiful, or less border-like, redesign it as smaller rail-connected linework.
 
 The border's aesthetic quality matters more than raw complexity. A technically valid frame that looks messy, cheap, overdrawn, or visually unresolved is a failed output.
 
 A border also fails when its own ornaments consume the user's usable dashboard space. Corner and side modules may be expressive, but they must not push deeply into all four content corners or force the content into an awkward inner polygon. Padding is not a cosmetic afterthought: it must be measured from the real safe area created by the final geometry and glow.
 
-Recent failure lesson: generated borders can pass structural checks while still feeling like heavy mecha armor and causing runtime jank. Treat thick rails, bulky corner plates, repeated glow filters, long `animateMotion` paths, and high-density edge noise as warning signs, not as proof of sophistication.
+Recent failure lesson: generated borders can pass structural checks while still feeling like heavy mecha armor, symbolic emblems, or dashboard-inappropriate objects. Treat crowns, badges, shields, portals, reactor hatches, thick rails, bulky corner plates, repeated glow filters, long `animateMotion` paths, and high-density edge noise as warning signs, not as proof of sophistication.
+
+Successful recent borders such as `border-box-2` through `border-box-6` are useful because they are rail systems: thin and medium strokes, shallow plates, clipped vector paths, fixed detail modules, clean extension strips, small nodes, layered glows, and measured content rectangles. Their complexity comes from line rhythm and slicing discipline, not from one large recognizable object.
 
 ## Large-Screen Strategy
 
@@ -121,6 +123,7 @@ Required qualities:
 
 - Strong first read: the silhouette should feel intentional, premium, and suitable for a cyber/HUD dashboard within one second.
 - Clear hierarchy: primary rails, secondary hairlines, panel fills, glows, nodes, ticks, and animation must have distinct visual roles. Avoid making every line equally bright or important.
+- Line-weight discipline: most strokes should be hairlines or thin rails, with a few medium accents for hierarchy. If the design reads as one thick outline, a broad filled crest, or a large central badge, redraw it with lighter rails and smaller modules.
 - Controlled density: complex borders need detail, but detail must cluster around modules, terminals, and focal zones. Leave calm stretches and negative space so the frame breathes.
 - Balanced asymmetry: asymmetry is welcome only when it feels composed. Heavy modules need counterweight through rails, light, spacing, or opposite-side accents.
 - Polished neon: use dim structure, colored body, and bright core/glint layers. Avoid flat single-stroke neon and avoid glow that muddies the linework.
@@ -140,6 +143,7 @@ Reject these:
 
 - A border that is only "usable" but not visually desirable.
 - A cool-looking side module attached to weak or messy top/bottom rails.
+- A design whose first-read identity is a crown, badge, shield, crest, portal, reactor, lens, wheel, or other large named object rather than a rail-based border.
 - High primitive count used to hide poor composition.
 - Top and bottom linework that looks tangled, noisy, arbitrary, or accidentally layered.
 - A design where glow makes edge disorder harder to notice instead of making the structure more beautiful.
@@ -157,6 +161,7 @@ Required checks:
 - Top/bottom discipline: top and bottom edges may have different rhythms, but they must not look swapped, staggered by accident, ugly, cluttered, or layered in the wrong order. Avoid crossing top rails through top modules or bottom rails through bottom modules without clipping or visual hierarchy.
 - Side-module discipline: side racks, spines, beacons, and scanner modules must attach to rail endpoints or plate geometry. Avoid a freestanding shape that merely touches the frame.
 - Arc/circle discipline: circular elements must be partial, bounded, and subordinate. They should read as a sensor, hinge, corner aperture, or rail terminal, not as a giant semicircle forming the whole side.
+- Symbol discipline: crowns, crests, shields, badges, wings, portals, and reactor-like hatches are not normal Datav border grammar. Do not use them unless the user explicitly requests that motif, and even then break the motif into shallow rails, tabs, and nodes rather than a large filled silhouette.
 - Content safety: no ornament may dominate or intrude so far that the content rectangle feels squeezed by a decorative object rather than protected by a frame.
 - Corner safety: diagonal corners, nodes, tabs, glow halos, and fixed plates must not collectively bite into all four content corners. A frame can have notches or inward cuts, but the content should still feel rectangularly usable and generous.
 - Padding truth: `contentRect` must represent the deepest inward reach of fixed modules and glow. A small hard-coded inset with larger visual intrusion, or a large padding value used to hide an ugly inward-reaching design, both fail this gate.
@@ -172,6 +177,7 @@ Reject these even when primitive counts and originality checks pass:
 - A frame whose corner decorations reach inward on every corner, reducing useful dashboard space and making the inner content area feel pinched.
 - A frame whose padding is calculated from generic constants instead of the actual inward reach of its fixed modules, paths, and glow.
 - A border whose most memorable feature would not normally be used as a technology large-screen dashboard frame.
+- A border whose most memorable feature is a symbolic object sitting on the edge rather than the edge system itself.
 - A border whose top/bottom edges look like tangled decoration rather than sleek engineered rails.
 
 ## Originality Gate
@@ -181,7 +187,7 @@ Before writing code, describe the new border in a short design brief. The brief 
 - What is the new silhouette, and how does it differ from the nearest existing border?
 - Which modules are fixed, and why are they visually unique to this design?
 - Which strips stretch, and why are those strips free of ornaments that would smear?
-- What is the dominant visual rhythm: heavy top command rail, asymmetric side spine, bottom dock, broken corner armor, radial node system, diagonal shard lattice, industrial clamp, floating beacon field, or another clear idea?
+- What is the dominant visual rhythm: thin top command rail, asymmetric side spine, bottom bus, broken corner rails, diagonal shard lattice, circuit trace field, floating node field, or another clear border-native idea?
 - What new light behavior appears beyond a color swap: traveling glint, split halo, layered underglow, isolated white-hot nodes, scan ticks, pulsing hatch marks, radar sweep, rail charging, or beacon breathing?
 - Which exact existing motifs are banned for this design?
 
@@ -200,16 +206,17 @@ When in doubt, change structure first: silhouette, corner mass, module count, as
 
 Use these as selectable design families. They are prompts for invention, not templates.
 
-- Asymmetric docking bay: one side has heavy machinery, the opposite side is a thin rail, and the bottom or top includes a protruding hatch.
-- Radial scanner frame: a partial circular lens, arc ticks, orbiting nodes, and broken linear rails that attach to the circle.
-- Industrial clamp frame: thick mechanical clamps on two corners, exposed bolts, short rail segments, and recessed content space.
+- Asymmetric rail dock: one side has a shallow status spine, the opposite side is a thin rail, and the bottom or top includes a protruding rail tab.
 - Diagonal shard frame: slanted braces, fractured corners, triangular plates, and skewed extension strips.
 - Circuit trench frame: printed-circuit traces, small solder nodes, offset bus bars, and dense micro ticks around one edge.
 - Split-rail console: top and bottom rails are interrupted into unequal segments with command tabs and status blocks.
 - Floating node constellation: corners are light anchors, sides are sparse broken rails, and fixed nodes form a non-rectangular rhythm.
-- Orbital gate: large arc modules intrude at one side or two opposite corners, with straight strips only between arc anchors.
+- Offset status spine: a compact vertical data rail, short ticks, small square pads, and long calm top/bottom lines.
+- Stepped command rail: a top or bottom edge built from shallow steps, aligned terminals, and small light bridges.
 - Minimal pulse frame: very spare outline, one or two signature beacon modules, low ornament density, and subtle animated pulse.
-- Extreme machinery frame: many fixed panels, separate light channels, multiple asymmetric hatches, and a high primitive count.
+- Dense trace frame: many tiny right-angle trace turns, pads, and hairlines with restrained mass.
+
+High-risk directions require an explicit user request: radial scanner, orbital gate, reactor hatch, portal, cockpit aperture, crown, crest, badge, shield, and large lens motifs. If used, keep the motif small, bounded, rail-connected, and subordinate; reject it if the thumbnail reads as the object before it reads as a border.
 
 When the user asks for choice, present several of these with complexity and motion options. When the user does not ask, select one direction that is far from the latest existing borders.
 
@@ -226,7 +233,7 @@ Complexity is not decoration count alone. A complex border with the same silhoue
 
 ## Design Grammar
 
-Use a reference canvas and design in source coordinates first. Choose the canvas for the concept, not habit. A wide command rail may use `1600 x 900`; an ornate source-style frame may use `1672 x 941`; a square-ish scanner, vertical side panel, or dashboard tile may use a different coordinate system.
+Use a reference canvas and design in source coordinates first. Choose the canvas for the concept, not habit. A wide command rail may use `1600 x 900`; an ornate source-style frame may use `1672 x 941`; a compact vertical side panel, status spine, or dashboard tile may use a different coordinate system.
 
 A strong border may include many of these traits, but should not include them all at maximum intensity:
 
@@ -239,7 +246,7 @@ A strong border may include many of these traits, but should not include them al
 - Asymmetry where useful: one side may have a large marker stack, the bottom may have hatch details, or a top line may have two different extension regions.
 - Enough negative space to hold dashboard content; ornament density should frame the panel, not invade the safe content rectangle.
 - A generous, deliberate safe content rectangle. Decorative mass should usually grow outward from the content area or stay within a shallow border band; repeated inward-pointing corners are rarely attractive and usually damage dashboard usability.
-- Large specialty motifs that remain subordinate to the edge system. A circle, arc, dock, or hatch may become a signature, but it must not become the whole frame identity at the expense of normal border readability.
+- Specialty motifs must remain subordinate to the edge system. Small arcs, rail docks, or hatches may appear when they are bounded and rail-connected, but they must not become the whole frame identity at the expense of normal border readability.
 - A deliberate top/bottom rail composition with baseline, terminals, focal modules, secondary hairlines, and breathing room.
 - A line-weight system that stays elegant: most strokes should be hairlines or thin rails; wide glow layers should be translucent and quiet.
 
@@ -253,6 +260,7 @@ Avoid these weak outputs:
 - A repeated "four armor corners + centered top module + centered bottom dock + left/right middle rack" structure unless the user explicitly requested that family.
 - Renaming modules, nudging coordinates, or adding a beacon while the large silhouette remains the same.
 - A giant half-round side scanner, portal, or decorative wheel that makes one edge stop reading as a border.
+- A crown, badge, crest, shield, portal, cockpit aperture, or logo-like silhouette used as the frame's main identity.
 - A "corner spikes into content" concept where multiple diagonal rails, tabs, nodes, and glows all point inward and squeeze the content corners.
 - Treating `contentRect` as a generic padding constant. The safe area must be derived from the actual rendered frame, and the design must be redrawn if that safe area becomes too small.
 - Unexplained edge disorder: top and bottom rails that appear mixed, crossed, clipped by accident, or placed on the wrong layer.
@@ -263,32 +271,32 @@ Avoid these weak outputs:
 
 Use these as starting prompts, not templates. A generated border may borrow one or two ideas from a case, but it should still invent its own paths, slices, proportions, and details.
 
-### Case 6: Offset Reactor Dock
+### Case 6: Offset Rail Dock
 
-Create a frame that feels like an off-center reactor dock or launch-bay console, not a symmetric picture frame.
+Create a frame that feels like an off-center rail dock or command console, not a symmetric picture frame and not a reactor object.
 
 - Canvas: `1672 x 941`, with a generous `contentRect` such as `x: 142`, `y: 124`, `width: 1388`, `height: 690`.
-- Silhouette: heavy stepped top-left armor, a long thin top command rail, a recessed right-side vertical spine, and a bottom dock that rises into the content area with two shallow trapezoid hatches.
-- Fixed modules: oversized top-left control block, compact top-right antenna bracket, right-side stacked capsule lights, bottom-left diagonal brace, bottom-center reactor hatch, bottom-right small lock plate, and at least two isolated node clusters.
-- Extension strips: split the top into three different rails instead of one repeated straight line; use a short left vertical strip, a long right vertical strip, and two bottom strips around the center hatch.
-- Ornament rhythm: dense detail on one corner and the bottom dock, sparse hairlines elsewhere, with intentional asymmetry.
-- Light behavior: dim blue structural underlay, cyan primary rails, amber or magenta accent hatch lights, and small white-hot node glints. Add one optional moving scan highlight only along a clean rail.
+- Silhouette: shallow stepped top-left rail, a long thin top command rail, a recessed right-side vertical spine, and a bottom bus that uses two shallow trapezoid tabs without rising deeply into the content area.
+- Fixed modules: compact top-left control rail, top-right antenna bracket, right-side stacked status ticks, bottom-left diagonal brace, bottom-center rail junction, bottom-right small lock plate, and at least two isolated node clusters.
+- Extension strips: split the top into three different rails instead of one repeated straight line; use a short left vertical strip, a long right vertical strip, and two bottom strips around the center rail junction.
+- Ornament rhythm: dense line detail on one corner and the bottom bus, sparse hairlines elsewhere, with intentional asymmetry.
+- Light behavior: dim blue structural underlay, cyan primary rails, amber or magenta accent status lights, and small white-hot node glints. Add one optional moving scan highlight only along a clean rail.
 - Must avoid: the `border-box-2` eight-module symmetry, matching corner brackets, centered top/bottom energy bars, and identical left/right side nodes.
-- Aesthetic rule: the top command rail and bottom dock must each have one clean dominant baseline; secondary detail should accent the baseline, not compete with it.
+- Aesthetic rule: the top command rail and bottom bus must each have one clean dominant baseline; secondary detail should accent the baseline, not compete with it.
 
 This case is useful when the request asks for more creativity. It gives the agent permission to change the frame's massing, not just draw another cyan rectangle.
 
 ### Case: Radial Side Scanner
 
-Create a frame where the dominant identity is a partial circular scanner mounted on one side, not corner armor.
+Use this case only when the user explicitly asks for a radial, circular, orbital, or scanner-like motif. Create a frame where any partial circle is a small rail terminal, not the dominant identity.
 
 - Canvas: any ratio that leaves room for the arc, such as `1500 x 920`.
-- Silhouette: mostly open rectangular rails interrupted by a bounded left or right arc module that stays in the border zone.
-- Fixed modules: short arc lens segments, orbit tick clusters, two small opposite corner anchors, one off-axis status tab, and several isolated node caps.
+- Silhouette: mostly open rectangular rails interrupted by bounded short arc segments that stay in the border zone.
+- Fixed modules: short arc rail terminals, tiny tick clusters, two small opposite corner anchors, one off-axis status tab, and several isolated node caps.
 - Extension strips: straight rail segments above and below the arc; never stretch the arc or orbit ticks.
-- Ornament rhythm: radial density around the scanner, sparse linear rails elsewhere.
-- Light behavior: slow radar sweep or pulsing arc nodes, gated by `animated`, `paused`, and reduced motion.
-- Must avoid: centered top/bottom energy bars, four mirrored corner armor blocks, and any half-circle that becomes the main silhouette. If the arc spans most of the side height or reads as a large semicircular cutout, split it into shorter rail-connected arc segments or choose another direction.
+- Ornament rhythm: small radial density only at rail terminals, sparse linear rails elsewhere.
+- Light behavior: pulsing arc nodes or a short rail charge, gated by `animated`, `paused`, and reduced motion. Avoid rotating sweeps unless explicitly requested.
+- Must avoid: centered top/bottom energy bars, four mirrored corner armor blocks, any half-circle that becomes the main silhouette, and any scanner/lens object that steals the frame identity. If the arc spans most of the side height or reads as a large semicircular cutout, split it into shorter rail-connected arc segments or choose another direction.
 
 ### Case: Diagonal Shard Lattice
 

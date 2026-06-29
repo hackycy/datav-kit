@@ -1,13 +1,13 @@
 ---
 name: create-complex-border
-description: Create original polished Datav-style SVG border components and assets with large-screen technology aesthetics, strong focal hierarchy, eye-catching data-screen presence, measured content safe areas, and performance-first motion. Use when Codex must design or implement a new futuristic border box rather than faithfully copying an existing SVG, including datav-kit Web Components, responsive SVG frames or sliced frames, fixed identity modules, clean extension strips, painted glow/gradient effects, metadata/docs/exports, and visual validation that prioritizes beautiful, memorable, dashboard-native large-screen aesthetics while preventing simple-line, cluttered-edge, over-thick mecha, decorative-only, distorted, broken-edge, intrusive-semicircle, or non-border generated styles.
+description: Create original polished Datav-style SVG border components and assets with large-screen technology aesthetics, line-first frame composition, strong focal hierarchy, measured content safe areas, and performance-first motion. Use when Codex must design or implement a new futuristic border box rather than faithfully copying an existing SVG, including datav-kit Web Components, responsive SVG frames or sliced frames, fixed rail/detail modules, clean extension strips, painted glow/gradient effects, metadata/docs/exports, and visual validation that prioritizes beautiful, memorable, dashboard-native large-screen aesthetics while preventing simple-line, cluttered-edge, over-thick mecha, decorative-only, distorted, broken-edge, symbolic crown/badge/emblem, intrusive-semicircle, or non-border generated styles.
 ---
 
 # Create Complex Border
 
 ## Overview
 
-Use this skill to create a new technology-style border with the same engineering rigor as the existing `border-box-*` components. Treat the border as an engineered responsive SVG system that helps a large-screen dashboard feel focused, premium, and memorable, not a standalone decorative outline. Complexity means visual intelligence, structure, rhythm, focal hierarchy, and polish; it does not mean thick armor, dense machinery, or expensive animation.
+Use this skill to create a new technology-style border with the same engineering rigor as the existing `border-box-*` components. Treat the border as an engineered responsive SVG rail system that helps a large-screen dashboard feel focused, premium, and memorable, not a standalone decorative outline or symbolic illustration. Complexity means visual intelligence, line-weight hierarchy, structure, rhythm, focal hierarchy, and polish; it does not mean thick armor, dense machinery, large emblem shapes, or expensive animation.
 
 The existing components are engineering references, not shape templates. A new border must have its own silhouette, module topology, ornament rhythm, slice strategy, complexity level, and light behavior. A border that keeps the same large outline and module layout while changing colors, labels, small ticks, or glow details is a failed use of this skill.
 
@@ -21,6 +21,9 @@ Pass this gate before coding and again after screenshots:
 - The border must support a strong dashboard first read. Within three seconds, the viewer should know where to look, what content is important, and why the frame exists. A border that looks like a pretty empty frame but does not strengthen the displayed data is a failed result.
 - The result must read first as a dashboard content frame, not as a decorative side emblem, chart widget, portal, badge, or circular instrument panel.
 - Decoration must never become the visual lead over the data. The most eye-catching element should be a dashboard focal zone, KPI, map, chart, or title system; the border should amplify that focal zone through light direction, framing, rhythm, and spatial depth.
+- The border must be line-first. Primary identity should come from rails, hairlines, stepped cuts, small nodes, hatches, terminals, shallow plates, and glow hierarchy. Do not use a large filled polygon, crown, badge, shield, crest, wing, portal, reactor, or logo-like silhouette as the signature.
+- Use an explicit stroke hierarchy: dim construction hairlines, thin primary rails, a few brighter glints, and rare medium strokes for accents. Most visible strokes should remain light; if the design depends on broad filled masses or thick outline blocks, redraw it as linework.
+- Irregularity must feel engineered. Create variation through shallow offsets, broken rail segments, small tabs, notches, unequal terminal lengths, and asymmetric detail density, not through one large irregular shape pasted onto the frame.
 - Top, bottom, left, and right edges must form an intentional, attractive frame system. Broken rails are allowed, but their interruptions must be mirrored by connector modules, anchors, or terminals; accidental-looking top/bottom misalignment or messy linework is a failure.
 - The top and bottom edges need clean composition: clear primary rail, secondary hairlines, deliberate gaps, aligned terminals, and restrained detail density. Random stacked strokes, tangled rails, visually noisy docks, or unbalanced top/bottom outlines must be redesigned.
 - Large arcs, circles, lenses, and semicircles may appear only as subordinate border modules. They must not dominate one side, invade the content safe area, or make the border read as a half-round object attached to a rectangle.
@@ -28,6 +31,7 @@ Pass this gate before coding and again after screenshots:
 - The content safe area must be designed before decoration. Padding derived from a small fixed inset while ornaments extend farther inward is a failed implementation; resize math must prove that the slotted content never crosses or visually fights the fixed frame modules.
 - Fixed ornaments may sit above extension strips, but the visual hierarchy must remain clear: dim structure below, rails and plates in the middle, bright glints above, and content above the non-interactive frame.
 - Reject any concept where one side has a large unexplained semicircle, a pasted-on scanner, or a module that is not connected to the frame grammar.
+- Reject any concept whose memorable feature is an object name rather than a border system, such as "crown", "shield", "badge", "crest", "portal", "gate", "reactor", or "aperture". Rename it in neutral rail terms only after the geometry has been redrawn as shallow frame-native linework.
 - Reject any concept whose best description is "the corners reach into the panel." Inward notches may exist only when they are rare, shallow, attractive, and accounted for by the contentRect.
 - Motion must support the dashboard instead of stealing runtime budget. Any animated border that causes visible jank, constant layout work, excessive paint, high CPU/GPU usage, or a busy full-frame redraw loop is a failed result even if it looks visually impressive.
 - Do not equate "technology" with mecha armor. Over-thick rails, bulky corner plates, heavy bevel stacks, loud glow blocks, and weapon/robot-like silhouettes are failed large-screen dashboard aesthetics unless explicitly requested by the user.
@@ -45,9 +49,10 @@ Pass this gate before coding and again after screenshots:
 2. Choose a creative direction before coding.
    - If the user specifies type, complexity, animation, or density, follow it.
    - First choose the dashboard story type: command-center hero, geo/city cockpit, operations nerve center, energy/grid monitor, financial pulse board, industrial digital twin, or abstract cyber showcase.
-   - Then choose the border direction. If the user asks for options, offer several substantially different directions such as asymmetric dock, diagonal shard frame, circular radar aperture, industrial clamp, split-screen rail, circuit trench, floating corner constellation, or ultra-minimal pulse frame.
+   - Then choose the border direction. If the user asks for options, offer several substantially different line-native directions such as asymmetric rail dock, diagonal shard frame, split-screen rail, circuit trench, floating corner constellation, offset status spine, stepped command rail, or ultra-minimal pulse frame.
+   - Use circular/radial/scanner/orbital/reactor/gate directions only when the user explicitly requests them, and keep them subordinate to straight rail systems.
    - If the user does not specify, choose one direction yourself and state it briefly; do not block implementation just to ask.
-   - Pick a complexity tier: simple, medium, complex, or extreme. Prefer medium or complex for default work. Complex and extreme borders must change structure, not only add detail, and must still feel light enough for dashboard content.
+   - Pick a complexity tier: simple, medium, or complex. Prefer medium or complex for default work. Extreme density is allowed only when the user asks for it and screenshots prove the frame still reads as light, refined dashboard technology.
 
 3. Generate divergent concepts before coding.
    - Produce at least three candidate concepts internally or in the visible design brief when useful.
@@ -55,24 +60,26 @@ Pass this gate before coding and again after screenshots:
    - Select the candidate with the greatest geometric distance from the nearest existing border.
    - Select only among candidates that are genuinely good-looking at thumbnail size: strong silhouette, balanced negative space, clear edge rhythm, restrained line weight, and polished glow hierarchy.
    - Discard any candidate whose thumbnail could be described as "another chamfered rectangle with four mirrored corner armor blocks and centered top/bottom docks."
+   - Discard any candidate whose thumbnail could be named as a crown, badge, shield, portal, wheel, scanner, cockpit, weapon UI, or other large object before it reads as a border.
 
 4. Define the final design brief.
    - Define the first-read promise: what should the viewer notice first, second, and third at dashboard distance.
    - Define the focal zone: central map/chart/title/KPI cluster, off-axis hero module, or top-left executive summary. The border must point toward it instead of competing with it.
    - Choose a reference canvas intentionally. Avoid defaulting to `1600 x 900` or `1672 x 941` when a different ratio better supports the concept.
-   - Name the concept in concrete visual terms: e.g. "left-heavy orbital scanner frame with a circular beacon and broken bottom rail".
+   - Name the concept in concrete border terms: e.g. "offset split-rail frame with a shallow left status spine and broken bottom bus". Avoid object-first names such as crown, shield, portal, reactor, or aperture.
    - Define `frameViewBox` or `contentViewBox`, `contentRect`, fixed modules, extension strips, and animation paths before writing render code.
    - Define the deepest inward reach of every fixed corner, side module, center dock, arc, and glow before approving the `contentRect`. If the required `contentRect` would squeeze normal dashboard content at the corners, redesign the frame outward or simplify the modules instead of accepting a large padding penalty.
-   - Include at least five visual systems: silhouette, layered linework, fixed identity marks, light/glow behavior, and optional motion or interaction state.
+   - Include at least five visual systems: silhouette, layered linework, stroke-weight hierarchy, fixed rail/detail modules, light/glow behavior, and optional motion or interaction state.
    - Define the aesthetic thesis: why the border is beautiful, cool, memorable, and suitable for a technology large-screen dashboard. Mention first-read focal hierarchy, top/bottom rail rhythm, focal modules, negative space, depth, and glow hierarchy.
-   - State why the shape still reads as a usable technology dashboard border and not a side illustration. Name any large arc or circular module and explain how it connects to adjacent rails.
+   - State why the shape still reads as a usable technology dashboard border and not a side illustration, emblem, or decorative object. If any large object-like motif is needed to explain the design, stop and redraw the motif as smaller rail-connected modules.
    - Pass the originality gate against the nearest existing border, not only `border-box-2`. State differences in outline, corner construction, side modules, center modules, slice topology, asymmetry, and animation. If the meaningful difference is only color, stroke weight, labels, or small ticks, stop and redesign.
    - Define an animation performance budget when motion is requested. Prefer sparse, low-frequency SVG/CSS animations such as opacity, stroke dash offset, small transforms, or isolated highlight movement. Avoid `animateMotion` across long paths, animating large filters, many independent nodes, layout-affecting attributes, full-frame masks, huge blur regions, or JavaScript-driven render loops. Decide which motion can be disabled or reduced.
 
 5. Compose the SVG as layered machinery.
    - Build from paths, symbols, intentionally mirrored or intentionally non-mirrored modules, gradients, painted halo strokes, ticks, nodes, hatches, plates, notches, short line breaks, and dim structural layers.
-   - Keep corners, center plates, side marker stacks, circles, dense tick clusters, and diagonal joins fixed.
+   - Keep corners, shallow center tabs, side marker stacks, small nodes, dense tick clusters, and diagonal joins fixed.
    - Invent new fixed modules instead of reusing the same corner bracket, side node, and center energy-bar motif from a previous border.
+   - Prefer linework and shallow plates over large filled silhouettes. A fixed module should still read as part of the rail network when the fill is removed.
    - Change large forms first: if the frame still has the same visual massing as a prior border, redesign the silhouette before adding small decoration.
    - Keep inward-reaching geometry sparse and purposeful. Prefer ornament mass outside the content rectangle or along the immediate border band; avoid stacking diagonal corner rails, nodes, tabs, and glows that all point into the content area.
    - Stretch only clean straight strips along one axis.
@@ -115,13 +122,13 @@ Pass this gate before coding and again after screenshots:
 
 Let users steer the design without forcing a narrow template:
 
-- Direction: asymmetric dock, radial scanner, industrial clamp, diagonal shard, circuit-board trace, glass HUD, split-rail console, floating node constellation, reactor hatch, orbital gate, minimal pulse, or custom.
-- Complexity: simple, medium, complex, extreme.
+- Direction: asymmetric rail dock, diagonal shard, circuit-board trace, glass HUD, split-rail console, floating node constellation, offset status spine, stepped command rail, minimal pulse, or custom. Radial scanner, reactor hatch, orbital gate, portal, crown, crest, badge, and shield motifs require an explicit user request and extra visual scrutiny.
+- Complexity: simple, medium, complex, or explicitly requested extreme.
 - Symmetry: symmetric, mirrored corners only, asymmetric sides, asymmetric top/bottom, or fully irregular.
 - Motion: none, subtle pulse, traveling scan, node blink, rail charge, rotating/radar sweep, or user-specified.
 - Motion performance: static by default for dense/extreme designs unless the user asks for motion; when motion is requested, prefer subtle, composited-looking accents and cap animated detail so the border does not compete with dashboard rendering.
 - Density: sparse, airy, balanced, dense, or maximal. Default to airy/balanced; never use density to hide weak composition.
-- Shape: rectangular-chamfered, stepped polygon, broken rails, circular/arc modules, diagonal braces, recessed side spine, protruding dock, or custom.
+- Shape: rectangular-chamfered, stepped polygon, broken rails, diagonal braces, recessed side spine, protruding rail dock, shallow status tabs, or custom. Circular/arc modules are high-risk and must stay small, bounded, rail-connected, and subordinate when explicitly requested.
 
 If no controls are supplied, choose a direction that is visually far from the newest existing borders and say which one you chose.
 

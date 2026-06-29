@@ -28,6 +28,7 @@ Use these principles as non-negotiable design anchors:
 - Use visual hierarchy through scale, contrast, color, grouping, spacing, and common regions. If everything is bright or detailed, nothing is important.
 - Use color intentionally. Limit the screen to a dominant base, a supporting chroma, and one or two accents. Use bright/warm accents for priority, anomaly, live status, or active energy.
 - Prefer charts that communicate quickly through length and 2D position. Avoid making radial shapes, gauges, 3D forms, and decorative circles the main data language unless the user asks for that style.
+- For borders, prefer line systems over symbols. A dashboard frame should not read as a crown, badge, shield, crest, portal, wheel, or logo before it reads as a usable content border.
 - For large-screen "coolness", combine technology, space, and light: dark depth, perspective or atmospheric layering, luminous focus, and precise structural lines.
 
 ## First-Read Strategy
@@ -65,7 +66,7 @@ Choose one style direction and commit to it. Mixing many styles makes the screen
 Eye-catching does not mean noisy. Use one or two dramatic moves:
 
 - A luminous title rail that feels like a command system.
-- A central aperture, map frame, or topology anchor that gives the screen a memorable silhouette.
+- A memorable title rail, map frame, or topology anchor built from shallow lines and nodes.
 - A strong diagonal or asymmetric cut that creates motion and direction.
 - A single accent color used only where the viewer should look.
 - Depth layers: far background grid, mid structural panels, near bright glints.
@@ -91,6 +92,7 @@ The border must be a framing system for data, not the hero by itself.
 - Use asymmetry with purpose: one heavy rail needs a visual counterweight such as a title, KPI cluster, or alert node.
 - Keep corners generous. Large-screen dashboards often put labels, cards, or legends near edges; corner decorations must not bite into them.
 - Make the border silhouette memorable at thumbnail size. It should not look like another generic cyan rectangle.
+- Make the line-weight system visible: hairlines for structure, thin rails for the frame, rare medium strokes for accents, and small bright glints for focus. Avoid broad filled shapes as the main source of irregularity.
 - Keep the content shape believable. Avoid forcing content into an awkward octagon, portal, cockpit window, or mechanical cavity unless the whole dashboard story supports it.
 - If the component is only a border box, use docs/demo content to prove how it behaves in a real large-screen composition.
 
@@ -113,6 +115,7 @@ Pass these gates before finishing:
 - All sides have equal brightness, equal density, and equal animation, so there is no visual hierarchy.
 - The design uses sci-fi decoration but no data story: random ticks, nodes, grids, labels, or rails.
 - The main shape reads as cockpit glass, portal, weapon UI, mecha armor, or game interface instead of a data dashboard frame.
+- The border's most memorable feature is a symbolic object such as a crown, badge, shield, crest, wheel, or logo-like silhouette.
 - The palette is just cyan-on-dark with no depth, warmth, contrast, or focal accent.
 - The demo screenshot has no believable dashboard content, so aesthetic judgment is impossible.
 - The design chases novelty with circles, arcs, and diagonal cuts that compete with data readability.
