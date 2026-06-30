@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const borderBox9Metadata = {
-  tagName: 'dv-border-box-9',
+  tagName: 'dvk-border-box-9',
   className: 'BorderBox9Element',
   description: 'DataV Vue3 BorderBox7-style panel with an inset glow, host border, and two-layer rounded corner linework.',
   props: {
@@ -9,21 +9,21 @@ export const borderBox9Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary border, outer corner, and inset glow color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary inner corner line color.',
     },
     backgroundColor: {
       type: 'string',
       default: 'transparent',
       attribute: 'background-color',
-      cssVariable: '--dv-border-box-9-background',
+      cssVariable: '--dvk-border-box-9-background',
       description: 'Panel background color.',
     },
     colors: {
@@ -35,7 +35,7 @@ export const borderBox9Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

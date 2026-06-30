@@ -1,11 +1,11 @@
 :root,
-.dv-theme-neon-magenta {
-  --dv-color-primary: #ff4fd8;
-  --dv-color-secondary: #7c5cff;
-  --dv-color-accent: #31ffe6;
-  --dv-color-surface: rgba(22, 6, 31, 0.72);
-  --dv-glow-soft: 0 0 12px rgba(255, 79, 216, 0.5);
-  --dv-glow-strong: 0 0 24px rgba(255, 79, 216, 0.82);
-  --dv-line-width: 1px;
-  --dv-motion-duration: 2200ms;
+.dvk-theme-neon-magenta {
+  --dvk-color-primary: #ff4fd8;
+  --dvk-color-secondary: #7c5cff;
+  --dvk-color-accent: #31ffe6;
+  --dvk-color-surface: rgba(22, 6, 31, 0.72);
+  --dvk-glow-soft: 0 0 12px rgba(255, 79, 216, 0.5);
+  --dvk-glow-strong: 0 0 24px rgba(255, 79, 216, 0.82);
+  --dvk-line-width: 1px;
+  --dvk-motion-duration: 2200ms;
 }

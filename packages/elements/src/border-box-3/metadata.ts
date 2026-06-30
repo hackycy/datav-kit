@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const borderBox3Metadata = {
-  tagName: 'dv-border-box-3',
+  tagName: 'dvk-border-box-3',
   className: 'BorderBox3Element',
   description: 'Minimal futuristic blue border rebuilt from fixed SVG detail slices and one-axis extension strips.',
   props: {
@@ -9,21 +9,21 @@ export const borderBox3Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary blue line and glint color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary dim blue frame color.',
     },
     accentColor: {
       type: 'string',
       default: '',
       attribute: 'accent-color',
-      cssVariable: '--dv-color-accent',
+      cssVariable: '--dvk-color-accent',
       description: 'Accent highlight color used by nodes and fine hairlines.',
     },
     colors: {
@@ -41,7 +41,7 @@ export const borderBox3Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

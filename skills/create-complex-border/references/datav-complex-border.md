@@ -30,7 +30,7 @@ For a new or redesigned `border-box-N`, update:
 - `packages/elements/test/register.test.ts`
 - `skills/create-complex-border/references/border-family-inventory.md`
 
-For `repair/redesign`, preserve public API by default: tag name, exports, standard props, CSS variables, parts, and `dv-ready`.
+For `repair/redesign`, preserve public API by default: tag name, exports, standard props, CSS variables, parts, and `dvk-ready`.
 
 ## Standard Public API
 

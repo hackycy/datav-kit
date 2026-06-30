@@ -57,7 +57,7 @@ export class BorderBox5Element extends DatavElement {
       min-width: 0;
       min-height: 0;
       box-sizing: border-box;
-      color: var(--dv-color-primary, #24d9ff);
+      color: var(--dvk-color-primary, #24d9ff);
     }
 
     .frame {
@@ -95,11 +95,11 @@ export class BorderBox5Element extends DatavElement {
       width: 100%;
       height: 100%;
       min-height: 0;
-      padding: var(--dv-border-box-5-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
+      padding: var(--dvk-border-box-5-padding, var(--dvk-border-box-padding, var(--dvk-border-box-auto-padding)));
     }
 
     .hud-frame {
-      opacity: var(--dv-border-box-5-glow-opacity, 1);
+      opacity: var(--dvk-border-box-5-glow-opacity, 1);
     }
   `
 
@@ -122,10 +122,10 @@ export class BorderBox5Element extends DatavElement {
   private size = defaultSize
 
   private readonly instanceId = ++borderBox5Id
-  private readonly outerAuraId = `dv-border-box-5-outer-aura-${this.instanceId}`
-  private readonly softHaloId = `dv-border-box-5-soft-halo-${this.instanceId}`
-  private readonly bodyGlowId = `dv-border-box-5-body-glow-${this.instanceId}`
-  private readonly strokeGlowId = `dv-border-box-5-stroke-glow-${this.instanceId}`
+  private readonly outerAuraId = `dvk-border-box-5-outer-aura-${this.instanceId}`
+  private readonly softHaloId = `dvk-border-box-5-soft-halo-${this.instanceId}`
+  private readonly bodyGlowId = `dvk-border-box-5-body-glow-${this.instanceId}`
+  private readonly strokeGlowId = `dvk-border-box-5-stroke-glow-${this.instanceId}`
 
   private readonly resizeController = new ResizeController(this, (state) => {
     this.size = {
@@ -135,7 +135,7 @@ export class BorderBox5Element extends DatavElement {
   })
 
   override firstUpdated(): void {
-    this.emit('dv-ready', { tagName: 'dv-border-box-5' })
+    this.emit('dvk-ready', { tagName: 'dvk-border-box-5' })
   }
 
   override render(): unknown {
@@ -146,7 +146,7 @@ export class BorderBox5Element extends DatavElement {
 
     return html`
       ${this.renderTiledGraphic(primary, secondary, accent, glowIntensity, sliceMetrics)}
-      <div part="content" class="content" style=${`--dv-border-box-auto-padding: ${contentPadding}`}>
+      <div part="content" class="content" style=${`--dvk-border-box-auto-padding: ${contentPadding}`}>
         <slot></slot>
       </div>
     `
@@ -512,19 +512,19 @@ export class BorderBox5Element extends DatavElement {
     const colors = this.colors.split(',').map(color => color.trim()).filter(Boolean)
     const primary = colors[0] ?? resolveThemeValue({
       explicit: this.color,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       host: this,
       fallback: '#24d9ff',
     })
     const secondary = colors[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       host: this,
       fallback: '#008cff',
     })
     const accent = colors[2] ?? resolveThemeValue({
       explicit: this.accentColor,
-      cssVariable: '--dv-color-accent',
+      cssVariable: '--dvk-color-accent',
       host: this,
       fallback: '#bffcff',
     })

@@ -22,7 +22,7 @@ export class Decoration4Element extends DatavElement {
       min-width: 0;
       min-height: 0;
       box-sizing: border-box;
-      color: var(--dv-color-primary, #18f0ff);
+      color: var(--dvk-color-primary, #18f0ff);
       overflow: hidden;
     }
 
@@ -52,7 +52,7 @@ export class Decoration4Element extends DatavElement {
       width: 100%;
       height: 100%;
       min-height: 0;
-      padding: var(--dv-decoration-4-padding, 0);
+      padding: var(--dvk-decoration-4-padding, 0);
     }
   `
 
@@ -76,7 +76,7 @@ export class Decoration4Element extends DatavElement {
   })
 
   override firstUpdated(): void {
-    this.emit('dv-ready', { tagName: 'dv-decoration-4' })
+    this.emit('dvk-ready', { tagName: 'dvk-decoration-4' })
   }
 
   override render(): unknown {
@@ -140,13 +140,13 @@ export class Decoration4Element extends DatavElement {
     const colors = this.colors.split(',').map(color => color.trim()).filter(Boolean)
     const primary = colors[0] ?? resolveThemeValue({
       explicit: this.color,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       host: this,
       fallback: '#18f0ff',
     })
     const secondary = colors[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       host: this,
       fallback: '#2b7cff',
     })

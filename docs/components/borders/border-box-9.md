@@ -1,9 +1,9 @@
 # Border Box 9
 
-`dv-border-box-9` recreates DataV Vue3 BorderBox7 as a glowing panel with a 1px host border, inset shadow, and two layers of rounded corner linework drawn from the live host size.
+`dvk-border-box-9` recreates DataV Vue3 BorderBox7 as a glowing panel with a 1px host border, inset shadow, and two layers of rounded corner linework drawn from the live host size.
 
 <BorderChartDemo
-  border="dv-border-box-9"
+  border="dvk-border-box-9"
   colors="#235fa7,#4fd2dd"
   accent="#4fd2dd"
   title="Border Box 9"
@@ -11,9 +11,9 @@
 />
 
 ```html
-<dv-border-box-9 colors="#235fa7,#4fd2dd" background-color="rgba(5, 18, 46, 0.22)">
+<dvk-border-box-9 colors="#235fa7,#4fd2dd" background-color="rgba(5, 18, 46, 0.22)">
   <section>Border Box 9</section>
-</dv-border-box-9>
+</dvk-border-box-9>
 ```
 
 ## Props
@@ -29,19 +29,19 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary border and glow fallback. |
-| `--dv-color-secondary` | Secondary corner line fallback. |
-| `--dv-border-box-9-background` | Panel background fallback color. |
-| `--dv-border-box-9-border-color` | Border color override. |
-| `--dv-border-box-9-border-width` | Border width override. |
-| `--dv-border-box-padding` | Shared override for automatic content inset across border boxes. |
-| `--dv-border-box-9-padding` | Component-specific override for automatic content inset. |
+| `--dvk-color-primary` | Primary border and glow fallback. |
+| `--dvk-color-secondary` | Secondary corner line fallback. |
+| `--dvk-border-box-9-background` | Panel background fallback color. |
+| `--dvk-border-box-9-border-color` | Border color override. |
+| `--dvk-border-box-9-border-width` | Border width override. |
+| `--dvk-border-box-padding` | Shared override for automatic content inset across border boxes. |
+| `--dvk-border-box-9-padding` | Component-specific override for automatic content inset. |
 
 ## Parts
 

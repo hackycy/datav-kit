@@ -25,7 +25,7 @@ export class BorderBox1Element extends DatavElement {
       min-width: 0;
       min-height: 0;
       box-sizing: border-box;
-      color: var(--dv-color-primary, #235fa7);
+      color: var(--dvk-color-primary, #235fa7);
     }
 
     :host([auto-height]) {
@@ -51,7 +51,7 @@ export class BorderBox1Element extends DatavElement {
       box-sizing: border-box;
       width: 100%;
       height: 100%;
-      padding: var(--dv-border-box-1-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
+      padding: var(--dvk-border-box-1-padding, var(--dvk-border-box-padding, var(--dvk-border-box-auto-padding)));
     }
 
     :host([auto-height]) .content {
@@ -92,9 +92,9 @@ export class BorderBox1Element extends DatavElement {
   @state()
   private size = defaultSize
 
-  private readonly pathId = `dv-border-box-1-path-${++borderBox1Id}`
-  private readonly gradientId = `dv-border-box-1-gradient-${borderBox1Id}`
-  private readonly maskId = `dv-border-box-1-mask-${borderBox1Id}`
+  private readonly pathId = `dvk-border-box-1-path-${++borderBox1Id}`
+  private readonly gradientId = `dvk-border-box-1-gradient-${borderBox1Id}`
+  private readonly maskId = `dvk-border-box-1-mask-${borderBox1Id}`
 
   private readonly resizeController = new ResizeController(this, (state) => {
     this.size = {
@@ -104,7 +104,7 @@ export class BorderBox1Element extends DatavElement {
   })
 
   override firstUpdated(): void {
-    this.emit('dv-ready', { tagName: 'dv-border-box-1' })
+    this.emit('dvk-ready', { tagName: 'dvk-border-box-1' })
   }
 
   override render(): unknown {
@@ -172,7 +172,7 @@ export class BorderBox1Element extends DatavElement {
           `}
         </svg>
       </div>
-      <div part="content" class="content" style=${`--dv-border-box-auto-padding: ${contentPadding}`}>
+      <div part="content" class="content" style=${`--dvk-border-box-auto-padding: ${contentPadding}`}>
         <slot></slot>
       </div>
     `
@@ -189,13 +189,13 @@ export class BorderBox1Element extends DatavElement {
     const colors = this.colors.split(',').map(color => color.trim()).filter(Boolean)
     const primary = colors[0] ?? resolveThemeValue({
       explicit: this.color,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       host: this,
       fallback: '#235fa7',
     })
     const secondary = colors[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       host: this,
       fallback: '#4fd2dd',
     })

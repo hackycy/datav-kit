@@ -1,11 +1,11 @@
 :root,
-.dv-theme-ice-white {
-  --dv-color-primary: #e9fbff;
-  --dv-color-secondary: #8bdfff;
-  --dv-color-accent: #5f7cff;
-  --dv-color-surface: rgba(236, 249, 255, 0.18);
-  --dv-glow-soft: 0 0 12px rgba(139, 223, 255, 0.42);
-  --dv-glow-strong: 0 0 24px rgba(139, 223, 255, 0.72);
-  --dv-line-width: 1px;
-  --dv-motion-duration: 2400ms;
+.dvk-theme-ice-white {
+  --dvk-color-primary: #e9fbff;
+  --dvk-color-secondary: #8bdfff;
+  --dvk-color-accent: #5f7cff;
+  --dvk-color-surface: rgba(236, 249, 255, 0.18);
+  --dvk-glow-soft: 0 0 12px rgba(139, 223, 255, 0.42);
+  --dvk-glow-strong: 0 0 24px rgba(139, 223, 255, 0.72);
+  --dvk-line-width: 1px;
+  --dvk-motion-duration: 2400ms;
 }

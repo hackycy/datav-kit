@@ -2,23 +2,23 @@
 
 Framework-agnostic Web Components for data dashboard decoration.
 
-The first usable loop is intentionally small: `dv-fit-screen` handles dashboard scale behavior, `dv-count-to` renders animated metrics, and `dv-border-box-1` through `dv-border-box-11` start the numbered border series. The docs site registers the current Web Components package directly, so every demo on this site is a live usage example rather than a separate demo application.
+The first usable loop is intentionally small: `dvk-fit-screen` handles dashboard scale behavior, `dvk-count-to` renders animated metrics, and `dvk-border-box-1` through `dvk-border-box-11` start the numbered border series. The docs site registers the current Web Components package directly, so every demo on this site is a live usage example rather than a separate demo application.
 
 ## Live Demo
 
 <div class="datav-demo">
-  <dv-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd" duration="3">
+  <dvk-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd" duration="3">
     <div class="datav-panel__content">
       <p class="datav-panel__title">Command Center</p>
-      <p class="datav-panel__meta">dv-border-box-1</p>
+      <p class="datav-panel__meta">dvk-border-box-1</p>
     </div>
-  </dv-border-box-1>
+  </dvk-border-box-1>
 </div>
 
 ```html
-<dv-border-box-1 colors="#235fa7,#4fd2dd" duration="3">
+<dvk-border-box-1 colors="#235fa7,#4fd2dd" duration="3">
   <section>Command Center</section>
-</dv-border-box-1>
+</dvk-border-box-1>
 ```
 
 ## What To Read Next

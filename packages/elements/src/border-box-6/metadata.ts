@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const borderBox6Metadata = {
-  tagName: 'dv-border-box-6',
+  tagName: 'dvk-border-box-6',
   className: 'BorderBox6Element',
   description: 'High-precision cyan HUD border recreated from the supplied 1672 x 941 SVG, rendered as fixed source details plus clipped edge extensions.',
   props: {
@@ -9,21 +9,21 @@ export const borderBox6Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary cyan glow and body color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Dark structural frame and shadow color.',
     },
     accentColor: {
       type: 'string',
       default: '',
       attribute: 'accent-color',
-      cssVariable: '--dv-color-accent',
+      cssVariable: '--dvk-color-accent',
       description: 'Bright cyan highlight color used by the solid trace layer.',
     },
     colors: {
@@ -41,7 +41,7 @@ export const borderBox6Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

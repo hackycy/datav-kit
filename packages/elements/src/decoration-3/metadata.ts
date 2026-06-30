@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const decoration3Metadata = {
-  tagName: 'dv-decoration-3',
+  tagName: 'dvk-decoration-3',
   className: 'Decoration3Element',
   description: 'Animated angular line decoration inspired by DataV Vue3 Decoration5.',
   props: {
@@ -9,14 +9,14 @@ export const decoration3Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary line color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary line color.',
     },
     colors: {
@@ -52,7 +52,7 @@ export const decoration3Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

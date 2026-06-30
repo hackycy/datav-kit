@@ -215,7 +215,7 @@ Vue、React 等适配包只包装 Custom Elements，不重写组件实现。
 公共接口由三部分组成：
 
 - attribute/property：表达输入状态。
-- `dv-*` 事件：表达组件生命周期和可观察变化。
+- `dvk-*` 事件：表达组件生命周期和可观察变化。
 - metadata：让文档、类型和适配层共享同一份描述。
 
 设计原则：
@@ -224,7 +224,7 @@ Vue、React 等适配包只包装 Custom Elements，不重写组件实现。
 - 复杂值通过 property 传递，并在必要时提供字符串 attribute 兜底。
 - 布尔属性兼容 HTML 写法。
 - 事件 detail 保持结构化。
-- 公共事件统一使用 `dv-` 前缀。
+- 公共事件统一使用 `dvk-` 前缀。
 
 详细字段约定见 [Architecture Contracts](./reference/architecture-contracts.md)。
 

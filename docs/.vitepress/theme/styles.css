@@ -2,9 +2,9 @@
   --vp-c-brand-1: #0ea5b7;
   --vp-c-brand-2: #118fa0;
   --vp-c-brand-3: #18f0ff;
-  --dv-color-primary: #18f0ff;
-  --dv-color-secondary: #2b7cff;
-  --dv-color-accent: #f3ff5c;
+  --dvk-color-primary: #18f0ff;
+  --dvk-color-secondary: #2b7cff;
+  --dvk-color-accent: #f3ff5c;
 }
 
 .datav-demo {
@@ -19,7 +19,7 @@
   background: #050813;
 }
 
-.datav-demo dv-fit-screen {
+.datav-demo dvk-fit-screen {
   width: 100%;
   height: 360px;
 }

@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const borderBox4Metadata = {
-  tagName: 'dv-border-box-4',
+  tagName: 'dvk-border-box-4',
   className: 'BorderBox4Element',
   description: 'Dense neon HUD frame adapted from the provided 1672 x 941 vector SVG material, rendered as fixed details plus source-clipped edge extensions.',
   props: {
@@ -9,21 +9,21 @@ export const borderBox4Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary cyan line and glint color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary glow and fine frame color.',
     },
     accentColor: {
       type: 'string',
       default: '',
       attribute: 'accent-color',
-      cssVariable: '--dv-color-accent',
+      cssVariable: '--dvk-color-accent',
       description: 'Hot highlight color used by nodes, strokes, and HUD ticks.',
     },
     colors: {
@@ -41,7 +41,7 @@ export const borderBox4Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

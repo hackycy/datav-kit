@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const borderBox11Metadata = {
-  tagName: 'dv-border-box-11',
+  tagName: 'dvk-border-box-11',
   className: 'BorderBox11Element',
   description: 'Minimal enterprise data-platform border with status rails, sparse live nodes, and subtle rail-charge motion.',
   props: {
@@ -9,21 +9,21 @@ export const borderBox11Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary steel-blue rail color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary cyan rail and status-line color.',
     },
     accentColor: {
       type: 'string',
       default: '',
       attribute: 'accent-color',
-      cssVariable: '--dv-color-accent',
+      cssVariable: '--dvk-color-accent',
       description: 'Accent color for live nodes and rail-charge highlights.',
     },
     colors: {
@@ -53,7 +53,7 @@ export const borderBox11Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

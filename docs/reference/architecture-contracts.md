@@ -8,10 +8,10 @@ Component metadata uses `DatavElementMetadata` from `@datav-kit/core`.
 
 Each element must declare:
 
-- `tagName`: a `dv-*` custom element name.
+- `tagName`: a `dvk-*` custom element name.
 - `className`: the exported element class name.
 - `props`: public attributes/properties, including type, default, attribute name, and optional CSS variable.
-- `events`: public `dv-*` events and their detail shape.
+- `events`: public `dvk-*` events and their detail shape.
 - `parts`: supported Shadow DOM `::part()` names.
 
 The `@datav-kit/elements` package exports a single `elementMetadata` array for docs and adapters.
@@ -44,7 +44,7 @@ Defaults:
 - `composed: true`
 - `cancelable: false`
 
-Event names must use the `dv-*` prefix.
+Event names must use the `dvk-*` prefix.
 
 ## SSR
 
@@ -89,12 +89,12 @@ Do not use fixed large padding or generic width/height ratios as the default con
 CSS variable precedence for border-box content inset is:
 
 ```txt
---dv-border-box-N-padding
-> --dv-border-box-padding
+--dvk-border-box-N-padding
+> --dvk-border-box-padding
 > computed safe-area padding
 ```
 
-The computed value may be stored in an internal CSS variable such as `--dv-border-box-auto-padding`, but it is not a public authoring contract.
+The computed value may be stored in an internal CSS variable such as `--dvk-border-box-auto-padding`, but it is not a public authoring contract.
 
 ## Fullscreen
 

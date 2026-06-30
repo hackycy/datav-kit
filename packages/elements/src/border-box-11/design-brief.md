@@ -37,7 +37,7 @@ At dashboard distance, the viewer first sees the upper-left status/KPI zone, the
 ## Existing Border Inventory
 
 - Inventory date: 2026-06-29
-- Nearest existing border: `dv-border-box-10`
+- Nearest existing border: `dvk-border-box-10`
 - Similarity reason: both are lightweight enterprise-friendly panel borders with live animation and modest content padding.
 - Do-not-repeat notes: avoid rounded rectangle identity, four equal glowing corners, and live host outline as the only structure.
 
@@ -63,7 +63,7 @@ At dashboard distance, the viewer first sees the upper-left status/KPI zone, the
 - Responsive model: source-coordinate fixed endcaps plus long extension strips.
 - Content safe-area implication: very safe, but visually close to a simple line frame.
 - Motion idea: horizontal charge only.
-- Why keep/reject: reject; too close to `dv-border-box-1` in silhouette and too generic for a new numbered border.
+- Why keep/reject: reject; too close to `dvk-border-box-1` in silhouette and too generic for a new numbered border.
 
 ### Candidate C: offset service spine
 
@@ -85,7 +85,7 @@ At dashboard distance, the viewer first sees the upper-left status/KPI zone, the
 
 ## Geometry Difference Score
 
-Nearest existing border: `dv-border-box-10`
+Nearest existing border: `dvk-border-box-10`
 
 | Dimension | Different? | Major? | Evidence |
 | --- | --- | --- | --- |

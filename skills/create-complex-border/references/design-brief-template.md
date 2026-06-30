@@ -113,7 +113,7 @@ Required for original and repair/redesign unless user direction is explicit.
 
 ## Geometry Difference Score
 
-Nearest existing border: `dv-border-box-X`
+Nearest existing border: `dvk-border-box-X`
 
 | Dimension | Different? | Major? | Evidence |
 | --- | --- | --- | --- |

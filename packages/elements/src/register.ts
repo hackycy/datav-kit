@@ -22,79 +22,79 @@ import { FitScreenElement } from './fit-screen/element'
 
 export const datavElementRegistrations: DatavElementRegistration[] = [
   {
-    tagName: 'dv-fit-screen',
+    tagName: 'dvk-fit-screen',
     element: FitScreenElement,
   },
   {
-    tagName: 'dv-border-box-1',
+    tagName: 'dvk-border-box-1',
     element: BorderBox1Element,
   },
   {
-    tagName: 'dv-border-box-2',
+    tagName: 'dvk-border-box-2',
     element: BorderBox2Element,
   },
   {
-    tagName: 'dv-border-box-3',
+    tagName: 'dvk-border-box-3',
     element: BorderBox3Element,
   },
   {
-    tagName: 'dv-border-box-4',
+    tagName: 'dvk-border-box-4',
     element: BorderBox4Element,
   },
   {
-    tagName: 'dv-border-box-5',
+    tagName: 'dvk-border-box-5',
     element: BorderBox5Element,
   },
   {
-    tagName: 'dv-border-box-6',
+    tagName: 'dvk-border-box-6',
     element: BorderBox6Element,
   },
   {
-    tagName: 'dv-border-box-7',
+    tagName: 'dvk-border-box-7',
     element: BorderBox7Element,
   },
   {
-    tagName: 'dv-border-box-8',
+    tagName: 'dvk-border-box-8',
     element: BorderBox8Element,
   },
   {
-    tagName: 'dv-border-box-9',
+    tagName: 'dvk-border-box-9',
     element: BorderBox9Element,
   },
   {
-    tagName: 'dv-border-box-10',
+    tagName: 'dvk-border-box-10',
     element: BorderBox10Element,
   },
   {
-    tagName: 'dv-border-box-11',
+    tagName: 'dvk-border-box-11',
     element: BorderBox11Element,
   },
   {
-    tagName: 'dv-decoration-1',
+    tagName: 'dvk-decoration-1',
     element: Decoration1Element,
   },
   {
-    tagName: 'dv-decoration-2',
+    tagName: 'dvk-decoration-2',
     element: Decoration2Element,
   },
   {
-    tagName: 'dv-decoration-3',
+    tagName: 'dvk-decoration-3',
     element: Decoration3Element,
   },
   {
-    tagName: 'dv-decoration-4',
+    tagName: 'dvk-decoration-4',
     element: Decoration4Element,
   },
   {
-    tagName: 'dv-decoration-5',
+    tagName: 'dvk-decoration-5',
     element: Decoration5Element,
   },
   {
-    tagName: 'dv-decoration-6',
+    tagName: 'dvk-decoration-6',
     element: Decoration6Element,
   },
   {
-    tagName: 'dv-count-to',
+    tagName: 'dvk-count-to',
     element: CountToElement,
   },
 ]

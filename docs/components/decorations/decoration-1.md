@@ -1,15 +1,15 @@
 # Decoration 1
 
-`dv-decoration-1` is the first decoration component in datav-kit. It recreates the animated vertical bar effect from DataV Vue3 `Decoration6` as a framework-agnostic Web Component.
+`dvk-decoration-1` is the first decoration component in datav-kit. It recreates the animated vertical bar effect from DataV Vue3 `Decoration6` as a framework-agnostic Web Component.
 
 <div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 300px; --datav-decoration-height: 35px;">
   <div class="datav-decoration-shell">
-    <dv-decoration-1 colors="#7acaec,#4fd2dd"></dv-decoration-1>
+    <dvk-decoration-1 colors="#7acaec,#4fd2dd"></dvk-decoration-1>
   </div>
 </div>
 
 ```html
-<dv-decoration-1 colors="#7acaec,#4fd2dd"></dv-decoration-1>
+<dvk-decoration-1 colors="#7acaec,#4fd2dd"></dvk-decoration-1>
 ```
 
 ## Props
@@ -27,14 +27,14 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary fallback color. |
-| `--dv-color-secondary` | Secondary fallback color. |
+| `--dvk-color-primary` | Primary fallback color. |
+| `--dvk-color-secondary` | Secondary fallback color. |
 
 ## Parts
 

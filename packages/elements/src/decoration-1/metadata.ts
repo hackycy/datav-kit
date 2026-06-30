@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const decoration1Metadata = {
-  tagName: 'dv-decoration-1',
+  tagName: 'dvk-decoration-1',
   className: 'Decoration1Element',
   description: 'Animated bar decoration inspired by DataV Decoration6.',
   props: {
@@ -9,14 +9,14 @@ export const decoration1Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary bar color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary bar color.',
     },
     colors: {
@@ -46,7 +46,7 @@ export const decoration1Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

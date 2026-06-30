@@ -18,37 +18,37 @@ export class CountToElement extends DatavElement {
   static override styles = css`
     :host {
       display: inline-block;
-      color: var(--dv-count-to-color, currentColor);
-      font-family: var(--dv-count-to-font-family, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif);
+      color: var(--dvk-count-to-color, currentColor);
+      font-family: var(--dvk-count-to-font-family, "Segoe UI", Tahoma, Geneva, Verdana, sans-serif);
       line-height: 1;
     }
 
     .count-to {
       display: inline-flex;
       align-items: baseline;
-      gap: var(--dv-count-to-gap, 0.25em);
+      gap: var(--dvk-count-to-gap, 0.25em);
       white-space: nowrap;
     }
 
     .prefix,
     .suffix {
-      color: var(--dv-count-to-affix-color, currentColor);
-      font-size: var(--dv-count-to-affix-font-size, 0.75em);
+      color: var(--dvk-count-to-affix-color, currentColor);
+      font-size: var(--dvk-count-to-affix-font-size, 0.75em);
       line-height: 1;
     }
 
     .main {
-      font-size: var(--dv-count-to-font-size, 1.5em);
-      font-weight: var(--dv-count-to-font-weight, 600);
+      font-size: var(--dvk-count-to-font-size, 1.5em);
+      font-weight: var(--dvk-count-to-font-weight, 600);
       font-variant-numeric: tabular-nums;
       letter-spacing: 0;
       line-height: 1;
     }
 
     .decimal {
-      color: var(--dv-count-to-decimal-color, currentColor);
-      font-size: var(--dv-count-to-decimal-font-size, 0.75em);
-      font-weight: var(--dv-count-to-decimal-font-weight, inherit);
+      color: var(--dvk-count-to-decimal-color, currentColor);
+      font-size: var(--dvk-count-to-decimal-font-size, 0.75em);
+      font-weight: var(--dvk-count-to-decimal-font-weight, inherit);
     }
   `
 
@@ -181,7 +181,7 @@ export class CountToElement extends DatavElement {
 
     this.delayId = window.setTimeout(() => {
       this.animationStart = window.performance.now()
-      this.emit('dv-started', {
+      this.emit('dvk-started', {
         from: this.animationFrom,
         to: this.animationTo,
         duration,
@@ -205,7 +205,7 @@ export class CountToElement extends DatavElement {
 
     this.currentValue = this.animationTo
     this.frameId = 0
-    this.emit('dv-finished', { value: this.animationTo })
+    this.emit('dvk-finished', { value: this.animationTo })
   }
 
   private cancelAnimation(): void {

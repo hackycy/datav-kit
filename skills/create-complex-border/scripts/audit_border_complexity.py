@@ -252,7 +252,7 @@ def audit(path: Path) -> tuple[list[Check], list[str]]:
         ("fixed-identity", has_fixed_module_model, "fixed identity modules or live-size geometry modules should be explicit"),
         ("responsive-model", has_extension_or_live_model, "clean strips should extend or live-size geometry should recompute from host dimensions"),
         ("safe-content", has_safe_content, "content padding should use a measured safe area"),
-        ("unique-svg-ids", "instanceId" in text and re.search(r"`dv-border-box-[^`]*\$\{this\.instanceId\}", text) is not None, "SVG ids should be instance-scoped"),
+        ("unique-svg-ids", "instanceId" in text and re.search(r"`dvk-border-box-[^`]*\$\{this\.instanceId\}", text) is not None, "SVG ids should be instance-scoped"),
         ("three-color-roles", all(token in text for token in ("secondaryColor", "accentColor", "colors")), "complex neon borders should expose primary, secondary, accent, and colors"),
         ("glow-control", "glowIntensity" in text and ("resolveNumberValue" in text or "Number" in text), "glow intensity should be configurable"),
         ("svg-defs", defs >= 3, f"expected at least 3 SVG defs, found {defs}"),

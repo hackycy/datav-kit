@@ -1,9 +1,9 @@
 # Border Box 1
 
-`dv-border-box-1` is the first numbered border component. It renders a rectangular SVG border with a moving highlight around the edge.
+`dvk-border-box-1` is the first numbered border component. It renders a rectangular SVG border with a moving highlight around the edge.
 
 <BorderChartDemo
-  border="dv-border-box-1"
+  border="dvk-border-box-1"
   colors="#235fa7,#4fd2dd"
   accent="#4fd2dd"
   title="Border Box 1"
@@ -11,9 +11,9 @@
 />
 
 ```html
-<dv-border-box-1 colors="#235fa7,#4fd2dd" duration="3">
+<dvk-border-box-1 colors="#235fa7,#4fd2dd" duration="3">
   <section>Border Box 1</section>
-</dv-border-box-1>
+</dvk-border-box-1>
 ```
 
 ## Props
@@ -33,16 +33,16 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary fallback color. |
-| `--dv-color-secondary` | Secondary fallback color. |
-| `--dv-border-box-padding` | Shared override for automatic content inset across border boxes. |
-| `--dv-border-box-1-padding` | Component-specific override for automatic content inset. |
+| `--dvk-color-primary` | Primary fallback color. |
+| `--dvk-color-secondary` | Secondary fallback color. |
+| `--dvk-border-box-padding` | Shared override for automatic content inset across border boxes. |
+| `--dvk-border-box-1-padding` | Component-specific override for automatic content inset. |
 
 ## Parts
 

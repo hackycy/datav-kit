@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const borderBox2Metadata = {
-  tagName: 'dv-border-box-2',
+  tagName: 'dvk-border-box-2',
   className: 'BorderBox2Element',
   description: 'Layered neon cyber frame border based on a 1600 x 900 SVG reference.',
   props: {
@@ -9,21 +9,21 @@ export const borderBox2Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary cyan line and detail color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary blue frame color.',
     },
     accentColor: {
       type: 'string',
       default: '',
       attribute: 'accent-color',
-      cssVariable: '--dv-color-accent',
+      cssVariable: '--dvk-color-accent',
       description: 'Accent highlight color used by gradient stops and purple detail blocks.',
     },
     colors: {
@@ -41,7 +41,7 @@ export const borderBox2Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

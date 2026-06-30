@@ -61,7 +61,7 @@ export class Decoration6Element extends DatavElement {
       height: 100%;
       min-width: 0;
       min-height: 0;
-      color: var(--dv-color-primary, #18f0ff);
+      color: var(--dvk-color-primary, #18f0ff);
     }
 
     svg {
@@ -109,11 +109,11 @@ export class Decoration6Element extends DatavElement {
   private size = defaultSize
 
   private readonly instanceId = ++decoration6Id
-  private readonly glowId = `dv-decoration-6-glow-${this.instanceId}`
-  private readonly nodeGlowId = `dv-decoration-6-node-glow-${this.instanceId}`
-  private readonly railGradientId = `dv-decoration-6-rail-${this.instanceId}`
-  private readonly dimGradientId = `dv-decoration-6-dim-${this.instanceId}`
-  private readonly nodeGradientId = `dv-decoration-6-node-${this.instanceId}`
+  private readonly glowId = `dvk-decoration-6-glow-${this.instanceId}`
+  private readonly nodeGlowId = `dvk-decoration-6-node-glow-${this.instanceId}`
+  private readonly railGradientId = `dvk-decoration-6-rail-${this.instanceId}`
+  private readonly dimGradientId = `dvk-decoration-6-dim-${this.instanceId}`
+  private readonly nodeGradientId = `dvk-decoration-6-node-${this.instanceId}`
 
   private readonly resizeController = new ResizeController(this, (state) => {
     this.size = {
@@ -123,7 +123,7 @@ export class Decoration6Element extends DatavElement {
   })
 
   override firstUpdated(): void {
-    this.emit('dv-ready', { tagName: 'dv-decoration-6' })
+    this.emit('dvk-ready', { tagName: 'dvk-decoration-6' })
   }
 
   override render(): unknown {
@@ -329,19 +329,19 @@ export class Decoration6Element extends DatavElement {
       : ''
     const primary = colorList[0] ?? resolveThemeValue({
       explicit: explicitPrimary,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       host: this,
       fallback: '#18f0ff',
     })
     const secondary = colorList[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       host: this,
       fallback: '#2b7cff',
     })
     const accent = colorList[2] ?? resolveThemeValue({
       explicit: this.accentColor,
-      cssVariable: '--dv-decoration-6-accent-color',
+      cssVariable: '--dvk-decoration-6-accent-color',
       host: this,
       fallback: '#e6fdff',
     })

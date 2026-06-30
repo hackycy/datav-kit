@@ -1,24 +1,24 @@
 # Fit Screen
 
-`dv-fit-screen` scales a fixed design canvas into either the browser viewport or its host container.
+`dvk-fit-screen` scales a fixed design canvas into either the browser viewport or its host container.
 
 <div class="datav-demo">
-  <dv-fit-screen fit-target="host" width="1280" height="720" mode="contain" align="center center">
-    <dv-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd">
+  <dvk-fit-screen fit-target="host" width="1280" height="720" mode="contain" align="center center">
+    <dvk-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd">
       <div class="datav-panel__content">
         <p class="datav-panel__title">Contain Mode</p>
         <p class="datav-panel__meta">1280 x 720 design canvas</p>
       </div>
-    </dv-border-box-1>
-  </dv-fit-screen>
+    </dvk-border-box-1>
+  </dvk-fit-screen>
 </div>
 
 ```html
-<dv-fit-screen fit-target="host" width="1280" height="720" mode="contain" align="center center">
-  <dv-border-box-1>
+<dvk-fit-screen fit-target="host" width="1280" height="720" mode="contain" align="center center">
+  <dvk-border-box-1>
     <section>Contain Mode</section>
-  </dv-border-box-1>
-</dv-fit-screen>
+  </dvk-border-box-1>
+</dvk-fit-screen>
 ```
 
 ## Props
@@ -36,18 +36,18 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-resize` | `{ width, height, dpr, scale, scaleX, scaleY, offsetX, offsetY }` |
-| `dv-fullscreen-request` | `{ ok, reason }` |
+| `dvk-resize` | `{ width, height, dpr, scale, scaleX, scaleY, offsetX, offsetY }` |
+| `dvk-fullscreen-request` | `{ ok, reason }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-scale` | The active uniform scale. |
-| `--dv-scale-x` | X scale. |
-| `--dv-scale-y` | Y scale. |
-| `--dv-viewport-width` | Observed viewport width. |
-| `--dv-viewport-height` | Observed viewport height. |
+| `--dvk-scale` | The active uniform scale. |
+| `--dvk-scale-x` | X scale. |
+| `--dvk-scale-y` | Y scale. |
+| `--dvk-viewport-width` | Observed viewport width. |
+| `--dvk-viewport-height` | Observed viewport height. |
 
 ## Parts
 

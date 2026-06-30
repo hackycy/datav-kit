@@ -20,7 +20,7 @@ export interface DatavEventMetadata {
 }
 
 export interface DatavElementMetadata {
-  tagName: `dv-${string}`
+  tagName: `dvk-${string}`
   className: string
   description?: string
   props: Record<string, DatavPropMetadata>

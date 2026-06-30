@@ -1,9 +1,9 @@
 # Border Box 8
 
-`dv-border-box-8` recreates DataV Vue3 BorderBox1 as a dynamic polygon panel with four fixed mirrored 150 x 150 animated corner ornaments.
+`dvk-border-box-8` recreates DataV Vue3 BorderBox1 as a dynamic polygon panel with four fixed mirrored 150 x 150 animated corner ornaments.
 
 <BorderChartDemo
-  border="dv-border-box-8"
+  border="dvk-border-box-8"
   colors="#235fa7,#4fd2dd"
   accent="#4fd2dd"
   title="Border Box 8"
@@ -11,9 +11,9 @@
 />
 
 ```html
-<dv-border-box-8 colors="#235fa7,#4fd2dd" background-color="rgba(5, 18, 46, 0.32)">
+<dvk-border-box-8 colors="#235fa7,#4fd2dd" background-color="rgba(5, 18, 46, 0.32)">
   <section>Border Box 8</section>
-</dv-border-box-8>
+</dvk-border-box-8>
 ```
 
 ## Props
@@ -31,17 +31,17 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary corner color fallback. |
-| `--dv-color-secondary` | Secondary corner color fallback. |
-| `--dv-border-box-8-background` | Panel background fallback color. |
-| `--dv-border-box-padding` | Shared override for automatic content inset across border boxes. |
-| `--dv-border-box-8-padding` | Component-specific override for automatic content inset. |
+| `--dvk-color-primary` | Primary corner color fallback. |
+| `--dvk-color-secondary` | Secondary corner color fallback. |
+| `--dvk-border-box-8-background` | Panel background fallback color. |
+| `--dvk-border-box-padding` | Shared override for automatic content inset across border boxes. |
+| `--dvk-border-box-8-padding` | Component-specific override for automatic content inset. |
 
 ## Parts
 

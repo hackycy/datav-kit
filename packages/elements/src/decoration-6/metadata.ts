@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const decoration6Metadata = {
-  tagName: 'dv-decoration-6',
+  tagName: 'dvk-decoration-6',
   className: 'Decoration6Element',
   description: 'Minimal cyber HUD rail decoration with reversible symmetric layout.',
   props: {
@@ -9,21 +9,21 @@ export const decoration6Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary cyan rail color. Also accepts a DataV-compatible color array when set as a property.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary electric-blue rail and halo color.',
     },
     accentColor: {
       type: 'string',
       default: '',
       attribute: 'accent-color',
-      cssVariable: '--dv-decoration-6-accent-color',
+      cssVariable: '--dvk-decoration-6-accent-color',
       description: 'Bright node core color.',
     },
     colors: {
@@ -41,7 +41,7 @@ export const decoration6Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

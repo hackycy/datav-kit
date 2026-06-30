@@ -14,7 +14,7 @@ describe('@datav-kit/core', () => {
   it('defines custom elements once and reports duplicate registrations', () => {
     class TestElement extends DatavElement {}
 
-    const tagName = `dv-test-${crypto.randomUUID()}`
+    const tagName = `dvk-test-${crypto.randomUUID()}`
 
     expect(defineDatavElement(tagName, TestElement)).toBe(true)
     expect(defineDatavElement(tagName, TestElement)).toBe(false)
@@ -23,7 +23,7 @@ describe('@datav-kit/core', () => {
   it('registers element batches without throwing on already-defined tags', () => {
     class BatchElement extends DatavElement {}
 
-    const tagName = `dv-batch-${crypto.randomUUID()}`
+    const tagName = `dvk-batch-${crypto.randomUUID()}`
     const first = registerDatavElements([{ tagName, element: BatchElement }])
     const second = registerDatavElements([{ tagName, element: BatchElement }])
 
@@ -36,9 +36,9 @@ describe('@datav-kit/core', () => {
     const listener = vi.fn()
 
     document.body.append(host)
-    document.body.addEventListener('dv-ready', listener)
+    document.body.addEventListener('dvk-ready', listener)
 
-    const result = dispatchDatavEvent(host, 'dv-ready', { detail: { ready: true } })
+    const result = dispatchDatavEvent(host, 'dvk-ready', { detail: { ready: true } })
 
     expect(result).toBe(true)
     expect(listener).toHaveBeenCalledTimes(1)
@@ -66,19 +66,19 @@ describe('@datav-kit/core', () => {
   it('resolves explicit values before CSS variables and fallbacks', () => {
     const host = document.createElement('div')
 
-    host.style.setProperty('--dv-color-primary', '#18f0ff')
+    host.style.setProperty('--dvk-color-primary', '#18f0ff')
     document.body.append(host)
 
     expect(resolveThemeValue({
       explicit: '#fff',
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       host,
       fallback: '#000',
     })).toBe('#fff')
 
     expect(resolveThemeValue({
       explicit: '',
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       host,
       fallback: '#000',
     })).toBe('#18f0ff')

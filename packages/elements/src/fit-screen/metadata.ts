@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const fitScreenMetadata = {
-  tagName: 'dv-fit-screen',
+  tagName: 'dvk-fit-screen',
   className: 'FitScreenElement',
   description: 'Scales a fixed-size design canvas into the available viewport.',
   props: {
@@ -44,12 +44,12 @@ export const fitScreenMetadata = {
   },
   events: [
     {
-      name: 'dv-resize',
+      name: 'dvk-resize',
       detail: '{ width, height, dpr, scale, offsetX, offsetY }',
       description: 'Fired after viewport measurements are recalculated.',
     },
     {
-      name: 'dv-fullscreen-request',
+      name: 'dvk-fullscreen-request',
       detail: '{ ok, reason }',
       description: 'Fired after requestFullscreenMode() resolves.',
     },

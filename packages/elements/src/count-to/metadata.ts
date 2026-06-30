@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const countToMetadata = {
-  tagName: 'dv-count-to',
+  tagName: 'dvk-count-to',
   className: 'CountToElement',
   description: 'Animated numeric value that counts from a start value to an end value.',
   props: {
@@ -74,12 +74,12 @@ export const countToMetadata = {
   },
   events: [
     {
-      name: 'dv-started',
+      name: 'dvk-started',
       detail: '{ from, to, duration, delay }',
       description: 'Fired when the count animation starts.',
     },
     {
-      name: 'dv-finished',
+      name: 'dvk-finished',
       detail: '{ value }',
       description: 'Fired when the count animation reaches the target value.',
     },

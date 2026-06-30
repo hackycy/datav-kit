@@ -1,9 +1,9 @@
 # Border Box 7
 
-`dv-border-box-7` recreates DataV BorderBox10 as a chamfered glowing panel. The main polygon is redrawn from the live host size, while the four source corner ornaments stay fixed and mirrored from the original 150 x 150 SVG module.
+`dvk-border-box-7` recreates DataV BorderBox10 as a chamfered glowing panel. The main polygon is redrawn from the live host size, while the four source corner ornaments stay fixed and mirrored from the original 150 x 150 SVG module.
 
 <BorderChartDemo
-  border="dv-border-box-7"
+  border="dvk-border-box-7"
   colors="#235fa7,#4fd2dd"
   accent="#4fd2dd"
   title="Border Box 7"
@@ -11,9 +11,9 @@
 />
 
 ```html
-<dv-border-box-7 colors="#235fa7,#4fd2dd">
+<dvk-border-box-7 colors="#235fa7,#4fd2dd">
   <section>Border Box 7</section>
-</dv-border-box-7>
+</dvk-border-box-7>
 ```
 
 ## Props
@@ -29,18 +29,18 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary glow fallback color. |
-| `--dv-color-secondary` | Corner fill fallback color. |
-| `--dv-border-box-7-background` | Panel background fallback color. |
-| `--dv-border-box-padding` | Shared override for automatic content inset across border boxes. |
-| `--dv-border-box-7-padding` | Component-specific override for automatic content inset. |
-| `--dv-border-box-7-radius` | Host border radius. |
+| `--dvk-color-primary` | Primary glow fallback color. |
+| `--dvk-color-secondary` | Corner fill fallback color. |
+| `--dvk-border-box-7-background` | Panel background fallback color. |
+| `--dvk-border-box-padding` | Shared override for automatic content inset across border boxes. |
+| `--dvk-border-box-7-padding` | Component-specific override for automatic content inset. |
+| `--dvk-border-box-7-radius` | Host border radius. |
 
 ## Parts
 

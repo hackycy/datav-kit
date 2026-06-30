@@ -1,19 +1,19 @@
 # Decoration 4
 
-`dv-decoration-4` recreates the responsive diamond panel from DataV Vue3 `Decoration11` as a framework-agnostic Web Component. It draws the four corner ornaments, main diamond frame, and side accent lines from the host width and height, then centers slotted content over the SVG.
+`dvk-decoration-4` recreates the responsive diamond panel from DataV Vue3 `Decoration11` as a framework-agnostic Web Component. It draws the four corner ornaments, main diamond frame, and side accent lines from the host width and height, then centers slotted content over the SVG.
 
 <div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 360px; --datav-decoration-height: 90px;">
   <div class="datav-decoration-shell">
-    <dv-decoration-4>
+    <dvk-decoration-4>
       <strong>Decoration 4</strong>
-    </dv-decoration-4>
+    </dvk-decoration-4>
   </div>
 </div>
 
 ```html
-<dv-decoration-4>
+<dvk-decoration-4>
   <strong>Decoration 4</strong>
-</dv-decoration-4>
+</dvk-decoration-4>
 ```
 
 ## Props
@@ -28,15 +28,15 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary fallback color. |
-| `--dv-color-secondary` | Secondary fallback color. |
-| `--dv-decoration-4-padding` | Padding applied to the centered content layer. |
+| `--dvk-color-primary` | Primary fallback color. |
+| `--dvk-color-secondary` | Secondary fallback color. |
+| `--dvk-decoration-4-padding` | Padding applied to the centered content layer. |
 
 ## Parts
 

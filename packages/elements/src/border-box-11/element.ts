@@ -58,7 +58,7 @@ export class BorderBox11Element extends DatavElement {
       min-width: 0;
       min-height: 0;
       box-sizing: border-box;
-      color: var(--dv-color-primary, #3d7fb8);
+      color: var(--dvk-color-primary, #3d7fb8);
       overflow: hidden;
     }
 
@@ -97,11 +97,11 @@ export class BorderBox11Element extends DatavElement {
       height: 100%;
       min-height: 0;
       overflow: hidden;
-      padding: var(--dv-border-box-11-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
+      padding: var(--dvk-border-box-11-padding, var(--dvk-border-box-padding, var(--dvk-border-box-auto-padding)));
     }
 
     .live-mark {
-      opacity: var(--dv-border-box-11-glow-opacity, 0.95);
+      opacity: var(--dvk-border-box-11-glow-opacity, 0.95);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -136,9 +136,9 @@ export class BorderBox11Element extends DatavElement {
   private size = defaultSize
 
   private readonly instanceId = ++borderBox11Id
-  private readonly glowId = `dv-border-box-11-glow-${this.instanceId}`
-  private readonly railGradientId = `dv-border-box-11-rail-${this.instanceId}`
-  private readonly chargeGradientId = `dv-border-box-11-charge-${this.instanceId}`
+  private readonly glowId = `dvk-border-box-11-glow-${this.instanceId}`
+  private readonly railGradientId = `dvk-border-box-11-rail-${this.instanceId}`
+  private readonly chargeGradientId = `dvk-border-box-11-charge-${this.instanceId}`
 
   private readonly resizeController = new ResizeController(this, (state) => {
     this.size = {
@@ -148,7 +148,7 @@ export class BorderBox11Element extends DatavElement {
   })
 
   override firstUpdated(): void {
-    this.emit('dv-ready', { tagName: 'dv-border-box-11' })
+    this.emit('dvk-ready', { tagName: 'dvk-border-box-11' })
   }
 
   override render(): unknown {
@@ -223,7 +223,7 @@ export class BorderBox11Element extends DatavElement {
           glowIntensity,
         })}
       </div>
-      <div part="content" class="content" style=${`--dv-border-box-auto-padding: ${contentPadding}`}>
+      <div part="content" class="content" style=${`--dvk-border-box-auto-padding: ${contentPadding}`}>
         <slot></slot>
       </div>
     `
@@ -582,19 +582,19 @@ export class BorderBox11Element extends DatavElement {
     const colors = this.colors.split(',').map(color => color.trim()).filter(Boolean)
     const primary = colors[0] ?? resolveThemeValue({
       explicit: this.color,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       host: this,
       fallback: '#3d7fb8',
     })
     const secondary = colors[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       host: this,
       fallback: '#6ed7e8',
     })
     const accent = colors[2] ?? resolveThemeValue({
       explicit: this.accentColor,
-      cssVariable: '--dv-color-accent',
+      cssVariable: '--dvk-color-accent',
       host: this,
       fallback: '#52f0b5',
     })

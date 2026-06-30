@@ -1,17 +1,17 @@
 # Screen Fit
 
-`dv-fit-screen` maps a fixed design canvas into the viewport by default. Use `fit-target="host"` when the component is embedded inside another layout, such as this documentation site.
+`dvk-fit-screen` maps a fixed design canvas into the viewport by default. Use `fit-target="host"` when the component is embedded inside another layout, such as this documentation site.
 
 ```html
-<dv-fit-screen width="1920" height="1080" mode="contain">
+<dvk-fit-screen width="1920" height="1080" mode="contain">
   <main>dashboard content</main>
-</dv-fit-screen>
+</dvk-fit-screen>
 ```
 
 ```html
-<dv-fit-screen fit-target="host" width="1280" height="720" mode="contain">
+<dvk-fit-screen fit-target="host" width="1280" height="720" mode="contain">
   <section>embedded dashboard preview</section>
-</dv-fit-screen>
+</dvk-fit-screen>
 ```
 
 Supported modes:
@@ -28,7 +28,7 @@ Alignment accepts two tokens such as `center center`, `left top`, or `right bott
 Fullscreen is exposed as a method and must be called from a user gesture:
 
 ```ts
-const el = document.querySelector('dv-fit-screen')
+const el = document.querySelector('dvk-fit-screen')
 
 button.addEventListener('click', () => {
   el?.requestFullscreenMode()

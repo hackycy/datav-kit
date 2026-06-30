@@ -1,9 +1,9 @@
 # Border Box 3
 
-`dv-border-box-3` renders a restrained futuristic blue frame rebuilt from the 1672 x 941 SVG reference canvas. It keeps corners, center modules, side ticks, and node lights as fixed SVG slices, while clean edge strips extend on one axis to adapt freely to the host size.
+`dvk-border-box-3` renders a restrained futuristic blue frame rebuilt from the 1672 x 941 SVG reference canvas. It keeps corners, center modules, side ticks, and node lights as fixed SVG slices, while clean edge strips extend on one axis to adapt freely to the host size.
 
 <BorderChartDemo
-  border="dv-border-box-3"
+  border="dvk-border-box-3"
   colors="#57b9ff,#168cff,#9ae7ff"
   accent="#57b9ff"
   title="Border Box 3"
@@ -11,9 +11,9 @@
 />
 
 ```html
-<dv-border-box-3 colors="#57b9ff,#168cff,#9ae7ff" glow-intensity="1">
+<dvk-border-box-3 colors="#57b9ff,#168cff,#9ae7ff" glow-intensity="1">
   <section>Border Box 3</section>
-</dv-border-box-3>
+</dvk-border-box-3>
 ```
 
 ## Props
@@ -30,18 +30,18 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary fallback color. |
-| `--dv-color-secondary` | Secondary fallback color. |
-| `--dv-color-accent` | Accent fallback color. |
-| `--dv-border-box-padding` | Shared override for automatic content inset across border boxes. |
-| `--dv-border-box-3-padding` | Component-specific override for automatic content inset. |
-| `--dv-border-box-3-glow-opacity` | Static glow layer opacity. |
+| `--dvk-color-primary` | Primary fallback color. |
+| `--dvk-color-secondary` | Secondary fallback color. |
+| `--dvk-color-accent` | Accent fallback color. |
+| `--dvk-border-box-padding` | Shared override for automatic content inset across border boxes. |
+| `--dvk-border-box-3-padding` | Component-specific override for automatic content inset. |
+| `--dvk-border-box-3-glow-opacity` | Static glow layer opacity. |
 
 ## Parts
 

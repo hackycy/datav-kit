@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const borderBox8Metadata = {
-  tagName: 'dv-border-box-8',
+  tagName: 'dvk-border-box-8',
   className: 'BorderBox8Element',
   description: 'DataV BorderBox1-style panel with a dynamic polygon background and four fixed mirrored animated corner ornaments.',
   props: {
@@ -9,21 +9,21 @@ export const borderBox8Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary corner ornament color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary corner ornament color used by the animated fill swap.',
     },
     backgroundColor: {
       type: 'string',
       default: 'transparent',
       attribute: 'background-color',
-      cssVariable: '--dv-border-box-8-background',
+      cssVariable: '--dvk-border-box-8-background',
       description: 'Panel background fill color.',
     },
     colors: {
@@ -47,7 +47,7 @@ export const borderBox8Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

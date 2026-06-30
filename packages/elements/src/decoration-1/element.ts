@@ -35,7 +35,7 @@ export class Decoration1Element extends DatavElement {
       height: 100%;
       min-width: 0;
       min-height: 0;
-      color: var(--dv-color-primary, #7acaec);
+      color: var(--dvk-color-primary, #7acaec);
     }
 
     svg {
@@ -75,7 +75,7 @@ export class Decoration1Element extends DatavElement {
   })
 
   override firstUpdated(): void {
-    this.emit('dv-ready', { tagName: 'dv-decoration-1' })
+    this.emit('dvk-ready', { tagName: 'dvk-decoration-1' })
   }
 
   override render(): unknown {
@@ -142,13 +142,13 @@ export class Decoration1Element extends DatavElement {
     const colors = this.colors.split(',').map(color => color.trim()).filter(Boolean)
     const primary = colors[0] ?? resolveThemeValue({
       explicit: this.color,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       host: this,
       fallback: '#7acaec',
     })
     const secondary = colors[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       host: this,
       fallback: '#7acaec',
     })

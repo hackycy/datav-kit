@@ -1,9 +1,9 @@
 # Border Box 6
 
-`dv-border-box-6` renders a high-precision cyan HUD frame recreated from the supplied 1672 x 941 SVG. It keeps the traced source layers as inline SVG paths, clips fixed detail modules from the original coordinates, and extends only clean edge strips so the frame can resize without stretching the whole artwork.
+`dvk-border-box-6` renders a high-precision cyan HUD frame recreated from the supplied 1672 x 941 SVG. It keeps the traced source layers as inline SVG paths, clips fixed detail modules from the original coordinates, and extends only clean edge strips so the frame can resize without stretching the whole artwork.
 
 <BorderChartDemo
-  border="dv-border-box-6"
+  border="dvk-border-box-6"
   colors="#04b9f2,#102132,#00b7f0"
   accent="#04b9f2"
   title="Border Box 6"
@@ -11,22 +11,22 @@
 />
 
 ```html
-<dv-border-box-6 colors="#04b9f2,#102132,#00b7f0" glow-intensity="1">
+<dvk-border-box-6 colors="#04b9f2,#102132,#00b7f0" glow-intensity="1">
   <section>Border Box 6</section>
-</dv-border-box-6>
+</dvk-border-box-6>
 ```
 
 ## Free Border
 
-`dv-border-box-6` behaves like a decorative border. The host box can be fixed, responsive, or content-sized by normal CSS, while the component keeps corners, marker stacks, bottom hatch details, and other source modules fixed. Only measured straight strips are stretched along one axis.
+`dvk-border-box-6` behaves like a decorative border. The host box can be fixed, responsive, or content-sized by normal CSS, while the component keeps corners, marker stacks, bottom hatch details, and other source modules fixed. Only measured straight strips are stretched along one axis.
 
 ```html
-<dv-border-box-6 colors="#04b9f2,#102132,#00b7f0">
+<dvk-border-box-6 colors="#04b9f2,#102132,#00b7f0">
   <section>
     <h3>Free border panel</h3>
     <p>The border adapts to the content box.</p>
   </section>
-</dv-border-box-6>
+</dvk-border-box-6>
 ```
 
 ## Props
@@ -43,18 +43,18 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary fallback color. |
-| `--dv-color-secondary` | Secondary fallback color. |
-| `--dv-color-accent` | Accent fallback color. |
-| `--dv-border-box-padding` | Shared override for automatic content inset across border boxes. |
-| `--dv-border-box-6-padding` | Component-specific override for automatic content inset. |
-| `--dv-border-box-6-glow-opacity` | Static glow layer opacity. |
+| `--dvk-color-primary` | Primary fallback color. |
+| `--dvk-color-secondary` | Secondary fallback color. |
+| `--dvk-color-accent` | Accent fallback color. |
+| `--dvk-border-box-padding` | Shared override for automatic content inset across border boxes. |
+| `--dvk-border-box-6-padding` | Component-specific override for automatic content inset. |
+| `--dvk-border-box-6-glow-opacity` | Static glow layer opacity. |
 
 ## Parts
 

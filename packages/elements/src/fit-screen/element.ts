@@ -36,11 +36,11 @@ export class FitScreenElement extends DatavElement {
       min-height: 0;
       overflow: hidden;
       box-sizing: border-box;
-      --dv-scale: 1;
-      --dv-scale-x: 1;
-      --dv-scale-y: 1;
-      --dv-viewport-width: 0px;
-      --dv-viewport-height: 0px;
+      --dvk-scale: 1;
+      --dvk-scale-x: 1;
+      --dvk-scale-y: 1;
+      --dvk-viewport-width: 0px;
+      --dvk-viewport-height: 0px;
     }
 
     :host(:not([fit-target])),
@@ -116,7 +116,7 @@ export class FitScreenElement extends DatavElement {
 
   async requestFullscreenMode(): Promise<void> {
     const result = await requestDatavFullscreen(this)
-    this.emit('dv-fullscreen-request', result)
+    this.emit('dvk-fullscreen-request', result)
   }
 
   override render(): unknown {
@@ -147,12 +147,12 @@ export class FitScreenElement extends DatavElement {
     const next = this.computeViewport(viewportWidth, viewportHeight, designWidth, designHeight, dpr)
 
     this.viewport = next
-    this.style.setProperty('--dv-scale', String(Math.min(next.scaleX, next.scaleY)))
-    this.style.setProperty('--dv-scale-x', String(next.scaleX))
-    this.style.setProperty('--dv-scale-y', String(next.scaleY))
-    this.style.setProperty('--dv-viewport-width', `${next.width}px`)
-    this.style.setProperty('--dv-viewport-height', `${next.height}px`)
-    this.emit('dv-resize', {
+    this.style.setProperty('--dvk-scale', String(Math.min(next.scaleX, next.scaleY)))
+    this.style.setProperty('--dvk-scale-x', String(next.scaleX))
+    this.style.setProperty('--dvk-scale-y', String(next.scaleY))
+    this.style.setProperty('--dvk-viewport-width', `${next.width}px`)
+    this.style.setProperty('--dvk-viewport-height', `${next.height}px`)
+    this.emit('dvk-resize', {
       width: next.width,
       height: next.height,
       dpr: next.dpr,

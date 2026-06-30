@@ -26,7 +26,7 @@ export class BorderBox9Element extends DatavElement {
       min-width: 0;
       min-height: 0;
       box-sizing: border-box;
-      color: var(--dv-color-primary, #235fa7);
+      color: var(--dvk-color-primary, #235fa7);
       overflow: hidden;
     }
 
@@ -40,9 +40,9 @@ export class BorderBox9Element extends DatavElement {
       position: absolute;
       inset: 0;
       box-sizing: border-box;
-      border: var(--dv-border-box-9-border-width, 1px) solid var(--dv-border-box-9-border-color, var(--dv-border-box-9-primary));
-      background-color: var(--dv-border-box-9-background);
-      box-shadow: var(--dv-border-box-9-box-shadow);
+      border: var(--dvk-border-box-9-border-width, 1px) solid var(--dvk-border-box-9-border-color, var(--dvk-border-box-9-primary));
+      background-color: var(--dvk-border-box-9-background);
+      box-shadow: var(--dvk-border-box-9-box-shadow);
     }
 
     svg {
@@ -69,7 +69,7 @@ export class BorderBox9Element extends DatavElement {
       width: 100%;
       height: 100%;
       min-height: 0;
-      padding: var(--dv-border-box-9-padding, var(--dv-border-box-padding, var(--dv-border-box-auto-padding)));
+      padding: var(--dvk-border-box-9-padding, var(--dvk-border-box-padding, var(--dvk-border-box-auto-padding)));
     }
   `
 
@@ -96,7 +96,7 @@ export class BorderBox9Element extends DatavElement {
   })
 
   override firstUpdated(): void {
-    this.emit('dv-ready', { tagName: 'dv-border-box-9' })
+    this.emit('dvk-ready', { tagName: 'dvk-border-box-9' })
   }
 
   override render(): unknown {
@@ -127,9 +127,9 @@ export class BorderBox9Element extends DatavElement {
         part="frame"
         class="frame"
         style=${`
-          --dv-border-box-9-primary: ${primary};
-          --dv-border-box-9-box-shadow: inset 0 0 40px ${primary};
-          --dv-border-box-9-background: ${background};
+          --dvk-border-box-9-primary: ${primary};
+          --dvk-border-box-9-box-shadow: inset 0 0 40px ${primary};
+          --dvk-border-box-9-background: ${background};
         `}
       >
         <div class="surface"></div>
@@ -137,7 +137,7 @@ export class BorderBox9Element extends DatavElement {
           ${this.renderCornerLines(width, height, primary, secondary)}
         </svg>
       </div>
-      <div part="content" class="content" style=${`--dv-border-box-auto-padding: ${contentPadding}`}>
+      <div part="content" class="content" style=${`--dvk-border-box-auto-padding: ${contentPadding}`}>
         <slot></slot>
       </div>
     `
@@ -170,19 +170,19 @@ export class BorderBox9Element extends DatavElement {
     const colors = this.colors.split(',').map(color => color.trim()).filter(Boolean)
     const primary = colors[0] ?? resolveThemeValue({
       explicit: this.color,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       host: this,
       fallback: '#235fa7',
     })
     const secondary = colors[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       host: this,
       fallback: '#4fd2dd',
     })
     const background = resolveThemeValue({
       explicit: this.backgroundColor,
-      cssVariable: '--dv-border-box-9-background',
+      cssVariable: '--dvk-border-box-9-background',
       host: this,
       fallback: 'transparent',
     })

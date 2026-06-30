@@ -1,27 +1,27 @@
 # Decoration 6
 
-`dv-decoration-6` is a minimal cyber HUD rail for enterprise data screens. It uses thin cyan and electric-blue SVG strokes, restrained glow, segmented breaks, angled cuts, and small light nodes without forming a frame. The `reverse` attribute mirrors the full geometry so paired instances can create a symmetric title or divider composition.
+`dvk-decoration-6` is a minimal cyber HUD rail for enterprise data screens. It uses thin cyan and electric-blue SVG strokes, restrained glow, segmented breaks, angled cuts, and small light nodes without forming a frame. The `reverse` attribute mirrors the full geometry so paired instances can create a symmetric title or divider composition.
 
 <div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 520px; --datav-decoration-height: 48px;">
   <div class="datav-decoration-shell">
-    <dv-decoration-6></dv-decoration-6>
+    <dvk-decoration-6></dvk-decoration-6>
   </div>
 </div>
 
 ```html
-<dv-decoration-6></dv-decoration-6>
+<dvk-decoration-6></dvk-decoration-6>
 ```
 
 <div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 640px; --datav-decoration-height: 52px;">
   <div class="datav-decoration-shell" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px;">
-    <dv-decoration-6></dv-decoration-6>
-    <dv-decoration-6 reverse></dv-decoration-6>
+    <dvk-decoration-6></dvk-decoration-6>
+    <dvk-decoration-6 reverse></dvk-decoration-6>
   </div>
 </div>
 
 ```html
-<dv-decoration-6></dv-decoration-6>
-<dv-decoration-6 reverse></dv-decoration-6>
+<dvk-decoration-6></dvk-decoration-6>
+<dvk-decoration-6 reverse></dvk-decoration-6>
 ```
 
 ## Props
@@ -38,15 +38,15 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary fallback color. |
-| `--dv-color-secondary` | Secondary fallback color. |
-| `--dv-decoration-6-accent-color` | Accent fallback color for node cores. |
+| `--dvk-color-primary` | Primary fallback color. |
+| `--dvk-color-secondary` | Secondary fallback color. |
+| `--dvk-decoration-6-accent-color` | Accent fallback color for node cores. |
 
 ## Parts
 

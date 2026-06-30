@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const decoration4Metadata = {
-  tagName: 'dv-decoration-4',
+  tagName: 'dvk-decoration-4',
   className: 'Decoration4Element',
   description: 'Responsive diamond panel decoration inspired by DataV Vue3 Decoration11.',
   props: {
@@ -9,14 +9,14 @@ export const decoration4Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary frame color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Corner ornament color.',
     },
     colors: {
@@ -28,7 +28,7 @@ export const decoration4Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

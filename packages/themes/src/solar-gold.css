@@ -1,11 +1,11 @@
 :root,
-.dv-theme-solar-gold {
-  --dv-color-primary: #ffd166;
-  --dv-color-secondary: #ff8f3d;
-  --dv-color-accent: #5ee7ff;
-  --dv-color-surface: rgba(28, 18, 6, 0.72);
-  --dv-glow-soft: 0 0 12px rgba(255, 209, 102, 0.46);
-  --dv-glow-strong: 0 0 24px rgba(255, 209, 102, 0.76);
-  --dv-line-width: 1px;
-  --dv-motion-duration: 2500ms;
+.dvk-theme-solar-gold {
+  --dvk-color-primary: #ffd166;
+  --dvk-color-secondary: #ff8f3d;
+  --dvk-color-accent: #5ee7ff;
+  --dvk-color-surface: rgba(28, 18, 6, 0.72);
+  --dvk-glow-soft: 0 0 12px rgba(255, 209, 102, 0.46);
+  --dvk-glow-strong: 0 0 24px rgba(255, 209, 102, 0.76);
+  --dvk-line-width: 1px;
+  --dvk-motion-duration: 2500ms;
 }

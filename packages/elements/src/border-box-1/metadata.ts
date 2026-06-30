@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const borderBox1Metadata = {
-  tagName: 'dv-border-box-1',
+  tagName: 'dvk-border-box-1',
   className: 'BorderBox1Element',
   description: 'Animated numbered border box inspired by DataV BorderBox1.',
   props: {
@@ -9,14 +9,14 @@ export const borderBox1Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary border color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Secondary border color.',
     },
     colors: {
@@ -58,7 +58,7 @@ export const borderBox1Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

@@ -1,7 +1,7 @@
 import type { DatavElementMetadata } from '@datav-kit/core'
 
 export const borderBox7Metadata = {
-  tagName: 'dv-border-box-7',
+  tagName: 'dvk-border-box-7',
   className: 'BorderBox7Element',
   description: 'Chamfered glowing border recreated from DataV BorderBox10, with dynamic panel geometry and fixed mirrored corner ornaments.',
   props: {
@@ -9,21 +9,21 @@ export const borderBox7Metadata = {
       type: 'string',
       default: '',
       attribute: true,
-      cssVariable: '--dv-color-primary',
+      cssVariable: '--dvk-color-primary',
       description: 'Primary inset glow color.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
-      cssVariable: '--dv-color-secondary',
+      cssVariable: '--dvk-color-secondary',
       description: 'Corner ornament fill color.',
     },
     backgroundColor: {
       type: 'string',
       default: 'transparent',
       attribute: 'background-color',
-      cssVariable: '--dv-border-box-7-background',
+      cssVariable: '--dvk-border-box-7-background',
       description: 'Panel background fill color.',
     },
     colors: {
@@ -35,7 +35,7 @@ export const borderBox7Metadata = {
   },
   events: [
     {
-      name: 'dv-ready',
+      name: 'dvk-ready',
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },

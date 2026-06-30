@@ -185,7 +185,7 @@ def check_process(component_dir: Path, inventory_path: Path) -> tuple[list[str],
 
     match = re.search(r"border-box-(\d+)", str(component_dir))
     if match:
-        tag_name = f"dv-border-box-{match.group(1)}"
+        tag_name = f"dvk-border-box-{match.group(1)}"
         if inventory_path and not inventory_has_entry(inventory_path, tag_name):
             errors.append(f"Family inventory missing entry for {tag_name}: {inventory_path}")
 

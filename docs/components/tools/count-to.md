@@ -1,24 +1,24 @@
 # Count To
 
-`dv-count-to` renders an animated numeric metric with optional prefix, suffix, thousands separator, and decimal formatting.
+`dvk-count-to` renders an animated numeric metric with optional prefix, suffix, thousands separator, and decimal formatting.
 
 <div class="datav-demo">
-  <dv-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd">
+  <dvk-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd">
     <div class="datav-panel__content">
       <p class="datav-panel__title">Total Throughput</p>
-      <dv-count-to end-val="987654.32" decimals="2" prefix="$" suffix="M" duration="1800"></dv-count-to>
+      <dvk-count-to end-val="987654.32" decimals="2" prefix="$" suffix="M" duration="1800"></dvk-count-to>
     </div>
-  </dv-border-box-1>
+  </dvk-border-box-1>
 </div>
 
 ```html
-<dv-count-to
+<dvk-count-to
   end-val="987654.32"
   decimals="2"
   prefix="$"
   suffix="M"
   duration="1800"
-></dv-count-to>
+></dvk-count-to>
 ```
 
 ## Props
@@ -41,8 +41,8 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-started` | `{ from, to, duration, delay }` |
-| `dv-finished` | `{ value }` |
+| `dvk-started` | `{ from, to, duration, delay }` |
+| `dvk-finished` | `{ value }` |
 
 ## Slots
 
@@ -55,16 +55,16 @@
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-count-to-color` | Root text color. |
-| `--dv-count-to-font-family` | Number font family. |
-| `--dv-count-to-font-size` | Main number font size. |
-| `--dv-count-to-font-weight` | Main number font weight. |
-| `--dv-count-to-gap` | Gap between prefix, number, and suffix. |
-| `--dv-count-to-affix-color` | Prefix and suffix text color. |
-| `--dv-count-to-affix-font-size` | Prefix and suffix font size. |
-| `--dv-count-to-decimal-color` | Decimal text color. |
-| `--dv-count-to-decimal-font-size` | Decimal font size. |
-| `--dv-count-to-decimal-font-weight` | Decimal font weight. |
+| `--dvk-count-to-color` | Root text color. |
+| `--dvk-count-to-font-family` | Number font family. |
+| `--dvk-count-to-font-size` | Main number font size. |
+| `--dvk-count-to-font-weight` | Main number font weight. |
+| `--dvk-count-to-gap` | Gap between prefix, number, and suffix. |
+| `--dvk-count-to-affix-color` | Prefix and suffix text color. |
+| `--dvk-count-to-affix-font-size` | Prefix and suffix font size. |
+| `--dvk-count-to-decimal-color` | Decimal text color. |
+| `--dvk-count-to-decimal-font-size` | Decimal font size. |
+| `--dvk-count-to-decimal-font-weight` | Decimal font weight. |
 
 ## Parts
 

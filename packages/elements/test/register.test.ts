@@ -46,65 +46,65 @@ describe('@datav-kit/elements', () => {
 
   it('exposes MVP metadata and registers elements once', () => {
     expect(elementMetadata.map(meta => meta.tagName)).toEqual([
-      'dv-fit-screen',
-      'dv-border-box-1',
-      'dv-border-box-2',
-      'dv-border-box-3',
-      'dv-border-box-4',
-      'dv-border-box-5',
-      'dv-border-box-6',
-      'dv-border-box-7',
-      'dv-border-box-8',
-      'dv-border-box-9',
-      'dv-border-box-10',
-      'dv-border-box-11',
-      'dv-decoration-1',
-      'dv-decoration-2',
-      'dv-decoration-3',
-      'dv-decoration-4',
-      'dv-decoration-5',
-      'dv-decoration-6',
-      'dv-count-to',
+      'dvk-fit-screen',
+      'dvk-border-box-1',
+      'dvk-border-box-2',
+      'dvk-border-box-3',
+      'dvk-border-box-4',
+      'dvk-border-box-5',
+      'dvk-border-box-6',
+      'dvk-border-box-7',
+      'dvk-border-box-8',
+      'dvk-border-box-9',
+      'dvk-border-box-10',
+      'dvk-border-box-11',
+      'dvk-decoration-1',
+      'dvk-decoration-2',
+      'dvk-decoration-3',
+      'dvk-decoration-4',
+      'dvk-decoration-5',
+      'dvk-decoration-6',
+      'dvk-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-decoration-5', 'dv-decoration-6', 'dv-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-decoration-5', 'dv-decoration-6', 'dv-count-to']))
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('autoHeight')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('viewBox')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-3')?.props).not.toHaveProperty('autoHeight')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('viewBox')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-4')?.props).not.toHaveProperty('autoHeight')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-5')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-5')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-5')?.props).not.toHaveProperty('viewBox')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-6')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-6')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-6')?.props).not.toHaveProperty('viewBox')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-7')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-7')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-7')?.props).not.toHaveProperty('viewBox')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-8')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-8')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-8')?.props).not.toHaveProperty('viewBox')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-9')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-9')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-9')?.props).not.toHaveProperty('viewBox')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-10')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-10')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-10')?.props).not.toHaveProperty('viewBox')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-11')?.props).not.toHaveProperty('width')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-11')?.props).not.toHaveProperty('height')
-    expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-11')?.props).not.toHaveProperty('viewBox')
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-count-to']))
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('autoHeight')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-3')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-3')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-3')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-3')?.props).not.toHaveProperty('autoHeight')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-4')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-4')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-4')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-4')?.props).not.toHaveProperty('autoHeight')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-5')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-5')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-5')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-6')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-6')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-6')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-7')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-7')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-7')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-8')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-8')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-8')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-9')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-9')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-9')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-10')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-10')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-10')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-11')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-11')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-11')?.props).not.toHaveProperty('viewBox')
   })
 
   it('supports single-element registration helpers', () => {
@@ -132,7 +132,7 @@ describe('@datav-kit/elements', () => {
   it('renders decoration-5 with DataV Decoration8 coordinates and reverse mode', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-5') as Decoration5Element
+    const element = document.createElement('dvk-decoration-5') as Decoration5Element
     element.setAttribute('reverse', '')
     element.setAttribute('colors', '#111,#222')
     document.body.append(element)
@@ -153,7 +153,7 @@ describe('@datav-kit/elements', () => {
   it('renders decoration-6 as a reversible HUD rail', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-6') as Decoration6Element
+    const element = document.createElement('dvk-decoration-6') as Decoration6Element
     element.setAttribute('reverse', '')
     element.setAttribute('colors', '#18f0ff,#2b7cff,#e6fdff')
     document.body.append(element)
@@ -179,7 +179,7 @@ describe('@datav-kit/elements', () => {
   it('maps count-to attributes and formats the disabled target value', async () => {
     register()
 
-    const element = document.createElement('dv-count-to') as CountToElement
+    const element = document.createElement('dvk-count-to') as CountToElement
     element.setAttribute('start-val', '100')
     element.setAttribute('end-val', '12345.678')
     element.setAttribute('decimals', '2')
@@ -203,7 +203,7 @@ describe('@datav-kit/elements', () => {
   it('clamps count-to decimal places to avoid invalid toFixed ranges', async () => {
     register()
 
-    const element = document.createElement('dv-count-to') as CountToElement
+    const element = document.createElement('dvk-count-to') as CountToElement
     element.setAttribute('end-val', '1.234567890123456789012345')
     element.setAttribute('decimals', '999')
     element.setAttribute('disabled', '')
@@ -228,11 +228,11 @@ describe('@datav-kit/elements', () => {
 
     register()
 
-    const element = document.createElement('dv-count-to') as CountToElement
+    const element = document.createElement('dvk-count-to') as CountToElement
     const started = vi.fn()
 
     element.setAttribute('end-val', '100')
-    element.addEventListener('dv-started', started)
+    element.addEventListener('dvk-started', started)
     document.body.append(element)
 
     await element.updateComplete
@@ -258,15 +258,15 @@ describe('@datav-kit/elements', () => {
 
     register()
 
-    const element = document.createElement('dv-count-to') as CountToElement
+    const element = document.createElement('dvk-count-to') as CountToElement
     const started = vi.fn()
     const finished = vi.fn()
 
     element.setAttribute('end-val', '100')
     element.setAttribute('duration', '16')
     element.setAttribute('delay', '10')
-    element.addEventListener('dv-started', started)
-    element.addEventListener('dv-finished', finished)
+    element.addEventListener('dvk-started', started)
+    element.addEventListener('dvk-finished', finished)
     document.body.append(element)
     await element.updateComplete
 
@@ -292,7 +292,7 @@ describe('@datav-kit/elements', () => {
   it('maps border-box-1 attributes to element properties and renders SVG', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-1')
+    const element = document.createElement('dvk-border-box-1')
     element.setAttribute('colors', '#fff,#f3ff5c')
     element.setAttribute('duration', '5')
     element.setAttribute('reverse', '')
@@ -312,9 +312,9 @@ describe('@datav-kit/elements', () => {
   it('resolves border-box-1 colors from CSS variables and supports paused animation', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-1') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#123456')
-    element.style.setProperty('--dv-color-secondary', '#abcdef')
+    const element = document.createElement('dvk-border-box-1') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#123456')
+    element.style.setProperty('--dvk-color-secondary', '#abcdef')
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -334,7 +334,7 @@ describe('@datav-kit/elements', () => {
   it('renders border-box-2 with fixed details and clean source extensions by default', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-2')
+    const element = document.createElement('dvk-border-box-2')
     element.setAttribute('colors', '#18f0ff,#2b7cff,#20c8ff')
     element.setAttribute('width', '800')
     element.setAttribute('height', '450')
@@ -392,10 +392,10 @@ describe('@datav-kit/elements', () => {
   it('resolves border-box-2 colors from CSS variables and applies glow intensity', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-2') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#102030')
-    element.style.setProperty('--dv-color-secondary', '#405060')
-    element.style.setProperty('--dv-color-accent', '#708090')
+    const element = document.createElement('dvk-border-box-2') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#102030')
+    element.style.setProperty('--dvk-color-secondary', '#405060')
+    element.style.setProperty('--dvk-color-accent', '#708090')
     element.setAttribute('glow-intensity', '0.5')
     document.body.append(element)
 
@@ -417,7 +417,7 @@ describe('@datav-kit/elements', () => {
   it('maps border-box-3 public attributes and keeps SVG reference geometry internal', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-3')
+    const element = document.createElement('dvk-border-box-3')
     element.setAttribute('colors', '#57b9ff,#168cff,#9ae7ff')
     element.setAttribute('width', '800')
     element.setAttribute('height', '450')
@@ -475,7 +475,7 @@ describe('@datav-kit/elements', () => {
   it('aligns border-box-3 lower corner slices with bottom edge extensions', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
     await element.updateComplete
 
@@ -498,10 +498,10 @@ describe('@datav-kit/elements', () => {
   it('resolves border-box-3 colors from CSS variables and applies glow intensity', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#112233')
-    element.style.setProperty('--dv-color-secondary', '#445566')
-    element.style.setProperty('--dv-color-accent', '#778899')
+    const element = document.createElement('dvk-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#112233')
+    element.style.setProperty('--dvk-color-secondary', '#445566')
+    element.style.setProperty('--dvk-color-accent', '#778899')
     element.setAttribute('glow-intensity', '0.5')
     document.body.append(element)
 
@@ -523,7 +523,7 @@ describe('@datav-kit/elements', () => {
   it('renders border-box-4 with fixed details and source edge extensions by default', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-4')
+    const element = document.createElement('dvk-border-box-4')
     element.setAttribute('colors', '#36d9ff,#1ecfff,#c9fbff')
     element.setAttribute('width', '800')
     element.setAttribute('height', '450')
@@ -591,16 +591,16 @@ describe('@datav-kit/elements', () => {
     expect(paths.some(path => path.getAttribute('d')?.includes('M809,868L839,868L839,867L810,867'))).toBe(true)
     expect(blurs.slice(0, 3)).toEqual(['5.25', '2.625', '1.0625'])
     expect(animateMotion).toBeNull()
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('40.61px 32.49px 40.61px 32.49px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('40.61px 32.49px 40.61px 32.49px')
   })
 
   it('resolves border-box-4 colors from CSS variables and applies glow intensity', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-4') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#213141')
-    element.style.setProperty('--dv-color-secondary', '#526272')
-    element.style.setProperty('--dv-color-accent', '#8393a3')
+    const element = document.createElement('dvk-border-box-4') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#213141')
+    element.style.setProperty('--dvk-color-secondary', '#526272')
+    element.style.setProperty('--dvk-color-accent', '#8393a3')
     element.setAttribute('glow-intensity', '0.5')
     document.body.append(element)
 
@@ -622,7 +622,7 @@ describe('@datav-kit/elements', () => {
   it('maps border-box-5 public attributes and keeps SVG reference geometry internal', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-5')
+    const element = document.createElement('dvk-border-box-5')
     element.setAttribute('colors', '#24d9ff,#008cff,#bffcff')
     element.setAttribute('width', '800')
     element.setAttribute('height', '450')
@@ -667,10 +667,10 @@ describe('@datav-kit/elements', () => {
   it('resolves border-box-5 colors from CSS variables and applies glow intensity', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#1a2a3a')
-    element.style.setProperty('--dv-color-secondary', '#4a5a6a')
-    element.style.setProperty('--dv-color-accent', '#7a8a9a')
+    const element = document.createElement('dvk-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#1a2a3a')
+    element.style.setProperty('--dvk-color-secondary', '#4a5a6a')
+    element.style.setProperty('--dvk-color-accent', '#7a8a9a')
     element.setAttribute('glow-intensity', '0.5')
     document.body.append(element)
 
@@ -691,13 +691,13 @@ describe('@datav-kit/elements', () => {
     register()
 
     const cases = [
-      ['dv-border-box-1', '8px 8px 8px 8px'],
-      ['dv-border-box-2', '21.72px 21.94px 21.72px 21.94px'],
-      ['dv-border-box-3', '15.8px 11.8px 15.59px 11.8px'],
-      ['dv-border-box-4', '16.24px 12.18px 16.24px 12.18px'],
-      ['dv-border-box-5', '32px 22px 16px 22px'],
-      ['dv-border-box-10', '15px 15px 15px 15px'],
-      ['dv-border-box-11', '21.94px 19px 21.94px 18.5px'],
+      ['dvk-border-box-1', '8px 8px 8px 8px'],
+      ['dvk-border-box-2', '21.72px 21.94px 21.72px 21.94px'],
+      ['dvk-border-box-3', '15.8px 11.8px 15.59px 11.8px'],
+      ['dvk-border-box-4', '16.24px 12.18px 16.24px 12.18px'],
+      ['dvk-border-box-5', '32px 22px 16px 22px'],
+      ['dvk-border-box-10', '15px 15px 15px 15px'],
+      ['dvk-border-box-11', '21.94px 19px 21.94px 18.5px'],
     ] as const
 
     for (const [tagName, expectedPadding] of cases) {
@@ -708,14 +708,14 @@ describe('@datav-kit/elements', () => {
       emitResize(300, 180)
       await element.updateComplete
 
-      expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe(expectedPadding)
+      expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe(expectedPadding)
     }
   })
 
   it('maps border-box-2 block padding from host height without masking safe area', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-2') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-2') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
     await element.updateComplete
 
@@ -723,40 +723,40 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     expect(element).not.toHaveProperty('autoHeight')
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('51.88px 70.21px 51.88px 70.21px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('51.88px 70.21px 51.88px 70.21px')
   })
 
   it('maps border-box-4 block padding from host height without masking safe area', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-4') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-4') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
     await element.updateComplete
 
     emitResize(960, 430)
     await element.updateComplete
 
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('38.8px 38.98px 38.8px 38.98px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('38.8px 38.98px 38.8px 38.98px')
   })
 
   it('maps border-box-3 block padding from host height without masking safe area', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
     await element.updateComplete
 
     emitResize(960, 430)
     await element.updateComplete
 
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('37.76px 37.77px 37.23px 37.77px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('37.76px 37.77px 37.23px 37.77px')
   })
 
   it('supports content-driven height across border box variants', async () => {
     register()
 
     const cases = [
-      ['dv-border-box-1', '8px 8px 8px 8px'],
+      ['dvk-border-box-1', '8px 8px 8px 8px'],
     ] as const
 
     for (const [tagName, expectedPadding] of cases) {
@@ -769,14 +769,14 @@ describe('@datav-kit/elements', () => {
       await element.updateComplete
 
       expect(element).toHaveProperty('autoHeight', true)
-      expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe(expectedPadding)
+      expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe(expectedPadding)
     }
   })
 
   it('uses content-driven height for border-box-3 by default', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-3') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
     await element.updateComplete
 
@@ -784,13 +784,13 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     expect(element).not.toHaveProperty('autoHeight')
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('15.8px 11.8px 15.59px 11.8px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('15.8px 11.8px 15.59px 11.8px')
   })
 
   it('renders border-box-5 as a tiled free border by default', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
     await element.updateComplete
 
@@ -803,26 +803,26 @@ describe('@datav-kit/elements', () => {
     expect(tiles.some(tile => tile.getAttribute('style')?.includes('right: 0'))).toBe(true)
     expect(tiles.some(tile => tile.getAttribute('style')?.includes('bottom: 0'))).toBe(true)
     expect(element.shadowRoot?.querySelectorAll('svg').length).toBe(tiles.length)
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('32px 22px 16px 22px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('32px 22px 16px 22px')
   })
 
   it('maps border-box-5 block padding from host height', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
     await element.updateComplete
 
     emitResize(960, 430)
     await element.updateComplete
 
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('35.74px 37.13px 20.58px 41.1px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('35.74px 37.13px 20.58px 41.1px')
   })
 
   it('maps border-box-6 public attributes and renders source-clipped slices', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-6')
+    const element = document.createElement('dvk-border-box-6')
     element.setAttribute('colors', '#04b9f2,#102132,#00b7f0')
     element.setAttribute('width', '800')
     element.setAttribute('height', '450')
@@ -882,16 +882,16 @@ describe('@datav-kit/elements', () => {
       '1581 630 59 35',
     ]))
     expect(blurs.slice(0, 3)).toEqual(['1.875', '3', '0.6875'])
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('34.74px 32px 31.62px 32px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('34.74px 32px 31.62px 32px')
   })
 
   it('resolves border-box-6 colors from CSS variables and applies glow intensity', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-6') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#112233')
-    element.style.setProperty('--dv-color-secondary', '#445566')
-    element.style.setProperty('--dv-color-accent', '#778899')
+    const element = document.createElement('dvk-border-box-6') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#112233')
+    element.style.setProperty('--dvk-color-secondary', '#445566')
+    element.style.setProperty('--dvk-color-accent', '#778899')
     element.setAttribute('glow-intensity', '0.5')
     document.body.append(element)
 
@@ -911,7 +911,7 @@ describe('@datav-kit/elements', () => {
   it('keeps border-box-6 source-ratio right side on the original slice set', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-6') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-6') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
     await element.updateComplete
 
@@ -954,20 +954,20 @@ describe('@datav-kit/elements', () => {
   it('maps border-box-6 block padding from host height', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-6') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-6') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
     await element.updateComplete
 
     emitResize(960, 430)
     await element.updateComplete
 
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('33.19px 38.4px 30.22px 38.4px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('33.19px 38.4px 30.22px 38.4px')
   })
 
   it('maps border-box-7 public attributes and recreates BorderBox10 geometry', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-7')
+    const element = document.createElement('dvk-border-box-7')
     element.setAttribute('colors', '#1d48c4,#d3e1f8')
     element.setAttribute('background-color', 'rgba(5, 18, 46, 0.36)')
     element.setAttribute('width', '800')
@@ -998,42 +998,42 @@ describe('@datav-kit/elements', () => {
     expect(cornerPolygons.every(polygon => polygon.getAttribute('points') === '40,0 5,0 0,5 0,16 3,19 3,7 7,3 35,3')).toBe(true)
     expect(cornerPolygons.every(polygon => polygon.getAttribute('fill') === '#d3e1f8')).toBe(true)
     expect(element.shadowRoot?.querySelector('feGaussianBlur')).toBeNull()
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')?.style.getPropertyValue('--dv-border-box-7-box-shadow')).toBe('inset 0 0 25px 3px #1d48c4')
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('9.6px 12.8px 9.6px 12.8px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')?.style.getPropertyValue('--dvk-border-box-7-box-shadow')).toBe('inset 0 0 25px 3px #1d48c4')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('9.6px 12.8px 9.6px 12.8px')
   })
 
   it('resolves border-box-7 colors from CSS variables', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-7') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#112233')
-    element.style.setProperty('--dv-color-secondary', '#ddeeff')
-    element.style.setProperty('--dv-border-box-7-background', 'rgba(1, 2, 3, 0.4)')
+    const element = document.createElement('dvk-border-box-7') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#112233')
+    element.style.setProperty('--dvk-color-secondary', '#ddeeff')
+    element.style.setProperty('--dvk-border-box-7-background', 'rgba(1, 2, 3, 0.4)')
     document.body.append(element)
 
     await element.updateComplete
 
     expect(element.shadowRoot?.querySelector('.panel polygon')?.getAttribute('fill')).toBe('rgba(1, 2, 3, 0.4)')
     expect(element.shadowRoot?.querySelector('.corner polygon')?.getAttribute('fill')).toBe('#ddeeff')
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')?.style.getPropertyValue('--dv-border-box-7-box-shadow')).toBe('inset 0 0 25px 3px #112233')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')?.style.getPropertyValue('--dvk-border-box-7-box-shadow')).toBe('inset 0 0 25px 3px #112233')
   })
 
   it('uses datav-kit colors as border-box-7 defaults', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-7') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-7') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
 
     await element.updateComplete
 
     expect(element.shadowRoot?.querySelector('.corner polygon')?.getAttribute('fill')).toBe('#4fd2dd')
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')?.style.getPropertyValue('--dv-border-box-7-box-shadow')).toBe('inset 0 0 25px 3px #235fa7')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="frame"]')?.style.getPropertyValue('--dvk-border-box-7-box-shadow')).toBe('inset 0 0 25px 3px #235fa7')
   })
 
   it('maps border-box-8 public attributes and recreates BorderBox1 geometry', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-8')
+    const element = document.createElement('dvk-border-box-8')
     element.setAttribute('colors', '#235fa7,#4fd2dd')
     element.setAttribute('background-color', 'rgba(5, 18, 46, 0.32)')
     document.body.append(element)
@@ -1064,16 +1064,16 @@ describe('@datav-kit/elements', () => {
     ]))
     expect(animations).toHaveLength(12)
     expect(animations.map(animation => animation.getAttribute('dur'))).toEqual(expect.arrayContaining(['0.5s', '1s']))
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('18px 18px 18px 18px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('18px 18px 18px 18px')
   })
 
   it('resolves border-box-8 colors from CSS variables and supports paused animation', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-8') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#112233')
-    element.style.setProperty('--dv-color-secondary', '#ddeeff')
-    element.style.setProperty('--dv-border-box-8-background', 'rgba(1, 2, 3, 0.4)')
+    const element = document.createElement('dvk-border-box-8') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#112233')
+    element.style.setProperty('--dvk-color-secondary', '#ddeeff')
+    element.style.setProperty('--dvk-border-box-8-background', 'rgba(1, 2, 3, 0.4)')
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1091,7 +1091,7 @@ describe('@datav-kit/elements', () => {
   it('uses datav-kit colors as border-box-8 defaults', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-8') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-8') as HTMLElement & { updateComplete: Promise<boolean> }
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1107,7 +1107,7 @@ describe('@datav-kit/elements', () => {
   it('maps border-box-9 public attributes and recreates BorderBox7 geometry', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-9')
+    const element = document.createElement('dvk-border-box-9')
     element.setAttribute('colors', '#334455,#ddeeff')
     element.setAttribute('background-color', 'rgba(5, 18, 46, 0.22)')
     element.setAttribute('width', '800')
@@ -1150,19 +1150,19 @@ describe('@datav-kit/elements', () => {
     expect(lines.filter(line => line.getAttribute('stroke-width') === '2').every(line => line.getAttribute('stroke') === '#334455')).toBe(true)
     expect(lines.filter(line => line.getAttribute('stroke-width') === '5').every(line => line.getAttribute('stroke') === '#ddeeff')).toBe(true)
     expect(lines.every(line => line.hasAttribute('fill') === false)).toBe(true)
-    expect(frame?.style.getPropertyValue('--dv-border-box-9-primary').trim()).toBe('#334455')
-    expect(frame?.style.getPropertyValue('--dv-border-box-9-box-shadow').trim()).toBe('inset 0 0 40px #334455')
-    expect(frame?.style.getPropertyValue('--dv-border-box-9-background').trim()).toBe('rgba(5, 18, 46, 0.22)')
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('10px 10px 10px 10px')
+    expect(frame?.style.getPropertyValue('--dvk-border-box-9-primary').trim()).toBe('#334455')
+    expect(frame?.style.getPropertyValue('--dvk-border-box-9-box-shadow').trim()).toBe('inset 0 0 40px #334455')
+    expect(frame?.style.getPropertyValue('--dvk-border-box-9-background').trim()).toBe('rgba(5, 18, 46, 0.22)')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('10px 10px 10px 10px')
   })
 
   it('resolves border-box-9 colors from CSS variables', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-9') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#112233')
-    element.style.setProperty('--dv-color-secondary', '#ddeeff')
-    element.style.setProperty('--dv-border-box-9-background', 'rgba(1, 2, 3, 0.4)')
+    const element = document.createElement('dvk-border-box-9') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#112233')
+    element.style.setProperty('--dvk-color-secondary', '#ddeeff')
+    element.style.setProperty('--dvk-border-box-9-background', 'rgba(1, 2, 3, 0.4)')
     document.body.append(element)
 
     await element.updateComplete
@@ -1172,14 +1172,14 @@ describe('@datav-kit/elements', () => {
 
     expect(lines.filter(line => line.getAttribute('stroke-width') === '2').every(line => line.getAttribute('stroke') === '#112233')).toBe(true)
     expect(lines.filter(line => line.getAttribute('stroke-width') === '5').every(line => line.getAttribute('stroke') === '#ddeeff')).toBe(true)
-    expect(frame?.style.getPropertyValue('--dv-border-box-9-box-shadow').trim()).toBe('inset 0 0 40px #112233')
-    expect(frame?.style.getPropertyValue('--dv-border-box-9-background').trim()).toBe('rgba(1, 2, 3, 0.4)')
+    expect(frame?.style.getPropertyValue('--dvk-border-box-9-box-shadow').trim()).toBe('inset 0 0 40px #112233')
+    expect(frame?.style.getPropertyValue('--dvk-border-box-9-background').trim()).toBe('rgba(1, 2, 3, 0.4)')
   })
 
   it('uses datav-kit colors as border-box-9 defaults', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-9') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-9') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
 
     await element.updateComplete
@@ -1189,13 +1189,13 @@ describe('@datav-kit/elements', () => {
 
     expect(lines.filter(line => line.getAttribute('stroke-width') === '2').every(line => line.getAttribute('stroke') === '#235fa7')).toBe(true)
     expect(lines.filter(line => line.getAttribute('stroke-width') === '5').every(line => line.getAttribute('stroke') === '#4fd2dd')).toBe(true)
-    expect(frame?.style.getPropertyValue('--dv-border-box-9-box-shadow').trim()).toBe('inset 0 0 40px #235fa7')
+    expect(frame?.style.getPropertyValue('--dvk-border-box-9-box-shadow').trim()).toBe('inset 0 0 40px #235fa7')
   })
 
   it('maps border-box-10 public attributes and recreates BorderBox12 geometry', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-10')
+    const element = document.createElement('dvk-border-box-10')
     element.setAttribute('colors', '#334455,#ddeeff')
     element.setAttribute('background-color', 'rgba(5, 18, 46, 0.22)')
     element.setAttribute('width', '800')
@@ -1230,19 +1230,19 @@ describe('@datav-kit/elements', () => {
       'M 20 175 L 15 175 Q 5 175 5 165 L 5 160',
     ])
     expect(corners.every(corner => corner.getAttribute('stroke') === '#ddeeff')).toBe(true)
-    expect(corners.every(corner => corner.getAttribute('filter')?.startsWith('url(#dv-border-box-10-glow-'))).toBe(true)
+    expect(corners.every(corner => corner.getAttribute('filter')?.startsWith('url(#dvk-border-box-10-glow-'))).toBe(true)
     expect(flood?.getAttribute('flood-color')).toBe('rgba(221, 238, 255, 0.7)')
     expect(animation?.getAttribute('values')).toBe('rgba(221, 238, 255, 0.7);rgba(221, 238, 255, 0.3);rgba(221, 238, 255, 0.7)')
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('15px 15px 15px 15px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('15px 15px 15px 15px')
   })
 
   it('resolves border-box-10 colors from CSS variables and supports paused glow', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-10') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#112233')
-    element.style.setProperty('--dv-color-secondary', '#ddeeff')
-    element.style.setProperty('--dv-border-box-10-background', 'rgba(1, 2, 3, 0.4)')
+    const element = document.createElement('dvk-border-box-10') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#112233')
+    element.style.setProperty('--dvk-color-secondary', '#ddeeff')
+    element.style.setProperty('--dvk-border-box-10-background', 'rgba(1, 2, 3, 0.4)')
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1262,7 +1262,7 @@ describe('@datav-kit/elements', () => {
   it('uses datav-kit colors as border-box-10 defaults', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-10') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-10') as HTMLElement & { updateComplete: Promise<boolean> }
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1280,7 +1280,7 @@ describe('@datav-kit/elements', () => {
   it('maps border-box-11 public attributes and renders enterprise status rail slices', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-11')
+    const element = document.createElement('dvk-border-box-11')
     element.setAttribute('colors', '#112233,#445566,#77ffaa')
     element.setAttribute('glow-intensity', '1.25')
     element.setAttribute('width', '800')
@@ -1337,7 +1337,7 @@ describe('@datav-kit/elements', () => {
     ]))
     expect(extensions.every(extension => extension.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(true)
     expect(tiles.some(tile => tile.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(false)
-    expect(rail?.getAttribute('stroke')).toContain('dv-border-box-11-rail-')
+    expect(rail?.getAttribute('stroke')).toContain('dvk-border-box-11-rail-')
     expect(innerRail?.getAttribute('d')).toContain('H1140 V554')
     expect(innerRail?.getAttribute('d')).not.toContain('V184 M1140 456')
     expect(element.shadowRoot?.querySelector('[data-slice="right-upper"] svg')?.getAttribute('viewBox')?.split(' ')[2]).toBe('90')
@@ -1347,16 +1347,16 @@ describe('@datav-kit/elements', () => {
     expect(motion).not.toBeNull()
     expect(blurs.every(value => value === '3')).toBe(true)
     expect(animate.length).toBeGreaterThanOrEqual(4)
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dv-border-box-auto-padding')).toBe('21.94px 20.27px 21.94px 19.73px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('21.94px 20.27px 21.94px 19.73px')
   })
 
   it('resolves border-box-11 colors from CSS variables and supports paused motion', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-11') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#203040')
-    element.style.setProperty('--dv-color-secondary', '#506070')
-    element.style.setProperty('--dv-color-accent', '#80c090')
+    const element = document.createElement('dvk-border-box-11') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#203040')
+    element.style.setProperty('--dvk-color-secondary', '#506070')
+    element.style.setProperty('--dvk-color-accent', '#80c090')
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1367,7 +1367,7 @@ describe('@datav-kit/elements', () => {
     const accentNodes = [...(element.shadowRoot?.querySelectorAll('circle') ?? [])]
       .map(circle => circle.getAttribute('fill'))
 
-    expect(rails.some(rail => rail.getAttribute('stroke')?.includes('dv-border-box-11-rail-'))).toBe(true)
+    expect(rails.some(rail => rail.getAttribute('stroke')?.includes('dvk-border-box-11-rail-'))).toBe(true)
     expect(rightStatus).not.toBeNull()
     expect(accentNodes).toContain('#80c090')
     expect(element.shadowRoot?.querySelector('animate')).toBeNull()
@@ -1376,7 +1376,7 @@ describe('@datav-kit/elements', () => {
   it('uses datav-kit colors as border-box-11 defaults', async () => {
     register()
 
-    const element = document.createElement('dv-border-box-11') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-border-box-11') as HTMLElement & { updateComplete: Promise<boolean> }
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1396,7 +1396,7 @@ describe('@datav-kit/elements', () => {
   it('maps decoration-1 attributes and renders animated bars', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-1') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-decoration-1') as HTMLElement & { updateComplete: Promise<boolean> }
     element.setAttribute('colors', '#7acaec,#4fd2dd')
     element.setAttribute('bar-width', '8')
     document.body.append(element)
@@ -1419,9 +1419,9 @@ describe('@datav-kit/elements', () => {
   it('resolves decoration-1 colors from CSS variables and supports paused animation', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-1') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#123456')
-    element.style.setProperty('--dv-color-secondary', '#abcdef')
+    const element = document.createElement('dvk-decoration-1') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#123456')
+    element.style.setProperty('--dvk-color-secondary', '#abcdef')
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1451,7 +1451,7 @@ describe('@datav-kit/elements', () => {
 
     register()
 
-    const element = document.createElement('dv-decoration-1') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-decoration-1') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
 
     await element.updateComplete
@@ -1465,7 +1465,7 @@ describe('@datav-kit/elements', () => {
   it('maps decoration-2 attributes and renders dotted rows', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-2') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-decoration-2') as HTMLElement & { updateComplete: Promise<boolean> }
     element.setAttribute('colors', '#7acaec,transparent')
     element.setAttribute('point-size', '8')
     document.body.append(element)
@@ -1493,9 +1493,9 @@ describe('@datav-kit/elements', () => {
   it('resolves decoration-2 colors from CSS variables and supports paused animation', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-2') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#123456')
-    element.style.setProperty('--dv-color-secondary', '#abcdef')
+    const element = document.createElement('dvk-decoration-2') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#123456')
+    element.style.setProperty('--dvk-color-secondary', '#abcdef')
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1513,7 +1513,7 @@ describe('@datav-kit/elements', () => {
   it('maps decoration-3 attributes and renders responsive angular lines', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
     element.setAttribute('colors', '#18f0ff,#2b7cff')
     element.setAttribute('duration', '2.4')
     document.body.append(element)
@@ -1545,7 +1545,7 @@ describe('@datav-kit/elements', () => {
   it('supports decoration-3 DataV-compatible dur attribute', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
     element.setAttribute('dur', '0.8')
     document.body.append(element)
 
@@ -1564,9 +1564,9 @@ describe('@datav-kit/elements', () => {
   it('resolves decoration-3 colors from CSS variables and supports paused animation', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#123456')
-    element.style.setProperty('--dv-color-secondary', '#abcdef')
+    const element = document.createElement('dvk-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#123456')
+    element.style.setProperty('--dvk-color-secondary', '#abcdef')
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1585,7 +1585,7 @@ describe('@datav-kit/elements', () => {
   it('uses datav-kit colors as decoration-3 fallback colors', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-decoration-3') as HTMLElement & { updateComplete: Promise<boolean> }
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1601,7 +1601,7 @@ describe('@datav-kit/elements', () => {
   it('maps decoration-4 attributes and renders responsive Decoration11 frame', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-4') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-decoration-4') as HTMLElement & { updateComplete: Promise<boolean> }
     element.setAttribute('colors', '#18f0ff,#2b7cff')
     element.innerHTML = '<span>Center</span>'
     document.body.append(element)
@@ -1636,9 +1636,9 @@ describe('@datav-kit/elements', () => {
   it('resolves decoration-4 colors from CSS variables', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-4') as HTMLElement & { updateComplete: Promise<boolean> }
-    element.style.setProperty('--dv-color-primary', '#123456')
-    element.style.setProperty('--dv-color-secondary', '#abcdef')
+    const element = document.createElement('dvk-decoration-4') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#123456')
+    element.style.setProperty('--dvk-color-secondary', '#abcdef')
     document.body.append(element)
 
     await element.updateComplete
@@ -1657,7 +1657,7 @@ describe('@datav-kit/elements', () => {
   it('uses datav-kit colors as decoration-4 fallback colors', async () => {
     register()
 
-    const element = document.createElement('dv-decoration-4') as HTMLElement & { updateComplete: Promise<boolean> }
+    const element = document.createElement('dvk-decoration-4') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
 
     await element.updateComplete
@@ -1677,12 +1677,12 @@ describe('@datav-kit/elements', () => {
   it('emits resize details when fit-screen receives ResizeObserver entries', async () => {
     register()
 
-    const element = document.createElement('dv-fit-screen') as FitScreenElement
+    const element = document.createElement('dvk-fit-screen') as FitScreenElement
     const listener = vi.fn()
 
     element.setAttribute('width', '1280')
     element.setAttribute('height', '720')
-    element.addEventListener('dv-resize', listener)
+    element.addEventListener('dvk-resize', listener)
     document.body.append(element)
     await element.updateComplete
     listener.mockClear()
@@ -1704,7 +1704,7 @@ describe('@datav-kit/elements', () => {
       offsetX: 0,
       offsetY: 0,
     })
-    expect(element.style.getPropertyValue('--dv-scale')).toBe('0.5')
+    expect(element.style.getPropertyValue('--dvk-scale')).toBe('0.5')
 
     element.setAttribute('fit-target', 'host')
     await element.updateComplete
@@ -1715,12 +1715,12 @@ describe('@datav-kit/elements', () => {
   it('computes cover, fill, scroll, alignment, and zero-size fit-screen states', async () => {
     register()
 
-    const element = document.createElement('dv-fit-screen') as FitScreenElement
+    const element = document.createElement('dvk-fit-screen') as FitScreenElement
     const listener = vi.fn()
 
     element.setAttribute('width', '1280')
     element.setAttribute('height', '720')
-    element.addEventListener('dv-resize', listener)
+    element.addEventListener('dvk-resize', listener)
     document.body.append(element)
     await element.updateComplete
     listener.mockClear()

@@ -1,9 +1,9 @@
 # Border Box 10
 
-`dv-border-box-10` recreates DataV Vue3 BorderBox12 as a rounded outline panel with four animated corner glows and responsive content padding from the live host size.
+`dvk-border-box-10` recreates DataV Vue3 BorderBox12 as a rounded outline panel with four animated corner glows and responsive content padding from the live host size.
 
 <BorderChartDemo
-  border="dv-border-box-10"
+  border="dvk-border-box-10"
   colors="#235fa7,#4fd2dd"
   accent="#4fd2dd"
   title="Border Box 10"
@@ -11,9 +11,9 @@
 />
 
 ```html
-<dv-border-box-10 colors="#235fa7,#4fd2dd" background-color="rgba(5, 18, 46, 0.22)">
+<dvk-border-box-10 colors="#235fa7,#4fd2dd" background-color="rgba(5, 18, 46, 0.22)">
   <section>Border Box 10</section>
-</dv-border-box-10>
+</dvk-border-box-10>
 ```
 
 ## Props
@@ -31,17 +31,17 @@
 
 | Name | Detail |
 | --- | --- |
-| `dv-ready` | `{ tagName }` |
+| `dvk-ready` | `{ tagName }` |
 
 ## CSS Variables
 
 | Name | Meaning |
 | --- | --- |
-| `--dv-color-primary` | Primary outline fallback. |
-| `--dv-color-secondary` | Secondary corner glow fallback. |
-| `--dv-border-box-10-background` | Panel background fallback color. |
-| `--dv-border-box-padding` | Shared override for automatic content inset across border boxes. |
-| `--dv-border-box-10-padding` | Component-specific override for automatic content inset. |
+| `--dvk-color-primary` | Primary outline fallback. |
+| `--dvk-color-secondary` | Secondary corner glow fallback. |
+| `--dvk-border-box-10-background` | Panel background fallback color. |
+| `--dvk-border-box-padding` | Shared override for automatic content inset across border boxes. |
+| `--dvk-border-box-10-padding` | Component-specific override for automatic content inset. |
 
 ## Parts
 
