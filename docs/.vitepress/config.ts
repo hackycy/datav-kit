@@ -12,6 +12,9 @@ export default defineConfig({
       { text: 'Components', link: '/components/decorations/decoration-1' },
       { text: 'Reference', link: '/reference/architecture-contracts' },
     ],
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/hackycy/datav-kit' },
+    ],
     sidebar: {
       '/guide/': [
         {
