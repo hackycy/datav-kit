@@ -68,3 +68,5 @@ title: DataV Kit
   <section>Command Center</section>
 </dvk-border-box-11>
 ```
+
+<AviationCommandScreen />
