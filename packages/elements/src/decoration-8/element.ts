@@ -13,11 +13,19 @@ const defaultSize: Decoration8Size = {
 }
 const baseSize = 100
 const outerArcSegments = [
-  { start: -84, end: -18, width: 5.6, opacity: 0.95 },
-  { start: 22, end: 76, width: 4.8, opacity: 0.72 },
-  { start: 116, end: 168, width: 5.2, opacity: 0.86 },
-  { start: 206, end: 258, width: 4.6, opacity: 0.68 },
-  { start: 292, end: 338, width: 5.4, opacity: 0.9 },
+  { start: -94, end: -38, width: 5.9, opacity: 0.96 },
+  { start: -18, end: -2, width: 4.2, opacity: 0.5 },
+  { start: 24, end: 80, width: 5.4, opacity: 0.88 },
+  { start: 108, end: 126, width: 4.1, opacity: 0.48 },
+  { start: 150, end: 216, width: 5.7, opacity: 0.92 },
+  { start: 242, end: 260, width: 4.1, opacity: 0.5 },
+]
+const outerTraceSegments = [
+  { start: -34, end: -22, width: 1.5, opacity: 0.68 },
+  { start: 4, end: 18, width: 1.1, opacity: 0.4 },
+  { start: 86, end: 102, width: 1.45, opacity: 0.72 },
+  { start: 132, end: 144, width: 1.2, opacity: 0.46 },
+  { start: 222, end: 236, width: 1.35, opacity: 0.62 },
 ]
 const innerArcSegments = [
   { start: -48, end: -12 },
@@ -87,7 +95,7 @@ export class Decoration8Element extends DatavElement {
   colors = ''
 
   @property({ type: Number })
-  dur = 3
+  dur = 5
 
   @property({ type: Boolean })
   animated = true
@@ -120,7 +128,7 @@ export class Decoration8Element extends DatavElement {
 
   override render(): unknown {
     const [primary, secondary] = this.resolveColors()
-    const duration = Math.max(resolveNumberValue(this.dur, 3), 0.1)
+    const duration = Math.max(resolveNumberValue(this.dur, 5), 0.1)
     const showAnimation = this.animated
       && !this.paused
       && !this.prefersReducedMotion()
@@ -154,28 +162,55 @@ export class Decoration8Element extends DatavElement {
         </g>
 
         <g part="outer-arcs" filter=${`url(#${this.glowFilterId})`}>
-          ${showAnimation
-            ? svg`
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                values="0 50 50;360 50 50"
-                dur=${`${duration * 1.35}s`}
-                repeatCount="indefinite"
-              ></animateTransform>
-            `
-            : null}
-          ${outerArcSegments.map(segment => svg`
-            <path
-              part="ring outer-ring"
-              d=${arcPath(50, 50, 43.5, segment.start, segment.end)}
-              fill="transparent"
-              stroke=${`url(#${this.arcGradientId})`}
-              stroke-width=${String(segment.width)}
-              stroke-linecap="butt"
-              stroke-opacity=${String(segment.opacity)}
-            ></path>
-          `)}
+          <g part="outer-arc-band">
+            ${showAnimation
+              ? svg`
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  values="0 50 50;360 50 50"
+                  dur=${`${duration * 1.28}s`}
+                  repeatCount="indefinite"
+                ></animateTransform>
+              `
+              : null}
+            ${outerArcSegments.map(segment => svg`
+              <path
+                part="ring outer-ring"
+                d=${arcPath(50, 50, 44.2, segment.start, segment.end)}
+                fill="transparent"
+                stroke=${`url(#${this.arcGradientId})`}
+                stroke-width=${String(segment.width)}
+                stroke-linecap="butt"
+                stroke-opacity=${String(segment.opacity)}
+              ></path>
+            `)}
+          </g>
+
+          <g part="outer-arc-trace">
+            ${showAnimation
+              ? svg`
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  values="0 50 50;-360 50 50"
+                  dur=${`${duration * 1.85}s`}
+                  repeatCount="indefinite"
+                ></animateTransform>
+              `
+              : null}
+            ${outerTraceSegments.map(segment => svg`
+              <path
+                part="ring outer-trace"
+                d=${arcPath(50, 50, 40.1, segment.start, segment.end)}
+                fill="transparent"
+                stroke=${`url(#${this.arcGradientId})`}
+                stroke-width=${String(segment.width)}
+                stroke-linecap="round"
+                stroke-opacity=${String(segment.opacity)}
+              ></path>
+            `)}
+          </g>
         </g>
 
         <g part="segmented-track">

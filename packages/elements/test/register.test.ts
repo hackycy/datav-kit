@@ -224,6 +224,7 @@ describe('@datav-kit/elements', () => {
     const animations = [...element.shadowRoot?.querySelectorAll('animateTransform') ?? []]
     const svg = element.shadowRoot?.querySelector('svg')
     const outerArc = element.shadowRoot?.querySelector('[part="ring outer-ring"]')
+    const outerTrace = element.shadowRoot?.querySelector('[part="ring outer-trace"]')
     const innerArc = element.shadowRoot?.querySelector('[part="ring inner-ring"]')
     const coreCircles = [...element.shadowRoot?.querySelectorAll('[part="core"] circle') ?? []]
     const stops = [...element.shadowRoot?.querySelectorAll('linearGradient stop') ?? []]
@@ -232,10 +233,12 @@ describe('@datav-kit/elements', () => {
     expect(svg?.getAttribute('height')).toBe('100')
     expect(svg?.getAttribute('viewBox')).toBe('0 0 100 100')
     expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet')
-    expect(rings).toHaveLength(11)
-    expect(outerArc?.getAttribute('d')).toBe('M 36.558 8.629 A 43.5 43.5 0 0 0 6.738 45.453')
+    expect(rings).toHaveLength(17)
+    expect(outerArc?.getAttribute('d')).toBe('M 22.788 15.17 A 44.2 44.2 0 0 0 5.908 53.083')
     expect(outerArc?.getAttribute('stroke')).toContain('dvk-decoration-8-arc-')
-    expect(outerArc?.getAttribute('stroke-width')).toBe('5.6')
+    expect(outerArc?.getAttribute('stroke-width')).toBe('5.9')
+    expect(outerTrace?.getAttribute('d')).toBe('M 34.978 12.82 A 40.1 40.1 0 0 0 27.576 16.756')
+    expect(outerTrace?.getAttribute('stroke-width')).toBe('1.5')
     expect(innerArc?.getAttribute('stroke')).toBe('#111')
     expect(innerArc?.getAttribute('stroke-width')).toBe('1.8')
     expect(guides.map(guide => guide.getAttribute('r'))).toEqual(['39.3', '28.8', '21.3'])
