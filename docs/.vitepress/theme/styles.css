@@ -420,6 +420,12 @@ html:not(.dark) .datav-home-capabilities p {
   padding: 20px 24px;
 }
 
+.datav-demo--decoration-7 {
+  background:
+    linear-gradient(90deg, rgba(159, 235, 255, 0.08), transparent 22%, rgba(139, 92, 255, 0.07) 54%, transparent 82%),
+    linear-gradient(180deg, #030814 0%, #06111f 46%, #02050d 100%);
+}
+
 .datav-decoration-shell {
   width: min(100%, var(--datav-decoration-width, 300px));
   height: var(--datav-decoration-height, 40px);
