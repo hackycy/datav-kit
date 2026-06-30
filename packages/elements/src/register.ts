@@ -20,6 +20,7 @@ import { Decoration5Element } from './decoration-5/element'
 import { Decoration6Element } from './decoration-6/element'
 import { Decoration7Element } from './decoration-7/element'
 import { Decoration8Element } from './decoration-8/element'
+import { Decoration9Element } from './decoration-9/element'
 import { FitScreenElement } from './fit-screen/element'
 
 export const datavElementRegistrations: DatavElementRegistration[] = [
@@ -102,6 +103,10 @@ export const datavElementRegistrations: DatavElementRegistration[] = [
   {
     tagName: 'dvk-decoration-8',
     element: Decoration8Element,
+  },
+  {
+    tagName: 'dvk-decoration-9',
+    element: Decoration9Element,
   },
   {
     tagName: 'dvk-count-to',

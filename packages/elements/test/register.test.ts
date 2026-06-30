@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, FitScreenElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -66,14 +66,15 @@ describe('@datav-kit/elements', () => {
       'dvk-decoration-6',
       'dvk-decoration-7',
       'dvk-decoration-8',
+      'dvk-decoration-9',
       'dvk-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -130,6 +131,7 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration6()).toBe(false)
     expect(defineDecoration7()).toBe(false)
     expect(defineDecoration8()).toBe(false)
+    expect(defineDecoration9()).toBe(false)
     expect(defineCountTo()).toBe(false)
   })
 
@@ -250,6 +252,39 @@ describe('@datav-kit/elements', () => {
     expect(stops[4].getAttribute('stop-color')).toBe('#222')
     expect(stops[5].getAttribute('stop-color')).toBe('#111')
     expect(animations).toHaveLength(0)
+  })
+
+  it('renders decoration-9 as a reversible enterprise HUD rail', async () => {
+    register()
+
+    const element = document.createElement('dvk-decoration-9') as Decoration9Element
+    element.setAttribute('reverse', '')
+    element.setAttribute('colors', '#18f0ff,#2b7cff,#60e7ff')
+    document.body.append(element)
+
+    emitResize(480, 54)
+    await element.updateComplete
+
+    const lines = [...element.shadowRoot?.querySelectorAll('[part~="line"]') ?? []]
+    const cornerLines = [...element.shadowRoot?.querySelectorAll('[part~="corner-line"]') ?? []]
+    const ticks = [...element.shadowRoot?.querySelectorAll('[part="tick"]') ?? []]
+    const blocks = [...element.shadowRoot?.querySelectorAll('[part~="block"]') ?? []]
+    const firstBlock = blocks[0]
+    const stops = [...element.shadowRoot?.querySelectorAll('linearGradient stop') ?? []]
+
+    expect(lines).toHaveLength(4)
+    expect(cornerLines).toHaveLength(3)
+    expect(ticks).toHaveLength(3)
+    expect(blocks).toHaveLength(2)
+    expect(lines[0].getAttribute('x1')).toBe('465.6')
+    expect(lines[0].getAttribute('x2')).toBe('340.8')
+    expect(lines[0].getAttribute('y1')).toBe('27')
+    expect(ticks[0].getAttribute('x1')).toBe('328.8')
+    expect(ticks[0].getAttribute('x2')).toBe('314.4')
+    expect(cornerLines[1].getAttribute('points')).toBe('244.8,35.64 211.2,35.64 194.4,27')
+    expect(firstBlock?.getAttribute('points')).toBe('392.64,11.34 360,11.34 365.76,17.01 398.4,17.01')
+    expect(stops[6].getAttribute('stop-color')).toBe('#2b7cff')
+    expect(stops[12].getAttribute('stop-color')).toBe('#60e7ff')
   })
 
   it('maps count-to attributes and formats the disabled target value', async () => {
