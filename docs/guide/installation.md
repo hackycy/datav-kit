@@ -27,3 +27,5 @@ defineBorderBox3()
 ```
 
 Registration is guarded for SSR. Importing modules is allowed on the server, but defining custom elements only happens when browser APIs are available.
+
+For Vue, React, Vite, and webpack setup examples, continue to [Framework Integration](/guide/framework-integration).

@@ -27,6 +27,7 @@ export default defineConfig({
           items: [
             { text: 'Introduction', link: '/guide/introduction' },
             { text: 'Installation', link: '/guide/installation' },
+            { text: 'Framework Integration', link: '/guide/framework-integration' },
             { text: 'Theming', link: '/guide/theming' },
             { text: 'Component Authoring', link: '/guide/component-authoring' },
           ],
