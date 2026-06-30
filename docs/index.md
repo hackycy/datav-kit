@@ -39,4 +39,5 @@ The first usable loop is intentionally small: `dv-fit-screen` handles dashboard 
 - [Border Box 11](/components/borders/border-box-11) for the enterprise status rail frame with subtle live motion.
 - [Decoration 3](/components/decorations/decoration-3) for the DataV Vue3 Decoration5-style angular line decoration.
 - [Decoration 4](/components/decorations/decoration-4) for the DataV Vue3 Decoration11-style diamond panel decoration.
+- [Decoration 6](/components/decorations/decoration-6) for a minimal cyber HUD rail decoration with reversible symmetry.
 - [Component Authoring](/guide/component-authoring) for the required file layout and checklist.

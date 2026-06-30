@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, FitScreenElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -63,14 +63,15 @@ describe('@datav-kit/elements', () => {
       'dv-decoration-3',
       'dv-decoration-4',
       'dv-decoration-5',
+      'dv-decoration-6',
       'dv-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-decoration-5', 'dv-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-decoration-5', 'dv-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-decoration-5', 'dv-decoration-6', 'dv-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dv-fit-screen', 'dv-border-box-1', 'dv-border-box-2', 'dv-border-box-3', 'dv-border-box-4', 'dv-border-box-5', 'dv-border-box-6', 'dv-border-box-7', 'dv-border-box-8', 'dv-border-box-9', 'dv-border-box-10', 'dv-border-box-11', 'dv-decoration-1', 'dv-decoration-2', 'dv-decoration-3', 'dv-decoration-4', 'dv-decoration-5', 'dv-decoration-6', 'dv-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dv-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -124,6 +125,7 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration3()).toBe(false)
     expect(defineDecoration4()).toBe(false)
     expect(defineDecoration5()).toBe(false)
+    expect(defineDecoration6()).toBe(false)
     expect(defineCountTo()).toBe(false)
   })
 
@@ -146,6 +148,32 @@ describe('@datav-kit/elements', () => {
     expect(lines[2].getAttribute('points')).toBe('360,37 160,37')
     expect(lines[0].getAttribute('stroke')).toBe('#111')
     expect(lines[2].getAttribute('stroke')).toBe('#222')
+  })
+
+  it('renders decoration-6 as a reversible HUD rail', async () => {
+    register()
+
+    const element = document.createElement('dv-decoration-6') as Decoration6Element
+    element.setAttribute('reverse', '')
+    element.setAttribute('colors', '#18f0ff,#2b7cff,#e6fdff')
+    document.body.append(element)
+
+    emitResize(360, 48)
+    await element.updateComplete
+
+    const lines = [...element.shadowRoot?.querySelectorAll('[part~="main-line"]') ?? []]
+    const nodes = [...element.shadowRoot?.querySelectorAll('circle') ?? []]
+    const stops = [...element.shadowRoot?.querySelectorAll('linearGradient stop') ?? []]
+
+    expect(lines).toHaveLength(3)
+    expect(lines[0].getAttribute('points')).toBe('354.24,29.76 333.12,29.76 319.68,18.24 287.04,18.24 264,24.96')
+    expect(lines[1].getAttribute('points')).toBe('252,24.96 187.2,24.96')
+    expect(lines[2].getAttribute('points')).toBe('165.6,24.96 8,24.96')
+    expect(nodes[0].getAttribute('cx')).toBe('264')
+    expect(nodes[0].getAttribute('cy')).toBe('24.96')
+    expect(stops[0].getAttribute('stop-color')).toBe('#e6fdff')
+    expect(stops[1].getAttribute('stop-color')).toBe('#18f0ff')
+    expect(stops[2].getAttribute('stop-color')).toBe('#2b7cff')
   })
 
   it('maps count-to attributes and formats the disabled target value', async () => {

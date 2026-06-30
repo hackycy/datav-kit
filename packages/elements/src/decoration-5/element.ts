@@ -20,7 +20,7 @@ export class Decoration5Element extends DatavElement {
       height: 100%;
       min-width: 0;
       min-height: 0;
-      color: var(--dv-color-primary, #3f96a5);
+      color: var(--dv-color-primary, #18f0ff);
     }
 
     svg {
@@ -106,13 +106,13 @@ export class Decoration5Element extends DatavElement {
       explicit: explicitPrimary,
       cssVariable: '--dv-color-primary',
       host: this,
-      fallback: '#3f96a5',
+      fallback: '#18f0ff',
     })
     const secondary = colorList[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
       cssVariable: '--dv-color-secondary',
       host: this,
-      fallback: '#3f96a5',
+      fallback: '#2b7cff',
     })
 
     return [primary, secondary]

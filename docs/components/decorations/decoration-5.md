@@ -12,14 +12,16 @@
 <dv-decoration-5></dv-decoration-5>
 ```
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 360px; --datav-decoration-height: 40px;">
-  <div class="datav-decoration-shell">
-    <dv-decoration-5 reverse colors="#18f0ff,#f3ff5c"></dv-decoration-5>
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 640px; --datav-decoration-height: 40px;">
+  <div class="datav-decoration-shell" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px;">
+    <dv-decoration-5></dv-decoration-5>
+    <dv-decoration-5 reverse></dv-decoration-5>
   </div>
 </div>
 
 ```html
-<dv-decoration-5 reverse colors="#18f0ff,#f3ff5c"></dv-decoration-5>
+<dv-decoration-5></dv-decoration-5>
+<dv-decoration-5 reverse></dv-decoration-5>
 ```
 
 ## Props
