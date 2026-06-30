@@ -1,0 +1,76 @@
+import type { DatavElementMetadata } from '@datav-kit/core'
+
+export const decoration8Metadata = {
+  tagName: 'dvk-decoration-8',
+  className: 'Decoration8Element',
+  description: 'Futuristic rotating HUD energy ring with segmented arcs, neon blocks, precision ticks, and a dark hollow core.',
+  props: {
+    color: {
+      type: 'string',
+      default: '',
+      attribute: true,
+      cssVariable: '--dvk-color-primary',
+      description: 'Primary neon ring, tick, and energy block color. Also accepts a DataV-compatible color array when set as a property.',
+    },
+    secondaryColor: {
+      type: 'string',
+      default: '',
+      attribute: 'secondary-color',
+      cssVariable: '--dvk-color-secondary',
+      description: 'Secondary arc, guide, and micro indicator color.',
+    },
+    colors: {
+      type: 'string',
+      default: '',
+      attribute: true,
+      description: 'Comma-separated primary and secondary colors.',
+    },
+    dur: {
+      type: 'number',
+      default: 3,
+      attribute: true,
+      description: 'Rotation duration in seconds.',
+    },
+    animated: {
+      type: 'boolean',
+      default: true,
+      attribute: true,
+      description: 'Enables SVG rotation animations.',
+    },
+    paused: {
+      type: 'boolean',
+      default: false,
+      attribute: true,
+      description: 'Stops rotation animations while keeping the static geometry visible.',
+    },
+  },
+  events: [
+    {
+      name: 'dvk-ready',
+      detail: '{ tagName }',
+      description: 'Fired after the element first renders.',
+    },
+  ],
+  parts: [
+    'graphic',
+    'background',
+    'halo',
+    'ring',
+    'outer-ring',
+    'inner-ring',
+    'outer-arcs',
+    'segmented-track',
+    'guide-ring',
+    'outer-guide',
+    'inner-guide',
+    'core-guide',
+    'ticks',
+    'tick',
+    'energy-blocks',
+    'energy-block',
+    'micro-lights',
+    'micro-light',
+    'core',
+    'content',
+  ],
+} satisfies DatavElementMetadata

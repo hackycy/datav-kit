@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, FitScreenElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -65,14 +65,15 @@ describe('@datav-kit/elements', () => {
       'dvk-decoration-5',
       'dvk-decoration-6',
       'dvk-decoration-7',
+      'dvk-decoration-8',
       'dvk-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -128,6 +129,7 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration5()).toBe(false)
     expect(defineDecoration6()).toBe(false)
     expect(defineDecoration7()).toBe(false)
+    expect(defineDecoration8()).toBe(false)
     expect(defineCountTo()).toBe(false)
   })
 
@@ -200,6 +202,51 @@ describe('@datav-kit/elements', () => {
     expect(stops[0].getAttribute('stop-color')).toBe('#22d3ee')
     expect(stops[1].getAttribute('stop-color')).toBe('#9febff')
     expect(stops[3].getAttribute('stop-color')).toBe('#8b5cff')
+  })
+
+  it('renders decoration-8 as a futuristic HUD energy ring', async () => {
+    register()
+
+    const element = document.createElement('dvk-decoration-8') as Decoration8Element
+    element.setAttribute('colors', '#111,#222')
+    element.setAttribute('dur', '4')
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    emitResize(180, 120)
+    await element.updateComplete
+
+    const rings = [...element.shadowRoot?.querySelectorAll('[part~="ring"]') ?? []]
+    const guides = [...element.shadowRoot?.querySelectorAll('[part~="guide-ring"]') ?? []]
+    const ticks = [...element.shadowRoot?.querySelectorAll('[part="tick"]') ?? []]
+    const blocks = [...element.shadowRoot?.querySelectorAll('[part="energy-block"]') ?? []]
+    const microLights = [...element.shadowRoot?.querySelectorAll('[part="micro-light"]') ?? []]
+    const animations = [...element.shadowRoot?.querySelectorAll('animateTransform') ?? []]
+    const svg = element.shadowRoot?.querySelector('svg')
+    const outerArc = element.shadowRoot?.querySelector('[part="ring outer-ring"]')
+    const innerArc = element.shadowRoot?.querySelector('[part="ring inner-ring"]')
+    const coreCircles = [...element.shadowRoot?.querySelectorAll('[part="core"] circle') ?? []]
+    const stops = [...element.shadowRoot?.querySelectorAll('linearGradient stop') ?? []]
+
+    expect(svg?.getAttribute('width')).toBe('100')
+    expect(svg?.getAttribute('height')).toBe('100')
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 100 100')
+    expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet')
+    expect(rings).toHaveLength(11)
+    expect(outerArc?.getAttribute('d')).toBe('M 36.558 8.629 A 43.5 43.5 0 0 0 6.738 45.453')
+    expect(outerArc?.getAttribute('stroke')).toContain('dvk-decoration-8-arc-')
+    expect(outerArc?.getAttribute('stroke-width')).toBe('5.6')
+    expect(innerArc?.getAttribute('stroke')).toBe('#111')
+    expect(innerArc?.getAttribute('stroke-width')).toBe('1.8')
+    expect(guides.map(guide => guide.getAttribute('r'))).toEqual(['39.3', '28.8', '21.3'])
+    expect(guides[0].getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.42)')
+    expect(ticks).toHaveLength(96)
+    expect(blocks).toHaveLength(32)
+    expect(microLights).toHaveLength(48)
+    expect(coreCircles.at(-1)?.getAttribute('fill')).toBe('rgba(2, 8, 20, 0.92)')
+    expect(stops[4].getAttribute('stop-color')).toBe('#222')
+    expect(stops[5].getAttribute('stop-color')).toBe('#111')
+    expect(animations).toHaveLength(0)
   })
 
   it('maps count-to attributes and formats the disabled target value', async () => {
