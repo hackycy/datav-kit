@@ -24,6 +24,393 @@
   height: 360px;
 }
 
+.VPDoc:has(.datav-home-hero) .aside {
+  display: none;
+}
+
+.VPDoc:has(.datav-home-hero) .container {
+  max-width: 1224px !important;
+}
+
+.VPDoc:has(.datav-home-hero) .content {
+  max-width: 100% !important;
+  padding-right: 32px !important;
+}
+
+.VPDoc:has(.datav-home-hero) .content-container {
+  max-width: 1160px !important;
+}
+
+.datav-home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(440px, 1.08fr);
+  gap: 28px;
+  align-items: stretch;
+  margin: 6px 0 28px;
+  padding: 28px;
+  border: 1px solid rgba(110, 215, 232, 0.22);
+  background:
+    linear-gradient(rgba(110, 215, 232, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(110, 215, 232, 0.05) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(4, 18, 31, 0.98), rgba(2, 8, 19, 0.98) 58%, rgba(7, 22, 24, 0.98));
+  background-size: 34px 34px, 34px 34px, auto;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.26);
+}
+
+.datav-home-copy {
+  display: grid;
+  align-content: center;
+  min-width: 0;
+  padding: 14px 6px 14px 4px;
+}
+
+.datav-home-eyebrow {
+  width: fit-content;
+  margin: 0 0 18px;
+  padding: 6px 10px;
+  border: 1px solid rgba(82, 240, 181, 0.28);
+  color: #99f6d1;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(82, 240, 181, 0.08);
+}
+
+.datav-home-copy h1 {
+  margin: 0;
+  color: #effbff;
+  font-size: 64px;
+  line-height: 0.95;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.datav-home-headline {
+  max-width: 680px;
+  margin: 18px 0 0;
+  color: #f4fdff;
+  font-size: 34px;
+  line-height: 1.16;
+  font-weight: 760;
+  letter-spacing: 0;
+}
+
+.datav-home-lede {
+  max-width: 620px;
+  margin: 18px 0 0;
+  color: rgba(223, 244, 248, 0.72);
+  font-size: 17px;
+  line-height: 1.72;
+}
+
+.datav-home-lede code {
+  color: #c7fff0;
+  background: rgba(82, 240, 181, 0.1);
+}
+
+.datav-home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.datav-home-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(110, 215, 232, 0.28);
+  color: #dff8ff !important;
+  font-weight: 700;
+  text-decoration: none !important;
+  background: rgba(9, 28, 43, 0.82);
+}
+
+.datav-home-action:hover {
+  border-color: rgba(110, 215, 232, 0.56);
+  color: #ffffff;
+  text-decoration: none;
+  background: rgba(14, 165, 183, 0.18);
+}
+
+.datav-home-action--primary {
+  border-color: rgba(82, 240, 181, 0.46);
+  color: #04131b !important;
+  background: #52f0b5;
+}
+
+.datav-home-action--primary:hover {
+  color: #021016 !important;
+  background: #8ff7d3;
+}
+
+.datav-home-preview {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 420px;
+  border: 1px solid rgba(110, 215, 232, 0.2);
+  background: rgba(1, 8, 18, 0.74);
+}
+
+.datav-home-preview__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(110, 215, 232, 0.16);
+  color: rgba(223, 244, 248, 0.56);
+  font-size: 12px;
+}
+
+.datav-home-preview__bar span,
+.datav-home-preview__bar strong {
+  min-width: 0;
+}
+
+.datav-home-preview__bar strong {
+  color: #eaffff;
+  font-weight: 700;
+}
+
+.datav-home-console {
+  display: block;
+  width: calc(100% - 28px);
+  min-height: 330px;
+  margin: 14px;
+  color: #effbff;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.datav-home-console__content {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 22px;
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: 30px;
+}
+
+.datav-home-console__label {
+  margin: 0 0 8px;
+  color: #52f0b5;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.datav-home-console h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 30px;
+  line-height: 1.1;
+  font-weight: 760;
+}
+
+.datav-home-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  align-self: end;
+}
+
+.datav-home-metrics div {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(110, 215, 232, 0.18);
+  background: rgba(6, 20, 34, 0.66);
+}
+
+.datav-home-metrics span {
+  display: block;
+  color: rgba(223, 244, 248, 0.58);
+  font-size: 12px;
+}
+
+.datav-home-metrics strong {
+  display: block;
+  margin-top: 8px;
+  color: #ffffff;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.datav-home-capabilities {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0 30px;
+}
+
+.datav-home-capabilities section {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid rgba(110, 215, 232, 0.16);
+  background: rgba(4, 15, 28, 0.46);
+}
+
+.datav-home-capabilities span {
+  display: block;
+  color: #ffd166;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.datav-home-capabilities h3 {
+  margin: 10px 0 8px;
+  color: #effbff;
+  font-size: 17px;
+  line-height: 1.25;
+}
+
+.datav-home-capabilities p {
+  margin: 0;
+  color: rgba(223, 244, 248, 0.64);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+html:not(.dark) .datav-home-hero {
+  border-color: rgba(14, 116, 144, 0.18);
+  background:
+    linear-gradient(rgba(14, 116, 144, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(14, 116, 144, 0.06) 1px, transparent 1px),
+    linear-gradient(135deg, #f8fdff, #eef8fb 54%, #f7fbf6);
+  background-size: 34px 34px, 34px 34px, auto;
+  box-shadow: 0 24px 70px rgba(15, 43, 56, 0.12);
+}
+
+html:not(.dark) .datav-home-eyebrow {
+  border-color: rgba(15, 118, 110, 0.22);
+  color: #0f766e;
+  background: rgba(20, 184, 166, 0.1);
+}
+
+html:not(.dark) .datav-home-copy h1 {
+  color: #092333;
+}
+
+html:not(.dark) .datav-home-headline {
+  color: #12384a;
+}
+
+html:not(.dark) .datav-home-lede {
+  color: rgba(19, 55, 72, 0.74);
+}
+
+html:not(.dark) .datav-home-lede code {
+  color: #0f766e;
+  background: rgba(20, 184, 166, 0.12);
+}
+
+html:not(.dark) .datav-home-action {
+  border-color: rgba(14, 116, 144, 0.22);
+  color: #16465a !important;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+html:not(.dark) .datav-home-action:hover {
+  border-color: rgba(14, 116, 144, 0.42);
+  color: #082f49 !important;
+  background: #ffffff;
+}
+
+html:not(.dark) .datav-home-action--primary {
+  border-color: rgba(15, 118, 110, 0.28);
+  color: #ffffff !important;
+  background: #0f766e;
+}
+
+html:not(.dark) .datav-home-action--primary:hover {
+  color: #ffffff !important;
+  background: #0d9488;
+}
+
+html:not(.dark) .datav-home-preview {
+  border-color: rgba(14, 116, 144, 0.18);
+  background: #07131f;
+  box-shadow: 0 18px 42px rgba(8, 47, 73, 0.16);
+}
+
+html:not(.dark) .datav-home-capabilities section {
+  border-color: rgba(14, 116, 144, 0.16);
+  background: #ffffff;
+  box-shadow: 0 12px 32px rgba(15, 43, 56, 0.08);
+}
+
+html:not(.dark) .datav-home-capabilities span {
+  color: #0f766e;
+}
+
+html:not(.dark) .datav-home-capabilities h3 {
+  color: #12384a;
+}
+
+html:not(.dark) .datav-home-capabilities p {
+  color: rgba(19, 55, 72, 0.68);
+}
+
+@media (max-width: 960px) {
+  .datav-home-hero {
+    grid-template-columns: 1fr;
+    padding: 22px;
+  }
+
+  .datav-home-copy h1 {
+    font-size: 52px;
+  }
+
+  .datav-home-headline {
+    font-size: 30px;
+  }
+
+  .datav-home-preview {
+    min-height: 380px;
+  }
+}
+
+@media (max-width: 720px) {
+  .datav-home-hero {
+    margin-top: 28px;
+    padding: 16px;
+  }
+
+  .datav-home-copy h1 {
+    font-size: 42px;
+  }
+
+  .datav-home-headline {
+    font-size: 25px;
+  }
+
+  .datav-home-lede {
+    font-size: 15px;
+  }
+
+  .datav-home-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .datav-home-preview {
+    min-height: auto;
+  }
+
+  .datav-home-console {
+    min-height: 420px;
+  }
+
+  .datav-home-console__content {
+    padding: 24px;
+  }
+
+  .datav-home-metrics,
+  .datav-home-capabilities {
+    grid-template-columns: 1fr;
+  }
+}
+
 .datav-demo--wide {
   min-height: 420px;
 }

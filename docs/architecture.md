@@ -5,7 +5,7 @@
 本文只记录 `datav-kit` 的长期架构边界和关键技术决策，不承担路线图、组件规划、开发流程或发布计划的职责。
 
 - 组件 API、事件、metadata、SSR 等实现契约见 [Architecture Contracts](./reference/architecture-contracts.md)。
-- 安装、主题、适配容器和组件编写说明放在 `guide/`。
+- 安装、主题和组件编写说明放在 `guide/`。
 - 具体组件的属性和示例放在 `components/`。
 
 这份文档应该回答：

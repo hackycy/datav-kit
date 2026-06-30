@@ -20,7 +20,6 @@ export default defineConfig({
             { text: 'Introduction', link: '/guide/introduction' },
             { text: 'Installation', link: '/guide/installation' },
             { text: 'Theming', link: '/guide/theming' },
-            { text: 'Screen Fit', link: '/guide/screen-fit' },
             { text: 'Component Authoring', link: '/guide/component-authoring' },
           ],
         },
