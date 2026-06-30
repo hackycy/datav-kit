@@ -31,6 +31,8 @@ Before implementing, read `references/svg-frame-replication.md`.
    - If a side has a fixed center module, stretch only the plain strip between the corner and center module on each side of that module.
    - Reject tile repetition when the source is not visually periodic; prefer dynamic-length straight extension strips.
    - If a strip contains a diagonal transition or node, it is not an extension strip.
+   - If tile repetition is necessary, define a minimum rendered tile length and maximum tile count before coding. Do not allow repeat counts to grow unbounded when a host dimension is tiny.
+   - Treat large blur/filter stacks as desktop-only unless mobile validation proves they are safe.
 
 4. Implement with source-clipped modules.
    - Render fixed modules at fixed aspect ratio.
@@ -38,6 +40,8 @@ Before implementing, read `references/svg-frame-replication.md`.
    - Never stretch the full artwork with `preserveAspectRatio="none"`.
    - Avoid hand-drawn replacement strokes unless the task explicitly asks for abstraction.
    - Align extensions by the same source edge they are continuing; do not let a right-side strip drift inward from the right border.
+   - Cap repeated tile generation and let the final tile absorb any remaining length after the cap; size that SVG to the final tile so it does not clip.
+   - For mobile/coarse-pointer/reduced-motion states, disable or simplify expensive SVG filters while preserving the visible frame silhouette.
 
 5. Compute responsive layout from geometry.
    - Let host CSS/content determine size.
@@ -57,6 +61,8 @@ Before implementing, read `references/svg-frame-replication.md`.
    - Use browser screenshots and computed DOM rectangles for corners, side extensions, content-growth cases, and fixed-height non-source-ratio demos.
    - Measure host, content wrapper, and slotted content bounding boxes; verify content wrapper overflow is zero and assigned content remains inside the intended safe area.
    - Confirm no full-frame SVG leaks underneath sliced modules.
+   - Test at a mobile viewport such as `390 x 844` and one pathological narrow/tall host when repetition is used.
+   - Inspect SVG/tile counts, computed filter styles, and browser console logs; mobile fallback filters should be `none` or otherwise clearly cheaper when the source uses repeated heavy blur filters.
 
 7. Update public surfaces.
    - Keep metadata, docs, registration exports, and tests in sync.
@@ -72,6 +78,7 @@ Before implementing, read `references/svg-frame-replication.md`.
 - Content crosses the bottom border even though padding looks correct: the content wrapper may be auto-height instead of host-height, so slotted `height: 100%` content plus padding expands beyond the frame.
 - Top/bottom spacing is wrong only in wide or short containers: block padding may be incorrectly scaled from width instead of height.
 - Bottom frame has a large blank gap: the bottom slice/viewBox may include transparent source margin beyond the real frame bounds.
+- Mobile load appears stuck or blank: repeated tiles may be unbounded, or every slice may duplicate expensive SVG blur/filter stacks without a mobile fallback.
 - Tests pass but visual fidelity is wrong: add DOM assertions for source viewBoxes and run browser screenshot checks against source crops.
 
 ## Resources

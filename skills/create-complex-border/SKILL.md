@@ -81,7 +81,7 @@ Complete the branches in this order. Each branch depends on the decisions above 
 6. Select one concept using structure, beauty, dashboard usefulness, safe area, and distance from the nearest existing border.
 7. Define geometry: outer contour, corner grammar, side logic, top/bottom rhythm, fixed modules, extension strips, source canvas, and cross-slice continuity contracts for any rail/path that crosses slice boundaries.
 8. Define content safe area from actual inward reach of modules, glow, and motion. Redesign geometry if padding would squeeze dashboard content.
-9. Define visual language: line hierarchy, glow hierarchy, density, color roles, and motion budget.
+9. Define visual language: line hierarchy, glow hierarchy, density, color roles, motion budget, and mobile rendering budget.
 10. Define implementation contract: files, exports, docs, tests, inventory update, and public API.
 11. Implement.
 12. Validate with realistic dashboard content and multiple sizes. Record conclusions in the brief; do not commit screenshot evidence.
@@ -110,6 +110,19 @@ For source-coordinate slices, do not assume a path is visually continuous becaus
 - Verify tile/extension CSS placement as well as SVG viewBox values. A correct path can still break visually if one slice uses `viewBox="1140 ... 60 ..."` and the neighboring slice uses `viewBox="1110 ... 90 ..."`.
 - Add unit tests for each intentional cross-slice rail that assert compatible viewBox bands or explicit mapping math.
 - During manual browser validation, measure at least one shared coordinate across the slices with DOM geometry or visible inspection, and record the maximum alignment delta and boundary gap in `Validation Evidence`.
+
+For repeated or tiled slices, add explicit guardrails before implementation:
+
+- Define the minimum rendered tile length and maximum tile count per repeated band.
+- Reject repeat loops that can scale toward unbounded SVG counts when host width or height approaches zero.
+- If a final tile absorbs remaining length after the cap, ensure its own SVG viewport/rendered size covers that larger tile without clipping.
+- Add a regression test for an extreme narrow/tall host, such as `1 x 1200`, that proves node count stays bounded.
+
+For complex SVG filters, treat mobile rendering as a required responsive state:
+
+- Avoid duplicating large blur/filter stacks in every small slice when a painted glow, CSS opacity, or mobile fallback can preserve the first-read shape.
+- On `max-width: 768px`, `pointer: coarse`, or `prefers-reduced-motion: reduce`, disable or simplify expensive SVG filters unless the component is proven safe on an actual mobile viewport.
+- Keep desktop glow fidelity by default, but make the mobile fallback structural rather than hidden behind a public API.
 
 ## Public API
 
@@ -144,7 +157,7 @@ pnpm --filter @datav-kit/elements test
 
 `audit_border_process.py` checks process artifacts. It cannot approve visual quality.
 
-Manual validation is required. Use realistic dashboard content, not an empty slot. Check source-ratio, wide, tall, and small sizes. For sliced borders, include a cross-slice continuity check for each rail that appears visually continuous across fixed tiles and extension strips. Record conclusions in `Validation Evidence`. Do not commit screenshots, `visual-review/`, or other image evidence unless the user explicitly changes this policy.
+Manual validation is required. Use realistic dashboard content, not an empty slot. Check source-ratio, wide, tall, small, and mobile viewport sizes. For sliced borders, include a cross-slice continuity check for each rail that appears visually continuous across fixed tiles and extension strips. For complex SVG or repeated/tiled borders, also validate a coarse/mobile viewport, confirm console logs are clean, confirm SVG/tile counts stay bounded, and inspect computed styles to ensure expensive filters are disabled or simplified in the mobile fallback. Record conclusions in `Validation Evidence`. Do not commit screenshots, `visual-review/`, or other image evidence unless the user explicitly changes this policy.
 
 ## Rework Rule
 
@@ -152,7 +165,7 @@ Let the failure type choose the rework level:
 
 - Concept, silhouette, nearest-border similarity, content crowding, symbolic motif, or weak first-read failures require returning to `Candidate Concepts` or `Selected Concept`.
 - Top/bottom rail disorder, side-rail discontinuity, cross-slice coordinate mismatch, unsafe inward reach, or responsive identity drift require returning to `Geometry`, `Content Safe Area`, or `Responsive Model`.
-- Loud motion or poor performance requires returning to `Motion Budget`.
+- Loud motion, mobile loading stalls, unbounded repeated slices, or poor performance requires returning to `Motion Budget`, mobile rendering budget, or `Responsive Model`.
 - Color, opacity, a single node position, docs, tests, or metadata issues may be fixed locally.
 
 Do not rescue a failed concept by only adding ticks, changing colors, or increasing glow.
