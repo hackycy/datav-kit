@@ -14,8 +14,8 @@
 
 <div class="datav-demo datav-demo--decoration datav-demo--decoration-7" style="--datav-decoration-width: 760px; --datav-decoration-height: 92px;">
   <div class="datav-decoration-shell" style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px;">
-    <dvk-decoration-7></dvk-decoration-7>
     <dvk-decoration-7 reverse></dvk-decoration-7>
+    <dvk-decoration-7></dvk-decoration-7>
   </div>
 </div>
 
