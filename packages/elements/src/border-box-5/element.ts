@@ -40,6 +40,8 @@ const defaultSize = {
   width: 0,
   height: 0,
 }
+const minRepeatTileLength = 8
+const maxRepeatTiles = 48
 
 interface BorderBox5FilterIds {
   outerAuraId: string
@@ -100,6 +102,12 @@ export class BorderBox5Element extends DatavElement {
 
     .hud-frame {
       opacity: var(--dvk-border-box-5-glow-opacity, 1);
+    }
+
+    @media (max-width: 768px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+      svg [filter] {
+        filter: none;
+      }
     }
   `
 
@@ -281,7 +289,7 @@ export class BorderBox5Element extends DatavElement {
       return this.renderTile({
         name: `${options.name}-${index}`,
         style: `left: ${options.left + tile.offset}px; ${vertical}; width: ${tile.length}px; height: ${options.height}px`,
-        svgWidth: options.tileWidth,
+        svgWidth: Math.max(options.tileWidth, tile.length),
         svgHeight: options.height,
         viewBox: options.viewBox,
         primary: options.primary,
@@ -310,7 +318,7 @@ export class BorderBox5Element extends DatavElement {
         name: `${options.name}-${index}`,
         style: `${options.leftStyle}; top: ${options.top + tile.offset}px; width: ${options.width}px; height: ${tile.length}px`,
         svgWidth: options.width,
-        svgHeight: options.tileHeight,
+        svgHeight: Math.max(options.tileHeight, tile.length),
         viewBox: options.viewBox,
         primary: options.primary,
         secondary: options.secondary,
@@ -465,19 +473,25 @@ export class BorderBox5Element extends DatavElement {
   }
 
   private createRepeatOffsets(available: number, tileLength: number): Array<{ offset: number, length: number }> {
-    if (available <= 0 || tileLength <= 0)
+    if (available <= 0 || tileLength <= 0 || !Number.isFinite(available) || !Number.isFinite(tileLength))
       return []
 
+    const safeTileLength = Math.max(tileLength, minRepeatTileLength)
     const tiles: Array<{ offset: number, length: number }> = []
     let offset = 0
 
-    while (offset < available) {
-      const length = Math.min(tileLength, available - offset)
+    while (offset < available && tiles.length < maxRepeatTiles) {
+      const length = Math.min(safeTileLength, available - offset)
       tiles.push({
         offset: Number(offset.toFixed(2)),
         length: Number(length.toFixed(2)),
       })
-      offset += tileLength
+      offset += safeTileLength
+    }
+
+    if (offset < available && tiles.length > 0) {
+      const last = tiles[tiles.length - 1]
+      last.length = Number((last.length + available - offset).toFixed(2))
     }
 
     return tiles

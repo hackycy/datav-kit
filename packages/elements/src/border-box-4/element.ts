@@ -112,6 +112,12 @@ export class BorderBox4Element extends DatavElement {
     .hud-frame {
       opacity: var(--dvk-border-box-4-glow-opacity, 1);
     }
+
+    @media (max-width: 768px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+      svg [filter] {
+        filter: none;
+      }
+    }
   `
 
   @property()

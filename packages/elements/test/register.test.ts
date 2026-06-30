@@ -832,6 +832,24 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('32px 22px 16px 22px')
   })
 
+  it('caps border-box-5 repeat tiles for very narrow mobile layouts', async () => {
+    register()
+
+    const element = document.createElement('dvk-border-box-5') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+    await element.updateComplete
+
+    emitResize(1, 1200)
+    await element.updateComplete
+
+    const tiles = [...(element.shadowRoot?.querySelectorAll('.tile') ?? [])]
+    const heights = tiles
+      .map(tile => Number(tile.getAttribute('style')?.match(/height: ([\d.]+)px/)?.[1] ?? 0))
+
+    expect(tiles.length).toBeLessThanOrEqual(102)
+    expect(Math.max(...heights)).toBeGreaterThan(800)
+  })
+
   it('maps border-box-5 block padding from host height', async () => {
     register()
 

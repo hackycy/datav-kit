@@ -128,6 +128,12 @@ export class BorderBox2Element extends DatavElement {
     .outer-line {
       opacity: var(--dvk-border-box-2-glow-opacity, 1);
     }
+
+    @media (max-width: 768px), (pointer: coarse), (prefers-reduced-motion: reduce) {
+      svg [filter] {
+        filter: none;
+      }
+    }
   `
 
   @property()

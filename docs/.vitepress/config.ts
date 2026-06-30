@@ -6,6 +6,11 @@ export default defineConfig({
   description: 'Framework-agnostic Web Components for data dashboard decoration.',
   base: process.env.VITEPRESS_BASE || '/',
   cleanUrls: true,
+  vite: {
+    server: {
+      host: '0.0.0.0',
+    },
+  },
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/introduction' },
