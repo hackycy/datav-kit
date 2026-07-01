@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, FitScreenElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -92,14 +92,15 @@ describe('@datav-kit/elements', () => {
       'dvk-decoration-7',
       'dvk-decoration-8',
       'dvk-decoration-9',
+      'dvk-decoration-10',
       'dvk-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -173,6 +174,7 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration7()).toBe(false)
     expect(defineDecoration8()).toBe(false)
     expect(defineDecoration9()).toBe(false)
+    expect(defineDecoration10()).toBe(false)
     expect(defineCountTo()).toBe(false)
   })
 
@@ -326,6 +328,50 @@ describe('@datav-kit/elements', () => {
     expect(firstBlock?.getAttribute('points')).toBe('392.64,11.34 360,11.34 365.76,17.01 398.4,17.01')
     expect(stops[6].getAttribute('stop-color')).toBe('#2b7cff')
     expect(stops[12].getAttribute('stop-color')).toBe('#60e7ff')
+  })
+
+  it('renders decoration-10 as a futuristic radar HUD', async () => {
+    register()
+
+    const element = document.createElement('dvk-decoration-10') as Decoration10Element
+    element.setAttribute('colors', '#66f5ff,#2f8cff,#a688ff')
+    element.setAttribute('dur', '12')
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    emitResize(240, 240)
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const grid = element.shadowRoot?.querySelector('[part="grid"]')
+    const rings = [...element.shadowRoot?.querySelectorAll('[part~="ring"]') ?? []]
+    const ticks = [...element.shadowRoot?.querySelectorAll('[part="tick"]') ?? []]
+    const radialLines = [...element.shadowRoot?.querySelectorAll('[part="radial-line"]') ?? []]
+    const targets = [...element.shadowRoot?.querySelectorAll('[part="target"]') ?? []]
+    const particles = [...element.shadowRoot?.querySelectorAll('[part="particle"]') ?? []]
+    const dataLines = [...element.shadowRoot?.querySelectorAll('[part="data-line"]') ?? []]
+    const scanBeam = element.shadowRoot?.querySelector('[part="scan-beam"]')
+    const scanEdge = element.shadowRoot?.querySelector('[part="scan-edge"]')
+    const centerPulse = element.shadowRoot?.querySelector('[part="center-pulse"]')
+    const animations = [...element.shadowRoot?.querySelectorAll('animate, animateTransform') ?? []]
+    const stops = [...element.shadowRoot?.querySelectorAll('linearGradient stop') ?? []]
+
+    expect(svg?.getAttribute('width')).toBe('120')
+    expect(svg?.getAttribute('height')).toBe('120')
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 120 120')
+    expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet')
+    expect(grid?.getAttribute('fill')).toContain('dvk-decoration-10-grid-')
+    expect(rings).toHaveLength(18)
+    expect(ticks).toHaveLength(120)
+    expect(radialLines).toHaveLength(24)
+    expect(targets).toHaveLength(5)
+    expect(particles).toHaveLength(42)
+    expect(dataLines).toHaveLength(6)
+    expect(scanBeam?.getAttribute('d')).toBe('M 60.803 57.527 L 75.204 13.208 A 49.2 49.2 0 0 1 103.441 36.902 L 62.296 58.779 A 2.6 2.6 0 0 0 60.803 57.527 Z')
+    expect(scanEdge?.getAttribute('stroke')).toBe('#66f5ff')
+    expect(centerPulse?.getAttribute('fill')).toBe('#66f5ff')
+    expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#2f8cff', '#66f5ff', '#a688ff']))
+    expect(animations).toHaveLength(0)
   })
 
   it('maps count-to attributes and formats the disabled target value', async () => {
