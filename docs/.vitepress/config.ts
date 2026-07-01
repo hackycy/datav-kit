@@ -65,10 +65,10 @@ export default defineConfig({
           ],
         },
         {
-          text: 'Tool',
+          text: 'Other',
           items: [
-            { text: 'Fit Screen', link: '/components/tools/fit-screen' },
-            { text: 'Count To', link: '/components/tools/count-to' },
+            { text: 'Fit Screen', link: '/components/other/fit-screen' },
+            { text: 'Count To', link: '/components/other/count-to' },
           ],
         },
       ],
