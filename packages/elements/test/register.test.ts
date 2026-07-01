@@ -31,6 +31,27 @@ function latestDetail(listener: ReturnType<typeof vi.fn>): Record<string, number
   return listener.mock.calls.at(-1)?.[0].detail
 }
 
+function extractPathPoints(path: string): Array<{ x: number, y: number }> {
+  const numbers = [...path.matchAll(/-?\d+(?:\.\d+)?/g)].map(match => Number(match[0]))
+  const points: Array<{ x: number, y: number }> = []
+
+  for (let index = 0; index < numbers.length; index += 2) {
+    points.push({
+      x: numbers[index],
+      y: numbers[index + 1],
+    })
+  }
+
+  return points
+}
+
+function segmentDelta(from: { x: number, y: number }, to: { x: number, y: number }): { dx: number, dy: number } {
+  return {
+    dx: Math.abs(to.x - from.x),
+    dy: Math.abs(to.y - from.y),
+  }
+}
+
 describe('@datav-kit/elements', () => {
   beforeEach(() => {
     resizeCallbacks.length = 0
@@ -1567,28 +1588,28 @@ describe('@datav-kit/elements', () => {
     expect(panel?.getAttribute('viewBox')).toBe('0 0 320 180')
     expect(backgroundPanel?.getAttribute('x')).toBe('8.42')
     expect(backgroundPanel?.getAttribute('y')).toBe('13.01')
-    expect(backgroundPanel?.getAttribute('width')).toBe('303.16')
+    expect(backgroundPanel?.getAttribute('width')).toBe('303.17')
     expect(backgroundPanel?.getAttribute('height')).toBe('154.94')
     expect(outerRail?.getAttribute('stroke')).toContain('dvk-border-box-12-rail-')
     expect(outerRail?.getAttribute('stroke-width')).toBe('2')
-    expect(outerRail?.getAttribute('d')).toBe('M 14.55 7.65 L 75.41 7.65 L 80.77 13.01 L 239.23 13.01 L 244.59 7.65 L 305.45 7.65 L 314.26 16.45 L 314.26 63.51 L 310.81 66.95 L 310.81 106.55 L 314.26 109.99 L 314.26 163.74 L 305.45 172.54 L 14.55 172.54 L 5.74 163.74 L 5.74 109.99 L 9.19 106.55 L 9.19 66.95 L 5.74 63.51 L 5.74 16.45 Z')
+    expect(outerRail?.getAttribute('d')).toBe('M 14.54 7.65 L 75.37 7.65 L 80.72 13.01 L 239.28 13.01 L 244.63 7.65 L 305.46 7.65 L 314.26 16.45 L 314.26 66.76 L 310.82 70.2 L 310.82 109.8 L 314.26 113.24 L 314.26 163.74 L 305.46 172.54 L 14.54 172.54 L 5.74 163.74 L 5.74 113.24 L 9.18 109.8 L 9.18 70.2 L 5.74 66.76 L 5.74 16.45 Z')
     expect(innerRail?.getAttribute('stroke')).toBe('rgba(68, 85, 102, 0.58)')
     expect(innerRail?.getAttribute('stroke-width')).toBe('1.4')
-    expect(innerRail?.getAttribute('d')).toBe('M 15.89 9.95 L 73.88 9.95 L 79.23 15.11 L 240.77 15.11 L 246.12 9.95 L 304.11 9.95 L 311.58 17.41 L 311.58 62.55 L 308.13 65.99 L 308.13 107.5 L 311.58 110.95 L 311.58 162.4 L 304.11 170.05 L 15.89 170.05 L 8.42 162.4 L 8.42 110.95 L 11.87 107.5 L 11.87 65.99 L 8.42 62.55 L 8.42 17.41 Z')
+    expect(innerRail?.getAttribute('d')).toBe('M 15.88 9.95 L 73.84 9.95 L 79.19 15.11 L 240.81 15.11 L 246.16 9.95 L 304.12 9.95 L 311.58 17.41 L 311.58 65.8 L 308.14 69.25 L 308.14 110.75 L 311.58 114.2 L 311.58 162.4 L 304.12 170.05 L 15.88 170.05 L 8.42 162.4 L 8.42 114.2 L 11.86 110.75 L 11.86 69.25 L 8.42 65.8 L 8.42 17.41 Z')
     expect(shadowRail?.getAttribute('stroke')).toBe('rgba(17, 34, 51, 0.28)')
     expect(shadowRail?.getAttribute('stroke-width')).toBe('4.7')
     expect(blockGroups).toEqual(['left', 'right'])
     expect(blocks).toHaveLength(6)
     expect(blocks.map(block => block.getAttribute('fill')).every(fill => fill?.includes('dvk-border-box-12-block-'))).toBe(true)
-    expect(blocks[0].getAttribute('points')).toBe('42.11,10.71 48.61,10.71 52.44,14.92 45.93,14.92')
-    expect(blocks[3].getAttribute('points')).toBe('253.01,10.71 259.52,10.71 255.69,14.92 249.19,14.92')
+    expect(blocks[0].getAttribute('points')).toBe('42.08,10.71 48.59,10.71 52.41,14.92 45.91,14.92')
+    expect(blocks[3].getAttribute('points')).toBe('253.05,10.71 259.55,10.71 255.73,14.92 249.22,14.92')
     expect(sideFolds.map(fold => fold.getAttribute('data-side-fold'))).toEqual(['left', 'right'])
     expect(sideFolds.map(fold => fold.getAttribute('d'))).toEqual([
-      'M 5.74 63.51 L 9.19 66.95 L 9.19 106.55 L 5.74 109.99',
-      'M 314.26 63.51 L 310.81 66.95 L 310.81 106.55 L 314.26 109.99',
+      'M 5.74 66.76 L 9.18 70.2 L 9.18 109.8 L 5.74 113.24',
+      'M 314.26 66.76 L 310.82 70.2 L 310.82 109.8 L 314.26 113.24',
     ])
     expect(sideFolds.every(fold => fold.getAttribute('stroke-width') === '4')).toBe(true)
-    expect(bottomRail?.getAttribute('d')).toBe('M 14.55 172.54 L 305.45 172.54')
+    expect(bottomRail?.getAttribute('d')).toBe('M 14.54 172.54 L 305.46 172.54')
     expect(stops).toEqual([
       'rgba(17, 34, 51, 0.72)',
       '#445566',
@@ -1601,6 +1622,47 @@ describe('@datav-kit/elements', () => {
     expect(flood?.getAttribute('flood-opacity')).toBe('0.9')
     expect(animations).toHaveLength(6)
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('17.6px 19px 17.02px 19px')
+  })
+
+  it('extends border-box-12 straight rails without deforming fold angles', async () => {
+    register()
+
+    const element = document.createElement('dvk-border-box-12') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(320, 180)
+    await element.updateComplete
+
+    const sourceOuterPoints = extractPathPoints(element.shadowRoot?.querySelector('[data-rail="outer"]')?.getAttribute('d') ?? '')
+    const sourceBottomPoints = extractPathPoints(element.shadowRoot?.querySelector('[data-rail="bottom-reinforcement"]')?.getAttribute('d') ?? '')
+    const sourceTopMiddleLength = sourceOuterPoints[3].x - sourceOuterPoints[2].x
+    const sourceBottomLength = sourceBottomPoints[1].x - sourceBottomPoints[0].x
+
+    emitResize(640, 180)
+    await element.updateComplete
+
+    const wideOuterPoints = extractPathPoints(element.shadowRoot?.querySelector('[data-rail="outer"]')?.getAttribute('d') ?? '')
+    const wideBottomPoints = extractPathPoints(element.shadowRoot?.querySelector('[data-rail="bottom-reinforcement"]')?.getAttribute('d') ?? '')
+    const wideLeftTopFold = segmentDelta(wideOuterPoints[1], wideOuterPoints[2])
+    const wideRightTopFold = segmentDelta(wideOuterPoints[3], wideOuterPoints[4])
+    const wideRightSideFold = segmentDelta(wideOuterPoints[7], wideOuterPoints[8])
+
+    expect(Math.abs(wideLeftTopFold.dx - wideLeftTopFold.dy)).toBeLessThan(0.02)
+    expect(Math.abs(wideRightTopFold.dx - wideRightTopFold.dy)).toBeLessThan(0.02)
+    expect(Math.abs(wideRightSideFold.dx - wideRightSideFold.dy)).toBeLessThan(0.02)
+    expect(wideOuterPoints[3].x - wideOuterPoints[2].x).toBeGreaterThan(sourceTopMiddleLength)
+    expect(wideBottomPoints[1].x - wideBottomPoints[0].x).toBeGreaterThan(sourceBottomLength)
+
+    emitResize(320, 360)
+    await element.updateComplete
+
+    const tallOuterPoints = extractPathPoints(element.shadowRoot?.querySelector('[data-rail="outer"]')?.getAttribute('d') ?? '')
+    const tallRightSideFold = segmentDelta(tallOuterPoints[7], tallOuterPoints[8])
+
+    expect(Math.abs(tallRightSideFold.dx - tallRightSideFold.dy)).toBeLessThan(0.02)
+    expect(tallOuterPoints[7].y).toBeGreaterThan(wideOuterPoints[7].y)
+    expect(tallOuterPoints[10].y).toBeGreaterThan(wideOuterPoints[10].y)
   })
 
   it('resolves border-box-12 colors from CSS variables and supports paused block motion', async () => {

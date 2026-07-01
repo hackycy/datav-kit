@@ -15,7 +15,7 @@
 
 ## Design Goal
 
-- Concept name in structure language: source-mapped chamfer rail outline
+- Concept name in structure language: fixed-fold chamfer rail outline
 - Aesthetic thesis: preserve the supplied minimal HUD SVG's quiet blue rail system while adapting it to real host dimensions.
 - Dashboard value: leaves the top-center title zone and the large inner content region visually clean, with only edge-hugging slant blocks and side break accents adding technology atmosphere.
 
@@ -27,7 +27,7 @@
 
 ## First-Read Promise
 
-At dashboard distance, the viewer first sees the clean central content/title area, then the source-mapped beveled blue frame, then the faint glow and top-corner slant blocks.
+At dashboard distance, the viewer first sees the clean central content/title area, then the fixed-fold beveled blue frame, then the faint glow and top-corner slant blocks.
 
 ## Rejected Patterns
 
@@ -44,13 +44,13 @@ At dashboard distance, the viewer first sees the clean central content/title are
 
 ## Candidate Concepts
 
-### Candidate A: source-mapped chamfer rail outline
+### Candidate A: fixed-fold chamfer rail outline
 
-- Outer contour: use the supplied 1672 x 941 SVG rail path, including the shallow top-center lowered rail and side midpoint folds.
+- Outer contour: use the supplied 1672 x 941 SVG rail path as fixed fold modules plus straight extension rails.
 - Corner grammar: beveled rail corners with miter joins, no rounded corners or corner blocks.
 - Top/bottom rhythm: top center remains open and continuous with a lowered rail segment; bottom is one clean reinforced line.
 - Side logic: left and right midpoint use the reference SVG's symmetric inward break accent.
-- Responsive model: live-size exception that maps reference source coordinates into host coordinates.
+- Responsive model: live-size exception that keeps fold modules uniformly scaled and stretches only straight rails.
 - Content safe-area implication: content rect follows the reference dark panel area and clamps to minimum padding on small hosts.
 - Motion idea: six top parallelogram blocks blink with staggered opacity.
 - Why keep/reject: keep; it follows the user's reference SVG and keeps the requested minimal HUD discipline.
@@ -79,7 +79,7 @@ At dashboard distance, the viewer first sees the clean central content/title are
 
 ## Selected Concept
 
-- Selected candidate: Candidate A, source-mapped chamfer rail outline.
+- Selected candidate: Candidate A, fixed-fold chamfer rail outline.
 - Selection reason: it directly follows the supplied SVG while preserving the component's standard API, content padding, and animation controls.
 - Structural differences from nearest border: this is a low-density single-frame rail with an empty top-center title zone, paired top slant blocks, mirrored side break accents, and no dense clipped HUD modules.
 - Why it remains a usable dashboard border: all decoration stays close to the outer rail, content padding is measured from the reference safe panel, and motion is limited to six small blocks away from the title zone.
@@ -95,7 +95,7 @@ Nearest existing border: `dvk-border-box-6`
 | Major module placement | yes | yes | Only paired top slant blocks and side folds, no top joins/bottom hatch fields. |
 | Top/bottom rhythm | yes | yes | Top center remains a clean lowered rail; bottom is a single reinforced line. |
 | Side logic | yes | yes | Symmetric midpoint folds replace asymmetric markers. |
-| Responsive model | yes | no | Both are source-aware, but this recomputes one live SVG instead of source-sliced modules. |
+| Responsive model | yes | no | Both are source-aware, but this keeps fold modules uniform and extends straight rails instead of source-sliced modules. |
 | Ornament rhythm | yes | yes | Six slant blocks replace dense hatches/nodes. |
 | Motion grammar | yes | yes | Subtle block opacity blink instead of static source details. |
 | Content safe-area shape | yes | no | Safe area follows the reference dark panel, not border-box-6's measured source content rectangle. |
@@ -117,18 +117,18 @@ Pass threshold: at least 5 dimensions different and at least 2 major structural 
 ## Responsive Model
 
 - Model: live-size exception
-- Fixed modules: reference outer path, inner path, background panel, three left slant blocks, three right slant blocks, side break accents, and bottom reinforcement path.
-- Extension strips: clean rail spans are recomputed from the 1672 x 941 source coordinates into the host coordinate system.
+- Fixed modules: top-left/top-right corner bends, two top-center angled bends, three left slant blocks, three right slant blocks, mirrored side break accents, and bottom corner bends.
+- Extension strips: top center horizontal rail, left/right vertical rail sections outside the middle side break, bottom horizontal rail, and the blank dark panel.
 - Cross-slice rails: none; no slicing is used.
 - Slice continuity contract: not applicable.
-- What may stretch: long clean rail spans and the dark blank panel.
-- What must never stretch conceptually: top-center openness, six-block count, side-fold symmetry, no title box, no rounded corners, no grid/texture.
+- What may stretch: top center horizontal rail, left/right vertical rail sections outside the middle side break, bottom horizontal rail, and the dark blank panel.
+- What must never stretch conceptually: diagonal fold angles, side break angles, top-center openness, six-block count, side-fold symmetry, no title box, no rounded corners, no grid/texture.
 
 ## Live-Size Exception
 
-- Why live-size is appropriate: the reference is a single minimal line-first SVG with no dense clipped source modules; recomputing coordinates keeps the supplied implementation recognizable.
-- Why slicing is not better: slicing would add unnecessary module boundaries to a simple full-frame path and could introduce visual gaps in the continuous top and bottom rails.
-- Stable identity checks: source-ratio, wide, tall, small, and mobile browser checks preserve six slant blocks, two side break accents, the lowered clean top rail, and the continuous bottom rail.
+- Why live-size is appropriate: the reference is a single minimal line-first SVG with no dense clipped source modules; fixed fold modules plus straight extensions keep the supplied implementation recognizable without angle distortion.
+- Why slicing is not better: slicing would add unnecessary module boundaries to a simple full-frame path; the live geometry already separates fixed folds from extendable straight rails.
+- Stable identity checks: source-ratio, wide, tall, small, and mobile browser checks preserve six slant blocks, two side break accents, the lowered clean top rail, continuous bottom rail, and fixed diagonal angles.
 - Inward reach calculation: content padding maps `contentRect` from the 1672 x 941 reference canvas to current host size through `createBorderBoxContentPadding`.
 
 ## Visual Language
@@ -188,12 +188,12 @@ Pass threshold: all gates recorded as pass.
 Do not link or commit screenshot files. Record manual checks only.
 
 - Realistic dashboard content used: docs `BorderChartDemo` title, KPI/chart, and status content.
-- Source-ratio check: unit tests at 320 x 180 verified the source-mapped outer path, inner path, side break paths, bottom reinforcement, six top blocks, gradient stops, six animation tags, and safe-area padding.
+- Source-ratio check: unit tests at 320 x 180 verified the fixed-fold outer path, inner path, side break paths, bottom reinforcement, six top blocks, gradient stops, six animation tags, and safe-area padding.
 - Wide check: browser validation at a wide viewport showed the docs component at 638 x 430 with 6 blocks, 2 side folds, 6 animations, `viewBox="0 0 638 430"`, and no title panel or `foreignObject`.
 - Tall check: browser validation at a taller viewport kept the same docs component geometry constraints with 6 blocks, 2 side folds, 6 animations, and the clean top-center rail.
-- Small check: browser validation at a narrow/mobile viewport showed a 297 x 680 component with 6 blocks, 2 side folds, 6 animations, side padding clamped to 14 px, and vertical safe-area padding preserved.
+- Small check: browser validation at a narrow/mobile viewport showed a 297 x 680 component with 6 blocks, 2 side folds, 6 animations, side padding clamped to 19 px, and vertical safe-area padding preserved.
 - Safe-area overlay/manual inspection: content padding maps the 1672 x 941 reference `contentRect` and clears the top slant blocks, side folds, bottom rail, and glow; no title box, grid, text, or pattern is rendered inside the SVG.
 - Cross-slice continuity check: not applicable because this is one live-size SVG with no slices.
-- Issues found: first implementation drifted away from the supplied SVG by using a too-plain freeform rectangle and extra calibration ticks; follow-up review found the top block groups overlapped the two angled ends of the lowered top rail and the outer rail was too heavy.
-- Rework completed: replaced the freeform geometry with source-mapped paths and blocks from `minimal_hud_border.svg`, removed calibration ticks, shifted the left block group outward-left and the right block group outward-right to clear the top rail折线, reduced the outer glow/main rail stroke widths by about one third, kept only the reference-style side folds and bottom reinforcement, and updated tests.
+- Issues found: first implementation drifted away from the supplied SVG by using a too-plain freeform rectangle and extra calibration ticks; follow-up review found the top block groups overlapped the two angled ends of the lowered top rail, the outer rail was too heavy, and independent x/y coordinate mapping deformed fold angles during free adaptation.
+- Rework completed: replaced the freeform geometry with fixed fold modules from `minimal_hud_border.svg`, removed calibration ticks, shifted the left block group outward-left and the right block group outward-right to clear the top rail折线, reduced the outer glow/main rail stroke widths by about one third, changed adaptation so only the top center rail, side straight rails outside the middle fold, and bottom rail extend, increased side content padding, and updated tests.
 - Final manual conclusion: accepted as a reference-aligned minimal HUD border because the top center stays clean, side folds are symmetric, bottom rail is continuous, animation is limited to six small blocks, and the large dark interior remains blank.

@@ -333,9 +333,18 @@ export class BorderBox12Element extends DatavElement {
   private createGeometry(): BorderBox12Geometry {
     const width = Math.max(this.size.width, 1)
     const height = Math.max(this.size.height, 1)
-    const sx = (value: number): number => round(value / sourceViewBox.width * width)
-    const sy = (value: number): number => round(value / sourceViewBox.height * height)
-    const point = (x: number, y: number): string => `${sx(x)} ${sy(y)}`
+    const moduleScale = Math.min(width / sourceViewBox.width, height / sourceViewBox.height)
+    const sourceX = (value: number): number => round(value * moduleScale)
+    const sourceY = (value: number): number => round(value * moduleScale)
+    const sourceRightX = (value: number): number => round(width - (sourceViewBox.width - value) * moduleScale)
+    const sourceBottomY = (value: number): number => round(height - (sourceViewBox.height - value) * moduleScale)
+    const centeredY = (value: number): number => round(height / 2 + (value - 453.5) * moduleScale)
+    const point = (x: number, y: number): string => {
+      const mappedX = x <= sourceViewBox.width / 2 ? sourceX(x) : sourceRightX(x)
+      const mappedY = y <= 150 ? sourceY(y) : y >= 800 ? sourceBottomY(y) : centeredY(y)
+
+      return `${mappedX} ${mappedY}`
+    }
     const path = (commands: Array<[string, number, number] | [string]>): string => {
       return commands.map((command) => {
         if (command.length === 1)
@@ -345,7 +354,11 @@ export class BorderBox12Element extends DatavElement {
       }).join(' ')
     }
     const polygon = (points: Array<[number, number]>): string => {
-      return points.map(([x, y]) => `${sx(x)},${sy(y)}`).join(' ')
+      return points.map(([x, y]) => {
+        const mappedX = x <= sourceViewBox.width / 2 ? sourceX(x) : sourceRightX(x)
+
+        return `${mappedX},${sourceY(y)}`
+      }).join(' ')
     }
     const outerCommands: Array<[string, number, number] | [string]> = [
       ['M', 76, 40],
@@ -416,10 +429,10 @@ export class BorderBox12Element extends DatavElement {
         ['L', 1642, 575],
       ]),
       backgroundPanel: {
-        x: sx(44),
-        y: sy(68),
-        width: sx(1584),
-        height: sy(810),
+        x: sourceX(44),
+        y: sourceY(68),
+        width: round(Math.max(width - 88 * moduleScale, 0)),
+        height: round(Math.max(height - (68 + 63) * moduleScale, 0)),
       },
       leftBlocks: [
         polygon([[220, 56], [254, 56], [274, 78], [240, 78]]),
