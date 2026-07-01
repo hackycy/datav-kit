@@ -9,9 +9,9 @@ title: DataV Kit
     <p class="datav-home-headline">Precision visual primitives for data dashboard surfaces.</p>
     <p class="datav-home-lede"><code>datav-kit</code> ships SSR-safe Custom Elements for large-screen dashboard decoration. Components live under Components; Guide pages stay focused on setup, themes, and authoring.</p>
     <div class="datav-home-actions">
-      <a class="datav-home-action datav-home-action--primary" href="/guide/installation">Install</a>
-      <a class="datav-home-action" href="/components/decorations/decoration-1">Components</a>
-      <a class="datav-home-action" href="/guide/theming">Themes</a>
+      <a class="datav-home-action datav-home-action--primary" href="guide/installation">Install</a>
+      <a class="datav-home-action" href="components/decorations/decoration-1">Components</a>
+      <a class="datav-home-action" href="guide/theming">Themes</a>
     </div>
   </section>
 
