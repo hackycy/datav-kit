@@ -1,6 +1,6 @@
 # Border Box 13
 
-`dvk-border-box-13` renders a sparse electric-blue split rail frame with cropped source-mapped linework, host-size adaptation, and subtle endpoint sparkles at a few existing rail terminals.
+`dvk-border-box-13` renders a sparse electric-blue split rail frame with fixed source-proportioned corner modules, a bottom carrier spine that extends through its simple middle rails, and subtle endpoint sparkles at a few existing rail terminals.
 
 <BorderChartDemo
   border="dvk-border-box-13"

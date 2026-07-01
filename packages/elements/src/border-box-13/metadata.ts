@@ -3,7 +3,7 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const borderBox13Metadata = {
   tagName: 'dvk-border-box-13',
   className: 'BorderBox13Element',
-  description: 'Electric-blue split rail border with cropped source-mapped linework, short side rails, a bottom carrier spine, and subtle endpoint sparkles.',
+  description: 'Electric-blue split rail border with fixed source-proportioned corner modules, short side rails, a bottom-extending carrier spine, and subtle endpoint sparkles.',
   props: {
     color: {
       type: 'string',

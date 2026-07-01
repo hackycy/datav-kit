@@ -2,8 +2,8 @@
 
 ## User Constraints
 
-- Request: add `border 13` from the provided sparse blue SVG reference, remove the large outer blank area caused by preserving the full source canvas, normalize the automatic padding, then redesign the too-invisible motion.
-- Explicit direction: preserve the provided line layout, tightly crop the source SVG's unused outer whitespace, keep all four automatic paddings equal to the reasonable top baseline, and use only a few endpoint star-like sparkle dots. Do not use animated line segments, moving light, scanlines, or flow.
+- Request: add `border 13` from the provided sparse blue SVG reference, remove the large outer blank area caused by preserving the full source canvas, normalize the automatic padding, redesign the too-invisible motion, then repair free adaptation so corner modules do not deform.
+- Explicit direction: preserve the provided line layout, tightly crop the source SVG's unused outer whitespace, keep all four automatic paddings equal to the reasonable top baseline, use only a few endpoint star-like sparkle dots, and keep all four corners source-proportioned. Do not use animated line segments, moving light, scanlines, flow, or extension on the top/left/right edges; only the bottom carrier's simple middle line segments may extend around the center fold.
 - Explicitly allowed risky motifs: none.
 
 ## Task Type
@@ -14,10 +14,10 @@
 
 ## Failure Diagnosis
 
-- Failed behavior: the visible rails were inset by source canvas whitespace; the first crop improved it but still left obvious surplus space, source-mapped padding made right/bottom/left diverge from the reasonable top padding, two rounds of line-opacity breathing were invisible, the first small node-only pulse remained too weak, and the later anchor-lock rail overlays added unwanted animated line segments.
+- Failed behavior: the visible rails were inset by source canvas whitespace; the first crop improved it but still left obvious surplus space, source-mapped padding made right/bottom/left diverge from the reasonable top padding, two rounds of line-opacity breathing were invisible, the first small node-only pulse remained too weak, the later anchor-lock rail overlays added unwanted animated line segments, and affine host mapping deformed the four corner brackets and bottom fold when the host aspect ratio changed.
 - Failed design layer: responsive model | motion | safe area.
 - Old modules allowed to remain: all 25 source line paths, the split top rails, short side rails, bottom carrier spine, public API, and color/glow language.
-- Old modules rejected: using the full `0 0 1920 1080` source canvas, a loose `40` source px crop allowance, source-rect four-side padding divergence, invisible line opacity breathing, dense node-only pulses, anchor-lock rail overlays, animated line segments, or moving dash/flow animation as the host-mapped drawing and motion model.
+- Old modules rejected: using the full `0 0 1920 1080` source canvas, a loose `40` source px crop allowance, source-rect four-side padding divergence, invisible line opacity breathing, dense node-only pulses, anchor-lock rail overlays, animated line segments, moving dash/flow animation, or affine x/y host scaling that stretches corner and fold geometry.
 
 ## Compatibility Contract
 
@@ -27,12 +27,12 @@
 - Preserve CSS variables: `--dvk-color-primary`, `--dvk-color-secondary`, `--dvk-color-accent`, `--dvk-border-box-padding`, `--dvk-border-box-13-padding`.
 - Preserve parts: `frame`, `graphic`, `content`.
 - Preserve events: `dvk-ready`.
-- Allowed internal changes: crop the internal source viewBox and remap the same source endpoints into the host SVG.
+- Allowed internal changes: crop the internal source viewBox and remap the same source endpoints into the host SVG using fixed left/center/right and top/middle/bottom anchors plus bottom-only extension on the carrier rail's simple middle segments.
 
 ## Design Goal
 
 - Concept name in structure language: faithful split horizon rail.
-- Aesthetic thesis: preserve the reference's restrained blue luminous linework while treating the line bounding region, not the unused full source canvas, as the responsive drawing area.
+- Aesthetic thesis: preserve the reference's restrained blue luminous linework while treating the corner, side, and center-fold modules as fixed source-proportioned modules instead of stretchable host geometry.
 - Dashboard value: frames a command-center panel without occupying the central title/content zone.
 
 ## Dashboard Story
@@ -55,7 +55,7 @@ At dashboard distance, the viewer first sees the central dashboard content, then
 
 - Inventory date: 2026-07-01
 - Nearest existing border: `dvk-border-box-12`
-- Similarity reason: sparse electric-blue HUD linework, live host geometry, and source-mapped content padding.
+- Similarity reason: sparse electric-blue HUD linework, host-size SVG geometry, and source-derived content padding.
 - Do-not-repeat notes: do not reuse a closed top-center chamfer outline, paired top slant blocks, or symmetric side midpoint folds as the identity.
 
 ## Candidate Concepts
@@ -66,7 +66,7 @@ At dashboard distance, the viewer first sees the central dashboard content, then
 - Corner grammar: L brackets with short chamfer joins, matching the reference but keeping the top center empty.
 - Top/bottom rhythm: top is quiet and split; bottom is the dominant long spine with a small center break.
 - Side logic: only short mid-height rails, no full vertical frame.
-- Responsive model: live-size source-coordinate mapping.
+- Responsive model: hybrid host SVG with fixed source-proportioned corner/side modules and bottom-only middle rail extension.
 - Content safe-area implication: generous top and side corners, deeper bottom allowance.
 - Motion idea: eight fixed endpoint sparkle dots blink gently at selected source rail terminals and bottom breakpoints without directional travel or line animation.
 - Why keep/reject: keep; it is the requested reference geometry without line-layout changes.
@@ -111,7 +111,7 @@ Nearest existing border: `dvk-border-box-12`
 | Major module placement | yes | yes | Bottom carrier and center break replace top slant blocks. |
 | Top/bottom rhythm | yes | yes | Top is split and quiet; bottom is the primary rhythm. |
 | Side logic | yes | yes | Mid-height short side rails instead of folded outline segments. |
-| Responsive model | no | no | Both use live-size source mapping. |
+| Responsive model | yes | no | Border 13 now fixes corners/top/side modules and extends only the bottom middle carrier rails; border 12 extends top, side, and bottom straight spans around fixed folds. |
 | Ornament rhythm | yes | yes | No repeated top blocks; only sparse inner bottom details. |
 | Motion grammar | yes | yes | Fixed endpoint sparkle dots instead of blinking polygons, animated line segments, or moving flow. |
 | Content safe-area shape | yes | no | Rectangular but bottom-biased inset. |
@@ -127,25 +127,25 @@ Pass threshold: at least 5 dimensions different and at least 2 major structural 
 - Deepest left inward reach: content starts at source `x=101`, 35 px after the cropped viewBox left.
 - Glow/motion allowance: 12 source px beyond the visible line bounding box before cropping to host size.
 - Final `contentRect`: `x=101, y=118, width=1718, height=831`.
-- Padding expectations at source-ratio, wide, tall, small: all four CSS padding values use the top source inset as the single baseline, with a 16px minimum, so right/bottom/left match the visually reasonable top padding.
+- Padding expectations at source-ratio, wide, tall, small: all four CSS padding values use the top source inset multiplied by the fixed-module scale, with a 16px minimum, so right/bottom/left match the visually reasonable top padding and do not grow from host-only vertical stretching.
 - Corner usability conclusion: top corners are shallow, bottom corners are outside the main content rectangle, and side rails do not squeeze legends or labels.
 
 ## Responsive Model
 
-- Model: live-size exception.
-- Fixed modules: none; all 25 static line paths keep the exact source endpoints and map them through the cropped source viewBox.
-- Extension strips: none; straight source paths scale with the host through affine x/y mapping.
+- Model: hybrid host SVG.
+- Fixed modules: top-left and top-right brackets/rails, left and right side marks, bottom corner brackets, bottom inner vertical marks, bottom center fold, bottom center break, and all endpoint sparkles use a single fixed-module scale anchored to left, right, center, top, middle, or bottom.
+- Extension strips: only the two bottom carrier rail spans from the left bottom module to the center fold and from the center fold to the right bottom module extend. Top, left, and right edges already have intentional blank space and do not receive extension treatment.
 - Cross-slice rails: none because the component renders as one SVG.
-- Slice continuity contract: not applicable.
-- What may stretch: the cropped source coordinate system scales to host width and height.
-- What must never stretch: no individual line may be re-authored, re-centered, repeated, or reordered independently of the source SVG.
+- Slice continuity contract: not applicable; bottom carrier continuity is handled inside one SVG by sharing the same bottom-anchored y coordinate between the extendable horizontal rails and the fixed center fold/corner endpoints.
+- What may stretch: only the simple horizontal bottom carrier spans `158,952 -> 865,952` and `1055,952 -> 1762,952`, because one endpoint is side-anchored and the other is center-anchored.
+- What must never stretch: the four corners, top rails, side marks, bottom verticals, bottom chamfers, bottom center fold, center break length, and endpoint sparkle module offsets.
 
 ## Live-Size Exception
 
-- Why live-size is appropriate: the source SVG is a sparse straight-line frame, so source endpoint mapping preserves the geometry more faithfully than slicing.
-- Why slicing is not better: slicing would add complexity and duplicate simple line segments without improving visual stability.
-- Stable identity checks: source-ratio, wide, tall, and small hosts retain the same 25 source paths, line order, and relative rail layout.
-- Inward reach calculation: content padding comes from the documented source `contentRect` and cropped source viewBox through `createBorderBoxContentPadding`.
+- Why live-size is appropriate: the component still uses a single host-size SVG, but the geometry is no longer affine host scaling; anchored endpoints preserve source proportions for fixed modules while allowing the bottom carrier to reach the available width.
+- Why slicing is not better: slicing would add unnecessary DOM and cross-boundary checks for a sparse straight-line frame whose only true extension need is two bottom horizontal segments.
+- Stable identity checks: source-ratio, wide, tall, and small hosts retain the same 25 source paths, line order, fixed corner ratios, fixed side mark length, fixed center-break length, and bottom-only extension behavior.
+- Inward reach calculation: content padding comes from the documented source top inset multiplied by the same fixed-module scale, with a 16px minimum.
 
 ## Visual Language
 
@@ -204,13 +204,13 @@ Pass threshold: all entries are `pass`.
 Do not link or commit screenshot files. Record manual checks only.
 
 - Realistic dashboard content used: docs `BorderChartDemo` with title, subtitle, KPI/chart-like content.
-- Source-ratio check: browser docs demo at 559 x 430 renders the first rail at `M 3.75 5.73 L 21.57 5.73`, preserving 25 primary paths, 25 core paths, 8 fixed endpoint sparkles, 6 gradient stops, and 16 `animate` nodes; automatic padding is `16.7px` on all four sides.
-- Wide check: browser docs demo at 638 x 430 keeps rail bounds at about `4.28px` left/right and `5.73px` top/bottom, with no full-canvas whitespace returning.
-- Tall check: unit geometry at 320 x 360 keeps short side rails centered and moves the top rail to about `y=9.99`, avoiding the previous visibly large vertical margin.
-- Small check: browser docs demo at 297 x 680 keeps rail bounds at about `1.99px` left/right and `9.06px` top/bottom; content padding is `26.42px` on all four sides.
+- Source-ratio check: unit DOM check at 320 x 180 renders the first rail as `M 2.15 2.15 L 12.35 2.15`, preserving 25 primary paths, 25 core paths, 8 fixed endpoint sparkles, 6 gradient stops, and 16 `animate` nodes; automatic padding remains `16px` on all four sides.
+- Wide check: unit DOM check from 400 x 180 to 640 x 180 keeps the top-left rail length fixed while the bottom left and bottom right carrier spans grow; the bottom center break length remains fixed.
+- Tall check: unit DOM check at 640 x 360 keeps the left side mark length equal to `150 * moduleScale` instead of stretching with host height, and the bottom center fold preserves its source `23:20` diagonal proportion.
+- Small check: unit DOM check at 300 x 180 keeps automatic padding at the compact `16px` minimum on all four sides and retains bounded SVG node counts.
 - Safe-area overlay/manual inspection: source-ratio automatic padding now hits the intended compact minimum `16px` on all four sides at 300 x 180; right/bottom/left no longer diverge from the top baseline.
 - Motion DOM check: browser docs demo renders 0 signal rail overlays, 8 endpoint sparkle dots, 16 fixed-position animations, 0 `stroke-dashoffset` animations, 0 `stroke-width` animations, all signal marks use `data-motion="endpoint-sparkle"`, sparkle opacity values `0.12;0.72;0.18;0.46;0.12`, and radius values `1.6;3.4;1.9;2.7;1.6`.
-- Cross-slice continuity check: not applicable; single SVG live-size rendering.
-- Issues found: full-canvas source mapping preserved `78px` horizontal, `95px` top, and `108px` bottom source whitespace, so the visible border sat too far from the component edge.
-- Rework completed: kept exact source endpoints, changed the internal source viewBox to `66 83 1788 901`, equalized automatic padding from the top source inset, and replaced line/node breathing plus anchor-lock line overlays with eight endpoint sparkle dots at top corners, side marks, bottom outer anchors, and bottom center breakpoints.
-- Final manual conclusion: accepted; browser validation confirms the rails now read near the component edge while keeping content inside the measured safe area.
+- Cross-slice continuity check: not applicable; single SVG rendering. Bottom carrier continuity has no slice boundary and shares y coordinates within the same path layer.
+- Issues found: full-canvas source mapping preserved `78px` horizontal, `95px` top, and `108px` bottom source whitespace, and later affine host mapping stretched corner and fold geometry across aspect ratios.
+- Rework completed: kept exact source endpoints, changed the internal source viewBox to `66 83 1788 901`, equalized automatic padding from the top source inset, replaced line/node breathing plus anchor-lock line overlays with eight endpoint sparkle dots, and changed the responsive geometry to fixed source-proportioned anchors with bottom-only middle rail extension.
+- Final manual conclusion: accepted; tests and DOM inspection confirm the rails read near the component edge, corner modules remain proportioned, and only the bottom middle carrier spans adapt to available width.

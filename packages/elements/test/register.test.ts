@@ -1781,7 +1781,7 @@ describe('@datav-kit/elements', () => {
     expect(coreRails[0].closest('[data-layer="core-rails"]')?.getAttribute('stroke-width')).toBe('1.2')
     expect(signalSparks[0].closest('[data-layer="signal-sparks"]')?.getAttribute('fill')).toContain('dvk-border-box-13-signal-')
     expect(signalSparks[0].getAttribute('cx')).toBe('2.15')
-    expect(signalSparks[0].getAttribute('cy')).toBe('2.4')
+    expect(signalSparks[0].getAttribute('cy')).toBe('2.15')
     expect(signalSparks[0].getAttribute('r')).toBe('2.2')
     expect(signalSparks[0].getAttribute('opacity')).toBe('0.2')
     expect(signalSparks[0].getAttribute('data-motion')).toBe('endpoint-sparkle')
@@ -1789,8 +1789,8 @@ describe('@datav-kit/elements', () => {
     expect(signalSparks[0].querySelector('animate[attributeName="stroke-width"]')).toBeNull()
     expect(signalSparks[0].querySelector('animate[attributeName="opacity"]')?.getAttribute('values')).toBe('0.12;0.72;0.18;0.46;0.12')
     expect(signalSparks[0].querySelector('animate[attributeName="r"]')?.getAttribute('values')).toBe('1.6;3.4;1.9;2.7;1.6')
-    expect(primaryRails[0].getAttribute('d')).toBe('M 2.15 2.4 L 12.35 2.4')
-    expect(primaryRails[18].getAttribute('d')).toBe('M 151.05 177.6 L 168.95 177.6')
+    expect(primaryRails[0].getAttribute('d')).toBe('M 2.15 2.15 L 12.35 2.15')
+    expect(primaryRails[18].getAttribute('d')).toBe('M 151.05 177.85 L 168.95 177.85')
     expect(stops).toEqual([
       'rgba(17, 34, 51, 0.62)',
       '#445566',
@@ -1805,39 +1805,56 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('16px 16px 16px 16px')
   })
 
-  it('extends border-box-13 rails and keeps side marks centered', async () => {
+  it('extends only border-box-13 bottom middle rails without deforming corner modules', async () => {
     register()
 
     const element = document.createElement('dvk-border-box-13') as HTMLElement & { updateComplete: Promise<boolean> }
     document.body.append(element)
 
     await element.updateComplete
-    emitResize(320, 180)
+    emitResize(400, 180)
     await element.updateComplete
 
     const sourceRails = [...(element.shadowRoot?.querySelectorAll('[data-rail="primary"]') ?? [])]
     const sourceTopRail = extractPathPoints(sourceRails[3].getAttribute('d') ?? '')
-    const sourceLeftSide = extractPathPoints(sourceRails[10].getAttribute('d') ?? '')
+    const sourceBottomLeftRail = extractPathPoints(sourceRails[16].getAttribute('d') ?? '')
+    const sourceBottomCenterBreak = extractPathPoints(sourceRails[18].getAttribute('d') ?? '')
     const sourceTopLength = sourceTopRail[1].x - sourceTopRail[0].x
-    const sourceSideCenter = (sourceLeftSide[0].y + sourceLeftSide[1].y) / 2
+    const sourceBottomLeftLength = sourceBottomLeftRail[1].x - sourceBottomLeftRail[0].x
+    const sourceCenterBreakLength = sourceBottomCenterBreak[1].x - sourceBottomCenterBreak[0].x
 
     emitResize(640, 180)
     await element.updateComplete
 
     const wideRails = [...(element.shadowRoot?.querySelectorAll('[data-rail="primary"]') ?? [])]
+    const wideTopChamfer = extractPathPoints(wideRails[2].getAttribute('d') ?? '')
     const wideTopRail = extractPathPoints(wideRails[3].getAttribute('d') ?? '')
+    const wideBottomLeftRail = extractPathPoints(wideRails[16].getAttribute('d') ?? '')
+    const wideBottomCenterBreak = extractPathPoints(wideRails[18].getAttribute('d') ?? '')
+    const wideBottomRightRail = extractPathPoints(wideRails[20].getAttribute('d') ?? '')
+    const wideTopChamferDelta = segmentDelta(wideTopChamfer[0], wideTopChamfer[1])
+    const wideBottomLeftLength = wideBottomLeftRail[1].x - wideBottomLeftRail[0].x
+    const wideBottomRightLength = wideBottomRightRail[1].x - wideBottomRightRail[0].x
+    const wideCenterBreakLength = wideBottomCenterBreak[1].x - wideBottomCenterBreak[0].x
 
-    expect(wideTopRail[1].x - wideTopRail[0].x).toBeGreaterThan(sourceTopLength)
+    expect(wideTopRail[1].x - wideTopRail[0].x).toBeCloseTo(sourceTopLength, 1)
+    expect(wideBottomLeftLength).toBeGreaterThan(sourceBottomLeftLength)
+    expect(wideBottomRightLength).toBeGreaterThan(sourceBottomLeftLength)
+    expect(wideCenterBreakLength).toBeCloseTo(sourceCenterBreakLength, 1)
+    expect(wideTopChamferDelta.dx / wideTopChamferDelta.dy).toBeCloseTo(17 / 13, 1)
 
-    emitResize(320, 360)
+    emitResize(640, 360)
     await element.updateComplete
 
     const tallRails = [...(element.shadowRoot?.querySelectorAll('[data-rail="primary"]') ?? [])]
+    const tallTopCap = extractPathPoints(tallRails[0].getAttribute('d') ?? '')
     const tallLeftSide = extractPathPoints(tallRails[10].getAttribute('d') ?? '')
-    const tallSideCenter = (tallLeftSide[0].y + tallLeftSide[1].y) / 2
+    const tallBottomLeftCenter = extractPathPoints(tallRails[17].getAttribute('d') ?? '')
+    const tallModuleScale = (tallTopCap[1].x - tallTopCap[0].x) / 57
+    const tallBottomLeftCenterDelta = segmentDelta(tallBottomLeftCenter[0], tallBottomLeftCenter[1])
 
-    expect(tallSideCenter).toBeGreaterThan(sourceSideCenter)
-    expect(tallLeftSide[1].y - tallLeftSide[0].y).toBeCloseTo((sourceLeftSide[1].y - sourceLeftSide[0].y) * 2, 1)
+    expect(tallLeftSide[1].y - tallLeftSide[0].y).toBeCloseTo(150 * tallModuleScale, 1)
+    expect(tallBottomLeftCenterDelta.dx / tallBottomLeftCenterDelta.dy).toBeCloseTo(23 / 20, 1)
   })
 
   it('resolves border-box-13 colors from CSS variables and supports paused endpoint sparkles', async () => {

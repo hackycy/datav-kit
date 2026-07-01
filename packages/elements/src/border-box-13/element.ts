@@ -17,10 +17,15 @@ interface BorderBox13Rect {
 interface BorderBox13Geometry {
   width: number
   height: number
+  moduleScale: number
   mainPaths: string[]
   corePaths: string[]
   signalSparks: BorderBox13SignalSpark[]
 }
+
+type BorderBox13HorizontalAnchor = 'left' | 'center' | 'right'
+type BorderBox13VerticalAnchor = 'top' | 'middle' | 'bottom'
+type BorderBox13AnchorPoint = [number, number, BorderBox13HorizontalAnchor, BorderBox13VerticalAnchor]
 
 interface BorderBox13SignalSpark {
   x: number
@@ -148,7 +153,7 @@ export class BorderBox13Element extends DatavElement {
     const glowIntensity = Math.max(resolveNumberValue(this.glowIntensity, 1), 0)
     const geometry = this.createGeometry()
     const { width, height } = geometry
-    const contentPadding = createContentPadding(height)
+    const contentPadding = createContentPadding(geometry.moduleScale)
 
     return html`
       <div part="frame" class="frame">
@@ -270,46 +275,67 @@ export class BorderBox13Element extends DatavElement {
   private createGeometry(): BorderBox13Geometry {
     const width = Math.max(this.size.width, 1)
     const height = Math.max(this.size.height, 1)
-    const sourceX = (value: number): number => round((value - sourceViewBox.x) / sourceViewBox.width * width)
-    const sourceY = (value: number): number => round((value - sourceViewBox.y) / sourceViewBox.height * height)
-    const p = (x: number, y: number): string => `${round(x)} ${round(y)}`
-    const line = (fromX: number, fromY: number, toX: number, toY: number): string => `M ${p(sourceX(fromX), sourceY(fromY))} L ${p(sourceX(toX), sourceY(toY))}`
+    const moduleScale = Math.min(width / sourceViewBox.width, height / sourceViewBox.height)
+    const sourceRight = sourceViewBox.x + sourceViewBox.width
+    const sourceBottom = sourceViewBox.y + sourceViewBox.height
+    const sourceCenterX = sourceViewBox.x + sourceViewBox.width / 2
+    const sourceCenterY = sourceViewBox.y + sourceViewBox.height / 2
+    const sourceX = (value: number, anchor: BorderBox13HorizontalAnchor): number => {
+      if (anchor === 'right')
+        return round(width - (sourceRight - value) * moduleScale)
+
+      if (anchor === 'center')
+        return round(width / 2 + (value - sourceCenterX) * moduleScale)
+
+      return round((value - sourceViewBox.x) * moduleScale)
+    }
+    const sourceY = (value: number, anchor: BorderBox13VerticalAnchor): number => {
+      if (anchor === 'bottom')
+        return round(height - (sourceBottom - value) * moduleScale)
+
+      if (anchor === 'middle')
+        return round(height / 2 + (value - sourceCenterY) * moduleScale)
+
+      return round((value - sourceViewBox.y) * moduleScale)
+    }
+    const p = ([x, y, xAnchor, yAnchor]: BorderBox13AnchorPoint): string => `${sourceX(x, xAnchor)} ${sourceY(y, yAnchor)}`
+    const line = (from: BorderBox13AnchorPoint, to: BorderBox13AnchorPoint): string => `M ${p(from)} L ${p(to)}`
     const signalTiming = (index: number): Pick<BorderBox13SignalSpark, 'begin' | 'duration'> => ({
       begin: `${Number((index * 0.61).toFixed(2))}s`,
       duration: `${Number((5.2 + (index % 3) * 0.48).toFixed(2))}s`,
     })
-    const signalSpark = (x: number, y: number, index: number): BorderBox13SignalSpark => ({
-      x: sourceX(x),
-      y: sourceY(y),
+    const signalSpark = ([x, y, xAnchor, yAnchor]: BorderBox13AnchorPoint, index: number): BorderBox13SignalSpark => ({
+      x: sourceX(x, xAnchor),
+      y: sourceY(y, yAnchor),
       radius: 2.2,
       ...signalTiming(index),
     })
 
-    const topLeftCapPath = line(78, 95, 135, 95)
-    const topLeftLegPath = line(78, 95, 78, 160)
-    const topLeftChamferPath = line(135, 95, 152, 108)
-    const topLeftRailPath = line(152, 108, 585, 108)
-    const topLeftTailPath = line(78, 160, 78, 170)
-    const topRightCapPath = line(1785, 95, 1842, 95)
-    const topRightLegPath = line(1842, 95, 1842, 160)
-    const topRightChamferPath = line(1785, 95, 1768, 108)
-    const topRightRailPath = line(1335, 108, 1768, 108)
-    const topRightTailPath = line(1842, 160, 1842, 170)
-    const leftSideRailPath = line(78, 455, 78, 605)
-    const rightSideRailPath = line(1842, 455, 1842, 605)
-    const bottomLeftLegPath = line(78, 885, 78, 965)
-    const bottomLeftFootPath = line(78, 965, 138, 965)
-    const bottomLeftInnerPath = line(84, 902, 84, 950)
-    const bottomLeftChamferPath = line(138, 965, 158, 952)
-    const bottomLeftRailPath = line(158, 952, 865, 952)
-    const bottomLeftCenterPath = line(865, 952, 888, 972)
-    const bottomCenterBreakPath = line(910, 972, 1010, 972)
-    const bottomRightCenterPath = line(1032, 972, 1055, 952)
-    const bottomRightRailPath = line(1055, 952, 1762, 952)
-    const bottomRightChamferPath = line(1762, 952, 1782, 965)
-    const bottomRightFootPath = line(1782, 965, 1842, 965)
-    const bottomRightLegPath = line(1842, 965, 1842, 885)
-    const bottomRightInnerPath = line(1836, 902, 1836, 950)
+    const topLeftCapPath = line([78, 95, 'left', 'top'], [135, 95, 'left', 'top'])
+    const topLeftLegPath = line([78, 95, 'left', 'top'], [78, 160, 'left', 'top'])
+    const topLeftChamferPath = line([135, 95, 'left', 'top'], [152, 108, 'left', 'top'])
+    const topLeftRailPath = line([152, 108, 'left', 'top'], [585, 108, 'left', 'top'])
+    const topLeftTailPath = line([78, 160, 'left', 'top'], [78, 170, 'left', 'top'])
+    const topRightCapPath = line([1785, 95, 'right', 'top'], [1842, 95, 'right', 'top'])
+    const topRightLegPath = line([1842, 95, 'right', 'top'], [1842, 160, 'right', 'top'])
+    const topRightChamferPath = line([1785, 95, 'right', 'top'], [1768, 108, 'right', 'top'])
+    const topRightRailPath = line([1335, 108, 'right', 'top'], [1768, 108, 'right', 'top'])
+    const topRightTailPath = line([1842, 160, 'right', 'top'], [1842, 170, 'right', 'top'])
+    const leftSideRailPath = line([78, 455, 'left', 'middle'], [78, 605, 'left', 'middle'])
+    const rightSideRailPath = line([1842, 455, 'right', 'middle'], [1842, 605, 'right', 'middle'])
+    const bottomLeftLegPath = line([78, 885, 'left', 'bottom'], [78, 965, 'left', 'bottom'])
+    const bottomLeftFootPath = line([78, 965, 'left', 'bottom'], [138, 965, 'left', 'bottom'])
+    const bottomLeftInnerPath = line([84, 902, 'left', 'bottom'], [84, 950, 'left', 'bottom'])
+    const bottomLeftChamferPath = line([138, 965, 'left', 'bottom'], [158, 952, 'left', 'bottom'])
+    const bottomLeftRailPath = line([158, 952, 'left', 'bottom'], [865, 952, 'center', 'bottom'])
+    const bottomLeftCenterPath = line([865, 952, 'center', 'bottom'], [888, 972, 'center', 'bottom'])
+    const bottomCenterBreakPath = line([910, 972, 'center', 'bottom'], [1010, 972, 'center', 'bottom'])
+    const bottomRightCenterPath = line([1032, 972, 'center', 'bottom'], [1055, 952, 'center', 'bottom'])
+    const bottomRightRailPath = line([1055, 952, 'center', 'bottom'], [1762, 952, 'right', 'bottom'])
+    const bottomRightChamferPath = line([1762, 952, 'right', 'bottom'], [1782, 965, 'right', 'bottom'])
+    const bottomRightFootPath = line([1782, 965, 'right', 'bottom'], [1842, 965, 'right', 'bottom'])
+    const bottomRightLegPath = line([1842, 965, 'right', 'bottom'], [1842, 885, 'right', 'bottom'])
+    const bottomRightInnerPath = line([1836, 902, 'right', 'bottom'], [1836, 950, 'right', 'bottom'])
     const mainPaths = [
       topLeftCapPath,
       topLeftLegPath,
@@ -341,17 +367,18 @@ export class BorderBox13Element extends DatavElement {
     return {
       width,
       height,
+      moduleScale,
       mainPaths,
       corePaths: mainPaths,
       signalSparks: [
-        signalSpark(78, 95, 0),
-        signalSpark(1842, 95, 1),
-        signalSpark(78, 530, 2),
-        signalSpark(1842, 530, 3),
-        signalSpark(158, 952, 4),
-        signalSpark(1762, 952, 5),
-        signalSpark(888, 972, 6),
-        signalSpark(1010, 972, 7),
+        signalSpark([78, 95, 'left', 'top'], 0),
+        signalSpark([1842, 95, 'right', 'top'], 1),
+        signalSpark([78, 530, 'left', 'middle'], 2),
+        signalSpark([1842, 530, 'right', 'middle'], 3),
+        signalSpark([158, 952, 'left', 'bottom'], 4),
+        signalSpark([1762, 952, 'right', 'bottom'], 5),
+        signalSpark([888, 972, 'center', 'bottom'], 6),
+        signalSpark([1010, 972, 'center', 'bottom'], 7),
       ],
     }
   }
@@ -385,9 +412,9 @@ function round(value: number): number {
   return Number(value.toFixed(2))
 }
 
-function createContentPadding(hostHeight: number): string {
+function createContentPadding(moduleScale: number): string {
   const sourcePadding = contentRect.y - sourceViewBox.y
-  const value = Math.max(sourcePadding / sourceViewBox.height * hostHeight, 16)
+  const value = Math.max(sourcePadding * moduleScale, 16)
   const padding = `${round(value)}px`
 
   return `${padding} ${padding} ${padding} ${padding}`
