@@ -24,7 +24,6 @@
 | `secondary-color` | `string` | CSS variable fallback | Secondary cyan core rail color. |
 | `accent-color` | `string` | CSS variable fallback | Accent color for the endpoint sparkle dots. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and accent colors. |
-| `background-color` | `string` | CSS variable fallback | Background panel fill color. |
 | `glow-intensity` | `number` | `1` | Multiplier for the rail and endpoint sparkle glow strength. |
 | `animated` | `boolean` | `true` | Whether the border renders subtle fixed endpoint sparkle animations. |
 | `paused` | `boolean` | `false` | Disables endpoint sparkle motion while keeping the static frame visible. |
@@ -42,7 +41,6 @@
 | `--dvk-color-primary` | Primary rail fallback. |
 | `--dvk-color-secondary` | Secondary core rail fallback. |
 | `--dvk-color-accent` | Endpoint sparkle fallback. |
-| `--dvk-border-box-13-background` | Background panel fill fallback. |
 | `--dvk-border-box-padding` | Shared override for automatic content inset across border boxes. |
 | `--dvk-border-box-13-padding` | Component-specific override for automatic content inset. |
 

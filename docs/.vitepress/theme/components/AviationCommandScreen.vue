@@ -600,7 +600,6 @@ const flights = [
 }
 
 .aviation-border-panel {
-  --dvk-border-box-13-background: transparent;
   --dvk-border-box-13-padding: 24px 26px;
 }
 

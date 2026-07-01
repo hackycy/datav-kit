@@ -17,7 +17,6 @@ interface BorderBox13Rect {
 interface BorderBox13Geometry {
   width: number
   height: number
-  backgroundPanel: BorderBox13Rect
   mainPaths: string[]
   corePaths: string[]
   signalSparks: BorderBox13SignalSpark[]
@@ -116,9 +115,6 @@ export class BorderBox13Element extends DatavElement {
   @property()
   colors = ''
 
-  @property({ attribute: 'background-color' })
-  backgroundColor = ''
-
   @property({ type: Number, attribute: 'glow-intensity' })
   glowIntensity = 1
 
@@ -149,7 +145,6 @@ export class BorderBox13Element extends DatavElement {
 
   override render(): unknown {
     const [primary, secondary, accent] = this.resolveColors()
-    const backgroundColor = this.resolveBackgroundColor()
     const glowIntensity = Math.max(resolveNumberValue(this.glowIntensity, 1), 0)
     const geometry = this.createGeometry()
     const { width, height } = geometry
@@ -159,7 +154,6 @@ export class BorderBox13Element extends DatavElement {
       <div part="frame" class="frame">
         <svg part="graphic" class="panel" width=${String(width)} height=${String(height)} viewBox=${`0 0 ${width} ${height}`} aria-hidden="true">
           <defs>${this.renderDefs(primary, secondary, accent, glowIntensity)}</defs>
-          ${this.renderBackgroundPanel(geometry, backgroundColor)}
           ${this.renderMainRails(geometry, glowIntensity)}
           ${this.renderCoreRails(geometry, secondary)}
           ${this.renderSignalSparks(geometry, glowIntensity)}
@@ -201,12 +195,6 @@ export class BorderBox13Element extends DatavElement {
           <feMergeNode in="SourceGraphic"></feMergeNode>
         </feMerge>
       </filter>
-    `
-  }
-
-  private renderBackgroundPanel(geometry: BorderBox13Geometry, backgroundColor: string): unknown {
-    return svg`
-      <rect data-panel="background" x="0" y="0" width=${String(geometry.backgroundPanel.width)} height=${String(geometry.backgroundPanel.height)} fill=${backgroundColor}></rect>
     `
   }
 
@@ -353,12 +341,6 @@ export class BorderBox13Element extends DatavElement {
     return {
       width,
       height,
-      backgroundPanel: {
-        x: 0,
-        y: 0,
-        width,
-        height,
-      },
       mainPaths,
       corePaths: mainPaths,
       signalSparks: [
@@ -396,15 +378,6 @@ export class BorderBox13Element extends DatavElement {
     })
 
     return [primary, secondary, accent]
-  }
-
-  private resolveBackgroundColor(): string {
-    return resolveThemeValue({
-      explicit: this.backgroundColor,
-      cssVariable: '--dvk-border-box-13-background',
-      host: this,
-      fallback: '#020407',
-    })
   }
 }
 

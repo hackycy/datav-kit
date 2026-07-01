@@ -32,13 +32,6 @@ export const borderBox13Metadata = {
       attribute: true,
       description: 'Comma-separated primary, secondary, and accent colors.',
     },
-    backgroundColor: {
-      type: 'string',
-      default: '',
-      attribute: 'background-color',
-      cssVariable: '--dvk-border-box-13-background',
-      description: 'Background panel fill color.',
-    },
     glowIntensity: {
       type: 'number',
       default: 1,
