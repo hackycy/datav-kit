@@ -12,6 +12,7 @@ import { borderBox10Metadata } from './border-box-10/metadata'
 import { borderBox11Metadata } from './border-box-11/metadata'
 import { borderBox12Metadata } from './border-box-12/metadata'
 import { borderBox13Metadata } from './border-box-13/metadata'
+import { borderBox14Metadata } from './border-box-14/metadata'
 import { countToMetadata } from './count-to/metadata'
 import { decoration1Metadata } from './decoration-1/metadata'
 import { decoration2Metadata } from './decoration-2/metadata'
@@ -41,6 +42,7 @@ export const elementMetadata: ElementMetadata[] = [
   borderBox11Metadata,
   borderBox12Metadata,
   borderBox13Metadata,
+  borderBox14Metadata,
   decoration1Metadata,
   decoration2Metadata,
   decoration3Metadata,

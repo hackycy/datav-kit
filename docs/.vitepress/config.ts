@@ -64,6 +64,7 @@ export default defineConfig({
             { text: 'Border Box 11', link: '/components/borders/border-box-11' },
             { text: 'Border Box 12', link: '/components/borders/border-box-12' },
             { text: 'Border Box 13', link: '/components/borders/border-box-13' },
+            { text: 'Border Box 14', link: '/components/borders/border-box-14' },
           ],
         },
         {

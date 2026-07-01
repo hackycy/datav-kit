@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -81,6 +81,7 @@ describe('@datav-kit/elements', () => {
       'dvk-border-box-11',
       'dvk-border-box-12',
       'dvk-border-box-13',
+      'dvk-border-box-14',
       'dvk-decoration-1',
       'dvk-decoration-2',
       'dvk-decoration-3',
@@ -96,8 +97,8 @@ describe('@datav-kit/elements', () => {
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -137,6 +138,9 @@ describe('@datav-kit/elements', () => {
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-13')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-13')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-13')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-14')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-14')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-14')?.props).not.toHaveProperty('viewBox')
   })
 
   it('supports single-element registration helpers', () => {
@@ -154,6 +158,7 @@ describe('@datav-kit/elements', () => {
     expect(defineBorderBox11()).toBe(false)
     expect(defineBorderBox12()).toBe(false)
     expect(defineBorderBox13()).toBe(false)
+    expect(defineBorderBox14()).toBe(false)
     expect(defineDecoration1()).toBe(false)
     expect(defineDecoration2()).toBe(false)
     expect(defineDecoration3()).toBe(false)
@@ -842,6 +847,7 @@ describe('@datav-kit/elements', () => {
       ['dvk-border-box-11', '21.94px 19px 21.94px 18.5px'],
       ['dvk-border-box-12', '17.6px 19px 17.02px 19px'],
       ['dvk-border-box-13', '16px 16px 16px 16px'],
+      ['dvk-border-box-14', '14px 14px 14px 14px'],
     ] as const
 
     for (const [tagName, expectedPadding] of cases) {
@@ -1890,6 +1896,168 @@ describe('@datav-kit/elements', () => {
       'rgba(144, 224, 255, 0.08)',
     ])
     expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('maps border-box-14 public attributes and renders shallow signal-port corners', async () => {
+    register()
+
+    const element = document.createElement('dvk-border-box-14')
+    element.setAttribute('colors', '#112233,#445566,#ddeeff')
+    element.setAttribute('glow-intensity', '1.25')
+    element.setAttribute('width', '800')
+    element.setAttribute('height', '450')
+    element.setAttribute('view-box', '0 0 800 450')
+    document.body.append(element)
+
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+    emitResize(320, 180)
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+
+    const panel = element.shadowRoot?.querySelector('.panel')
+    const railLayer = element.shadowRoot?.querySelector('[data-layer="signal-port-rails"]')
+    const nodeLayer = element.shadowRoot?.querySelector('[data-layer="signal-port-nodes"]')
+    const rails = [...(element.shadowRoot?.querySelectorAll('[data-corner-rail]') ?? [])]
+    const nodes = [...(element.shadowRoot?.querySelectorAll('[data-signal-node]') ?? [])]
+    const pads = [...(element.shadowRoot?.querySelectorAll('[data-contact-pad]') ?? [])]
+    const stops = [...(element.shadowRoot?.querySelectorAll('stop') ?? [])]
+      .map(stop => stop.getAttribute('stop-color'))
+    const blur = element.shadowRoot?.querySelector('feGaussianBlur')
+    const animations = element.shadowRoot?.querySelectorAll('animate') ?? []
+
+    expect(element).toHaveProperty('colors', '#112233,#445566,#ddeeff')
+    expect(element).toHaveProperty('glowIntensity', 1.25)
+    expect(element).not.toHaveProperty('viewBox')
+    expect(panel?.getAttribute('width')).toBe('320')
+    expect(panel?.getAttribute('height')).toBe('180')
+    expect(panel?.getAttribute('viewBox')).toBe('0 0 320 180')
+    expect(rails).toHaveLength(48)
+    expect(nodes).toHaveLength(8)
+    expect(pads).toHaveLength(16)
+    expect(railLayer?.getAttribute('stroke')).toContain('dvk-border-box-14-rail-')
+    expect(railLayer?.getAttribute('stroke-width')).toBe('2.6')
+    expect(nodeLayer?.getAttribute('fill')).toContain('dvk-border-box-14-node-')
+    expect(rails.map(rail => rail.getAttribute('d')).slice(0, 12)).toEqual([
+      'M 8 80 L 8 59.2',
+      'M 8 59.2 L 8 43.2',
+      'M 8 43.2 L 8 12',
+      'M 8 12 L 12 12',
+      'M 12 12 L 12 8',
+      'M 12 8 L 80.32 8',
+      'M 80.32 8 L 96.32 8',
+      'M 96.32 8 L 138 8',
+      'M 8 32 L 12 32',
+      'M 8 62.4 L 12 62.4',
+      'M 32 8 L 32 12',
+      'M 62.4 8 L 62.4 12',
+    ])
+    expect(rails.map(rail => rail.getAttribute('d')).slice(-12)).toEqual([
+      'M 312 100 L 312 120.8',
+      'M 312 120.8 L 312 136.8',
+      'M 312 136.8 L 312 168',
+      'M 312 168 L 308 168',
+      'M 308 168 L 308 172',
+      'M 308 172 L 239.68 172',
+      'M 239.68 172 L 223.68 172',
+      'M 223.68 172 L 182 172',
+      'M 312 148 L 308 148',
+      'M 312 117.6 L 308 117.6',
+      'M 288 172 L 288 168',
+      'M 257.6 172 L 257.6 168',
+    ])
+    expect(nodes[0].getAttribute('cx')).toBe('88.32')
+    expect(nodes[0].getAttribute('cy')).toBe('8')
+    expect(nodes[0].getAttribute('r')).toBe('2.2')
+    expect(nodes[0].getAttribute('opacity')).toBe('0.38')
+    expect(pads.map(pad => [pad.getAttribute('cx'), pad.getAttribute('cy')]).slice(0, 4)).toEqual([
+      ['12', '32'],
+      ['12', '62.4'],
+      ['32', '12'],
+      ['62.4', '12'],
+    ])
+    expect(nodes[0].querySelector('animate[attributeName="opacity"]')?.getAttribute('values')).toBe('0.28;0.78;0.38;0.58;0.28')
+    expect(nodes[0].querySelector('animate[attributeName="r"]')?.getAttribute('values')).toBe('2.1;3.2;2.2;2.7;2.1')
+    expect(stops).toEqual([
+      'rgba(17, 34, 51, 0.96)',
+      '#445566',
+      'rgba(17, 34, 51, 0.96)',
+      '#ddeeff',
+      'rgba(221, 238, 255, 0.66)',
+      'rgba(221, 238, 255, 0.1)',
+    ])
+    expect(blur?.getAttribute('stdDeviation')).toBe('4')
+    expect(animations).toHaveLength(16)
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('14px 14px 14px 14px')
+  })
+
+  it('resolves border-box-14 colors from CSS variables and supports paused node pulses', async () => {
+    register()
+
+    const element = document.createElement('dvk-border-box-14') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#203040')
+    element.style.setProperty('--dvk-color-secondary', '#506070')
+    element.style.setProperty('--dvk-color-accent', '#90e0ff')
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(320, 180)
+    await element.updateComplete
+
+    const railLayer = element.shadowRoot?.querySelector('[data-layer="signal-port-rails"]')
+    const nodeLayer = element.shadowRoot?.querySelector('[data-layer="signal-port-nodes"]')
+    const stops = [...(element.shadowRoot?.querySelectorAll('stop') ?? [])]
+      .map(stop => stop.getAttribute('stop-color'))
+
+    expect(railLayer?.getAttribute('stroke')).toContain('dvk-border-box-14-rail-')
+    expect(railLayer?.getAttribute('stroke-width')).toBe('2.6')
+    expect(nodeLayer?.getAttribute('fill')).toContain('dvk-border-box-14-node-')
+    expect(stops).toEqual([
+      'rgba(32, 48, 64, 0.96)',
+      '#506070',
+      'rgba(32, 48, 64, 0.96)',
+      '#90e0ff',
+      'rgba(144, 224, 255, 0.66)',
+      'rgba(144, 224, 255, 0.1)',
+    ])
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('keeps border-box-14 corner reach shallow across aspect ratios', async () => {
+    register()
+
+    const element = document.createElement('dvk-border-box-14') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(320, 180)
+    await element.updateComplete
+
+    const sourceRails = [...(element.shadowRoot?.querySelectorAll('[data-corner-rail]') ?? [])]
+    const sourceFirstRail = sourceRails[0].getAttribute('d')
+
+    emitResize(640, 180)
+    await element.updateComplete
+
+    const wideRails = [...(element.shadowRoot?.querySelectorAll('[data-corner-rail]') ?? [])]
+
+    expect(wideRails).toHaveLength(48)
+    expect(wideRails[0].getAttribute('d')).toBe(sourceFirstRail)
+    expect(wideRails.at(-1)?.getAttribute('d')).toBe('M 577.6 172 L 577.6 168')
+
+    emitResize(320, 420)
+    await element.updateComplete
+
+    const tallRails = [...(element.shadowRoot?.querySelectorAll('[data-corner-rail]') ?? [])]
+
+    expect(tallRails[0].getAttribute('d')).toBe('M 8 138 L 8 96.32')
+    expect(tallRails.at(-1)?.getAttribute('d')).toBe('M 212.36 412 L 212.36 408')
+
+    emitResize(1, 1200)
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelectorAll('[data-corner-rail]')).toHaveLength(48)
+    expect(element.shadowRoot?.querySelectorAll('[data-signal-node]')).toHaveLength(8)
+    expect(element.shadowRoot?.querySelectorAll('[data-contact-pad]')).toHaveLength(16)
   })
 
   it('maps decoration-1 attributes and renders animated bars', async () => {
