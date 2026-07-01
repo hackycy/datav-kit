@@ -19,6 +19,7 @@ Use it before designing a new border, then read the nearest component source/doc
 | `dvk-border-box-9` | Rounded glowing corner frame | Rounded rectangle symmetry | Host border, inset shadow, two rounded corner line layers | Live host geometry | Host-derived content rectangle | Static | Avoid simple rounded glow panel for complex original borders. |
 | `dvk-border-box-10` | Rounded outline panel with corner glows | Full rounded symmetry | Primary rounded outline and four corner glow filters | Live host geometry | Host-derived content rectangle | Animated corner glow color | Avoid rounded outline plus four glow corners as a new complex topology. |
 | `dvk-border-box-11` | Restrained enterprise status rail frame on 1200 x 640 canvas | Lightly asymmetric top-left and right-rail emphasis | Thin clipped corners, left-biased top status rail, sparse right status nodes, bottom ticks | Source-coordinate fixed modules plus clean extension strips | Measured source content rectangle | Subtle rail-charge and node pulse | Avoid another low-density top-left status rail plus right node stack as the primary identity. |
+| `dvk-border-box-12` | Minimal electric-blue chamfered rectangle from 1672 x 941 reference SVG | Strong rectangular symmetry | Source-mapped beveled outline, clean lowered top rail, three slant blocks near each top corner, symmetric side midpoint folds | Live host geometry mapped from source coordinates | Source-mapped content rectangle | Subtle top-block blink | Avoid another near-fullscreen minimalist chamfer frame with paired top slant blocks and symmetric side folds. |
 
 ## Next Design Pressure
 
@@ -30,5 +31,6 @@ The next original border should change several high-level dimensions at once:
 - Avoid asymmetric split-bus trace layouts.
 - Avoid rounded DataV replica panels.
 - Avoid repeating the `dvk-border-box-11` enterprise status-rail lattice with top-left focal rail and right node stack.
+- Avoid repeating the `dvk-border-box-12` clean top-center chamfer rectangle with paired top slant blocks and symmetric side folds.
 - Prefer a border-native topology with generous content corners that is not armor-led, dock-led, label-led, or dependent on a left/top command spine.
 - Prefer source-coordinate fixed modules plus clean extension strips unless a live-size exception is documented.
