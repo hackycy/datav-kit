@@ -107,7 +107,7 @@ const flights = [
 
               <main class="dashboard-grid">
                 <aside class="left-column">
-                  <dvk-border-box-9 class="product-panel aviation-border-panel" colors="#235fa7,#6ed7e8" background-color="rgba(5, 18, 46, 0.26)">
+                  <dvk-border-box-13 class="product-panel aviation-border-panel" colors="#168cff,#6ed7e8,#52f0b5" glow-intensity="0.82">
                     <section class="panel-inner">
                       <header class="panel-heading">
                         <div>
@@ -133,9 +133,9 @@ const flights = [
                         </article>
                       </div>
                     </section>
-                  </dvk-border-box-9>
+                  </dvk-border-box-13>
 
-                  <dvk-border-box-9 class="product-panel aviation-border-panel" colors="#235fa7,#6ed7e8" background-color="rgba(5, 18, 46, 0.26)">
+                  <dvk-border-box-13 class="product-panel aviation-border-panel" colors="#168cff,#6ed7e8,#52f0b5" glow-intensity="0.82">
                     <section class="panel-inner">
                       <header class="panel-heading">
                         <div>
@@ -158,7 +158,7 @@ const flights = [
                         </article>
                       </div>
                     </section>
-                  </dvk-border-box-9>
+                  </dvk-border-box-13>
                 </aside>
 
                 <section class="center-column">
@@ -225,7 +225,7 @@ const flights = [
                     </section>
                   </dvk-border-box-11>
 
-                  <dvk-border-box-9 class="product-panel aviation-border-panel" colors="#235fa7,#6ed7e8" background-color="rgba(5, 18, 46, 0.26)">
+                  <dvk-border-box-13 class="product-panel aviation-border-panel" colors="#168cff,#6ed7e8,#52f0b5" glow-intensity="0.82">
                     <section class="panel-inner">
                       <header class="panel-heading">
                         <div>
@@ -243,11 +243,11 @@ const flights = [
                         </article>
                       </div>
                     </section>
-                  </dvk-border-box-9>
+                  </dvk-border-box-13>
                 </section>
 
                 <aside class="right-column">
-                  <dvk-border-box-9 class="product-panel aviation-border-panel" colors="#235fa7,#6ed7e8" background-color="rgba(5, 18, 46, 0.26)">
+                  <dvk-border-box-13 class="product-panel aviation-border-panel" colors="#168cff,#6ed7e8,#52f0b5" glow-intensity="0.82">
                     <section class="panel-inner">
                       <header class="panel-heading">
                         <div>
@@ -268,9 +268,9 @@ const flights = [
                         </article>
                       </div>
                     </section>
-                  </dvk-border-box-9>
+                  </dvk-border-box-13>
 
-                  <dvk-border-box-9 class="product-panel aviation-border-panel" colors="#235fa7,#6ed7e8" background-color="rgba(5, 18, 46, 0.26)">
+                  <dvk-border-box-13 class="product-panel aviation-border-panel" colors="#168cff,#6ed7e8,#52f0b5" glow-intensity="0.82">
                     <section class="panel-inner">
                       <header class="panel-heading">
                         <div>
@@ -292,9 +292,9 @@ const flights = [
                         </article>
                       </div>
                     </section>
-                  </dvk-border-box-9>
+                  </dvk-border-box-13>
 
-                  <dvk-border-box-9 class="product-panel aviation-border-panel" colors="#235fa7,#6ed7e8" background-color="rgba(5, 18, 46, 0.26)">
+                  <dvk-border-box-13 class="product-panel aviation-border-panel" colors="#168cff,#6ed7e8,#52f0b5" glow-intensity="0.82">
                     <section class="sync-panel">
                       <dvk-decoration-8 class="sync-ring" colors="#52f0b5,#2b7cff" dur="6">
                         <dvk-count-to class="sync-meter" end-val="98.4" decimals="1" suffix="%"></dvk-count-to>
@@ -304,7 +304,7 @@ const flights = [
                         <h3>跨场协同一致性</h3>
                       </div>
                     </section>
-                  </dvk-border-box-9>
+                  </dvk-border-box-13>
                 </aside>
               </main>
             </div>
@@ -600,7 +600,8 @@ const flights = [
 }
 
 .aviation-border-panel {
-  --dvk-border-box-9-padding: 24px 26px;
+  --dvk-border-box-13-background: transparent;
+  --dvk-border-box-13-padding: 24px 26px;
 }
 
 .panel-inner,

@@ -1808,6 +1808,14 @@ describe('@datav-kit/elements', () => {
     expect(flood).toBeNull()
     expect(animations).toHaveLength(16)
     expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('16px 16px 16px 16px')
+
+    element.setAttribute('background-color', 'transparent')
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+
+    const transparentBackgroundPanel = element.shadowRoot?.querySelector('[data-panel="background"]')
+
+    expect(element).toHaveProperty('backgroundColor', 'transparent')
+    expect(transparentBackgroundPanel?.getAttribute('fill')).toBe('transparent')
   })
 
   it('extends border-box-13 rails and keeps side marks centered', async () => {
@@ -1852,6 +1860,7 @@ describe('@datav-kit/elements', () => {
     element.style.setProperty('--dvk-color-primary', '#203040')
     element.style.setProperty('--dvk-color-secondary', '#506070')
     element.style.setProperty('--dvk-color-accent', '#90e0ff')
+    element.style.setProperty('--dvk-border-box-13-background', 'rgba(1, 2, 3, 0.28)')
     element.setAttribute('paused', '')
     document.body.append(element)
 
@@ -1862,11 +1871,13 @@ describe('@datav-kit/elements', () => {
     const primaryLayer = element.shadowRoot?.querySelector('[data-layer="primary-rails"]')
     const coreLayer = element.shadowRoot?.querySelector('[data-layer="core-rails"]')
     const signalSparkLayer = element.shadowRoot?.querySelector('[data-layer="signal-sparks"]')
+    const backgroundPanel = element.shadowRoot?.querySelector('[data-panel="background"]')
     const stops = [...(element.shadowRoot?.querySelectorAll('stop') ?? [])]
       .map(stop => stop.getAttribute('stop-color'))
 
     expect(primaryLayer?.getAttribute('stroke')).toContain('dvk-border-box-13-rail-')
     expect(primaryLayer?.querySelector('animate')).toBeNull()
+    expect(backgroundPanel?.getAttribute('fill')).toBe('rgba(1, 2, 3, 0.28)')
     expect(coreLayer?.getAttribute('stroke')).toBe('rgba(80, 96, 112, 0.94)')
     expect(signalSparkLayer?.getAttribute('fill')).toContain('dvk-border-box-13-signal-')
     expect(stops).toEqual([
