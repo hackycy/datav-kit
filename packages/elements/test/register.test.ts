@@ -343,6 +343,7 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     const svg = element.shadowRoot?.querySelector('svg')
+    const background = element.shadowRoot?.querySelector('[part="background"]')
     const grid = element.shadowRoot?.querySelector('[part="grid"]')
     const rings = [...element.shadowRoot?.querySelectorAll('[part~="ring"]') ?? []]
     const ticks = [...element.shadowRoot?.querySelectorAll('[part="tick"]') ?? []]
@@ -360,6 +361,7 @@ describe('@datav-kit/elements', () => {
     expect(svg?.getAttribute('height')).toBe('120')
     expect(svg?.getAttribute('viewBox')).toBe('0 0 120 120')
     expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet')
+    expect(background).toBeNull()
     expect(grid?.getAttribute('fill')).toContain('dvk-decoration-10-grid-')
     expect(rings).toHaveLength(18)
     expect(ticks).toHaveLength(120)

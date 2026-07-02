@@ -3,7 +3,7 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const decoration10Metadata = {
   tagName: 'dvk-decoration-10',
   className: 'Decoration10Element',
-  description: 'Dark futuristic HUD radar with concentric rings, precision ticks, a clockwise scanning beam, pulsing target points, sparse particles, and restrained cyan-blue neon glow.',
+  description: 'Futuristic HUD radar with concentric rings, precision ticks, a clockwise scanning beam, pulsing target points, sparse particles, and restrained cyan-blue neon glow.',
   props: {
     color: {
       type: 'string',
@@ -53,7 +53,6 @@ export const decoration10Metadata = {
   ],
   parts: [
     'graphic',
-    'background',
     'grid',
     'background-nodes',
     'background-node',

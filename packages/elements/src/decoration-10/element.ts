@@ -129,7 +129,6 @@ export class Decoration10Element extends DatavElement {
   private size = defaultSize
 
   private readonly instanceId = ++decoration10Id
-  private readonly backgroundGradientId = `dvk-decoration-10-background-${this.instanceId}`
   private readonly scanGradientId = `dvk-decoration-10-scan-${this.instanceId}`
   private readonly arcGradientId = `dvk-decoration-10-arc-${this.instanceId}`
   private readonly targetGradientId = `dvk-decoration-10-target-${this.instanceId}`
@@ -169,15 +168,6 @@ export class Decoration10Element extends DatavElement {
       >
         <defs>${this.renderDefs(primary, secondary, accent)}</defs>
 
-        <rect
-          part="background"
-          x="0"
-          y="0"
-          width="120"
-          height="120"
-          rx="0"
-          fill=${`url(#${this.backgroundGradientId})`}
-        ></rect>
         <rect
           part="grid"
           x="4"
@@ -364,13 +354,6 @@ export class Decoration10Element extends DatavElement {
 
   private renderDefs(primary: string, secondary: string, accent: string): unknown {
     return svg`
-      <radialGradient id=${this.backgroundGradientId} cx="50%" cy="50%" r="68%">
-        <stop offset="0%" stop-color="rgba(4, 24, 45, 0.92)"></stop>
-        <stop offset="46%" stop-color="rgba(2, 15, 34, 0.9)"></stop>
-        <stop offset="74%" stop-color="rgba(1, 8, 22, 0.96)"></stop>
-        <stop offset="100%" stop-color="rgba(0, 3, 12, 0.98)"></stop>
-      </radialGradient>
-
       <pattern id=${this.gridPatternId} width="8" height="8" patternUnits="userSpaceOnUse">
         <path d="M 8 0 H 0 V 8" fill="transparent" stroke=${withAlpha(secondary, 0.18)} stroke-width="0.28"></path>
         <path d="M 4 0 V 8 M 0 4 H 8" fill="transparent" stroke=${withAlpha(primary, 0.08)} stroke-width="0.18"></path>
