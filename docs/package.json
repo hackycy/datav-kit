@@ -13,5 +13,8 @@
     "echarts": "catalog:docs",
     "vitepress": "catalog:docs",
     "vue": "catalog:docs"
+  },
+  "devDependencies": {
+    "vitepress-plugin-llms": "catalog:cli"
   }
 }

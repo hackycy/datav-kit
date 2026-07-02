@@ -1,5 +1,6 @@
 import process from 'node:process'
 import { defineConfig } from 'vitepress'
+import llmstxt, { copyOrDownloadAsMarkdownButtons } from 'vitepress-plugin-llms'
 
 export default defineConfig({
   title: 'DataV Kit',
@@ -7,6 +8,7 @@ export default defineConfig({
   base: process.env.VITEPRESS_BASE || '/',
   cleanUrls: true,
   vite: {
+    plugins: [llmstxt()],
     server: {
       host: '0.0.0.0',
     },
@@ -105,6 +107,11 @@ export default defineConfig({
       compilerOptions: {
         isCustomElement: tag => tag.startsWith('dvk-'),
       },
+    },
+  },
+  markdown: {
+    config(md) {
+      md.use(copyOrDownloadAsMarkdownButtons)
     },
   },
 })
