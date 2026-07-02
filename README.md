@@ -29,6 +29,10 @@ pnpm docs:dev
 
 Architecture contracts live in [docs/reference/architecture-contracts.md](./docs/reference/architecture-contracts.md).
 
+## Inspire
+
+[datav-vue3](https://github.com/vaemusic/datav-vue3)
+
 ## License
 
 [MIT](./LICENSE) License © [hackycy](https://github.com/hackycy)
