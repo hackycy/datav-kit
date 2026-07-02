@@ -560,10 +560,21 @@ describe('@datav-kit/elements', () => {
 
     expect(tiles).toHaveLength(8)
     expect(extensions).toHaveLength(8)
-    expect(svgs).toHaveLength(16)
+    expect(svgs).toHaveLength(18)
     expect(svgs.some(svg => svg.getAttribute('viewBox') === '48 48 1504 804')).toBe(false)
     expect(tiles.some(tile => tile.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(false)
     expect(extensions.every(extension => extension.querySelector('svg')?.getAttribute('preserveAspectRatio') === 'none')).toBe(true)
+    expect(element.shadowRoot?.querySelector('[data-slice="bottom-leading"] circle[cx="540"][cy="760"]')).toBeNull()
+    expect(element.shadowRoot?.querySelector('[data-slice="bottom-trailing"] circle[cx="1060"][cy="760"]')).toBeNull()
+    expect([...(element.shadowRoot?.querySelectorAll('.node-overlay svg') ?? [])].map(svg => [
+      svg.getAttribute('viewBox'),
+      svg.getAttribute('preserveAspectRatio'),
+      svg.getAttribute('width'),
+      svg.getAttribute('height'),
+    ])).toEqual([
+      ['520 740 40 40', 'xMidYMid meet', '21.28', '21.28'],
+      ['1040 740 40 40', 'xMidYMid meet', '21.28', '21.28'],
+    ])
     expect(svgs.map(svg => svg.getAttribute('viewBox'))).toEqual(expect.arrayContaining([
       '48 48 477 210',
       '575 88 455 70',
@@ -581,6 +592,8 @@ describe('@datav-kit/elements', () => {
       '48 596 132 46',
       '1420 258 132 32',
       '1420 596 132 46',
+      '520 740 40 40',
+      '1040 740 40 40',
     ]))
     expect(tiles.some(tile => tile.getAttribute('style')?.includes('right: 0'))).toBe(true)
     expect(paths.some(path => path.getAttribute('d')?.includes('L1510 785'))).toBe(true)

@@ -41,6 +41,10 @@ const extensionSlices = {
   rightUpper: { x: 1420, y: 258, width: 132, height: 32 },
   rightLower: { x: 1420, y: 596, width: 132, height: 46 },
 } satisfies Record<string, typeof contentViewBox>
+const fixedNodeSlices = {
+  bottomLeading: { x: 520, y: 740, width: 40, height: 40, cx: 540, cy: 760 },
+  bottomTrailing: { x: 1040, y: 740, width: 40, height: 40, cx: 1060, cy: 760 },
+} satisfies Record<string, typeof contentViewBox & { cx: number, cy: number }>
 
 const outerPath = [
   'M90 115',
@@ -100,7 +104,8 @@ export class BorderBox2Element extends DatavElement {
     }
 
     .extension,
-    .tile {
+    .tile,
+    .node-overlay {
       position: absolute;
       display: block;
       overflow: hidden;
@@ -111,6 +116,10 @@ export class BorderBox2Element extends DatavElement {
     }
 
     .tile {
+      z-index: 1;
+    }
+
+    .node-overlay {
       z-index: 1;
     }
 
@@ -292,6 +301,7 @@ export class BorderBox2Element extends DatavElement {
           accent,
           glowIntensity,
         })}
+        ${this.renderBottomNodeOverlays(primary, secondary, accent, glowIntensity, metrics)}
       </div>
     `
   }
@@ -434,7 +444,82 @@ export class BorderBox2Element extends DatavElement {
           <defs>
             ${this.renderDefs(options.primary, options.secondary, options.accent, options.glowIntensity, ids)}
           </defs>
-          ${this.renderFrame(options.primary, options.secondary, options.accent, ids)}
+          ${this.renderFrame(options.primary, options.secondary, options.accent, ids, options.name)}
+        </svg>
+      </div>
+    `
+  }
+
+  private renderBottomNodeOverlays(
+    primary: string,
+    secondary: string,
+    accent: string,
+    glowIntensity: number,
+    metrics: ReturnType<BorderBox2Element['createSliceMetrics']>,
+  ): unknown {
+    return html`
+      ${this.renderFixedNodeOverlay({
+        name: 'bottom-leading-node',
+        rect: fixedNodeSlices.bottomLeading,
+        centerX: metrics.bottomLeftWidth + metrics.bottomLeadingWidth * 0.3,
+        centerY: metrics.bottomCenterTop + this.round((fixedNodeSlices.bottomLeading.cy - fixedSlices.bottomCenter.y) * metrics.scale),
+        size: this.scaleValue(fixedNodeSlices.bottomLeading.width, metrics.scale),
+        primary,
+        secondary,
+        accent,
+        glowIntensity,
+      })}
+      ${this.renderFixedNodeOverlay({
+        name: 'bottom-trailing-node',
+        rect: fixedNodeSlices.bottomTrailing,
+        centerX: metrics.bottomTrailingLeft + metrics.bottomTrailingWidth * (30 / 45),
+        centerY: metrics.bottomCenterTop + this.round((fixedNodeSlices.bottomTrailing.cy - fixedSlices.bottomCenter.y) * metrics.scale),
+        size: this.scaleValue(fixedNodeSlices.bottomTrailing.width, metrics.scale),
+        primary,
+        secondary,
+        accent,
+        glowIntensity,
+      })}
+    `
+  }
+
+  private renderFixedNodeOverlay(options: {
+    name: string
+    rect: typeof fixedNodeSlices.bottomLeading
+    centerX: number
+    centerY: number
+    size: number
+    primary: string
+    secondary: string
+    accent: string
+    glowIntensity: number
+  }): unknown {
+    if (options.size < 1)
+      return ''
+
+    const ids = this.createSvgIds(options.name)
+
+    return html`
+      <div
+        class="node-overlay"
+        data-slice=${options.name}
+        style=${`left: ${this.round(options.centerX)}px; top: ${this.round(options.centerY)}px; width: ${options.size}px; height: ${options.size}px; transform: translate(-50%, -50%)`}
+      >
+        <svg
+          part="graphic"
+          width=${String(options.size)}
+          height=${String(options.size)}
+          viewBox=${`${options.rect.x} ${options.rect.y} ${options.rect.width} ${options.rect.height}`}
+          preserveAspectRatio="xMidYMid meet"
+          aria-hidden="true"
+          shape-rendering="geometricPrecision"
+        >
+          <defs>
+            ${this.renderDefs(options.primary, options.secondary, options.accent, options.glowIntensity, ids)}
+          </defs>
+          <g filter=${`url(#${ids.strongGlowId})`}>
+            <circle cx=${String(options.rect.cx)} cy=${String(options.rect.cy)} r="4" fill=${options.primary}></circle>
+          </g>
         </svg>
       </div>
     `
@@ -493,7 +578,7 @@ export class BorderBox2Element extends DatavElement {
     `
   }
 
-  private renderFrame(primary: string, secondary: string, accent: string, ids: BorderBox2SvgIds): unknown {
+  private renderFrame(primary: string, secondary: string, accent: string, ids: BorderBox2SvgIds, sliceName: string): unknown {
     return svg`
       <path
         d=${outerPath}
@@ -554,18 +639,7 @@ export class BorderBox2Element extends DatavElement {
         <path d="M1462 466 L1446 466 L1454 480 Z" fill=${primary}></path>
       </g>
 
-      <g filter=${`url(#${ids.strongGlowId})`}>
-        <circle cx="500" cy="120" r="4" fill=${primary}></circle>
-        <circle cx="630" cy="140" r="4" fill=${primary}></circle>
-        <circle cx="970" cy="140" r="4" fill=${primary}></circle>
-        <circle cx="1100" cy="120" r="4" fill=${primary}></circle>
-        <circle cx="500" cy="780" r="4" fill=${primary}></circle>
-        <circle cx="540" cy="760" r="4" fill=${primary}></circle>
-        <circle cx="1060" cy="760" r="4" fill=${primary}></circle>
-        <circle cx="1100" cy="780" r="4" fill=${primary}></circle>
-        <rect x="75" y="380" width="8" height="34" rx="4" fill=${primary}></rect>
-        <rect x="1517" y="380" width="8" height="34" rx="4" fill=${primary}></rect>
-      </g>
+      ${this.renderGlowNodes(primary, ids, sliceName)}
 
       <g stroke=${secondary} stroke-width="1.5" opacity="0.75" fill="transparent">
         <path d="M300 118 H520"></path>
@@ -587,6 +661,29 @@ export class BorderBox2Element extends DatavElement {
     `
   }
 
+  private renderGlowNodes(primary: string, ids: BorderBox2SvgIds, sliceName: string): unknown {
+    const circles = [
+      { cx: 500, cy: 120 },
+      { cx: 630, cy: 140 },
+      { cx: 970, cy: 140 },
+      { cx: 1100, cy: 120 },
+      { cx: 500, cy: 780 },
+      { cx: 540, cy: 760, omittedFromSlice: 'bottom-leading' },
+      { cx: 1060, cy: 760, omittedFromSlice: 'bottom-trailing' },
+      { cx: 1100, cy: 780 },
+    ]
+
+    return svg`
+      <g filter=${`url(#${ids.strongGlowId})`}>
+        ${circles
+          .filter(circle => circle.omittedFromSlice !== sliceName)
+          .map(circle => svg`<circle cx=${String(circle.cx)} cy=${String(circle.cy)} r="4" fill=${primary}></circle>`)}
+        <rect x="75" y="380" width="8" height="34" rx="4" fill=${primary}></rect>
+        <rect x="1517" y="380" width="8" height="34" rx="4" fill=${primary}></rect>
+      </g>
+    `
+  }
+
   private createSliceMetrics(): {
     scale: number
     topLeftWidth: number
@@ -596,6 +693,7 @@ export class BorderBox2Element extends DatavElement {
     centerWidth: number
     centerHeight: number
     topCenterTop: number
+    bottomCenterTop: number
     bottomCenterBottom: number
     topLeadingWidth: number
     topTrailingLeft: number
@@ -634,6 +732,8 @@ export class BorderBox2Element extends DatavElement {
     const topTrailingLeft = centerLeft + centerWidth
     const sideDetailTop = topHeight + sideUpperHeight
     const sideLowerTop = sideDetailTop + sideDetailHeight
+    const centerHeight = this.scaleValue(fixedSlices.topCenter.height, scale)
+    const bottomCenterBottom = this.scaleValue(contentViewBox.y + contentViewBox.height - fixedSlices.bottomCenter.y - fixedSlices.bottomCenter.height, scale)
 
     return {
       scale,
@@ -642,9 +742,10 @@ export class BorderBox2Element extends DatavElement {
       topHeight,
       centerLeft,
       centerWidth,
-      centerHeight: this.scaleValue(fixedSlices.topCenter.height, scale),
+      centerHeight,
       topCenterTop: this.sourceY(fixedSlices.topCenter.y, scale),
-      bottomCenterBottom: this.scaleValue(contentViewBox.y + contentViewBox.height - fixedSlices.bottomCenter.y - fixedSlices.bottomCenter.height, scale),
+      bottomCenterTop: this.round(hostHeight - bottomCenterBottom - centerHeight),
+      bottomCenterBottom,
       topLeadingWidth,
       topTrailingLeft,
       topTrailingWidth,
