@@ -31,7 +31,7 @@ Architecture contracts live in [docs/reference/architecture-contracts.md](./docs
 
 ## Inspire
 
-[datav-vue3](https://github.com/vaemusic/datav-vue3)
+- [datav-vue3](https://github.com/vaemusic/datav-vue3)
 
 ## License
 
