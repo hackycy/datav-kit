@@ -1,3 +1,7 @@
+---
+description: Apply CSS variable themes to datav-kit components with cyber-blue, neon-magenta, and custom color presets.
+---
+
 # Theming
 
 Components work without a theme file, but optional themes provide CSS variables for consistent color and motion.

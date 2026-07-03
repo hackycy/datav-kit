@@ -1,3 +1,7 @@
+---
+description: Dynamic polygon panel with four fixed mirrored animated corner ornaments for dashboard containers.
+---
+
 # Border Box 8
 
 `dvk-border-box-8` recreates DataV Vue3 BorderBox1 as a dynamic polygon panel with four fixed mirrored 150 x 150 animated corner ornaments.

@@ -1,3 +1,7 @@
+---
+description: Orthogonal signal-port corner frame with circuit traces, pin contacts, and interface nodes.
+---
+
 # Border Box 14
 
 `dvk-border-box-14` renders a shallow orthogonal signal-port corner frame with equal-weight circuit traces, pin contacts, fixed interface nodes, and subtle node pulse motion for precise technology dashboards.

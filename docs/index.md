@@ -1,5 +1,6 @@
 ---
 title: DataV Kit
+description: Web Components library for data dashboard decoration with SSR-safe custom elements, border boxes, and theme presets.
 ---
 
 <div class="datav-home-hero">

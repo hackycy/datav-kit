@@ -1,3 +1,7 @@
+---
+description: Restrained futuristic blue frame with fixed corners, center modules, and responsive edge strips.
+---
+
 # Border Box 3
 
 `dvk-border-box-3` renders a restrained futuristic blue frame rebuilt from the 1672 x 941 SVG reference canvas. It keeps corners, center modules, side ticks, and node lights as fixed SVG slices, while clean edge strips extend on one axis to adapt freely to the host size.

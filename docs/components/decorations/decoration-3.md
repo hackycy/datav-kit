@@ -1,3 +1,7 @@
+---
+description: Animated angular line decoration with stroke dash animation for responsive dividers.
+---
+
 # Decoration 3
 
 `dvk-decoration-3` recreates the animated angular line decoration from DataV Vue3 `Decoration5` as a framework-agnostic Web Component. It computes the same responsive polyline points from the host width and height, then applies the original stroke dash animation pattern.

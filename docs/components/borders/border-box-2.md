@@ -1,3 +1,7 @@
+---
+description: Layered neon cyber frame with corners, energy bars, tick marks, and circular nodes for HUD layouts.
+---
+
 # Border Box 2
 
 `dvk-border-box-2` renders a layered neon cyber frame based on a 1600 x 900 SVG reference canvas. It keeps corners, center energy bars, side tick marks, and circular nodes fixed while stretching only clean line segments for free-size layouts.

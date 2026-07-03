@@ -1,3 +1,7 @@
+---
+description: Responsive diamond panel with corner ornaments, main frame, and side accent lines for content display.
+---
+
 # Decoration 4
 
 `dvk-decoration-4` recreates the responsive diamond panel from DataV Vue3 `Decoration11` as a framework-agnostic Web Component. It draws the four corner ornaments, main diamond frame, and side accent lines from the host width and height, then centers slotted content over the SVG.

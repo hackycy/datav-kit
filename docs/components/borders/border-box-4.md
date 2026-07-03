@@ -1,3 +1,7 @@
+---
+description: Dense neon HUD frame with ornate corners, detail modules, and source-clipped edge sections.
+---
+
 # Border Box 4
 
 `dvk-border-box-4` renders a dense neon HUD frame adapted from the provided 1672 x 941 vector SVG material. It keeps the original ornate corners and detail modules as inline SVG linework, then extends the edge sections from source-clipped straight strips so the border follows normal CSS layout sizes without stretching the whole SVG.

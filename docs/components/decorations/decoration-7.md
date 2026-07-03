@@ -1,3 +1,7 @@
+---
+description: Crystal-glass ribbon ornament with gradients, refraction, particles, and flowing light trails for data screens.
+---
+
 # Decoration 7
 
 `dvk-decoration-7` is a restrained enterprise data-screen ornament built around a translucent crystal-glass ribbon. It uses soft cyan/ice-blue gradients, purple-blue refraction, sparse particles, and thin flowing light trails. The `reverse` attribute mirrors the complete glass geometry so paired instances can form a balanced title bar or module divider.

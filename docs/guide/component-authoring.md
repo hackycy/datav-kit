@@ -1,3 +1,7 @@
+---
+description: Create new datav-kit elements with proper file layout, metadata, registration, and testing conventions.
+---
+
 # Component Authoring
 
 Every new element should follow the same shape so docs, metadata, registration, and adapters can be generated consistently later.

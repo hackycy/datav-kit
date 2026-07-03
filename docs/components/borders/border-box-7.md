@@ -1,3 +1,7 @@
+---
+description: Chamfered glowing panel with fixed mirrored corner ornaments and optional background fill.
+---
+
 # Border Box 7
 
 `dvk-border-box-7` recreates DataV BorderBox10 as a chamfered glowing panel. The main polygon is redrawn from the live host size, while the four source corner ornaments stay fixed and mirrored from the original 150 x 150 SVG module.

@@ -1,3 +1,7 @@
+---
+description: Animated vertical bar decoration component for data dashboard dividers and accents.
+---
+
 # Decoration 1
 
 `dvk-decoration-1` is the first decoration component in datav-kit. It recreates the animated vertical bar effect from DataV Vue3 `Decoration6` as a framework-agnostic Web Component.

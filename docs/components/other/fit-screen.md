@@ -1,3 +1,7 @@
+---
+description: Responsive scaling container that adapts design canvases to viewport or host container with multiple scaling modes.
+---
+
 # Fit Screen
 
 `dvk-fit-screen` scales a fixed design canvas into either the browser viewport or its host container.

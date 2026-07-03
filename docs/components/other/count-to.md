@@ -1,3 +1,7 @@
+---
+description: Animated numeric metric display with prefix, suffix, thousands separator, and decimal formatting options.
+---
+
 # Count To
 
 `dvk-count-to` renders an animated numeric metric with optional prefix, suffix, thousands separator, and decimal formatting.

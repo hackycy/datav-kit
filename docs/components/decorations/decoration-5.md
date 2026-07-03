@@ -1,3 +1,7 @@
+---
+description: Angled line decoration with three polylines and horizontal mirror option for dashboard layouts.
+---
+
 # Decoration 5
 
 `dvk-decoration-5` recreates the angled line decoration from DataV Vue3 `Decoration8` as a framework-agnostic Web Component. It reads the host width and height, draws the original three SVG polylines, and can mirror the line direction with `reverse`.

@@ -1,3 +1,7 @@
+---
+description: Integrate datav-kit Web Components with Vue, React, Vite, and webpack frameworks using custom element configuration.
+---
+
 # Framework Integration
 
 `datav-kit` ships standard Web Components. Framework integration usually has two parts:

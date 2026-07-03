@@ -1,3 +1,7 @@
+---
+description: Animated rectangular SVG border component with moving highlight for data dashboard panels.
+---
+
 # Border Box 1
 
 `dvk-border-box-1` is the first numbered border component. It renders a rectangular SVG border with a moving highlight around the edge.

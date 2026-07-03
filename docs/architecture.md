@@ -1,3 +1,7 @@
+---
+description: Technical architecture of datav-kit covering package responsibilities, rendering models, theming, SSR, and design decisions.
+---
+
 # datav-kit 技术架构
 
 ## 1. 文档边界

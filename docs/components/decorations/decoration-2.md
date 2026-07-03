@@ -1,3 +1,7 @@
+---
+description: Two-row dotted light decoration with animated point fill for cyber dashboard styling.
+---
+
 # Decoration 2
 
 `dvk-decoration-2` recreates the two-row dotted light decoration from DataV Vue3 `Decoration3` as a framework-agnostic Web Component. It uses a 300 x 35 SVG reference grid and scales to the host element.

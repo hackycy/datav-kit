@@ -1,3 +1,7 @@
+---
+description: Rounded outline panel with animated corner glows and responsive content padding for dashboards.
+---
+
 # Border Box 10
 
 `dvk-border-box-10` recreates DataV Vue3 BorderBox12 as a rounded outline panel with four animated corner glows and responsive content padding from the live host size.

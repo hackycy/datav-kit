@@ -1,3 +1,7 @@
+---
+description: Minimal electric-blue HUD frame with chamfered corners, title rail, and symmetric side folds.
+---
+
 # Border Box 12
 
 `dvk-border-box-12` is a minimal electric-blue HUD frame with sharp chamfered corners, a clean top title rail, subtle top slant blocks, and symmetric side folds.

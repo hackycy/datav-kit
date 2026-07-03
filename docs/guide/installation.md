@@ -1,3 +1,7 @@
+---
+description: Install datav-kit packages, register Web Components, and configure element imports for data screen projects.
+---
+
 # Installation
 
 Install the element package and optional theme package:

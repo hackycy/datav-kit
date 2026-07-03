@@ -1,3 +1,7 @@
+---
+description: Layered electric-blue HUD frame with five fixed frame layers and responsive background adaptation.
+---
+
 # Border Box 5
 
 `dvk-border-box-5` renders a layered electric-blue HUD frame adapted from the provided 1672 x 941 vector SVG material. It preserves the five visible frame layers as inline SVG paths while leaving the background to the host application.

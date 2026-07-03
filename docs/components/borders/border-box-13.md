@@ -1,3 +1,7 @@
+---
+description: Sparse electric-blue split rail frame with corner modules, carrier spine, and endpoint sparkles.
+---
+
 # Border Box 13
 
 `dvk-border-box-13` renders a sparse electric-blue split rail frame with fixed source-proportioned corner modules, a bottom carrier spine that extends through its simple middle rails, and subtle endpoint sparkles at a few existing rail terminals.

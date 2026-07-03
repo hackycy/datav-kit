@@ -1,3 +1,7 @@
+---
+description: Glowing panel with host border, inset shadow, and rounded corner linework for data screens.
+---
+
 # Border Box 9
 
 `dvk-border-box-9` recreates DataV Vue3 BorderBox7 as a glowing panel with a 1px host border, inset shadow, and two layers of rounded corner linework drawn from the live host size.

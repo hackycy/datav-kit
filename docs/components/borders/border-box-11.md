@@ -1,3 +1,7 @@
+---
+description: Enterprise data-platform frame with status rails, live nodes, and rail-charge motion for operations panels.
+---
+
 # Border Box 11
 
 `dvk-border-box-11` is a restrained enterprise data-platform frame with status rails, sparse live nodes, and subtle rail-charge motion for operations panels.

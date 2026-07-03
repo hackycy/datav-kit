@@ -1,3 +1,7 @@
+---
+description: Minimal cyber HUD rail with thin strokes, segmented breaks, angled cuts, and light nodes for enterprise screens.
+---
+
 # Decoration 6
 
 `dvk-decoration-6` is a minimal cyber HUD rail for enterprise data screens. It uses thin cyan and electric-blue SVG strokes, restrained glow, segmented breaks, angled cuts, and small light nodes without forming a frame. The `reverse` attribute mirrors the full geometry so paired instances can create a symmetric title or divider composition.

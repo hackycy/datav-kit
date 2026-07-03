@@ -1,3 +1,7 @@
+---
+description: Rotating HUD energy ring with arcs, tick marks, neon blocks, and dark hollow center for metrics display.
+---
+
 # Decoration 8
 
 `dvk-decoration-8` is a futuristic rotating HUD energy ring for dark data-screen scenes. It renders non-overlapping long-short outer arcs, a thinner offset trace ring that crosses them only during parallax motion, precision tick marks, dotted micro indicators, a ring of neon square energy blocks, and a dark hollow center. A default slot sits above the SVG so the decoration can frame a compact metric, icon, or status label.

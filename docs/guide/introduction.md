@@ -1,3 +1,7 @@
+---
+description: Overview of datav-kit architecture, package structure, and Web Components approach for data dashboard development.
+---
+
 # Introduction
 
 `datav-kit` uses Web Components as the runtime boundary. Components can be used from plain HTML and, later, wrapped by framework adapters without rewriting the visual implementation.

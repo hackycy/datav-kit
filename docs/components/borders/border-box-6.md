@@ -1,3 +1,7 @@
+---
+description: High-precision cyan HUD frame with traced source layers, marker stacks, and bottom hatch details.
+---
+
 # Border Box 6
 
 `dvk-border-box-6` renders a high-precision cyan HUD frame recreated from the supplied 1672 x 941 SVG. It keeps the traced source layers as inline SVG paths, clips fixed detail modules from the original coordinates, and extends only clean edge strips so the frame can resize without stretching the whole artwork.

@@ -1,3 +1,7 @@
+---
+description: Lightweight responsive panel with corner dots, corner ticks, straight edge rails, and optional background.
+---
+
 # Border Box 15
 
 `dvk-border-box-15` recreates DataV Vue3 BorderBox6 as a lightweight responsive panel with four fixed corner dots, short corner ticks, straight edge rails, and an optional background fill.

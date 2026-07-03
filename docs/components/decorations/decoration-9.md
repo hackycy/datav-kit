@@ -1,3 +1,7 @@
+---
+description: Minimal enterprise HUD rail with guide lines, corner guides, and angled parallelogram modules for symmetry.
+---
+
 # Decoration 9
 
 `dvk-decoration-9` is a minimal enterprise HUD rail for dark data-screen surfaces. It uses separated horizontal guide lines for extension, short angled corner guides for irregular rhythm, then places two independent angled parallelogram modules as restrained visual anchors. The geometry never stitches the blocks into the lines, so `reverse` can be used to build clean left-right symmetry.

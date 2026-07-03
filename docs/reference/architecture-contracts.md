@@ -1,3 +1,7 @@
+---
+description: Implementation contracts for datav-kit metadata, events, SSR, props, themes, and decorative container content areas.
+---
+
 # Architecture Contracts
 
 This file records the implementation contracts that package code must follow.

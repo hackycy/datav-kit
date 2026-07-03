@@ -1,3 +1,7 @@
+---
+description: Enterprise radar HUD with concentric rings, scanning beam, target signals, and technical grid overlay.
+---
+
 # Decoration 10
 
 `dvk-decoration-10` is a restrained enterprise radar HUD for dark data-center screens. It renders a deep black-blue technical background, low-opacity grid and circuit traces, concentric radar rings, radial guides, precision ticks, segmented light arcs, sparse particles, target signal points, and a translucent clockwise scanning beam with a bright leading edge. A default slot sits above the SVG so the radar can frame a compact metric, status badge, or icon.
