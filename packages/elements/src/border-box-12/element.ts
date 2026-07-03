@@ -228,7 +228,7 @@ export class BorderBox12Element extends DatavElement {
         data-rail="outer-shadow"
         fill="none"
         stroke=${dimPrimary}
-        stroke-width="4.7"
+        stroke-width="2.35"
         stroke-linejoin="miter"
         d=${geometry.outerPath}
       ></path>
@@ -236,7 +236,7 @@ export class BorderBox12Element extends DatavElement {
         data-rail="outer"
         fill="none"
         stroke=${`url(#${this.railGradientId})`}
-        stroke-width="2"
+        stroke-width="1"
         stroke-linecap="square"
         stroke-linejoin="miter"
         filter=${filter}
@@ -246,7 +246,7 @@ export class BorderBox12Element extends DatavElement {
         data-rail="inner"
         fill="none"
         stroke=${secondaryStroke}
-        stroke-width="1.4"
+        stroke-width="0.7"
         stroke-linejoin="miter"
         d=${geometry.innerPath}
       ></path>
@@ -322,7 +322,7 @@ export class BorderBox12Element extends DatavElement {
         data-rail="bottom-reinforcement"
         fill="none"
         stroke=${withAlpha(secondary, 0.58)}
-        stroke-width="1.4"
+        stroke-width="0.7"
         opacity="0.55"
         filter=${glowIntensity > 0 ? `url(#${this.glowId})` : ''}
         d=${geometry.bottomReinforcementPath}
