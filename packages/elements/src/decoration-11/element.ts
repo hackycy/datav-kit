@@ -23,53 +23,27 @@ const defaultSize: Decoration11Size = {
 const baseWidth = 160
 const baseHeight = 120
 const perspectiveScaleY = 0.42
-const baseLayerY = 70.8
-const lowerLayerY = 68.2
-const middleLayerY = 65
-const innerLayerY = 61.8
-const particleLayerY = 69.8
-const outerTickCount = 132
-const innerTickCount = 54
-const coreTickCount = 36
-const blockCount = 88
-const particleCount = 86
-const bridgeAngles = [42, 116, 214, 318]
-const outerTickIndexes = Array.from({ length: outerTickCount }, (_, index) => index)
-const innerTickIndexes = Array.from({ length: innerTickCount }, (_, index) => index)
-const coreTickIndexes = Array.from({ length: coreTickCount }, (_, index) => index)
-const blockIndexes = Array.from({ length: blockCount }, (_, index) => index)
-  .filter(index => index < 9 || index > 39)
-const particleIndexes = Array.from({ length: particleCount }, (_, index) => index)
-const outerArcSegments: ArcSegment[] = [
-  { start: -84, end: -18, radius: 61.8, width: 3.4, opacity: 0.92, accent: 'white' },
-  { start: 6, end: 62, radius: 61.8, width: 4.2, opacity: 0.98, accent: 'primary' },
-  { start: 82, end: 116, radius: 61.8, width: 1.6, opacity: 0.45, accent: 'secondary' },
-  { start: 148, end: 222, radius: 61.8, width: 3.8, opacity: 0.9, accent: 'primary' },
-  { start: 246, end: 294, radius: 61.8, width: 2.4, opacity: 0.7, accent: 'secondary' },
-  { start: 312, end: 348, radius: 61.8, width: 2, opacity: 0.58, accent: 'white' },
+const particleLayerY = 70.6
+const thinGlowLayerY = 70.6
+const thickGlowLayerY = 68.2
+const scaleLayerY = 65.8
+const segmentLayerY = 63.4
+const innerLayerY = 60.8
+const audioBarCount = 144
+const scaleTickCount = 96
+const segmentCount = 32
+const bridgeAngles = [34, 128, 218, 318]
+const indicatorAngles = [28, 132, 222, 314]
+const audioBarIndexes = Array.from({ length: audioBarCount }, (_, index) => index)
+const scaleTickIndexes = Array.from({ length: scaleTickCount }, (_, index) => index)
+const segmentIndexes = Array.from({ length: segmentCount }, (_, index) => index)
+const thinArcSegments: ArcSegment[] = [
+  { start: -74, end: -28, radius: 63.2, width: 0.72, opacity: 0.74, accent: 'white' },
+  { start: 8, end: 54, radius: 63.2, width: 0.78, opacity: 0.66, accent: 'primary' },
+  { start: 94, end: 132, radius: 63.2, width: 0.58, opacity: 0.44, accent: 'secondary' },
+  { start: 184, end: 248, radius: 63.2, width: 0.72, opacity: 0.58, accent: 'primary' },
+  { start: 292, end: 338, radius: 63.2, width: 0.6, opacity: 0.44, accent: 'white' },
 ]
-const lowerArcSegments: ArcSegment[] = [
-  { start: -58, end: -12, radius: 51.6, width: 2, opacity: 0.56, accent: 'secondary' },
-  { start: 28, end: 76, radius: 51.6, width: 2.2, opacity: 0.62, accent: 'primary' },
-  { start: 118, end: 176, radius: 51.6, width: 1.7, opacity: 0.45, accent: 'secondary' },
-  { start: 216, end: 276, radius: 51.6, width: 2.2, opacity: 0.66, accent: 'primary' },
-  { start: 304, end: 336, radius: 51.6, width: 1.5, opacity: 0.42, accent: 'white' },
-]
-const middleArcSegments: ArcSegment[] = [
-  { start: -46, end: 8, radius: 42.8, width: 1.45, opacity: 0.78, accent: 'white' },
-  { start: 32, end: 72, radius: 42.8, width: 2.1, opacity: 0.78, accent: 'gold' },
-  { start: 114, end: 164, radius: 42.8, width: 1.25, opacity: 0.48, accent: 'primary' },
-  { start: 206, end: 252, radius: 42.8, width: 2.05, opacity: 0.72, accent: 'gold' },
-  { start: 286, end: 328, radius: 42.8, width: 1.3, opacity: 0.52, accent: 'white' },
-]
-const innerOrbitSegments: ArcSegment[] = [
-  { start: -64, end: -22, radius: 27.8, width: 1.2, opacity: 0.58, accent: 'primary' },
-  { start: 24, end: 74, radius: 27.8, width: 1.55, opacity: 0.82, accent: 'white' },
-  { start: 124, end: 174, radius: 27.8, width: 1.1, opacity: 0.52, accent: 'primary' },
-  { start: 214, end: 274, radius: 27.8, width: 1.55, opacity: 0.84, accent: 'gold' },
-  { start: 310, end: 340, radius: 27.8, width: 0.95, opacity: 0.5, accent: 'secondary' },
-]
-
 let decoration11Id = 0
 
 export class Decoration11Element extends DatavElement {
@@ -99,7 +73,8 @@ export class Decoration11Element extends DatavElement {
     circle,
     line,
     rect,
-    ellipse {
+    ellipse,
+    polygon {
       vector-effect: non-scaling-stroke;
     }
 
@@ -127,12 +102,9 @@ export class Decoration11Element extends DatavElement {
   private size = defaultSize
 
   private readonly instanceId = ++decoration11Id
-  private readonly groundGradientId = `dvk-decoration-11-ground-${this.instanceId}`
-  private readonly voidGradientId = `dvk-decoration-11-void-${this.instanceId}`
   private readonly ringGradientId = `dvk-decoration-11-ring-${this.instanceId}`
-  private readonly goldGradientId = `dvk-decoration-11-gold-${this.instanceId}`
-  private readonly blockGradientId = `dvk-decoration-11-block-${this.instanceId}`
-  private readonly particleGradientId = `dvk-decoration-11-particle-${this.instanceId}`
+  private readonly accentGradientId = `dvk-decoration-11-accent-${this.instanceId}`
+  private readonly segmentGradientId = `dvk-decoration-11-segment-${this.instanceId}`
   private readonly glowFilterId = `dvk-decoration-11-glow-${this.instanceId}`
   private readonly strongGlowFilterId = `dvk-decoration-11-strong-glow-${this.instanceId}`
   private readonly softGlowFilterId = `dvk-decoration-11-soft-glow-${this.instanceId}`
@@ -169,37 +141,22 @@ export class Decoration11Element extends DatavElement {
       >
         <defs>${this.renderDefs(primary, secondary, accent)}</defs>
 
-        <ellipse
-          part="ground-glow"
-          cx="80"
-          cy="83"
-          rx="68"
-          ry="18"
-          fill=${`url(#${this.groundGradientId})`}
-          opacity="0.76"
-          filter=${`url(#${this.softGlowFilterId})`}
-        ></ellipse>
-
-        <g part="lift-shadow" filter=${`url(#${this.softGlowFilterId})`}>
-          <ellipse cx="80" cy="73.4" rx="58" ry="10.8" fill="transparent" stroke="rgba(1, 8, 28, 0.5)" stroke-width="3.2" stroke-opacity="0.34"></ellipse>
-          <ellipse cx="80" cy="69.2" rx="47" ry="7.8" fill="transparent" stroke=${withAlpha(primary, 0.18)} stroke-width="1.1" stroke-opacity="0.38"></ellipse>
-        </g>
-
-        <g part="vertical-links" opacity="0.16" filter=${`url(#${this.softGlowFilterId})`}>
+        <g part="vertical-links" opacity="0.1" filter=${`url(#${this.softGlowFilterId})`}>
           ${bridgeAngles.map((angle, index) => this.renderBridge(angle, index, primary, secondary))}
         </g>
 
-        ${this.renderBaseLayer(primary, secondary, accent, duration, showAnimation)}
-        ${this.renderLowerLayer(primary, secondary, accent, duration, showAnimation)}
-        ${this.renderMiddleLayer(primary, secondary, accent, duration, showAnimation)}
+        ${this.renderAudioBars(primary, secondary, accent, duration, showAnimation)}
+        ${this.renderThinGlowLayer(primary, secondary, duration, showAnimation)}
+        ${this.renderThickGlowLayer()}
+        ${this.renderScaleLayer(primary, secondary)}
+        ${this.renderSegmentLayer(primary, secondary, accent, duration, showAnimation)}
         ${this.renderInnerLayer(primary, secondary, accent, duration, showAnimation)}
-        ${this.renderParticles(primary, accent, duration, showAnimation)}
       </svg>
 
     `
   }
 
-  private renderBaseLayer(
+  private renderAudioBars(
     primary: string,
     secondary: string,
     accent: string,
@@ -207,56 +164,114 @@ export class Decoration11Element extends DatavElement {
     showAnimation: boolean,
   ): unknown {
     return svg`
-      <g part="lift-layer base-layer" transform="translate(80 ${baseLayerY}) scale(1 ${perspectiveScaleY})">
-        <circle part="ring guide-ring" cx="0" cy="0" r="58.5" fill="transparent" stroke=${withAlpha(secondary, 0.22)} stroke-width="4.4"></circle>
-        <circle part="ring guide-ring" cx="0" cy="0" r="54.2" fill="transparent" stroke=${withAlpha(primary, 0.28)} stroke-width="0.7"></circle>
-        <circle part="ring guide-ring" cx="0" cy="0" r="46.8" fill="transparent" stroke=${withAlpha(secondary, 0.16)} stroke-width="0.58" stroke-dasharray="2.6, 3.4"></circle>
-
-        <g part="front-glow-ring" filter=${`url(#${this.strongGlowFilterId})`}>
-          <path part="ring front-glow" d=${arcPath(0, 0, 63.4, 74, 258)} fill="transparent" stroke="#f4fdff" stroke-width="3.1" stroke-linecap="round" stroke-opacity="0.88"></path>
-          <path part="ring front-glow" d=${arcPath(0, 0, 60.5, 86, 238)} fill="transparent" stroke=${primary} stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.72"></path>
-        </g>
-
-        <g part="bright-ring outer-bright" filter=${`url(#${this.strongGlowFilterId})`}>
-          ${showAnimation
-            ? svg`
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                values="0 0 0;360 0 0"
-                dur=${`${duration * 1.14}s`}
-                repeatCount="indefinite"
-              ></animateTransform>
-            `
-            : null}
-          ${outerArcSegments.map(segment => this.renderArc(segment, primary, secondary, 'ring bright-ring'))}
-        </g>
-
-        <g part="sweep-ring outer-sweep" filter=${`url(#${this.glowFilterId})`} opacity="0.74">
+      <g part="lift-layer particle-layer particles audio-bars" transform=${layerTransform(particleLayerY)} filter=${`url(#${this.glowFilterId})`}>
+        <g part="audio-bar-ring">
           ${showAnimation
             ? svg`
               <animateTransform
                 attributeName="transform"
                 type="rotate"
                 values="0 0 0;-360 0 0"
-                dur=${`${duration * 0.72}s`}
+                dur=${`${duration * 2.1}s`}
                 repeatCount="indefinite"
               ></animateTransform>
             `
             : null}
-          <path part="ring sweep-arc" d=${arcPath(0, 0, 56.2, -22, 28)} fill="transparent" stroke=${primary} stroke-width="1.25" stroke-linecap="round" stroke-opacity="0.78"></path>
-          <path part="ring sweep-arc" d=${arcPath(0, 0, 49.4, 96, 148)} fill="transparent" stroke=${secondary} stroke-width="0.92" stroke-linecap="round" stroke-opacity="0.52"></path>
-          <path part="ring sweep-arc" d=${arcPath(0, 0, 38.8, 242, 304)} fill="transparent" stroke=${accent} stroke-width="0.9" stroke-linecap="round" stroke-opacity="0.5"></path>
-        </g>
-
-        <g part="ticks outer-ticks">
-          ${outerTickIndexes.map(index => this.renderOuterTick(index, primary, secondary))}
+          <circle part="ring guide-ring particle-guide" cx="0" cy="0" r="63.2" fill="transparent" stroke=${withAlpha(secondary, 0.18)} stroke-width="0.58"></circle>
+          ${audioBarIndexes.map(index => this.renderAudioBar(index, primary, secondary, accent))}
         </g>
       </g>
     `
   }
 
-  private renderLowerLayer(
+  private renderThinGlowLayer(
+    primary: string,
+    secondary: string,
+    duration: number,
+    showAnimation: boolean,
+  ): unknown {
+    return svg`
+      <g part="lift-layer thin-glow-layer" transform=${layerTransform(thinGlowLayerY)}>
+        <circle
+          part="ring guide-ring thin-glow-ring"
+          cx="0"
+          cy="0"
+          r="63.2"
+          fill="transparent"
+          stroke=${withAlpha(primary, 0.62)}
+          stroke-width="0.66"
+          filter=${`url(#${this.glowFilterId})`}
+        ></circle>
+        <circle
+          part="ring guide-ring thin-glow-ring"
+          cx="0"
+          cy="0"
+          r="61.4"
+          fill="transparent"
+          stroke=${withAlpha(secondary, 0.2)}
+          stroke-width="0.42"
+        ></circle>
+
+        <g part="sweep-ring thin-sweep" filter=${`url(#${this.glowFilterId})`}>
+          ${showAnimation
+            ? svg`
+              <animateTransform
+                attributeName="transform"
+                type="rotate"
+                values="0 0 0;360 0 0"
+                dur=${`${duration * 1.55}s`}
+                repeatCount="indefinite"
+              ></animateTransform>
+            `
+            : null}
+          ${thinArcSegments.map(segment => this.renderArc(segment, primary, secondary, 'ring sweep-arc thin-glow-ring'))}
+        </g>
+      </g>
+    `
+  }
+
+  private renderThickGlowLayer(): unknown {
+    return svg`
+      <g part="lift-layer thick-glow-layer" transform=${layerTransform(thickGlowLayerY)}>
+        <circle
+          part="ring guide-ring thick-glow-ring"
+          cx="0"
+          cy="0"
+          r="58.4"
+          fill="transparent"
+          stroke="rgba(174, 239, 255, 0.34)"
+          stroke-width="9.3"
+        ></circle>
+        <circle
+          part="ring bright-ring thick-glow-ring"
+          cx="0"
+          cy="0"
+          r="58.4"
+          fill="transparent"
+          stroke="#aeefff"
+          stroke-width="5.7"
+          stroke-opacity="0.82"
+          filter=${`url(#${this.strongGlowFilterId})`}
+        ></circle>
+        <path part="thick-side-shadow" d=${arcPath(0, 0, 55.4, 92, 268)} fill="transparent" stroke="rgba(7, 32, 70, 0.58)" stroke-width="2.4" stroke-linecap="round" stroke-opacity="0.38"></path>
+      </g>
+    `
+  }
+
+  private renderScaleLayer(primary: string, secondary: string): unknown {
+    return svg`
+      <g part="lift-layer scale-layer" transform=${layerTransform(scaleLayerY)}>
+        <circle part="ring guide-ring scale-guide" cx="0" cy="0" r="50.8" fill="transparent" stroke=${withAlpha(secondary, 0.2)} stroke-width="4.2"></circle>
+        <circle part="ring guide-ring scale-guide" cx="0" cy="0" r="46.8" fill="transparent" stroke=${withAlpha(primary, 0.24)} stroke-width="0.54"></circle>
+
+        <g part="ticks scale-ticks" opacity="0.78">
+          ${scaleTickIndexes.map(index => this.renderScaleTick(index, primary, secondary))}
+        </g>
+      </g>
+    `
+  }
+
+  private renderSegmentLayer(
     primary: string,
     secondary: string,
     accent: string,
@@ -264,73 +279,22 @@ export class Decoration11Element extends DatavElement {
     showAnimation: boolean,
   ): unknown {
     return svg`
-      <g part="lift-layer lower-layer" transform="translate(80 ${lowerLayerY}) scale(1 ${perspectiveScaleY})">
-        <circle part="ring guide-ring lower-track" cx="0" cy="0" r="50.6" fill="transparent" stroke=${withAlpha(secondary, 0.24)} stroke-width="5.8"></circle>
-        <circle part="ring guide-ring" cx="0" cy="0" r="43.8" fill="transparent" stroke=${withAlpha(primary, 0.32)} stroke-width="0.68"></circle>
+      <g part="lift-layer inner-segment-layer" transform=${layerTransform(segmentLayerY)}>
+        <circle part="ring guide-ring segment-guide" cx="0" cy="0" r="41.5" fill="transparent" stroke=${withAlpha(primary, 0.2)} stroke-width="0.68"></circle>
 
-        <g part="segmented-track" filter=${`url(#${this.glowFilterId})`}>
+        <g part="segmented-track segmented-ring" filter=${`url(#${this.glowFilterId})`}>
           ${showAnimation
             ? svg`
               <animateTransform
                 attributeName="transform"
                 type="rotate"
                 values="0 0 0;-360 0 0"
-                dur=${`${duration * 2.15}s`}
+                dur=${`${duration * 2.35}s`}
                 repeatCount="indefinite"
               ></animateTransform>
             `
             : null}
-          ${blockIndexes.map(index => this.renderSegmentBlock(index, primary, secondary))}
-        </g>
-
-        <g part="bright-ring lower-bright">
-          ${showAnimation
-            ? svg`
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                values="0 0 0;360 0 0"
-                dur=${`${duration * 1.72}s`}
-                repeatCount="indefinite"
-              ></animateTransform>
-            `
-            : null}
-          ${lowerArcSegments.map(segment => this.renderArc(segment, primary, secondary, 'ring bright-ring'))}
-        </g>
-      </g>
-    `
-  }
-
-  private renderMiddleLayer(
-    primary: string,
-    secondary: string,
-    accent: string,
-    duration: number,
-    showAnimation: boolean,
-  ): unknown {
-    return svg`
-      <g part="lift-layer middle-layer" transform="translate(80 ${middleLayerY}) scale(1 ${perspectiveScaleY})">
-        <circle part="ring guide-ring" cx="0" cy="0" r="43.8" fill="transparent" stroke=${withAlpha(secondary, 0.28)} stroke-width="0.86"></circle>
-        <circle part="ring guide-ring" cx="0" cy="0" r="36.6" fill="transparent" stroke=${withAlpha(primary, 0.2)} stroke-width="0.56"></circle>
-        <circle part="ring guide-ring" cx="0" cy="0" r="31" fill="transparent" stroke=${withAlpha(accent, 0.22)} stroke-width="0.46" stroke-dasharray="4.4, 4.8"></circle>
-
-        <g part="gold-orbit" filter=${`url(#${this.glowFilterId})`}>
-          ${showAnimation
-            ? svg`
-              <animateTransform
-                attributeName="transform"
-                type="rotate"
-                values="0 0 0;360 0 0"
-                dur=${`${duration * 0.95}s`}
-                repeatCount="indefinite"
-              ></animateTransform>
-            `
-            : null}
-          ${middleArcSegments.map(segment => this.renderArc(segment, primary, secondary, 'ring gold-orbit'))}
-        </g>
-
-        <g part="ticks inner-ticks" opacity="0.7">
-          ${innerTickIndexes.map(index => this.renderInnerTick(index, primary, secondary))}
+          ${segmentIndexes.map(index => this.renderSegmentArc(index, primary, secondary, accent))}
         </g>
       </g>
     `
@@ -344,106 +308,49 @@ export class Decoration11Element extends DatavElement {
     showAnimation: boolean,
   ): unknown {
     return svg`
-      <g part="lift-layer inner-layer" transform="translate(80 ${innerLayerY}) scale(1 ${perspectiveScaleY})" filter=${`url(#${this.softGlowFilterId})`}>
-        <path part="inner-side-shadow" d=${arcPath(0, 0, 35.2, 86, 274)} fill="transparent" stroke="rgba(0, 5, 22, 0.68)" stroke-width="3.1" stroke-linecap="round" stroke-opacity="0.5"></path>
-        <circle part="core-disc" cx="0" cy="0" r="34.8" fill="transparent" stroke=${withAlpha(primary, 0.54)} stroke-width="0.88"></circle>
-        <path part="inner-top-highlight" d=${arcPath(0, 0, 34.4, -70, 58)} fill="transparent" stroke="#f4fdff" stroke-width="1.35" stroke-linecap="round" stroke-opacity="0.68"></path>
-        <path part="inner-front-lip" d=${arcPath(0, 0, 34.2, 84, 266)} fill="transparent" stroke=${withAlpha(primary, 0.58)} stroke-width="1.45" stroke-linecap="round" stroke-opacity="0.62"></path>
-        <path part="inner-front-lip" d=${arcPath(0, 0, 31.4, 104, 250)} fill="transparent" stroke="rgba(0, 5, 22, 0.58)" stroke-width="0.8" stroke-linecap="round" stroke-opacity="0.5"></path>
-        <circle part="ring guide-ring inner-rim" cx="0" cy="0" r="33.1" fill="transparent" stroke=${withAlpha(secondary, 0.32)} stroke-width="1.25"></circle>
-        <circle part="ring guide-ring" cx="0" cy="0" r="25.4" fill="transparent" stroke=${withAlpha(primary, 0.52)} stroke-width="0.7" stroke-dasharray="2.2, 4.2"></circle>
-        <circle part="ring guide-ring" cx="0" cy="0" r="16.8" fill="transparent" stroke=${withAlpha(accent, 0.28)} stroke-width="0.48"></circle>
-        <circle part="ring guide-ring core-guide" cx="0" cy="0" r="12.8" fill="transparent" stroke=${withAlpha(primary, 0.34)} stroke-width="0.46" stroke-dasharray="1.4, 2.4"></circle>
-
-        <g part="core-ticks" opacity="0.72">
-          ${coreTickIndexes.map(index => this.renderCoreTick(index, primary, secondary))}
-        </g>
-
-        <g part="white-orbit" filter=${`url(#${this.glowFilterId})`}>
+      <g part="lift-layer inner-layer" transform=${layerTransform(innerLayerY)} filter=${`url(#${this.softGlowFilterId})`}>
+        <circle part="ring guide-ring dashed-ring" cx="0" cy="0" r="32.2" fill="transparent" stroke=${withAlpha(primary, 0.66)} stroke-width="0.72" stroke-dasharray="2.8, 4.6"></circle>
+        <g part="triangle-indicators">
           ${showAnimation
             ? svg`
               <animateTransform
                 attributeName="transform"
                 type="rotate"
-                values="0 0 0;-360 0 0"
-                dur=${`${duration * 0.78}s`}
+                values="0 0 0;360 0 0"
+                dur=${`${duration * 1.9}s`}
                 repeatCount="indefinite"
               ></animateTransform>
             `
             : null}
-          ${innerOrbitSegments.map(segment => this.renderArc(segment, primary, secondary, 'ring white-orbit'))}
+          ${indicatorAngles.map((angle, index) => this.renderTriangleIndicator(angle, index, primary, accent))}
         </g>
 
-        <g part="core core-void" filter=${`url(#${this.glowFilterId})`}>
-          <circle part="void-hole" cx="0" cy="0" r="10.8" fill=${`url(#${this.voidGradientId})`}></circle>
-          <circle part="void-rim" cx="0" cy="0" r="11.4" fill="transparent" stroke="rgba(0, 3, 16, 0.9)" stroke-width="1.8"></circle>
-          <circle part="void-rim" cx="0" cy="0" r="12.6" fill="transparent" stroke=${withAlpha(primary, 0.42)} stroke-width="0.52" stroke-dasharray="2.2, 2.8"></circle>
-        </g>
-      </g>
-    `
-  }
-
-  private renderParticles(primary: string, accent: string, duration: number, showAnimation: boolean): unknown {
-    return svg`
-      <g part="particles" transform="translate(80 ${particleLayerY}) scale(1 ${perspectiveScaleY})" filter=${`url(#${this.glowFilterId})`}>
-        ${showAnimation
-          ? svg`
-            <animateTransform
-              attributeName="transform"
-              type="rotate"
-              additive="sum"
-              values="0 0 0;-360 0 0"
-              dur=${`${duration * 2.4}s`}
-              repeatCount="indefinite"
-            ></animateTransform>
-          `
-          : null}
-        ${particleIndexes.map(index => this.renderParticle(index, primary, accent, showAnimation))}
       </g>
     `
   }
 
   private renderDefs(primary: string, secondary: string, accent: string): unknown {
     return svg`
-      <radialGradient id=${this.groundGradientId} cx="50%" cy="50%" r="62%">
-        <stop offset="0%" stop-color=${withAlpha(primary, 0.3)}></stop>
-        <stop offset="44%" stop-color=${withAlpha(secondary, 0.18)}></stop>
-        <stop offset="100%" stop-color="rgba(0, 8, 28, 0)"></stop>
-      </radialGradient>
-
-      <radialGradient id=${this.voidGradientId} cx="50%" cy="50%" r="62%">
-        <stop offset="0%" stop-color="rgba(0, 0, 0, 1)"></stop>
-        <stop offset="58%" stop-color="rgba(0, 3, 16, 0.98)"></stop>
-        <stop offset="84%" stop-color="rgba(1, 10, 34, 0.94)"></stop>
-        <stop offset="100%" stop-color=${withAlpha(primary, 0.08)}></stop>
-      </radialGradient>
-
-      <linearGradient id=${this.ringGradientId} x1="-64" y1="-44" x2="64" y2="44" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color="#f4fdff" stop-opacity="0.96"></stop>
-        <stop offset="28%" stop-color=${primary} stop-opacity="0.98"></stop>
-        <stop offset="68%" stop-color=${secondary} stop-opacity="0.78"></stop>
-        <stop offset="100%" stop-color=${primary} stop-opacity="0.34"></stop>
+      <linearGradient id=${this.ringGradientId} x1="-66" y1="-46" x2="66" y2="46" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#f4fdff" stop-opacity="0.92"></stop>
+        <stop offset="30%" stop-color=${primary} stop-opacity="0.96"></stop>
+        <stop offset="72%" stop-color=${secondary} stop-opacity="0.72"></stop>
+        <stop offset="100%" stop-color=${primary} stop-opacity="0.24"></stop>
       </linearGradient>
 
-      <linearGradient id=${this.goldGradientId} x1="-42" y1="-18" x2="42" y2="18" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color="#fff6d2" stop-opacity="0.98"></stop>
-        <stop offset="50%" stop-color=${accent} stop-opacity="0.86"></stop>
-        <stop offset="100%" stop-color="#ffbd5c" stop-opacity="0.44"></stop>
+      <linearGradient id=${this.accentGradientId} x1="-42" y1="-18" x2="42" y2="18" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#fff6d2" stop-opacity="0.96"></stop>
+        <stop offset="52%" stop-color=${accent} stop-opacity="0.82"></stop>
+        <stop offset="100%" stop-color="#ffbd5c" stop-opacity="0.34"></stop>
       </linearGradient>
 
-      <linearGradient id=${this.blockGradientId} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color=${primary} stop-opacity="0.74"></stop>
-        <stop offset="55%" stop-color=${secondary} stop-opacity="0.38"></stop>
-        <stop offset="100%" stop-color="#083baf" stop-opacity="0.12"></stop>
+      <linearGradient id=${this.segmentGradientId} x1="-42" y1="-18" x2="42" y2="18" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color=${secondary} stop-opacity="0.28"></stop>
+        <stop offset="50%" stop-color=${primary} stop-opacity="0.76"></stop>
+        <stop offset="100%" stop-color=${secondary} stop-opacity="0.2"></stop>
       </linearGradient>
 
-      <radialGradient id=${this.particleGradientId} cx="50%" cy="50%" r="54%">
-        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"></stop>
-        <stop offset="48%" stop-color=${primary} stop-opacity="0.82"></stop>
-        <stop offset="100%" stop-color=${primary} stop-opacity="0"></stop>
-      </radialGradient>
-
-      <filter id=${this.glowFilterId} x="-40%" y="-60%" width="180%" height="220%" color-interpolation-filters="sRGB">
+      <filter id=${this.glowFilterId} x="-42%" y="-64%" width="184%" height="228%" color-interpolation-filters="sRGB">
         <feGaussianBlur stdDeviation="0.9" result="blur"></feGaussianBlur>
         <feMerge>
           <feMergeNode in="blur"></feMergeNode>
@@ -451,7 +358,7 @@ export class Decoration11Element extends DatavElement {
         </feMerge>
       </filter>
 
-      <filter id=${this.strongGlowFilterId} x="-55%" y="-75%" width="210%" height="250%" color-interpolation-filters="sRGB">
+      <filter id=${this.strongGlowFilterId} x="-58%" y="-80%" width="216%" height="260%" color-interpolation-filters="sRGB">
         <feGaussianBlur stdDeviation="1.8" result="blur"></feGaussianBlur>
         <feMerge>
           <feMergeNode in="blur"></feMergeNode>
@@ -459,7 +366,7 @@ export class Decoration11Element extends DatavElement {
         </feMerge>
       </filter>
 
-      <filter id=${this.softGlowFilterId} x="-30%" y="-45%" width="160%" height="190%" color-interpolation-filters="sRGB">
+      <filter id=${this.softGlowFilterId} x="-32%" y="-48%" width="164%" height="196%" color-interpolation-filters="sRGB">
         <feGaussianBlur stdDeviation="0.55" result="blur"></feGaussianBlur>
         <feMerge>
           <feMergeNode in="blur"></feMergeNode>
@@ -490,10 +397,111 @@ export class Decoration11Element extends DatavElement {
     `
   }
 
+  private renderAudioBar(index: number, primary: string, secondary: string, accent: string): unknown {
+    const angle = index * 360 / audioBarCount
+    const wave = (Math.sin(index * 0.74) + 1) / 2
+    const active = index % 18 === 0 || index % 31 === 0
+    const radius = 63.2
+    const width = active ? 1.35 : index % 3 === 0 ? 1.12 : 0.92
+    const height = 2.2 + wave * 3.8 + pseudoRandom(index, 7) * 3 + (active ? 2.4 : 0)
+    const point = polarPoint(0, 0, radius, angle)
+    const fill = active ? accent : index % 4 === 0 ? primary : secondary
+
+    return svg`
+      <rect
+        part="particle audio-bar"
+        transform=${`translate(${roundTo(point.x, 3)} ${roundTo(point.y, 3)}) rotate(${roundTo(angle, 3)})`}
+        x=${String(roundTo(-width / 2, 3))}
+        y=${String(roundTo(-height, 3))}
+        width=${String(roundTo(width, 3))}
+        height=${String(roundTo(height, 3))}
+        rx="0.22"
+        fill=${fill}
+        fill-opacity=${active ? '0.72' : index % 3 === 0 ? '0.48' : '0.3'}
+        stroke=${active ? '#f6ffff' : primary}
+        stroke-width="0.12"
+        stroke-opacity=${active ? '0.46' : '0.18'}
+      ></rect>
+    `
+  }
+
+  private renderScaleTick(index: number, primary: string, secondary: string): unknown {
+    const angle = index * 360 / scaleTickCount
+    const major = index % 8 === 0
+    const mid = index % 4 === 0
+    const radius = major ? 53.6 : 52.4
+    const length = major ? 5.2 : mid ? 3.8 : 2.4
+    const start = polarPoint(0, 0, radius, angle)
+    const end = polarPoint(0, 0, radius - length, angle)
+
+    return svg`
+      <line
+        part="tick scale-tick"
+        x1=${String(roundTo(start.x, 3))}
+        y1=${String(roundTo(start.y, 3))}
+        x2=${String(roundTo(end.x, 3))}
+        y2=${String(roundTo(end.y, 3))}
+        stroke=${major ? primary : secondary}
+        stroke-width=${major ? '0.7' : mid ? '0.46' : '0.3'}
+        stroke-linecap="round"
+        stroke-opacity=${major ? '0.74' : mid ? '0.45' : '0.24'}
+      ></line>
+    `
+  }
+
+  private renderSegmentArc(index: number, primary: string, secondary: string, accent: string): unknown {
+    const step = 360 / segmentCount
+    const start = index * step + 1.8
+    const end = start + step - 4.2
+    const active = index % 8 === 0 || index % 11 === 0
+    const stroke = active ? accent : index % 3 === 0 ? primary : `url(#${this.segmentGradientId})`
+
+    return svg`
+      <path
+        part="ring segment-block segment-arc"
+        d=${arcPath(0, 0, 40.2, start, end)}
+        fill="transparent"
+        stroke=${stroke}
+        stroke-width=${active ? '2.9' : '2.15'}
+        stroke-linecap="butt"
+        stroke-opacity=${active ? '0.82' : index % 3 === 0 ? '0.58' : '0.42'}
+      ></path>
+    `
+  }
+
+  private renderTriangleIndicator(angle: number, index: number, primary: string, accent: string): unknown {
+    const point = polarPoint(0, 0, 22.8, angle)
+    const active = index % 2 === 0
+    const stroke = active ? primary : accent
+
+    return svg`
+      <g part="triangle-indicator" transform=${`translate(${roundTo(point.x, 3)} ${roundTo(point.y, 3)}) rotate(${roundTo(angle, 3)})`}>
+        <polygon
+          points="0 2.05 1.8 -1.45 -1.8 -1.45"
+          fill="transparent"
+          stroke=${stroke}
+          stroke-width="0.36"
+          stroke-linejoin="round"
+          stroke-opacity=${active ? '0.78' : '0.62'}
+          opacity=${active ? '0.82' : '0.66'}
+        ></polygon>
+        <path
+          d="M -0.88 -0.58 L 0 0.42 L 0.88 -0.58"
+          fill="transparent"
+          stroke="#f6ffff"
+          stroke-width="0.22"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-opacity="0.46"
+        ></path>
+      </g>
+    `
+  }
+
   private renderBridge(angle: number, index: number, primary: string, secondary: string): unknown {
-    const low = projectedPoint(80, baseLayerY, 58, angle)
-    const middle = projectedPoint(80, lowerLayerY, 49, angle + (index % 2 === 0 ? 1.8 : -1.8))
-    const high = projectedPoint(80, innerLayerY, 33, angle + (index % 2 === 0 ? 3.2 : -3.2))
+    const low = projectedPoint(80, particleLayerY, 66, angle)
+    const middle = projectedPoint(80, segmentLayerY, 40, angle + (index % 2 === 0 ? 2.4 : -2.4))
+    const high = projectedPoint(80, innerLayerY, 27, angle + (index % 2 === 0 ? 4 : -4))
     const color = index % 2 === 0 ? primary : secondary
 
     return svg`
@@ -502,138 +510,17 @@ export class Decoration11Element extends DatavElement {
         d=${`M ${pointToString(low)} L ${pointToString(middle)} L ${pointToString(high)}`}
         fill="transparent"
         stroke=${color}
-        stroke-width="0.52"
+        stroke-width="0.42"
         stroke-linecap="round"
         stroke-linejoin="round"
-        stroke-opacity=${String(index < 2 ? 0.22 : 0.14)}
+        stroke-opacity=${String(index < 2 ? 0.2 : 0.12)}
       ></path>
-    `
-  }
-
-  private renderOuterTick(index: number, primary: string, secondary: string): unknown {
-    const angle = index * 360 / outerTickCount
-    const isMajor = index % 11 === 0
-    const isMid = index % 3 === 0
-    const radius = isMajor ? 66.3 : 64.4
-    const length = isMajor ? 3.6 : isMid ? 2.2 : 1.1
-    const start = polarPoint(0, 0, radius, angle)
-    const end = polarPoint(0, 0, radius - length, angle)
-
-    return svg`
-      <line
-        part="tick"
-        x1=${String(roundTo(start.x, 3))}
-        y1=${String(roundTo(start.y, 3))}
-        x2=${String(roundTo(end.x, 3))}
-        y2=${String(roundTo(end.y, 3))}
-        stroke=${isMajor ? primary : secondary}
-        stroke-width=${isMajor ? '0.62' : '0.34'}
-        stroke-linecap="round"
-        stroke-opacity=${isMajor ? '0.72' : isMid ? '0.34' : '0.18'}
-      ></line>
-    `
-  }
-
-  private renderInnerTick(index: number, primary: string, secondary: string): unknown {
-    const angle = index * 360 / innerTickCount
-    const active = index % 6 === 0
-    const start = polarPoint(0, 0, active ? 24.4 : 22.8, angle)
-    const end = polarPoint(0, 0, active ? 21.6 : 20.8, angle)
-
-    return svg`
-      <line
-        part="tick"
-        x1=${String(roundTo(start.x, 3))}
-        y1=${String(roundTo(start.y, 3))}
-        x2=${String(roundTo(end.x, 3))}
-        y2=${String(roundTo(end.y, 3))}
-        stroke=${active ? primary : secondary}
-        stroke-width=${active ? '0.54' : '0.28'}
-        stroke-linecap="round"
-        stroke-opacity=${active ? '0.64' : '0.26'}
-      ></line>
-    `
-  }
-
-  private renderCoreTick(index: number, primary: string, secondary: string): unknown {
-    const angle = index * 360 / coreTickCount
-    const active = index % 4 === 0
-    const start = polarPoint(0, 0, active ? 15.7 : 14.6, angle)
-    const end = polarPoint(0, 0, active ? 13.4 : 12.9, angle)
-
-    return svg`
-      <line
-        part="tick core-tick"
-        x1=${String(roundTo(start.x, 3))}
-        y1=${String(roundTo(start.y, 3))}
-        x2=${String(roundTo(end.x, 3))}
-        y2=${String(roundTo(end.y, 3))}
-        stroke=${active ? primary : secondary}
-        stroke-width=${active ? '0.42' : '0.24'}
-        stroke-linecap="round"
-        stroke-opacity=${active ? '0.58' : '0.26'}
-      ></line>
-    `
-  }
-
-  private renderSegmentBlock(index: number, primary: string, secondary: string): unknown {
-    const angle = index * 360 / blockCount
-    const radius = 48.9
-    const point = polarPoint(0, 0, radius, angle)
-    const active = index % 6 === 0 || index % 13 === 0
-
-    return svg`
-      <g part="segment-block" transform=${`translate(${roundTo(point.x, 3)} ${roundTo(point.y, 3)}) rotate(${roundTo(angle, 3)})`}>
-        <rect
-          x="-1.15"
-          y="-4.1"
-          width="2.3"
-          height=${active ? '8.6' : '6.7'}
-          rx="0.32"
-          fill=${`url(#${this.blockGradientId})`}
-          stroke=${active ? primary : secondary}
-          stroke-width="0.28"
-          stroke-opacity=${active ? '0.68' : '0.34'}
-          opacity=${active ? '0.88' : '0.58'}
-        ></rect>
-      </g>
-    `
-  }
-
-  private renderParticle(index: number, primary: string, accent: string, showAnimation: boolean): unknown {
-    const angle = pseudoRandom(index, 3) * 360
-    const radius = 58 + pseudoRandom(index, 7) * 13
-    const point = polarPoint(0, 0, radius, angle)
-    const active = index % 9 === 0 || index % 17 === 0
-    const size = active ? 0.95 + pseudoRandom(index, 11) * 0.65 : 0.38 + pseudoRandom(index, 13) * 0.46
-
-    return svg`
-      <circle
-        part="particle"
-        cx=${String(roundTo(point.x, 3))}
-        cy=${String(roundTo(point.y, 3))}
-        r=${String(roundTo(size, 3))}
-        fill=${active ? accent : `url(#${this.particleGradientId})`}
-        opacity=${active ? '0.72' : '0.38'}
-      >
-        ${showAnimation
-          ? svg`
-            <animate
-              attributeName="opacity"
-              values=${active ? '0.32;0.92;0.32' : '0.12;0.52;0.12'}
-              dur=${`${2.4 + pseudoRandom(index, 19) * 2.2}s`}
-              begin=${`${pseudoRandom(index, 23) * -2.8}s`}
-              repeatCount="indefinite"
-            ></animate>
-          `
-          : null}
-      </circle>
     `
   }
 
   private resolveArcStroke(segment: ArcSegment, primary: string, secondary: string): string {
     if (segment.accent === 'gold')
-      return `url(#${this.goldGradientId})`
+      return `url(#${this.accentGradientId})`
 
     if (segment.accent === 'white')
       return '#f4fdff'
@@ -747,6 +634,10 @@ function roundTo(value: number, precision: number): number {
   const multiplier = 10 ** precision
 
   return Math.round(value * multiplier) / multiplier
+}
+
+function layerTransform(y: number): string {
+  return `translate(80 ${y}) scale(1 ${perspectiveScaleY})`
 }
 
 function polarPoint(cx: number, cy: number, radius: number, angle: number): { x: number, y: number } {

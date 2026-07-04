@@ -265,7 +265,7 @@ describe('@datav-kit/elements', () => {
 
     const rings = [...element.shadowRoot?.querySelectorAll('[part~="ring"]') ?? []]
     const guides = [...element.shadowRoot?.querySelectorAll('[part~="guide-ring"]') ?? []]
-    const ticks = [...element.shadowRoot?.querySelectorAll('[part="tick"]') ?? []]
+    const ticks = [...element.shadowRoot?.querySelectorAll('[part~="tick"]') ?? []]
     const blocks = [...element.shadowRoot?.querySelectorAll('[part="energy-block"]') ?? []]
     const microLights = [...element.shadowRoot?.querySelectorAll('[part="micro-light"]') ?? []]
     const animations = [...element.shadowRoot?.querySelectorAll('animateTransform') ?? []]
@@ -312,7 +312,7 @@ describe('@datav-kit/elements', () => {
 
     const lines = [...element.shadowRoot?.querySelectorAll('[part~="line"]') ?? []]
     const cornerLines = [...element.shadowRoot?.querySelectorAll('[part~="corner-line"]') ?? []]
-    const ticks = [...element.shadowRoot?.querySelectorAll('[part="tick"]') ?? []]
+    const ticks = [...element.shadowRoot?.querySelectorAll('[part~="tick"]') ?? []]
     const blocks = [...element.shadowRoot?.querySelectorAll('[part~="block"]') ?? []]
     const firstBlock = blocks[0]
     const stops = [...element.shadowRoot?.querySelectorAll('linearGradient stop') ?? []]
@@ -392,16 +392,28 @@ describe('@datav-kit/elements', () => {
 
     const svg = element.shadowRoot?.querySelector('svg')
     const groundGlow = element.shadowRoot?.querySelector('[part="ground-glow"]')
+    const liftShadow = element.shadowRoot?.querySelector('[part="lift-shadow"]')
     const layers = [...element.shadowRoot?.querySelectorAll('[part~="lift-layer"]') ?? []]
     const rings = [...element.shadowRoot?.querySelectorAll('[part~="ring"]') ?? []]
     const bridgeLines = [...element.shadowRoot?.querySelectorAll('[part="bridge-line"]') ?? []]
-    const ticks = [...element.shadowRoot?.querySelectorAll('[part="tick"]') ?? []]
-    const segmentBlocks = [...element.shadowRoot?.querySelectorAll('[part="segment-block"]') ?? []]
-    const particles = [...element.shadowRoot?.querySelectorAll('[part="particle"]') ?? []]
+    const ticks = [...element.shadowRoot?.querySelectorAll('[part~="tick"]') ?? []]
+    const particleGuide = element.shadowRoot?.querySelector('[part="ring guide-ring particle-guide"]')
+    const thickGuide = element.shadowRoot?.querySelector('[part="ring guide-ring thick-glow-ring"]')
+    const thickBright = element.shadowRoot?.querySelector('[part="ring bright-ring thick-glow-ring"]')
+    const thickArcOverlays = [...element.shadowRoot?.querySelectorAll('[part~="outer-bright"]') ?? []]
+    const audioBars = [...element.shadowRoot?.querySelectorAll('[part~="audio-bar"]') ?? []]
+    const scaleTicks = [...element.shadowRoot?.querySelectorAll('[part~="scale-tick"]') ?? []]
+    const segmentBlocks = [...element.shadowRoot?.querySelectorAll('[part~="segment-block"]') ?? []]
+    const segmentArcs = [...element.shadowRoot?.querySelectorAll('[part~="segment-arc"]') ?? []]
+    const particles = [...element.shadowRoot?.querySelectorAll('[part~="particle"]') ?? []]
+    const triangleIndicators = [...element.shadowRoot?.querySelectorAll('[part="triangle-indicator"]') ?? []]
+    const triangleFrames = [...element.shadowRoot?.querySelectorAll('[part="triangle-indicator"] polygon') ?? []]
+    const frontGlows = [...element.shadowRoot?.querySelectorAll('[part~="front-glow"]') ?? []]
     const platformFills = [...element.shadowRoot?.querySelectorAll('[part="platform-fill"]') ?? []]
-    const coreTicks = [...element.shadowRoot?.querySelectorAll('[part="tick core-tick"]') ?? []]
-    const coreDisc = element.shadowRoot?.querySelector('[part="core-disc"]')
-    const voidHole = element.shadowRoot?.querySelector('[part="void-hole"]')
+    const coreDisc = element.shadowRoot?.querySelector('[part~="core-disc"]')
+    const cleanRings = [...element.shadowRoot?.querySelectorAll('[part~="clean-ring"]') ?? []]
+    const coreGuides = [...element.shadowRoot?.querySelectorAll('[part~="core-guide"]') ?? []]
+    const dashedRing = element.shadowRoot?.querySelector('[part="ring guide-ring dashed-ring"]')
     const voidRims = [...element.shadowRoot?.querySelectorAll('[part="void-rim"]') ?? []]
     const content = element.shadowRoot?.querySelector('[part="content"]')
     const animations = [...element.shadowRoot?.querySelectorAll('animate, animateTransform') ?? []]
@@ -411,24 +423,43 @@ describe('@datav-kit/elements', () => {
     expect(svg?.getAttribute('height')).toBe('120')
     expect(svg?.getAttribute('viewBox')).toBe('0 0 160 120')
     expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet')
-    expect(groundGlow?.getAttribute('rx')).toBe('68')
+    expect(groundGlow).toBeNull()
+    expect(liftShadow).toBeNull()
     expect(layers.map(layer => layer.getAttribute('transform'))).toEqual([
-      'translate(80 70.8) scale(1 0.42)',
+      'translate(80 70.6) scale(1 0.42)',
+      'translate(80 70.6) scale(1 0.42)',
       'translate(80 68.2) scale(1 0.42)',
-      'translate(80 65) scale(1 0.42)',
-      'translate(80 61.8) scale(1 0.42)',
+      'translate(80 65.8) scale(1 0.42)',
+      'translate(80 63.4) scale(1 0.42)',
+      'translate(80 60.8) scale(1 0.42)',
     ])
-    expect(rings).toHaveLength(38)
+    expect(rings.length).toBeGreaterThan(40)
     expect(bridgeLines).toHaveLength(4)
-    expect(ticks).toHaveLength(186)
-    expect(coreTicks).toHaveLength(36)
-    expect(segmentBlocks).toHaveLength(57)
-    expect(particles).toHaveLength(86)
+    expect(ticks).toHaveLength(96)
+    expect(particleGuide?.getAttribute('r')).toBe('63.2')
+    expect(thickGuide?.getAttribute('stroke')).toBe('rgba(174, 239, 255, 0.34)')
+    expect(thickGuide?.getAttribute('stroke-width')).toBe('9.3')
+    expect(thickBright?.getAttribute('stroke')).toBe('#aeefff')
+    expect(thickBright?.getAttribute('stroke-width')).toBe('5.7')
+    expect(thickArcOverlays).toHaveLength(0)
+    expect(audioBars).toHaveLength(144)
+    expect(audioBars.every(bar => bar.tagName.toLowerCase() === 'rect')).toBe(true)
+    expect(scaleTicks).toHaveLength(96)
+    expect(segmentBlocks).toHaveLength(32)
+    expect(segmentArcs).toHaveLength(32)
+    expect(particles).toHaveLength(144)
+    expect(triangleIndicators).toHaveLength(4)
+    expect(triangleFrames).toHaveLength(4)
+    expect(triangleFrames.every(frame => frame.getAttribute('fill') === 'transparent')).toBe(true)
+    expect(triangleFrames.every(frame => frame.getAttribute('points') === '0 2.05 1.8 -1.45 -1.8 -1.45')).toBe(true)
+    expect(frontGlows).toHaveLength(0)
     expect(platformFills).toHaveLength(0)
-    expect(coreDisc?.getAttribute('r')).toBe('34.8')
-    expect(coreDisc?.getAttribute('fill')).toBe('transparent')
-    expect(voidHole?.getAttribute('fill')).toContain('dvk-decoration-11-void-')
-    expect(voidRims).toHaveLength(2)
+    expect(coreDisc).toBeNull()
+    expect(cleanRings).toHaveLength(0)
+    expect(dashedRing?.getAttribute('r')).toBe('32.2')
+    expect(dashedRing?.getAttribute('stroke-dasharray')).toBe('2.8, 4.6')
+    expect(coreGuides).toHaveLength(0)
+    expect(voidRims).toHaveLength(0)
     expect(content).toBeNull()
     expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#66f5ff', '#2f8cff', '#ffe69c']))
     expect(animations).toHaveLength(0)

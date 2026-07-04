@@ -1,10 +1,10 @@
 ---
-description: Cyber floating hollow luminous halo with a raised inner ring and rotating neon orbits.
+description: Cyber floating audio halo with fixed outer rhythm blocks, glow rings, segmented scales, and raised inner indicators.
 ---
 
 # Decoration 11
 
-`dvk-decoration-11` is a cyber floating hollow luminous halo inspired by layered status rings on large-screen command dashboards. It avoids filled surfaces: the outer energy ring carries the main glow, the segmented tick track and gold-white orbits rotate inside it, and the raised center is a black-hole-like void surrounded by hollow rings, rim highlights, and micro ticks. The height is visible enough to read as stacked floating rings while staying lighter than a heavy 3D pedestal.
+`dvk-decoration-11` is a cyber floating audio halo inspired by layered status rings on large-screen command dashboards. The outer edge uses a fixed-count ring of short and tall rhythm blocks, like a clean music-player visualizer rotating around the platform. Inside it, a thin glow ring, a thick glow ring, a calibrated tick ring, a segmented inner ring, a single dashed core ring, and small outlined triangle indicators step upward to create a lightweight 3D stack.
 
 <div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 420px; --datav-decoration-height: 315px;">
   <div class="datav-decoration-shell">
@@ -30,12 +30,12 @@ description: Cyber floating hollow luminous halo with a raised inner ring and ro
 
 | Name | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `color` | `string` | CSS variable fallback | Primary cyan neon color for bright rings, ticks, particles, bridge glows, and the dark center rim. When set as a JavaScript property, a DataV-style color array is also accepted. |
-| `secondary-color` | `string` | CSS variable fallback | Secondary blue color for guide rings, lower tracks, segmented blocks, shadows, and cool bridge lines. |
+| `color` | `string` | CSS variable fallback | Primary cyan neon color for glow rings, scale ticks, audio rhythm blocks, bridge glows, and inner indicators. When set as a JavaScript property, a DataV-style color array is also accepted. |
+| `secondary-color` | `string` | CSS variable fallback | Secondary blue color for guide rings, tick shadows, segmented arcs, and cool bridge lines. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and optional gold accent colors. |
 | `dur` | `number` | `9` | Base rotation duration in seconds. Values are clamped to the `6`-`14` second floating-halo range. |
-| `animated` | `boolean` | `true` | Enables rotating halo layers, orbit arcs, and particle drift animations. |
-| `paused` | `boolean` | `false` | Stops all animations while keeping the raised layered platform visible. |
+| `animated` | `boolean` | `true` | Enables the fixed outer audio rhythm-block ring and selected inner layers to rotate. |
+| `paused` | `boolean` | `false` | Stops all rotations while keeping the raised layered platform visible. |
 
 ## Events
 
@@ -56,34 +56,39 @@ description: Cyber floating hollow luminous halo with a raised inner ring and ro
 | Part | Description |
 | --- | --- |
 | `graphic` | Internal SVG. |
-| `ground-glow` | Soft glow projected below the floating rings. |
-| `lift-shadow` | Stacked shallow shadows that sell the slight vertical lift. |
 | `vertical-links` | Group containing subtle perspective bridge strokes. |
 | `bridge-line` | Individual line connecting lower and higher halo layers. |
 | `lift-layer` | Shared part for each raised ring layer. |
-| `base-layer` | Lowest outer luminous halo layer. |
-| `lower-layer` | Slightly raised segmented blue track layer. |
-| `middle-layer` | Higher orbit layer with gold and white arcs. |
-| `inner-layer` | Highest ring and core tick layer. |
+| `particle-layer` | Lowest outer ring layer containing the fixed rhythm blocks. |
+| `audio-bars` | Group containing the fixed-count music-visualizer rhythm blocks. |
+| `audio-bar-ring` | Rotating group for the outer rhythm blocks. |
+| `thin-glow-layer` | Thin luminous ring layer just inside the rhythm blocks. |
+| `thick-glow-layer` | Thick primary glow ring layer. |
+| `thick-side-shadow` | Dark front edge that gives the thick glow ring a subtle raised side. |
+| `scale-layer` | Raised calibrated tick layer. |
+| `inner-segment-layer` | Raised segmented inner ring layer. |
+| `inner-layer` | Highest dashed ring and triangle indicator layer. |
 | `ring` | Shared part for circular and arc ring geometry. |
 | `guide-ring` | Static low-intensity guide rings. |
+| `particle-guide` | Subtle guide line under the outer rhythm blocks. |
+| `thin-glow-ring` | Fine glowing ring and its sweep arcs. |
+| `thick-glow-ring` | Main thick luminous ring, rendered as an ice-blue glow. |
+| `scale-guide` | Guide rings under the scale ticks. |
+| `segment-guide` | Guide ring under the inner segmented arcs. |
+| `dashed-ring` | Single dashed ring inside the segmented inner ring. |
 | `bright-ring` | Rotating bright neon arc groups. |
 | `sweep-ring` | Fast subtle sweep arcs around the outer halo. |
-| `segmented-track` | Rotating lower segmented track group. |
-| `segment-block` | Individual rectangular energy block in the lower track. |
+| `sweep-arc` | Individual sweep arc. |
+| `thin-sweep` | Rotating sweep group on the thin ring. |
+| `segmented-track` | Rotating inner segmented ring group. |
+| `segmented-ring` | Inner segmented ring group. |
+| `segment-block` | Individual segment arc in the inner ring. |
+| `segment-arc` | Individual segment arc in the inner ring. |
 | `ticks` | Group containing precision tick marks. |
 | `tick` | Individual tick mark. |
-| `gold-orbit` | Warm gold orbit arcs in the middle layer. |
-| `white-orbit` | White and gold orbit arcs around the inner layer. |
-| `core-disc` | Highest hollow inner ring. |
-| `inner-side-shadow` | Dark front edge that gives the highest ring a subtle raised side. |
-| `inner-top-highlight` | Thin upper rim highlight on the raised inner ring. |
-| `inner-front-lip` | Front rim strokes that make the inner ring read as slightly convex. |
-| `core-ticks` | Small tick ring inside the raised center. |
-| `core-tick` | Individual tick in the center tick ring. |
-| `core` | Center core group. |
-| `core-void` | Black-hole-like center void group. |
-| `void-hole` | Dark empty center. |
-| `void-rim` | Absorbing rim around the center void. |
-| `particles` | Sparse outer floating particle group. |
-| `particle` | Individual particle spark. |
+| `scale-ticks` | Group containing the calibrated scale ring ticks. |
+| `scale-tick` | Individual tick in the scale ring. |
+| `triangle-indicators` | Group containing small rotating outlined triangle indicators inside the dashed ring. |
+| `triangle-indicator` | Individual outlined triangle indicator with its tip facing inward. |
+| `particles` | Compatibility alias for the outer audio-bar layer. |
+| `particle` | Compatibility alias for an individual outer rhythm block. |
