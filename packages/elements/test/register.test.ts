@@ -1690,7 +1690,7 @@ describe('@datav-kit/elements', () => {
       'M 5.74 66.76 L 9.18 70.2 L 9.18 109.8 L 5.74 113.24',
       'M 314.26 66.76 L 310.82 70.2 L 310.82 109.8 L 314.26 113.24',
     ])
-    expect(sideFolds.every(fold => fold.getAttribute('stroke-width') === '4')).toBe(true)
+    expect(sideFolds.every(fold => fold.getAttribute('stroke-width') === '2')).toBe(true)
     expect(bottomRail?.getAttribute('d')).toBe('M 14.54 172.54 L 305.46 172.54')
     expect(stops).toEqual([
       'rgba(17, 34, 51, 0.72)',

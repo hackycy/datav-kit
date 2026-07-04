@@ -299,7 +299,7 @@ export class BorderBox12Element extends DatavElement {
         data-side-fold="left"
         fill="none"
         stroke=${stroke}
-        stroke-width="4"
+        stroke-width="2"
         stroke-linejoin="miter"
         filter=${filter}
         d=${geometry.leftSideAccentPath}
@@ -308,7 +308,7 @@ export class BorderBox12Element extends DatavElement {
         data-side-fold="right"
         fill="none"
         stroke=${stroke}
-        stroke-width="4"
+        stroke-width="2"
         stroke-linejoin="miter"
         filter=${filter}
         d=${geometry.rightSideAccentPath}
