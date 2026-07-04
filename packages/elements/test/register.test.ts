@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, FitScreenElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -93,14 +93,15 @@ describe('@datav-kit/elements', () => {
       'dvk-decoration-8',
       'dvk-decoration-9',
       'dvk-decoration-10',
+      'dvk-decoration-11',
       'dvk-count-to',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -175,6 +176,7 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration8()).toBe(false)
     expect(defineDecoration9()).toBe(false)
     expect(defineDecoration10()).toBe(false)
+    expect(defineDecoration11()).toBe(false)
     expect(defineCountTo()).toBe(false)
   })
 
@@ -373,6 +375,62 @@ describe('@datav-kit/elements', () => {
     expect(scanEdge?.getAttribute('stroke')).toBe('#66f5ff')
     expect(centerPulse?.getAttribute('fill')).toBe('#66f5ff')
     expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#2f8cff', '#66f5ff', '#a688ff']))
+    expect(animations).toHaveLength(0)
+  })
+
+  it('renders decoration-11 as a subtly raised floating cyber halo', async () => {
+    register()
+
+    const element = document.createElement('dvk-decoration-11') as Decoration11Element
+    element.setAttribute('colors', '#66f5ff,#2f8cff,#ffe69c')
+    element.setAttribute('dur', '20')
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    emitResize(320, 240)
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const groundGlow = element.shadowRoot?.querySelector('[part="ground-glow"]')
+    const layers = [...element.shadowRoot?.querySelectorAll('[part~="lift-layer"]') ?? []]
+    const rings = [...element.shadowRoot?.querySelectorAll('[part~="ring"]') ?? []]
+    const bridgeLines = [...element.shadowRoot?.querySelectorAll('[part="bridge-line"]') ?? []]
+    const ticks = [...element.shadowRoot?.querySelectorAll('[part="tick"]') ?? []]
+    const segmentBlocks = [...element.shadowRoot?.querySelectorAll('[part="segment-block"]') ?? []]
+    const particles = [...element.shadowRoot?.querySelectorAll('[part="particle"]') ?? []]
+    const platformFills = [...element.shadowRoot?.querySelectorAll('[part="platform-fill"]') ?? []]
+    const coreTicks = [...element.shadowRoot?.querySelectorAll('[part="tick core-tick"]') ?? []]
+    const coreDisc = element.shadowRoot?.querySelector('[part="core-disc"]')
+    const voidHole = element.shadowRoot?.querySelector('[part="void-hole"]')
+    const voidRims = [...element.shadowRoot?.querySelectorAll('[part="void-rim"]') ?? []]
+    const content = element.shadowRoot?.querySelector('[part="content"]')
+    const animations = [...element.shadowRoot?.querySelectorAll('animate, animateTransform') ?? []]
+    const stops = [...element.shadowRoot?.querySelectorAll('linearGradient stop') ?? []]
+
+    expect(svg?.getAttribute('width')).toBe('160')
+    expect(svg?.getAttribute('height')).toBe('120')
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 160 120')
+    expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet')
+    expect(groundGlow?.getAttribute('rx')).toBe('68')
+    expect(layers.map(layer => layer.getAttribute('transform'))).toEqual([
+      'translate(80 70.8) scale(1 0.42)',
+      'translate(80 68.2) scale(1 0.42)',
+      'translate(80 65) scale(1 0.42)',
+      'translate(80 61.8) scale(1 0.42)',
+    ])
+    expect(rings).toHaveLength(38)
+    expect(bridgeLines).toHaveLength(4)
+    expect(ticks).toHaveLength(186)
+    expect(coreTicks).toHaveLength(36)
+    expect(segmentBlocks).toHaveLength(57)
+    expect(particles).toHaveLength(86)
+    expect(platformFills).toHaveLength(0)
+    expect(coreDisc?.getAttribute('r')).toBe('34.8')
+    expect(coreDisc?.getAttribute('fill')).toBe('transparent')
+    expect(voidHole?.getAttribute('fill')).toContain('dvk-decoration-11-void-')
+    expect(voidRims).toHaveLength(2)
+    expect(content).toBeNull()
+    expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#66f5ff', '#2f8cff', '#ffe69c']))
     expect(animations).toHaveLength(0)
   })
 
