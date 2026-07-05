@@ -3,7 +3,7 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const decoration11Metadata = {
   tagName: 'dvk-decoration-11',
   className: 'Decoration11Element',
-  description: 'Cyber floating audio halo with fixed-count rhythm blocks, clean glow rings, a calibrated tick ring, a segmented inner ring, and raised dashed-core indicators.',
+  description: 'Cyber floating audio halo that rasterizes animated SVG into a runtime WebM video to avoid sustained SVG animation CPU cost.',
   props: {
     color: {
       type: 'string',
@@ -50,9 +50,15 @@ export const decoration11Metadata = {
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },
+    {
+      name: 'dvk-raster-error',
+      detail: '{ message }',
+      description: 'Fired when runtime video rasterization fails; the component keeps the SVG fallback visible.',
+    },
   ],
   parts: [
     'graphic',
+    'raster',
     'vertical-links',
     'bridge-line',
     'lift-layer',

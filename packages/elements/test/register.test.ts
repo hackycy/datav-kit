@@ -16,6 +16,73 @@ class MockResizeObserver {
   disconnect = vi.fn()
 }
 
+function createCanvasContext(): CanvasRenderingContext2D {
+  const gradient = {
+    addColorStop: vi.fn(),
+  }
+
+  return {
+    arc: vi.fn(),
+    beginPath: vi.fn(),
+    clearRect: vi.fn(),
+    closePath: vi.fn(),
+    createLinearGradient: vi.fn(() => gradient),
+    drawImage: vi.fn(),
+    fillRect: vi.fn(),
+    getImageData: vi.fn((_x: number, _y: number, width: number, height: number) => ({
+      data: new Uint8ClampedArray(width * height * 4),
+    })),
+    lineTo: vi.fn(),
+    moveTo: vi.fn(),
+    restore: vi.fn(),
+    rotate: vi.fn(),
+    save: vi.fn(),
+    scale: vi.fn(),
+    setLineDash: vi.fn(),
+    stroke: vi.fn(),
+    translate: vi.fn(),
+  } as unknown as CanvasRenderingContext2D
+}
+
+class MockImage {
+  onload: (() => void) | null = null
+  onerror: (() => void) | null = null
+  private value = ''
+
+  set src(value: string) {
+    this.value = value
+    this.onload?.()
+  }
+
+  get src(): string {
+    return this.value
+  }
+}
+
+class MockMediaRecorder {
+  static isTypeSupported = vi.fn(() => true)
+
+  ondataavailable: ((event: BlobEvent) => void) | null = null
+  onerror: (() => void) | null = null
+  onstop: (() => void) | null = null
+
+  start = vi.fn()
+
+  stop = vi.fn(() => {
+    this.ondataavailable?.({
+      data: new Blob(['webm'], { type: 'video/webm' }),
+    } as BlobEvent)
+    this.onstop?.()
+  })
+}
+
+function createCanvasStream(): MediaStream {
+  return {
+    getTracks: vi.fn(() => [{ stop: vi.fn() }]),
+    getVideoTracks: vi.fn(() => [{ requestFrame: vi.fn() }]),
+  } as unknown as MediaStream
+}
+
 function emitResize(width: number, height: number): void {
   resizeCallbacks.at(-1)?.([
     {
@@ -463,6 +530,45 @@ describe('@datav-kit/elements', () => {
     expect(content).toBeNull()
     expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#66f5ff', '#2f8cff', '#ffe69c']))
     expect(animations).toHaveLength(0)
+  })
+
+  it('rasterizes decoration-11 animation to a webm video and replaces SVG', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    const revokeObjectURL = vi.fn()
+    vi.spyOn(HTMLCanvasElement.prototype, 'captureStream').mockReturnValue(createCanvasStream())
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL,
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-11') as Decoration11Element
+    const rasterError = vi.fn()
+    element.setAttribute('colors', '#66f5ff,#2f8cff,#ffe69c')
+    element.addEventListener('dvk-raster-error', rasterError)
+    document.body.append(element)
+
+    emitResize(320, 240)
+    await element.updateComplete
+    await vi.runAllTimersAsync()
+    await element.updateComplete
+
+    const video = element.shadowRoot?.querySelector('video')
+
+    expect(rasterError).not.toHaveBeenCalled()
+    expect(createObjectURL).toHaveBeenCalledWith(expect.objectContaining({ type: 'video/webm;codecs=vp9' }))
+    expect(video?.getAttribute('src')).toContain('blob:video/webm')
+    expect(video?.getAttribute('part')).toBe('graphic raster')
+    expect(video?.hasAttribute('loop')).toBe(true)
+    expect(video?.hasAttribute('muted')).toBe(true)
+    expect(element.shadowRoot?.querySelector('svg')).toBeNull()
+    expect(revokeObjectURL).toHaveBeenCalled()
   })
 
   it('maps count-to attributes and formats the disabled target value', async () => {

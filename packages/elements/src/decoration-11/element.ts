@@ -1,10 +1,16 @@
+import type { SvgVideoRasterFrame } from '../internal/svg-video-rasterizer'
 import { DatavElement, ResizeController, resolveNumberValue, resolveThemeValue } from '@datav-kit/core'
 import { css, html, svg } from 'lit'
 import { property, state } from 'lit/decorators.js'
+import { rasterizeSvgToVideo } from '../internal/svg-video-rasterizer'
 
 interface Decoration11Size {
   width: number
   height: number
+}
+
+interface Decoration11RasterSize extends Decoration11Size {
+  displayWidth: number
 }
 
 interface ArcSegment {
@@ -22,6 +28,14 @@ const defaultSize: Decoration11Size = {
 }
 const baseWidth = 160
 const baseHeight = 120
+const minRasterWidth = 960
+const maxRasterWidth = 1920
+const rasterFrameRate = 30
+const minRasterFrameCount = 360
+const maxRasterFrameCount = 840
+const rasterFrameDelay = 1000 / rasterFrameRate
+const rasterLoopDurationMultiplier = 2
+const rasterVideoBitsPerSecond = 12_000_000
 const perspectiveScaleY = 0.42
 const particleLayerY = 70.6
 const thinGlowLayerY = 70.6
@@ -59,12 +73,14 @@ export class Decoration11Element extends DatavElement {
       color: var(--dvk-color-primary, rgba(52, 236, 255, 0.92));
     }
 
-    svg {
+    svg,
+    video {
       position: absolute;
       inset: 0;
       display: block;
       width: 100%;
       height: 100%;
+      object-fit: contain;
       overflow: visible;
       pointer-events: none;
     }
@@ -101,6 +117,9 @@ export class Decoration11Element extends DatavElement {
   @state()
   private size = defaultSize
 
+  @state()
+  private rasterUrl = ''
+
   private readonly instanceId = ++decoration11Id
   private readonly ringGradientId = `dvk-decoration-11-ring-${this.instanceId}`
   private readonly accentGradientId = `dvk-decoration-11-accent-${this.instanceId}`
@@ -116,8 +135,23 @@ export class Decoration11Element extends DatavElement {
     }
   })
 
+  private rasterKey = ''
+  private pendingRasterKey = ''
+  private rasterToken = 0
+
+  override disconnectedCallback(): void {
+    this.rasterToken += 1
+    this.clearRaster()
+    super.disconnectedCallback()
+  }
+
   override firstUpdated(): void {
     this.emit('dvk-ready', { tagName: 'dvk-decoration-11' })
+    this.queueRasterize()
+  }
+
+  override updated(): void {
+    this.queueRasterize()
   }
 
   override render(): unknown {
@@ -125,9 +159,25 @@ export class Decoration11Element extends DatavElement {
     const duration = Math.min(Math.max(resolveNumberValue(this.dur, 9), 6), 14)
     const showAnimation = this.animated
       && !this.paused
+      && !this.rasterUrl
       && !this.prefersReducedMotion()
       && this.size.width > 0
       && this.size.height > 0
+
+    if (this.rasterUrl) {
+      return html`
+        <video
+          part="graphic raster"
+          src=${this.rasterUrl}
+          aria-hidden="true"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="auto"
+        ></video>
+      `
+    }
 
     return html`
       <svg
@@ -154,6 +204,106 @@ export class Decoration11Element extends DatavElement {
       </svg>
 
     `
+  }
+
+  private queueRasterize(): void {
+    if (typeof window === 'undefined' || typeof document === 'undefined')
+      return
+
+    const key = this.createRasterKey()
+    if (!key) {
+      this.pendingRasterKey = ''
+      this.rasterKey = ''
+      this.clearRaster()
+      return
+    }
+
+    if (key === this.rasterKey || key === this.pendingRasterKey)
+      return
+
+    this.clearRaster()
+    this.pendingRasterKey = key
+    const token = ++this.rasterToken
+
+    window.setTimeout(() => {
+      void this.generateRasterVideo(token, key)
+    }, 0)
+  }
+
+  private async generateRasterVideo(token: number, key: string): Promise<void> {
+    try {
+      const sourceSvg = this.renderRoot.querySelector('svg')
+      if (!sourceSvg)
+        return
+
+      const duration = Math.min(Math.max(resolveNumberValue(this.dur, 9), 6), 14)
+      const rasterSize = this.resolveRasterSize()
+      const url = await createRasterVideo(sourceSvg, duration, rasterSize)
+
+      if (token !== this.rasterToken || key !== this.pendingRasterKey) {
+        URL.revokeObjectURL(url)
+        return
+      }
+
+      this.pendingRasterKey = ''
+      this.rasterKey = key
+      this.rasterUrl = url
+    }
+    catch (error) {
+      if (token === this.rasterToken)
+        this.pendingRasterKey = ''
+
+      this.emit('dvk-raster-error', {
+        message: error instanceof Error ? error.message : String(error),
+      }, { bubbles: false })
+    }
+  }
+
+  private createRasterKey(): string {
+    if (!this.animated || this.paused || this.prefersReducedMotion())
+      return ''
+
+    if (this.size.width <= 0 || this.size.height <= 0)
+      return ''
+
+    if (typeof document === 'undefined')
+      return ''
+
+    const [primary, secondary, accent] = this.resolveColors()
+    const duration = Math.min(Math.max(resolveNumberValue(this.dur, 9), 6), 14)
+
+    return [
+      primary,
+      secondary,
+      accent,
+      duration,
+      Math.round(this.size.width),
+      Math.round(this.size.height),
+    ].join('|')
+  }
+
+  private resolveRasterSize(): Decoration11RasterSize {
+    const ratio = baseHeight / baseWidth
+    const contentWidth = Math.min(
+      Math.max(this.size.width, baseWidth),
+      Math.max(this.size.height, baseHeight) / ratio,
+    )
+    const requestedWidth = contentWidth * 3
+    const width = Math.round(Math.min(Math.max(requestedWidth, minRasterWidth), maxRasterWidth))
+
+    return {
+      width,
+      height: Math.round(width * ratio),
+      displayWidth: contentWidth,
+    }
+  }
+
+  private clearRaster(): void {
+    if (!this.rasterUrl)
+      return
+
+    URL.revokeObjectURL(this.rasterUrl)
+    this.rasterUrl = ''
   }
 
   private renderAudioBars(
@@ -587,6 +737,38 @@ export class Decoration11Element extends DatavElement {
       && typeof window.matchMedia === 'function'
       && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   }
+}
+
+async function createRasterVideo(sourceSvg: SVGSVGElement, duration: number, size: Decoration11RasterSize): Promise<string> {
+  const loopDuration = duration * rasterLoopDurationMultiplier
+  const frameCount = Math.min(Math.max(Math.round(loopDuration * rasterFrameRate), minRasterFrameCount), maxRasterFrameCount)
+  const strokeWidthScale = size.width / Math.max(size.displayWidth, baseWidth)
+
+  return rasterizeSvgToVideo(sourceSvg, {
+    width: size.width,
+    height: size.height,
+    frameCount,
+    frameDelay: rasterFrameDelay,
+    prepareFrame: prepareDecoration11RasterFrame,
+    strokeWidthScale,
+    videoBitsPerSecond: rasterVideoBitsPerSecond,
+  })
+}
+
+function prepareDecoration11RasterFrame(svg: SVGSVGElement, frame: SvgVideoRasterFrame): void {
+  svg.querySelectorAll('animate, animateTransform').forEach(node => node.remove())
+
+  setRasterRotation(svg, 'audio-bar-ring', -360 * frame.progress)
+  setRasterRotation(svg, 'thin-sweep', 360 * frame.progress)
+  setRasterRotation(svg, 'segmented-ring', -360 * frame.progress)
+  setRasterRotation(svg, 'triangle-indicators', 360 * frame.progress)
+}
+
+function setRasterRotation(svg: SVGSVGElement, part: string, angle: number): void {
+  const node = svg.querySelector(`[part~="${part}"]`)
+
+  if (node instanceof SVGElement)
+    node.setAttribute('transform', `rotate(${roundTo(angle, 3)} 0 0)`)
 }
 
 function splitColors(value: string): string[] {
