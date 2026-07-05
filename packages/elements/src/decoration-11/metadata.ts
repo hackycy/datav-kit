@@ -53,7 +53,7 @@ export const decoration11Metadata = {
       type: 'string',
       default: 'sprite',
       attribute: 'raster-renderer',
-      description: 'Runtime raster output renderer. Defaults to "sprite" for a transparent PNG atlas with CSS steps playback; use "video" for WebM playback.',
+      description: 'Runtime raster output renderer. Defaults to "sprite" for transparent PNG atlas playback on canvas; use "video" for WebM playback.',
     },
   },
   events: [

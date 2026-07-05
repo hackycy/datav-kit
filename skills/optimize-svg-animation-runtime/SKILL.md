@@ -54,7 +54,7 @@ Support `video-rasterize="false"`, `"0"`, and `"off"` as false. Default must rem
 
 For new integrations, `rasterRenderer` must default to `"sprite"` and support:
 
-- `"sprite"`: transparent PNG atlas with CSS `steps()` playback.
+- `"sprite"`: transparent PNG atlas with canvas single-clock playback.
 - `"video"`: transparent WebM playback.
 
 Unknown renderer values should fall back to `"video"` or the component's established fallback only if that matches existing behavior; otherwise prefer `"sprite"`.
@@ -85,7 +85,7 @@ Follow the decoration-11 structure unless there is a strong component-specific r
    - display width used for stroke compensation
    - any animation mode or variant that changes pixels
 4. Acquire a shared raster handle from a module-level cache.
-5. Default replacement is a sprite wrapper with `<img>` sheet playback and CSS `steps()`.
+5. Default replacement is a `<canvas part="graphic raster">` that draws frames from the decoded PNG atlas with one playback clock.
 6. Optional video replacement is `<video part="graphic raster" autoplay loop muted playsinline preload="auto">`.
 7. On prop/size changes, disconnection, or opt-out, release the raster handle and fall back safely.
 8. Emit a component event such as `dvk-raster-error` and keep SVG visible if generation fails.
@@ -118,23 +118,25 @@ SVG-to-raster can visibly degrade line art. Check these before blaming the rende
 - Keep raster scale adaptive. A practical starting point is DPR clamped to `1.5x-2x`, not fixed `3x`.
 - Use 24fps unless visual motion proves it needs more; 30fps transparent media can be expensive.
 - For sprite, cap the atlas by a raw RGBA budget and lower generated width before lowering fps.
+- For sprite, decode the generated atlas image before replacing the fallback SVG to avoid first-frame blank flashes.
 - If loop closure needs a longer cycle, explain the cost. Do not hide seams with crossfades unless the user accepts the look.
 
 ## Playback CPU Rules
 
-Transparent WebM playback may still keep Chrome Renderer CPU high because each visible `<video>` can decode/composite independently. Sprite playback can shift the cost toward atlas memory/GPU texture size.
+Transparent WebM playback may still keep Chrome Renderer CPU high because each visible `<video>` can decode/composite independently. Sprite playback can shift the cost toward atlas memory/GPU texture size and canvas draw scheduling.
 
 Always add:
 
 - `IntersectionObserver` pause/resume when offscreen.
 - `document.visibilitychange` pause/resume when tab is hidden.
-- `paused` and `animated` integration so public controls stop video playback or CSS sprite animation.
+- `paused` and `animated` integration so public controls stop video playback or the sprite canvas timer.
 
 If CPU remains high while visible:
 
 - Lower raster max width, fps, and bitrate before changing generation architecture.
 - Check how many visible video instances are decoding.
 - For sprite, check atlas pixel dimensions and generated frame count.
+- Avoid two-axis CSS sprite playback for multi-row atlases; independent row/column `steps()` animations can desynchronize and flash at row or loop boundaries.
 - Consider shared canvas playback or static SVG glow plus rasterized moving layers only after measuring sprite and video.
 
 ## SSR And Build Safety
@@ -181,5 +183,5 @@ Run docs build separately from tests that rebuild `packages/elements/dist`; conc
 - Runtime cache is bounded.
 - Generation tasks are serialized.
 - No top-level browser globals break SSR.
-- Hidden/offscreen videos pause and sprite CSS animation state updates.
+- Hidden/offscreen videos pause and sprite canvas timers stop.
 - The final answer explains whether remaining CPU is generation cost or playback decode/compositing cost.
