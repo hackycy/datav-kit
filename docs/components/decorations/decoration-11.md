@@ -8,7 +8,7 @@ description: Cyber floating audio halo with fixed outer rhythm blocks, glow ring
 
 <div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 420px; --datav-decoration-height: 315px;">
   <div class="datav-decoration-shell">
-    <dvk-decoration-11></dvk-decoration-11>
+    <dvk-decoration-11 raster-renderer="sprite"></dvk-decoration-11>
   </div>
 </div>
 
@@ -18,7 +18,7 @@ description: Cyber floating audio halo with fixed outer rhythm blocks, glow ring
 
 <div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 460px; --datav-decoration-height: 345px;">
   <div class="datav-decoration-shell">
-    <dvk-decoration-11 colors="#66f5ff,#2f8cff,#ffe69c" dur="9"></dvk-decoration-11>
+    <dvk-decoration-11 colors="#66f5ff,#2f8cff,#ffe69c" dur="9" raster-renderer="sprite"></dvk-decoration-11>
   </div>
 </div>
 
@@ -36,7 +36,8 @@ description: Cyber floating audio halo with fixed outer rhythm blocks, glow ring
 | `dur` | `number` | `9` | Base rotation duration in seconds. Values are clamped to the `6`-`14` second floating-halo range. |
 | `animated` | `boolean` | `true` | Enables the fixed outer audio rhythm-block ring and selected inner layers to rotate. |
 | `paused` | `boolean` | `false` | Stops all rotations while keeping the raised layered platform visible. |
-| `video-rasterize` | `boolean` | `true` | Enables runtime WebM rasterization for the animated SVG. Set `video-rasterize="false"` to keep the live SVG animation path. |
+| `video-rasterize` | `boolean` | `true` | Enables runtime rasterization for the animated SVG. Set `video-rasterize="false"` to keep the live SVG animation path. |
+| `raster-renderer` | `'video' \| 'sprite'` | `'sprite'` | Runtime raster output renderer. Defaults to transparent PNG atlas playback; use `video` for transparent WebM playback. |
 
 ## Events
 

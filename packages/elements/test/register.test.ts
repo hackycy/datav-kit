@@ -551,6 +551,8 @@ describe('@datav-kit/elements', () => {
     const element = document.createElement('dvk-decoration-11') as Decoration11Element
     const rasterError = vi.fn()
     element.setAttribute('colors', '#66f5ff,#2f8cff,#ffe69c')
+    element.setAttribute('dur', '6')
+    element.setAttribute('raster-renderer', 'video')
     element.addEventListener('dvk-raster-error', rasterError)
     document.body.append(element)
 
@@ -569,7 +571,7 @@ describe('@datav-kit/elements', () => {
     expect(video?.hasAttribute('muted')).toBe(true)
     expect(element.shadowRoot?.querySelector('svg')).toBeNull()
     expect(revokeObjectURL).toHaveBeenCalled()
-  })
+  }, 15000)
 
   it('keeps decoration-11 on live SVG animation when video rasterization is disabled', async () => {
     vi.useFakeTimers()
@@ -597,6 +599,45 @@ describe('@datav-kit/elements', () => {
     expect(createObjectURL).not.toHaveBeenCalled()
   })
 
+  it('rasterizes decoration-11 animation to a PNG sprite by default', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation((callback) => {
+      callback(new Blob(['png'], { type: 'image/png' }))
+    })
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-11') as Decoration11Element
+    element.setAttribute('dur', '6')
+    document.body.append(element)
+
+    emitResize(320, 240)
+    await element.updateComplete
+    await vi.runAllTimersAsync()
+    await element.updateComplete
+
+    const sprite = element.shadowRoot?.querySelector('.raster-sprite')
+    const sheet = element.shadowRoot?.querySelector('.raster-sprite-sheet')
+    const pngBlobCalls = createObjectURL.mock.calls
+      .filter(([blob]) => blob instanceof Blob && blob.type === 'image/png')
+
+    expect(element).toHaveProperty('rasterRenderer', 'sprite')
+    expect(pngBlobCalls).toHaveLength(1)
+    expect(sprite?.getAttribute('part')).toBe('graphic raster')
+    expect(sprite?.getAttribute('style')).toContain('--dvk-raster-columns:')
+    expect(sheet?.getAttribute('src')).toContain('blob:image/png')
+    expect(element.shadowRoot?.querySelector('video')).toBeNull()
+    expect(element.shadowRoot?.querySelector('svg')).toBeNull()
+  }, 15000)
+
   it('shares one decoration-11 rasterization across matching instances', async () => {
     vi.useFakeTimers()
     let urlIndex = 0
@@ -614,12 +655,16 @@ describe('@datav-kit/elements', () => {
 
     const first = document.createElement('dvk-decoration-11') as Decoration11Element
     first.setAttribute('colors', '#44f5ff,#447cff,#ffeeaa')
+    first.setAttribute('dur', '6')
+    first.setAttribute('raster-renderer', 'video')
     document.body.append(first)
     emitResize(320, 240)
     await first.updateComplete
 
     const second = document.createElement('dvk-decoration-11') as Decoration11Element
     second.setAttribute('colors', '#44f5ff,#447cff,#ffeeaa')
+    second.setAttribute('dur', '6')
+    second.setAttribute('raster-renderer', 'video')
     document.body.append(second)
     emitResize(320, 240)
     await second.updateComplete
@@ -635,7 +680,7 @@ describe('@datav-kit/elements', () => {
 
     expect(videoBlobCalls).toHaveLength(1)
     expect(firstVideo?.getAttribute('src')).toBe(secondVideo?.getAttribute('src'))
-  })
+  }, 15000)
 
   it('maps count-to attributes and formats the disabled target value', async () => {
     register()

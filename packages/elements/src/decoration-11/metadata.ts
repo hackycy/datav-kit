@@ -3,7 +3,7 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const decoration11Metadata = {
   tagName: 'dvk-decoration-11',
   className: 'Decoration11Element',
-  description: 'Cyber floating audio halo that rasterizes animated SVG into a runtime WebM video to avoid sustained SVG animation CPU cost.',
+  description: 'Cyber floating audio halo that can rasterize animated SVG into runtime media to avoid sustained SVG animation CPU cost.',
   props: {
     color: {
       type: 'string',
@@ -47,7 +47,13 @@ export const decoration11Metadata = {
       type: 'boolean',
       default: true,
       attribute: 'video-rasterize',
-      description: 'Enables runtime WebM rasterization for the animated SVG. Set video-rasterize="false" to keep the live SVG animation path.',
+      description: 'Enables runtime rasterization for the animated SVG. Set video-rasterize="false" to keep the live SVG animation path.',
+    },
+    rasterRenderer: {
+      type: 'string',
+      default: 'sprite',
+      attribute: 'raster-renderer',
+      description: 'Runtime raster output renderer. Defaults to "sprite" for a transparent PNG atlas with CSS steps playback; use "video" for WebM playback.',
     },
   },
   events: [
@@ -59,7 +65,7 @@ export const decoration11Metadata = {
     {
       name: 'dvk-raster-error',
       detail: '{ message }',
-      description: 'Fired when runtime video rasterization fails; the component keeps the SVG fallback visible.',
+      description: 'Fired when runtime rasterization fails; the component keeps the SVG fallback visible.',
     },
   ],
   parts: [

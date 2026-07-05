@@ -2,6 +2,7 @@ import type { SvgVideoRasterFrame } from '../internal/svg-video-rasterizer'
 import { DatavElement, ResizeController, resolveNumberValue, resolveThemeValue } from '@datav-kit/core'
 import { css, html, svg } from 'lit'
 import { property, state } from 'lit/decorators.js'
+import { rasterizeSvgToPngSprite } from '../internal/svg-png-sprite-rasterizer'
 import { rasterizeSvgToVideo } from '../internal/svg-video-rasterizer'
 
 interface Decoration11Size {
@@ -14,16 +15,27 @@ interface Decoration11RasterSize extends Decoration11Size {
 }
 
 interface Decoration11RasterHandle {
-  url: string
+  asset: Decoration11RasterAsset
   release: () => void
 }
 
 interface Decoration11RasterCacheEntry {
   lastUsed: number
-  promise?: Promise<string>
+  asset?: Decoration11RasterAsset
+  promise?: Promise<Decoration11RasterAsset>
   refs: number
-  url?: string
 }
+
+interface Decoration11RasterAsset {
+  url: string
+  renderer: Decoration11RasterRenderer
+  frameCount?: number
+  columns?: number
+  rows?: number
+  frameDelay?: number
+}
+
+type Decoration11RasterRenderer = 'sprite' | 'video'
 
 interface ArcSegment {
   start: number
@@ -50,6 +62,13 @@ const maxRasterFrameCount = 672
 const rasterFrameDelay = 1000 / rasterFrameRate
 const rasterLoopDurationMultiplier = 2
 const rasterVideoBitsPerSecond = 8_000_000
+const spriteMaxRasterWidth = 640
+const spriteMinRasterWidth = 320
+const spriteRasterFrameRate = 24
+const spriteMinRasterFrameCount = 240
+const spriteMaxRasterFrameCount = 672
+const spriteRasterFrameDelay = 1000 / spriteRasterFrameRate
+const spriteRawAtlasBudgetBytes = 192 * 1024 * 1024
 const maxRasterCacheEntries = 12
 const perspectiveScaleY = 0.42
 const particleLayerY = 70.6
@@ -101,8 +120,10 @@ export class Decoration11Element extends DatavElement {
       color: var(--dvk-color-primary, rgba(52, 236, 255, 0.92));
     }
 
+    img[part~="graphic"],
     svg,
-    video {
+    video,
+    .raster-sprite {
       position: absolute;
       inset: 0;
       display: block;
@@ -111,6 +132,48 @@ export class Decoration11Element extends DatavElement {
       object-fit: contain;
       overflow: visible;
       pointer-events: none;
+    }
+
+    .raster-sprite {
+      contain: layout paint size;
+      overflow: hidden;
+    }
+
+    .raster-sprite-y {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: calc(var(--dvk-raster-rows, 1) * 100%);
+      animation: dvk-decoration-11-sprite-y var(--dvk-sprite-total-duration, 1s) steps(var(--dvk-raster-rows, 1)) infinite;
+      animation-play-state: var(--dvk-sprite-play-state, running);
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    .raster-sprite-sheet {
+      position: absolute;
+      inset: 0 auto auto 0;
+      display: block;
+      width: calc(var(--dvk-raster-columns, 1) * 100%);
+      height: 100%;
+      max-width: none;
+      object-fit: fill;
+      animation: dvk-decoration-11-sprite-x var(--dvk-sprite-row-duration, 1s) steps(var(--dvk-raster-columns, 1)) infinite;
+      animation-play-state: var(--dvk-sprite-play-state, running);
+      transform-origin: 0 0;
+      will-change: transform;
+    }
+
+    @keyframes dvk-decoration-11-sprite-x {
+      to {
+        transform: translateX(-100%);
+      }
+    }
+
+    @keyframes dvk-decoration-11-sprite-y {
+      to {
+        transform: translateY(-100%);
+      }
     }
 
     path,
@@ -145,11 +208,14 @@ export class Decoration11Element extends DatavElement {
   @property({ attribute: 'video-rasterize', converter: defaultTrueBooleanConverter })
   videoRasterize = true
 
+  @property({ attribute: 'raster-renderer' })
+  rasterRenderer: Decoration11RasterRenderer = 'sprite'
+
   @state()
   private size = defaultSize
 
   @state()
-  private rasterUrl = ''
+  private rasterAsset: Decoration11RasterAsset | undefined
 
   private readonly instanceId = ++decoration11Id
   private readonly ringGradientId = `dvk-decoration-11-ring-${this.instanceId}`
@@ -175,6 +241,7 @@ export class Decoration11Element extends DatavElement {
 
   private readonly handleDocumentVisibility = (): void => {
     this.syncRasterPlayback()
+    this.requestUpdate()
   }
 
   override connectedCallback(): void {
@@ -185,6 +252,7 @@ export class Decoration11Element extends DatavElement {
       this.rasterVisibilityObserver = new IntersectionObserver((entries) => {
         this.rasterVisible = entries.at(-1)?.isIntersecting ?? true
         this.syncRasterPlayback()
+        this.requestUpdate()
       })
       this.rasterVisibilityObserver.observe(this)
     }
@@ -214,16 +282,31 @@ export class Decoration11Element extends DatavElement {
     const duration = Math.min(Math.max(resolveNumberValue(this.dur, 9), 6), 14)
     const showAnimation = this.animated
       && !this.paused
-      && !this.rasterUrl
+      && !this.rasterAsset
       && !this.prefersReducedMotion()
       && this.size.width > 0
       && this.size.height > 0
 
-    if (this.rasterUrl) {
+    if (this.rasterAsset) {
+      if (this.rasterAsset.renderer === 'sprite') {
+        return html`
+          <div
+            part="graphic raster"
+            class="raster-sprite"
+            style=${this.createSpriteStyle(this.rasterAsset)}
+            aria-hidden="true"
+          >
+            <div class="raster-sprite-y">
+              <img class="raster-sprite-sheet" src=${this.rasterAsset.url} alt="">
+            </div>
+          </div>
+        `
+      }
+
       return html`
         <video
           part="graphic raster"
-          src=${this.rasterUrl}
+          src=${this.rasterAsset.url}
           aria-hidden="true"
           autoplay
           loop
@@ -281,11 +364,11 @@ export class Decoration11Element extends DatavElement {
     const token = ++this.rasterToken
 
     window.setTimeout(() => {
-      void this.generateRasterVideo(token, key)
+      void this.generateRaster(token, key)
     }, 0)
   }
 
-  private async generateRasterVideo(token: number, key: string): Promise<void> {
+  private async generateRaster(token: number, key: string): Promise<void> {
     try {
       const sourceSvg = this.renderRoot.querySelector('svg')
       if (!sourceSvg)
@@ -293,7 +376,8 @@ export class Decoration11Element extends DatavElement {
 
       const duration = Math.min(Math.max(resolveNumberValue(this.dur, 9), 6), 14)
       const rasterSize = this.resolveRasterSize()
-      const raster = await acquireDecoration11Raster(key, sourceSvg, duration, rasterSize)
+      const renderer = this.resolveRasterRenderer()
+      const raster = await acquireDecoration11Raster(key, sourceSvg, duration, rasterSize, renderer)
 
       if (token !== this.rasterToken || key !== this.pendingRasterKey) {
         raster.release()
@@ -303,7 +387,7 @@ export class Decoration11Element extends DatavElement {
       this.pendingRasterKey = ''
       this.rasterKey = key
       this.rasterRelease = raster.release
-      this.rasterUrl = raster.url
+      this.rasterAsset = raster.asset
     }
     catch (error) {
       if (token === this.rasterToken)
@@ -328,8 +412,10 @@ export class Decoration11Element extends DatavElement {
     const [primary, secondary, accent] = this.resolveColors()
     const duration = Math.min(Math.max(resolveNumberValue(this.dur, 9), 6), 14)
     const rasterSize = this.resolveRasterSize()
+    const renderer = this.resolveRasterRenderer()
 
     return [
+      renderer,
       primary,
       secondary,
       accent,
@@ -356,10 +442,17 @@ export class Decoration11Element extends DatavElement {
     }
   }
 
+  private resolveRasterRenderer(): Decoration11RasterRenderer {
+    if (this.rasterRenderer === 'sprite')
+      return this.rasterRenderer
+
+    return 'video'
+  }
+
   private clearRaster(): void {
     this.rasterRelease?.()
     this.rasterRelease = undefined
-    this.rasterUrl = ''
+    this.rasterAsset = undefined
   }
 
   private syncRasterPlayback(): void {
@@ -376,6 +469,25 @@ export class Decoration11Element extends DatavElement {
     }
 
     video.pause()
+  }
+
+  private shouldPlayRaster(): boolean {
+    return this.animated && !this.paused && this.rasterVisible && (typeof document === 'undefined' || !document.hidden)
+  }
+
+  private createSpriteStyle(asset: Decoration11RasterAsset): string {
+    const columns = Math.max(asset.columns ?? 1, 1)
+    const rows = Math.max(asset.rows ?? 1, 1)
+    const frameDelay = Math.max(asset.frameDelay ?? spriteRasterFrameDelay, 1)
+    const frameCount = Math.max(asset.frameCount ?? columns * rows, 1)
+
+    return [
+      `--dvk-raster-columns:${columns}`,
+      `--dvk-raster-rows:${rows}`,
+      `--dvk-sprite-row-duration:${roundTo(frameDelay * columns, 3)}ms`,
+      `--dvk-sprite-total-duration:${roundTo(frameDelay * frameCount, 3)}ms`,
+      `--dvk-sprite-play-state:${this.shouldPlayRaster() ? 'running' : 'paused'}`,
+    ].join(';')
   }
 
   private renderAudioBars(
@@ -817,12 +929,12 @@ function resolveRasterScale(): number {
   return Math.min(Math.max(ratio, minRasterScale), maxRasterScale)
 }
 
-async function createRasterVideo(sourceSvg: SVGSVGElement, duration: number, size: Decoration11RasterSize): Promise<string> {
+async function createRasterVideo(sourceSvg: SVGSVGElement, duration: number, size: Decoration11RasterSize): Promise<Decoration11RasterAsset> {
   const loopDuration = duration * rasterLoopDurationMultiplier
   const frameCount = Math.min(Math.max(Math.round(loopDuration * rasterFrameRate), minRasterFrameCount), maxRasterFrameCount)
   const strokeWidthScale = size.width / Math.max(size.displayWidth, baseWidth)
 
-  return rasterizeSvgToVideo(sourceSvg, {
+  const url = await rasterizeSvgToVideo(sourceSvg, {
     width: size.width,
     height: size.height,
     frameCount,
@@ -831,6 +943,45 @@ async function createRasterVideo(sourceSvg: SVGSVGElement, duration: number, siz
     strokeWidthScale,
     videoBitsPerSecond: rasterVideoBitsPerSecond,
   })
+
+  return {
+    url,
+    renderer: 'video',
+  }
+}
+
+async function createRasterSprite(sourceSvg: SVGSVGElement, duration: number, size: Decoration11RasterSize): Promise<Decoration11RasterAsset> {
+  const loopDuration = duration * rasterLoopDurationMultiplier
+  const requestedFrameCount = Math.min(Math.max(Math.round(loopDuration * spriteRasterFrameRate), spriteMinRasterFrameCount), spriteMaxRasterFrameCount)
+  const columns = Math.ceil(Math.sqrt(requestedFrameCount))
+  const rows = Math.ceil(requestedFrameCount / columns)
+  const frameCount = columns * rows
+  const frameDelay = loopDuration * 1000 / frameCount
+  const widthCeiling = Math.min(size.width, spriteMaxRasterWidth)
+  const maxWidthByBudget = Math.floor(Math.sqrt(spriteRawAtlasBudgetBytes / (frameCount * (baseHeight / baseWidth) * 4)))
+  const widthFloor = Math.min(spriteMinRasterWidth, widthCeiling)
+  const width = Math.max(Math.min(widthCeiling, maxWidthByBudget), widthFloor)
+  const height = Math.round(width * baseHeight / baseWidth)
+  const strokeWidthScale = width / Math.max(size.displayWidth, baseWidth)
+  const result = await rasterizeSvgToPngSprite(sourceSvg, {
+    width,
+    height,
+    frameCount,
+    columns,
+    rows,
+    frameDelay,
+    prepareFrame: prepareDecoration11RasterFrame,
+    strokeWidthScale,
+  })
+
+  return {
+    url: result.url,
+    renderer: 'sprite',
+    frameCount: result.frameCount,
+    columns: result.columns,
+    rows: result.rows,
+    frameDelay: result.frameDelay,
+  }
 }
 
 async function acquireDecoration11Raster(
@@ -838,6 +989,7 @@ async function acquireDecoration11Raster(
   sourceSvg: SVGSVGElement,
   duration: number,
   size: Decoration11RasterSize,
+  renderer: Decoration11RasterRenderer,
 ): Promise<Decoration11RasterHandle> {
   let entry = rasterCache.get(key)
 
@@ -852,16 +1004,16 @@ async function acquireDecoration11Raster(
   entry.refs += 1
   entry.lastUsed = Date.now()
 
-  if (!entry.url && !entry.promise) {
-    entry.promise = enqueueRasterVideo(sourceSvg, duration, size)
-      .then((url) => {
+  if (!entry.asset && !entry.promise) {
+    entry.promise = enqueueRaster(sourceSvg, duration, size, renderer)
+      .then((asset) => {
         if (rasterCache.get(key) === entry) {
-          entry.url = url
+          entry.asset = asset
           entry.promise = undefined
           trimRasterCache()
         }
 
-        return url
+        return asset
       })
       .catch((error) => {
         if (rasterCache.get(key) === entry)
@@ -872,17 +1024,17 @@ async function acquireDecoration11Raster(
   }
 
   try {
-    let url = entry.url
+    let asset = entry.asset
 
-    if (!url) {
+    if (!asset) {
       if (!entry.promise)
         throw new Error('Decoration 11 rasterization did not start.')
 
-      url = await entry.promise
+      asset = await entry.promise
     }
 
     return {
-      url,
+      asset,
       release: () => releaseDecoration11Raster(key),
     }
   }
@@ -892,8 +1044,18 @@ async function acquireDecoration11Raster(
   }
 }
 
-function enqueueRasterVideo(sourceSvg: SVGSVGElement, duration: number, size: Decoration11RasterSize): Promise<string> {
-  const run = rasterQueue.then(() => createRasterVideo(sourceSvg, duration, size))
+function enqueueRaster(
+  sourceSvg: SVGSVGElement,
+  duration: number,
+  size: Decoration11RasterSize,
+  renderer: Decoration11RasterRenderer,
+): Promise<Decoration11RasterAsset> {
+  const run = rasterQueue.then(() => {
+    if (renderer === 'sprite')
+      return createRasterSprite(sourceSvg, duration, size)
+
+    return createRasterVideo(sourceSvg, duration, size)
+  })
 
   rasterQueue = run.then(
     () => undefined,
@@ -915,14 +1077,14 @@ function releaseDecoration11Raster(key: string): void {
 
 function trimRasterCache(): void {
   const releasable = [...rasterCache.entries()]
-    .filter(([, entry]) => entry.refs === 0 && entry.url)
+    .filter(([, entry]) => entry.refs === 0 && entry.asset)
     .sort(([, left], [, right]) => left.lastUsed - right.lastUsed)
 
   while (rasterCache.size > maxRasterCacheEntries && releasable.length > 0) {
     const [key, entry] = releasable.shift()!
 
-    if (entry.url)
-      URL.revokeObjectURL(entry.url)
+    if (entry.asset)
+      URL.revokeObjectURL(entry.asset.url)
 
     rasterCache.delete(key)
   }

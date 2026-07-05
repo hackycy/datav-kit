@@ -1,13 +1,13 @@
 ---
 name: optimize-svg-animation-runtime
-description: Diagnose and fix high CPU usage from complex animated SVG components in datav-kit by applying a consistent runtime rasterization/video fallback pattern, feature switch, cache/queue lifecycle, SSR safety, and validation workflow. Use when a decoration, border, HUD frame, or other SVG-heavy component causes Chrome Renderer/Google Chrome Helper CPU spikes, when adding the decoration-11 video rasterization approach to another component, or when deciding whether to keep SVG, simplify animation, or use a rasterized runtime asset.
+description: Diagnose and fix high CPU usage from complex animated SVG components in datav-kit by applying the shared runtime rasterization pattern with PNG sprite as the default renderer, optional WebM video renderer, feature switch, cache/queue lifecycle, SSR safety, and validation workflow. Use when a decoration, border, HUD frame, or other SVG-heavy component causes Chrome Renderer/Google Chrome Helper CPU spikes, when adding the decoration-11 rasterization approach to another component, or when deciding whether to keep SVG, simplify animation, or use a rasterized runtime asset.
 ---
 
 # Optimize SVG Animation Runtime
 
 ## Overview
 
-Use this skill when a datav-kit component has sustained CPU usage from SVG animation, filters, masks, gradients, or many animated nodes. The goal is not to blindly convert SVG to video; first prove the cost source, then apply the least risky runtime strategy with the same public API and lifecycle rules across components.
+Use this skill when a datav-kit component has sustained CPU usage from SVG animation, filters, masks, gradients, or many animated nodes. The goal is not to blindly convert SVG to media; first prove the cost source, then apply the least risky runtime strategy with the same public API and lifecycle rules across components.
 
 ## Read First
 
@@ -17,7 +17,8 @@ Before editing, read:
 - `docs/architecture.md`
 - The target component folder
 - `packages/elements/src/decoration-11/element.ts`
-- `packages/elements/src/internal/svg-video-rasterizer.ts` when reusing the current WebM path
+- `packages/elements/src/internal/svg-png-sprite-rasterizer.ts` when reusing the default sprite path
+- `packages/elements/src/internal/svg-video-rasterizer.ts` when reusing the optional WebM path
 - The target component metadata, docs page, registration/test coverage
 
 ## Decision Path
@@ -25,32 +26,44 @@ Before editing, read:
 1. Confirm the runtime cost.
    - Reproduce with the live SVG animation visible.
    - Distinguish generation CPU, playback CPU, layout/paint CPU, and memory growth.
-   - Check whether the CPU stays high after replacing SVG with `<video>`; if it does, suspect transparent WebM decode/compositing, not the recorder.
+   - Check whether the CPU stays high after replacing SVG with runtime media; if it does, separate playback decode/compositing from generation cost.
 
 2. Prefer cheaper SVG only when fidelity is easy.
    - Reduce repeated filters, animated nodes, or blur stacks if the visual survives.
    - Add reduced-motion and hidden/offscreen pauses.
    - Do not degrade the component's intended visual identity just to keep SVG.
 
-3. Use runtime rasterization when SVG animation is the sustained CPU source and the environment is Chromium-oriented.
+3. Use runtime rasterization when SVG animation is the sustained CPU source and the visual must remain faithful.
    - Reuse the shared internal rasterizer instead of creating component-specific encoders.
    - Keep the live SVG as initial render and fallback.
-   - Replace with video only after generation succeeds.
+   - Replace the SVG only after generation succeeds.
 
-4. Escalate away from WebM alpha when fidelity or playback CPU is unacceptable.
-   - For shallow or white backgrounds requiring exact translucent glow, consider APNG or PNG frame sequence.
-   - For many repeated visible instances, consider one shared canvas/sprite playback instead of many independent videos.
+4. Prefer PNG sprite for new integrations.
+   - PNG sprite keeps true alpha and high glow fidelity.
+   - Use WebM video only when sprite atlas size or playback behavior is worse in real measurements.
+   - Do not use GIF for translucent glow; palette and transparency limitations degrade the visual.
 
 ## Required Public API
 
-Every component using runtime rasterization must expose an opt-out property named `videoRasterize`, backed by the `video-rasterize` attribute and a default-true boolean converter.
+Every component using runtime rasterization must expose:
+
+- An opt-out property named `videoRasterize`, backed by the `video-rasterize` attribute and a default-true boolean converter.
+- A renderer property named `rasterRenderer`, backed by the `raster-renderer` attribute.
 
 Support `video-rasterize="false"`, `"0"`, and `"off"` as false. Default must remain true unless the user explicitly asks otherwise. When disabled, the component must keep the original live SVG path and must not create canvas/video resources.
+
+For new integrations, `rasterRenderer` must default to `"sprite"` and support:
+
+- `"sprite"`: transparent PNG atlas with CSS `steps()` playback.
+- `"video"`: transparent WebM playback.
+
+Unknown renderer values should fall back to `"video"` or the component's established fallback only if that matches existing behavior; otherwise prefer `"sprite"`.
 
 Document the property in metadata and docs:
 
 ```html
 <dvk-some-component video-rasterize="false"></dvk-some-component>
+<dvk-some-component raster-renderer="video"></dvk-some-component>
 ```
 
 ## Runtime Rasterization Pattern
@@ -72,9 +85,10 @@ Follow the decoration-11 structure unless there is a strong component-specific r
    - display width used for stroke compensation
    - any animation mode or variant that changes pixels
 4. Acquire a shared raster handle from a module-level cache.
-5. Replace SVG with `<video part="graphic raster" autoplay loop muted playsinline preload="auto">`.
-6. On prop/size changes, disconnection, or opt-out, release the raster handle and fall back safely.
-7. Emit a component event such as `dvk-raster-error` and keep SVG visible if generation fails.
+5. Default replacement is a sprite wrapper with `<img>` sheet playback and CSS `steps()`.
+6. Optional video replacement is `<video part="graphic raster" autoplay loop muted playsinline preload="auto">`.
+7. On prop/size changes, disconnection, or opt-out, release the raster handle and fall back safely.
+8. Emit a component event such as `dvk-raster-error` and keep SVG visible if generation fails.
 
 ## Shared Queue And Cache Rules
 
@@ -91,35 +105,37 @@ Blob URL rules:
 - Revoke temporary frame SVG Blob URLs immediately after image decode.
 - Stop `MediaStreamTrack`s in `finally`.
 - Stop `MediaRecorder` in `finally`.
-- Revoke completed video Blob URLs only when evicting from cache or when no longer shared.
+- Revoke completed media Blob URLs only when evicting from cache or when no longer shared.
 
 ## Fidelity Rules
 
-SVG-to-video can visibly degrade line art. Check these before blaming the codec:
+SVG-to-raster can visibly degrade line art. Check these before blaming the renderer:
 
 - `vector-effect: non-scaling-stroke` plus high-resolution canvas can make strokes thinner after downscale. Compensate stroke widths in the cloned SVG only.
 - Use final displayed content width, not unstable `clientWidth` from cloned SVG, for stroke compensation.
 - Avoid black-background `screen` compositing if the component must match light backgrounds.
 - Avoid GIF for glow/alpha: palette and transparency limitations usually ruin translucent lines.
 - Keep raster scale adaptive. A practical starting point is DPR clamped to `1.5x-2x`, not fixed `3x`.
-- Use 24fps unless visual motion proves it needs more; 30fps transparent video can be expensive.
+- Use 24fps unless visual motion proves it needs more; 30fps transparent media can be expensive.
+- For sprite, cap the atlas by a raw RGBA budget and lower generated width before lowering fps.
 - If loop closure needs a longer cycle, explain the cost. Do not hide seams with crossfades unless the user accepts the look.
 
 ## Playback CPU Rules
 
-Transparent WebM playback may still keep Chrome Renderer CPU high because each visible `<video>` can decode/composite independently.
+Transparent WebM playback may still keep Chrome Renderer CPU high because each visible `<video>` can decode/composite independently. Sprite playback can shift the cost toward atlas memory/GPU texture size.
 
 Always add:
 
 - `IntersectionObserver` pause/resume when offscreen.
 - `document.visibilitychange` pause/resume when tab is hidden.
-- `paused` and `animated` integration so public controls stop the video.
+- `paused` and `animated` integration so public controls stop video playback or CSS sprite animation.
 
 If CPU remains high while visible:
 
 - Lower raster max width, fps, and bitrate before changing generation architecture.
 - Check how many visible video instances are decoding.
-- Consider APNG/PNG sequence, shared canvas playback, or static SVG glow plus rasterized moving layers.
+- For sprite, check atlas pixel dimensions and generated frame count.
+- Consider shared canvas playback or static SVG glow plus rasterized moving layers only after measuring sprite and video.
 
 ## SSR And Build Safety
 
@@ -138,9 +154,11 @@ Access them only inside browser-gated functions. VitePress/docs SSR must be able
 
 Add or update tests for every component integration:
 
-- Default path eventually replaces SVG with video when rasterization succeeds.
+- Default path eventually replaces SVG with sprite when rasterization succeeds.
+- `raster-renderer="video"` replaces SVG with video when rasterization succeeds.
+- `raster-renderer="sprite"` or no renderer attribute uses sprite.
 - `video-rasterize="false"` keeps live SVG and does not call `URL.createObjectURL`.
-- Matching instances share one generated video URL.
+- Matching instances share one generated media URL.
 - Raster errors keep SVG fallback visible.
 - Typecheck, lint, package tests, and docs build pass.
 
@@ -163,5 +181,5 @@ Run docs build separately from tests that rebuild `packages/elements/dist`; conc
 - Runtime cache is bounded.
 - Generation tasks are serialized.
 - No top-level browser globals break SSR.
-- Hidden/offscreen videos pause.
+- Hidden/offscreen videos pause and sprite CSS animation state updates.
 - The final answer explains whether remaining CPU is generation cost or playback decode/compositing cost.
