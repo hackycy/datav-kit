@@ -13,6 +13,18 @@ interface Decoration11RasterSize extends Decoration11Size {
   displayWidth: number
 }
 
+interface Decoration11RasterHandle {
+  url: string
+  release: () => void
+}
+
+interface Decoration11RasterCacheEntry {
+  lastUsed: number
+  promise?: Promise<string>
+  refs: number
+  url?: string
+}
+
 interface ArcSegment {
   start: number
   end: number
@@ -28,14 +40,17 @@ const defaultSize: Decoration11Size = {
 }
 const baseWidth = 160
 const baseHeight = 120
-const minRasterWidth = 960
-const maxRasterWidth = 1920
-const rasterFrameRate = 30
-const minRasterFrameCount = 360
-const maxRasterFrameCount = 840
+const minRasterWidth = 480
+const maxRasterWidth = 1280
+const minRasterScale = 1.5
+const maxRasterScale = 2
+const rasterFrameRate = 24
+const minRasterFrameCount = 240
+const maxRasterFrameCount = 672
 const rasterFrameDelay = 1000 / rasterFrameRate
 const rasterLoopDurationMultiplier = 2
-const rasterVideoBitsPerSecond = 12_000_000
+const rasterVideoBitsPerSecond = 8_000_000
+const maxRasterCacheEntries = 12
 const perspectiveScaleY = 0.42
 const particleLayerY = 70.6
 const thinGlowLayerY = 70.6
@@ -58,7 +73,20 @@ const thinArcSegments: ArcSegment[] = [
   { start: 184, end: 248, radius: 63.2, width: 0.72, opacity: 0.58, accent: 'primary' },
   { start: 292, end: 338, radius: 63.2, width: 0.6, opacity: 0.44, accent: 'white' },
 ]
+const defaultTrueBooleanConverter = {
+  fromAttribute(value: string | null): boolean {
+    if (value === null)
+      return true
+
+    return !['0', 'false', 'off'].includes(value.trim().toLowerCase())
+  },
+  toAttribute(value: boolean): string {
+    return String(value)
+  },
+}
 let decoration11Id = 0
+let rasterQueue = Promise.resolve()
+const rasterCache = new Map<string, Decoration11RasterCacheEntry>()
 
 export class Decoration11Element extends DatavElement {
   static override styles = css`
@@ -114,6 +142,9 @@ export class Decoration11Element extends DatavElement {
   @property({ type: Boolean })
   paused = false
 
+  @property({ attribute: 'video-rasterize', converter: defaultTrueBooleanConverter })
+  videoRasterize = true
+
   @state()
   private size = defaultSize
 
@@ -137,10 +168,33 @@ export class Decoration11Element extends DatavElement {
 
   private rasterKey = ''
   private pendingRasterKey = ''
+  private rasterRelease: (() => void) | undefined
   private rasterToken = 0
+  private rasterVisible = true
+  private rasterVisibilityObserver: IntersectionObserver | undefined
+
+  private readonly handleDocumentVisibility = (): void => {
+    this.syncRasterPlayback()
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback()
+    document.addEventListener('visibilitychange', this.handleDocumentVisibility)
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      this.rasterVisibilityObserver = new IntersectionObserver((entries) => {
+        this.rasterVisible = entries.at(-1)?.isIntersecting ?? true
+        this.syncRasterPlayback()
+      })
+      this.rasterVisibilityObserver.observe(this)
+    }
+  }
 
   override disconnectedCallback(): void {
     this.rasterToken += 1
+    document.removeEventListener('visibilitychange', this.handleDocumentVisibility)
+    this.rasterVisibilityObserver?.disconnect()
+    this.rasterVisibilityObserver = undefined
     this.clearRaster()
     super.disconnectedCallback()
   }
@@ -152,6 +206,7 @@ export class Decoration11Element extends DatavElement {
 
   override updated(): void {
     this.queueRasterize()
+    this.syncRasterPlayback()
   }
 
   override render(): unknown {
@@ -238,16 +293,17 @@ export class Decoration11Element extends DatavElement {
 
       const duration = Math.min(Math.max(resolveNumberValue(this.dur, 9), 6), 14)
       const rasterSize = this.resolveRasterSize()
-      const url = await createRasterVideo(sourceSvg, duration, rasterSize)
+      const raster = await acquireDecoration11Raster(key, sourceSvg, duration, rasterSize)
 
       if (token !== this.rasterToken || key !== this.pendingRasterKey) {
-        URL.revokeObjectURL(url)
+        raster.release()
         return
       }
 
       this.pendingRasterKey = ''
       this.rasterKey = key
-      this.rasterUrl = url
+      this.rasterRelease = raster.release
+      this.rasterUrl = raster.url
     }
     catch (error) {
       if (token === this.rasterToken)
@@ -260,7 +316,7 @@ export class Decoration11Element extends DatavElement {
   }
 
   private createRasterKey(): string {
-    if (!this.animated || this.paused || this.prefersReducedMotion())
+    if (!this.videoRasterize || !this.animated || this.paused || this.prefersReducedMotion())
       return ''
 
     if (this.size.width <= 0 || this.size.height <= 0)
@@ -271,14 +327,16 @@ export class Decoration11Element extends DatavElement {
 
     const [primary, secondary, accent] = this.resolveColors()
     const duration = Math.min(Math.max(resolveNumberValue(this.dur, 9), 6), 14)
+    const rasterSize = this.resolveRasterSize()
 
     return [
       primary,
       secondary,
       accent,
       duration,
-      Math.round(this.size.width),
-      Math.round(this.size.height),
+      rasterSize.width,
+      rasterSize.height,
+      Math.round(rasterSize.displayWidth),
     ].join('|')
   }
 
@@ -288,7 +346,7 @@ export class Decoration11Element extends DatavElement {
       Math.max(this.size.width, baseWidth),
       Math.max(this.size.height, baseHeight) / ratio,
     )
-    const requestedWidth = contentWidth * 3
+    const requestedWidth = contentWidth * resolveRasterScale()
     const width = Math.round(Math.min(Math.max(requestedWidth, minRasterWidth), maxRasterWidth))
 
     return {
@@ -299,11 +357,25 @@ export class Decoration11Element extends DatavElement {
   }
 
   private clearRaster(): void {
-    if (!this.rasterUrl)
+    this.rasterRelease?.()
+    this.rasterRelease = undefined
+    this.rasterUrl = ''
+  }
+
+  private syncRasterPlayback(): void {
+    if (typeof document === 'undefined')
       return
 
-    URL.revokeObjectURL(this.rasterUrl)
-    this.rasterUrl = ''
+    const video = this.renderRoot.querySelector('video')
+    if (!(video instanceof HTMLVideoElement))
+      return
+
+    if (this.animated && !this.paused && this.rasterVisible && !document.hidden) {
+      void video.play().catch(() => undefined)
+      return
+    }
+
+    video.pause()
   }
 
   private renderAudioBars(
@@ -739,6 +811,12 @@ export class Decoration11Element extends DatavElement {
   }
 }
 
+function resolveRasterScale(): number {
+  const ratio = typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1
+
+  return Math.min(Math.max(ratio, minRasterScale), maxRasterScale)
+}
+
 async function createRasterVideo(sourceSvg: SVGSVGElement, duration: number, size: Decoration11RasterSize): Promise<string> {
   const loopDuration = duration * rasterLoopDurationMultiplier
   const frameCount = Math.min(Math.max(Math.round(loopDuration * rasterFrameRate), minRasterFrameCount), maxRasterFrameCount)
@@ -753,6 +831,101 @@ async function createRasterVideo(sourceSvg: SVGSVGElement, duration: number, siz
     strokeWidthScale,
     videoBitsPerSecond: rasterVideoBitsPerSecond,
   })
+}
+
+async function acquireDecoration11Raster(
+  key: string,
+  sourceSvg: SVGSVGElement,
+  duration: number,
+  size: Decoration11RasterSize,
+): Promise<Decoration11RasterHandle> {
+  let entry = rasterCache.get(key)
+
+  if (!entry) {
+    entry = {
+      lastUsed: Date.now(),
+      refs: 0,
+    }
+    rasterCache.set(key, entry)
+  }
+
+  entry.refs += 1
+  entry.lastUsed = Date.now()
+
+  if (!entry.url && !entry.promise) {
+    entry.promise = enqueueRasterVideo(sourceSvg, duration, size)
+      .then((url) => {
+        if (rasterCache.get(key) === entry) {
+          entry.url = url
+          entry.promise = undefined
+          trimRasterCache()
+        }
+
+        return url
+      })
+      .catch((error) => {
+        if (rasterCache.get(key) === entry)
+          rasterCache.delete(key)
+
+        throw error
+      })
+  }
+
+  try {
+    let url = entry.url
+
+    if (!url) {
+      if (!entry.promise)
+        throw new Error('Decoration 11 rasterization did not start.')
+
+      url = await entry.promise
+    }
+
+    return {
+      url,
+      release: () => releaseDecoration11Raster(key),
+    }
+  }
+  catch (error) {
+    releaseDecoration11Raster(key)
+    throw error
+  }
+}
+
+function enqueueRasterVideo(sourceSvg: SVGSVGElement, duration: number, size: Decoration11RasterSize): Promise<string> {
+  const run = rasterQueue.then(() => createRasterVideo(sourceSvg, duration, size))
+
+  rasterQueue = run.then(
+    () => undefined,
+    () => undefined,
+  )
+
+  return run
+}
+
+function releaseDecoration11Raster(key: string): void {
+  const entry = rasterCache.get(key)
+  if (!entry)
+    return
+
+  entry.refs = Math.max(entry.refs - 1, 0)
+  entry.lastUsed = Date.now()
+  trimRasterCache()
+}
+
+function trimRasterCache(): void {
+  const releasable = [...rasterCache.entries()]
+    .filter(([, entry]) => entry.refs === 0 && entry.url)
+    .sort(([, left], [, right]) => left.lastUsed - right.lastUsed)
+
+  while (rasterCache.size > maxRasterCacheEntries && releasable.length > 0) {
+    const [key, entry] = releasable.shift()!
+
+    if (entry.url)
+      URL.revokeObjectURL(entry.url)
+
+    rasterCache.delete(key)
+  }
 }
 
 function prepareDecoration11RasterFrame(svg: SVGSVGElement, frame: SvgVideoRasterFrame): void {

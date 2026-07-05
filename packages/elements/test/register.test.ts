@@ -571,6 +571,72 @@ describe('@datav-kit/elements', () => {
     expect(revokeObjectURL).toHaveBeenCalled()
   })
 
+  it('keeps decoration-11 on live SVG animation when video rasterization is disabled', async () => {
+    vi.useFakeTimers()
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}`)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-11') as Decoration11Element
+    element.setAttribute('video-rasterize', 'false')
+    document.body.append(element)
+
+    emitResize(320, 240)
+    await element.updateComplete
+    await vi.runAllTimersAsync()
+    await element.updateComplete
+
+    expect(element).toHaveProperty('videoRasterize', false)
+    expect(element.shadowRoot?.querySelector('video')).toBeNull()
+    expect(element.shadowRoot?.querySelector('svg')).not.toBeNull()
+    expect(element.shadowRoot?.querySelectorAll('animateTransform')).toHaveLength(4)
+    expect(createObjectURL).not.toHaveBeenCalled()
+  })
+
+  it('shares one decoration-11 rasterization across matching instances', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    vi.spyOn(HTMLCanvasElement.prototype, 'captureStream').mockReturnValue(createCanvasStream())
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const first = document.createElement('dvk-decoration-11') as Decoration11Element
+    first.setAttribute('colors', '#44f5ff,#447cff,#ffeeaa')
+    document.body.append(first)
+    emitResize(320, 240)
+    await first.updateComplete
+
+    const second = document.createElement('dvk-decoration-11') as Decoration11Element
+    second.setAttribute('colors', '#44f5ff,#447cff,#ffeeaa')
+    document.body.append(second)
+    emitResize(320, 240)
+    await second.updateComplete
+
+    await vi.runAllTimersAsync()
+    await first.updateComplete
+    await second.updateComplete
+
+    const firstVideo = first.shadowRoot?.querySelector('video')
+    const secondVideo = second.shadowRoot?.querySelector('video')
+    const videoBlobCalls = createObjectURL.mock.calls
+      .filter(([blob]) => blob instanceof Blob && blob.type === 'video/webm;codecs=vp9')
+
+    expect(videoBlobCalls).toHaveLength(1)
+    expect(firstVideo?.getAttribute('src')).toBe(secondVideo?.getAttribute('src'))
+  })
+
   it('maps count-to attributes and formats the disabled target value', async () => {
     register()
 

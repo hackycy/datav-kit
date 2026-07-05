@@ -36,6 +36,7 @@ description: Cyber floating audio halo with fixed outer rhythm blocks, glow ring
 | `dur` | `number` | `9` | Base rotation duration in seconds. Values are clamped to the `6`-`14` second floating-halo range. |
 | `animated` | `boolean` | `true` | Enables the fixed outer audio rhythm-block ring and selected inner layers to rotate. |
 | `paused` | `boolean` | `false` | Stops all rotations while keeping the raised layered platform visible. |
+| `video-rasterize` | `boolean` | `true` | Enables runtime WebM rasterization for the animated SVG. Set `video-rasterize="false"` to keep the live SVG animation path. |
 
 ## Events
 

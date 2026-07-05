@@ -43,6 +43,12 @@ export const decoration11Metadata = {
       attribute: true,
       description: 'Stops all rotations while keeping the raised layered platform visible.',
     },
+    videoRasterize: {
+      type: 'boolean',
+      default: true,
+      attribute: 'video-rasterize',
+      description: 'Enables runtime WebM rasterization for the animated SVG. Set video-rasterize="false" to keep the live SVG animation path.',
+    },
   },
   events: [
     {
