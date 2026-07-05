@@ -33,6 +33,9 @@ interface Decoration11RasterAsset {
   columns?: number
   rows?: number
   frameDelay?: number
+  image?: HTMLImageElement
+  height?: number
+  width?: number
 }
 
 type Decoration11RasterRenderer = 'sprite' | 'video'
@@ -120,10 +123,9 @@ export class Decoration11Element extends DatavElement {
       color: var(--dvk-color-primary, rgba(52, 236, 255, 0.92));
     }
 
-    img[part~="graphic"],
+    canvas,
     svg,
-    video,
-    .raster-sprite {
+    video {
       position: absolute;
       inset: 0;
       display: block;
@@ -132,48 +134,6 @@ export class Decoration11Element extends DatavElement {
       object-fit: contain;
       overflow: visible;
       pointer-events: none;
-    }
-
-    .raster-sprite {
-      contain: layout paint size;
-      overflow: hidden;
-    }
-
-    .raster-sprite-y {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: calc(var(--dvk-raster-rows, 1) * 100%);
-      animation: dvk-decoration-11-sprite-y var(--dvk-sprite-total-duration, 1s) steps(var(--dvk-raster-rows, 1)) infinite;
-      animation-play-state: var(--dvk-sprite-play-state, running);
-      transform-origin: 0 0;
-      will-change: transform;
-    }
-
-    .raster-sprite-sheet {
-      position: absolute;
-      inset: 0 auto auto 0;
-      display: block;
-      width: calc(var(--dvk-raster-columns, 1) * 100%);
-      height: 100%;
-      max-width: none;
-      object-fit: fill;
-      animation: dvk-decoration-11-sprite-x var(--dvk-sprite-row-duration, 1s) steps(var(--dvk-raster-columns, 1)) infinite;
-      animation-play-state: var(--dvk-sprite-play-state, running);
-      transform-origin: 0 0;
-      will-change: transform;
-    }
-
-    @keyframes dvk-decoration-11-sprite-x {
-      to {
-        transform: translateX(-100%);
-      }
-    }
-
-    @keyframes dvk-decoration-11-sprite-y {
-      to {
-        transform: translateY(-100%);
-      }
     }
 
     path,
@@ -238,6 +198,10 @@ export class Decoration11Element extends DatavElement {
   private rasterToken = 0
   private rasterVisible = true
   private rasterVisibilityObserver: IntersectionObserver | undefined
+  private spritePlaybackFrame = -1
+  private spritePlaybackStartedAt = 0
+  private spritePlaybackTimer: number | undefined
+  private spritePlaybackUrl = ''
 
   private readonly handleDocumentVisibility = (): void => {
     this.syncRasterPlayback()
@@ -275,6 +239,7 @@ export class Decoration11Element extends DatavElement {
   override updated(): void {
     this.queueRasterize()
     this.syncRasterPlayback()
+    this.syncSpritePlayback()
   }
 
   override render(): unknown {
@@ -290,16 +255,13 @@ export class Decoration11Element extends DatavElement {
     if (this.rasterAsset) {
       if (this.rasterAsset.renderer === 'sprite') {
         return html`
-          <div
+          <canvas
             part="graphic raster"
-            class="raster-sprite"
-            style=${this.createSpriteStyle(this.rasterAsset)}
+            class="raster-sprite-canvas"
+            width=${String(this.rasterAsset.width ?? baseWidth)}
+            height=${String(this.rasterAsset.height ?? baseHeight)}
             aria-hidden="true"
-          >
-            <div class="raster-sprite-y">
-              <img class="raster-sprite-sheet" src=${this.rasterAsset.url} alt="">
-            </div>
-          </div>
+          ></canvas>
         `
       }
 
@@ -450,6 +412,7 @@ export class Decoration11Element extends DatavElement {
   }
 
   private clearRaster(): void {
+    this.stopSpritePlayback()
     this.rasterRelease?.()
     this.rasterRelease = undefined
     this.rasterAsset = undefined
@@ -475,19 +438,101 @@ export class Decoration11Element extends DatavElement {
     return this.animated && !this.paused && this.rasterVisible && (typeof document === 'undefined' || !document.hidden)
   }
 
-  private createSpriteStyle(asset: Decoration11RasterAsset): string {
+  private syncSpritePlayback(): void {
+    const asset = this.rasterAsset
+    if (!asset || asset.renderer !== 'sprite') {
+      this.stopSpritePlayback()
+      return
+    }
+
+    const canvas = this.renderRoot.querySelector('canvas.raster-sprite-canvas')
+    if (!(canvas instanceof HTMLCanvasElement) || !asset.image)
+      return
+
+    if (this.spritePlaybackUrl !== asset.url) {
+      this.stopSpritePlayback()
+      this.spritePlaybackUrl = asset.url
+      this.spritePlaybackFrame = -1
+      this.spritePlaybackStartedAt = performance.now()
+      this.drawSpriteFrame(asset, canvas, 0)
+    }
+
+    if (!this.shouldPlayRaster()) {
+      this.stopSpritePlayback()
+      return
+    }
+
+    if (this.spritePlaybackTimer === undefined)
+      this.scheduleSpritePlayback(asset, canvas)
+  }
+
+  private scheduleSpritePlayback(asset: Decoration11RasterAsset, canvas: HTMLCanvasElement): void {
+    const frameDelay = Math.max(asset.frameDelay ?? spriteRasterFrameDelay, 1)
+    const timeout = Math.max(Math.min(frameDelay, 50), 16)
+
+    this.spritePlaybackTimer = window.setTimeout(() => {
+      this.spritePlaybackTimer = undefined
+
+      if (this.rasterAsset !== asset || !this.shouldPlayRaster())
+        return
+
+      const frameCount = Math.max(asset.frameCount ?? 1, 1)
+      const elapsed = performance.now() - this.spritePlaybackStartedAt
+      const frame = Math.floor(elapsed / frameDelay) % frameCount
+
+      this.drawSpriteFrame(asset, canvas, frame)
+      this.scheduleSpritePlayback(asset, canvas)
+    }, timeout)
+  }
+
+  private drawSpriteFrame(asset: Decoration11RasterAsset, canvas: HTMLCanvasElement, frame: number): void {
+    const image = asset.image
+    if (!image)
+      return
+
     const columns = Math.max(asset.columns ?? 1, 1)
     const rows = Math.max(asset.rows ?? 1, 1)
-    const frameDelay = Math.max(asset.frameDelay ?? spriteRasterFrameDelay, 1)
     const frameCount = Math.max(asset.frameCount ?? columns * rows, 1)
+    const frameWidth = Math.max(asset.width ?? canvas.width, 1)
+    const frameHeight = Math.max(asset.height ?? canvas.height, 1)
+    const frameIndex = ((frame % frameCount) + frameCount) % frameCount
 
-    return [
-      `--dvk-raster-columns:${columns}`,
-      `--dvk-raster-rows:${rows}`,
-      `--dvk-sprite-row-duration:${roundTo(frameDelay * columns, 3)}ms`,
-      `--dvk-sprite-total-duration:${roundTo(frameDelay * frameCount, 3)}ms`,
-      `--dvk-sprite-play-state:${this.shouldPlayRaster() ? 'running' : 'paused'}`,
-    ].join(';')
+    if (frameIndex === this.spritePlaybackFrame && canvas.width === frameWidth && canvas.height === frameHeight)
+      return
+
+    if (canvas.width !== frameWidth)
+      canvas.width = frameWidth
+
+    if (canvas.height !== frameHeight)
+      canvas.height = frameHeight
+
+    const context = canvas.getContext('2d')
+    if (!context)
+      return
+
+    const column = frameIndex % columns
+    const row = Math.floor(frameIndex / columns)
+
+    context.clearRect(0, 0, frameWidth, frameHeight)
+    context.drawImage(
+      image,
+      column * frameWidth,
+      row * frameHeight,
+      frameWidth,
+      frameHeight,
+      0,
+      0,
+      frameWidth,
+      frameHeight,
+    )
+    this.spritePlaybackFrame = frameIndex
+  }
+
+  private stopSpritePlayback(): void {
+    if (this.spritePlaybackTimer !== undefined) {
+      window.clearTimeout(this.spritePlaybackTimer)
+      this.spritePlaybackTimer = undefined
+    }
   }
 
   private renderAudioBars(
@@ -973,6 +1018,7 @@ async function createRasterSprite(sourceSvg: SVGSVGElement, duration: number, si
     prepareFrame: prepareDecoration11RasterFrame,
     strokeWidthScale,
   })
+  const image = await loadRasterImage(result.url)
 
   return {
     url: result.url,
@@ -981,7 +1027,31 @@ async function createRasterSprite(sourceSvg: SVGSVGElement, duration: number, si
     columns: result.columns,
     rows: result.rows,
     frameDelay: result.frameDelay,
+    height: result.height,
+    image,
+    width: result.width,
   }
+}
+
+function loadRasterImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+
+    image.decoding = 'async'
+    image.onload = () => {
+      if (typeof image.decode !== 'function') {
+        resolve(image)
+        return
+      }
+
+      void image.decode().then(
+        () => resolve(image),
+        () => resolve(image),
+      )
+    }
+    image.onerror = () => reject(new Error('Unable to decode sprite atlas.'))
+    image.src = url
+  })
 }
 
 async function acquireDecoration11Raster(

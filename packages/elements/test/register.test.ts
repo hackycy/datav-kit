@@ -589,7 +589,7 @@ describe('@datav-kit/elements', () => {
 
     emitResize(320, 240)
     await element.updateComplete
-    await vi.runAllTimersAsync()
+    await vi.advanceTimersByTimeAsync(0)
     await element.updateComplete
 
     expect(element).toHaveProperty('videoRasterize', false)
@@ -607,6 +607,7 @@ describe('@datav-kit/elements', () => {
     vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation((callback) => {
       callback(new Blob(['png'], { type: 'image/png' }))
     })
+    vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
     vi.stubGlobal('Image', MockImage)
     vi.stubGlobal('URL', {
       ...URL,
@@ -624,16 +625,15 @@ describe('@datav-kit/elements', () => {
     await vi.runAllTimersAsync()
     await element.updateComplete
 
-    const sprite = element.shadowRoot?.querySelector('.raster-sprite')
-    const sheet = element.shadowRoot?.querySelector('.raster-sprite-sheet')
+    const sprite = element.shadowRoot?.querySelector('canvas.raster-sprite-canvas')
     const pngBlobCalls = createObjectURL.mock.calls
       .filter(([blob]) => blob instanceof Blob && blob.type === 'image/png')
 
     expect(element).toHaveProperty('rasterRenderer', 'sprite')
     expect(pngBlobCalls).toHaveLength(1)
     expect(sprite?.getAttribute('part')).toBe('graphic raster')
-    expect(sprite?.getAttribute('style')).toContain('--dvk-raster-columns:')
-    expect(sheet?.getAttribute('src')).toContain('blob:image/png')
+    expect(sprite?.getAttribute('width')).toBeTruthy()
+    expect(sprite?.getAttribute('height')).toBeTruthy()
     expect(element.shadowRoot?.querySelector('video')).toBeNull()
     expect(element.shadowRoot?.querySelector('svg')).toBeNull()
   }, 15000)

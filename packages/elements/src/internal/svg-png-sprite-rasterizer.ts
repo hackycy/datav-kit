@@ -17,6 +17,8 @@ export interface SvgPngSpriteRasterizeResult {
   columns: number
   rows: number
   frameDelay: number
+  height: number
+  width: number
 }
 
 export async function rasterizeSvgToPngSprite(
@@ -66,6 +68,8 @@ export async function rasterizeSvgToPngSprite(
     columns: options.columns,
     rows: options.rows,
     frameDelay: options.frameDelay,
+    height: options.height,
+    width: options.width,
   }
 }
 
