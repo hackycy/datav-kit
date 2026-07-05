@@ -54,7 +54,7 @@ Support `video-rasterize="false"`, `"0"`, and `"off"` as false. Default must rem
 
 For new integrations, `rasterRenderer` must default to `"sprite"` and support:
 
-- `"sprite"`: transparent PNG atlas with canvas single-clock playback.
+- `"sprite"`: transparent PNG canvas playback. This may be a frame atlas for a truly loopable whole-scene animation, or a small set of rasterized layer images drawn by one canvas clock when independent SVG layers have different periods.
 - `"video"`: transparent WebM playback.
 
 Unknown renderer values should fall back to `"video"` or the component's established fallback only if that matches existing behavior; otherwise prefer `"sprite"`.
@@ -65,6 +65,30 @@ Document the property in metadata and docs:
 <dvk-some-component video-rasterize="false"></dvk-some-component>
 <dvk-some-component raster-renderer="video"></dvk-some-component>
 ```
+
+## Animation Topology Analysis
+
+Do not blindly copy the decoration-11 recording strategy to another component. Before choosing the raster shape, inventory the animation:
+
+1. List every animated node or CSS animation that changes pixels.
+   - Include `animate`, `animateTransform`, CSS keyframes, SMIL `values`, `from`/`to`, `dur`, `repeatCount`, transform origin, and direction.
+   - Note whether each animated group is visually independent, overlaps other animated groups, or changes geometry/filter/opacity in a way that cannot be separated.
+
+2. Compute the loop closure for the visual, not just for one layer.
+   - Whole-scene atlas/video loops are safe only when every animated layer returns to the same visual state at the same loop boundary.
+   - Different duration multipliers such as `1.28x`, `1.85x`, `1.8x`, and `2.1x` can create obvious jumps or "restart" stutter when forced into a short fixed loop.
+   - Do not fix a visible loop seam by arbitrarily changing layer speeds or integer turn counts. That changes the component's visual identity and can make the result worse even if the loop mathematically closes.
+
+3. Choose the renderer from the topology.
+   - Use a whole-scene PNG atlas when the animation has one shared cycle, or when all independent cycles have a short common closure and the atlas remains within the memory budget.
+   - Use layered PNG rasterization when the SVG is mostly static artwork plus independently rotating/translating layers. Rasterize static and moving layers once, then draw them on one canvas with the original per-layer timing. This avoids atlas loop seams and avoids generating hundreds of frames.
+   - Use WebM only when a finite loop is acceptable and measured playback is better than sprite/canvas. For independent periods without a short common closure, WebM will still need a long approximate loop and may show decode/compositing or loop-boundary stutter.
+   - Keep live SVG or simplify SVG when the animated content cannot be separated and no acceptable loop closure exists.
+
+4. Preserve original timing unless deliberately approved.
+   - Runtime playback should derive angles/progress from the original SVG durations and directions.
+   - If you must approximate timing, document the approximation and validate it visually in the built app.
+   - Longer loops increase generation time, atlas size, memory pressure, and sometimes playback jank; do not make loops longer as a first response to a seam.
 
 ## Runtime Rasterization Pattern
 
@@ -84,8 +108,9 @@ Follow the decoration-11 structure unless there is a strong component-specific r
    - final raster width/height
    - display width used for stroke compensation
    - any animation mode or variant that changes pixels
+   - raster topology such as whole-scene atlas vs layered sprite, and any per-layer timing inputs
 4. Acquire a shared raster handle from a module-level cache.
-5. Default replacement is a `<canvas part="graphic raster">` that draws frames from the decoded PNG atlas with one playback clock.
+5. Default replacement is a `<canvas part="graphic raster">` that draws either decoded PNG atlas frames or decoded raster layers with one playback clock.
 6. Optional video replacement is `<video part="graphic raster" autoplay loop muted playsinline preload="auto">`.
 7. On prop/size changes, disconnection, or opt-out, release the raster handle and fall back safely.
 8. Emit a component event such as `dvk-raster-error` and keep SVG visible if generation fails.
@@ -119,6 +144,7 @@ SVG-to-raster can visibly degrade line art. Check these before blaming the rende
 - Use 24fps unless visual motion proves it needs more; 30fps transparent media can be expensive.
 - For sprite, cap the atlas by a raw RGBA budget and lower generated width before lowering fps.
 - For sprite, decode the generated atlas image before replacing the fallback SVG to avoid first-frame blank flashes.
+- For layered sprites, decode every layer image before replacing the fallback SVG, and revoke every layer Blob URL on cache eviction.
 - If loop closure needs a longer cycle, explain the cost. Do not hide seams with crossfades unless the user accepts the look.
 
 ## Playback CPU Rules
@@ -136,6 +162,7 @@ If CPU remains high while visible:
 - Lower raster max width, fps, and bitrate before changing generation architecture.
 - Check how many visible video instances are decoding.
 - For sprite, check atlas pixel dimensions and generated frame count.
+- For layered sprite, check canvas draw count, layer dimensions, and whether unchanged/static layers can be precomposited.
 - Avoid two-axis CSS sprite playback for multi-row atlases; independent row/column `steps()` animations can desynchronize and flash at row or loop boundaries.
 - Consider shared canvas playback or static SVG glow plus rasterized moving layers only after measuring sprite and video.
 
@@ -162,6 +189,7 @@ Add or update tests for every component integration:
 - `video-rasterize="false"` keeps live SVG and does not call `URL.createObjectURL`.
 - Matching instances share one generated media URL.
 - Raster errors keep SVG fallback visible.
+- For components with independent animation periods, test or manually verify that sprite playback preserves the original per-layer direction/speed and does not introduce a loop-boundary stutter.
 - Typecheck, lint, package tests, and docs build pass.
 
 Run:
@@ -184,4 +212,6 @@ Run docs build separately from tests that rebuild `packages/elements/dist`; conc
 - Generation tasks are serialized.
 - No top-level browser globals break SSR.
 - Hidden/offscreen videos pause and sprite canvas timers stop.
+- Animation topology was analyzed before choosing whole-scene atlas, layered sprite, video, or live SVG.
+- Raster playback preserves original layer timing unless an intentional approximation is documented.
 - The final answer explains whether remaining CPU is generation cost or playback decode/compositing cost.
