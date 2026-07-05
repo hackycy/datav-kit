@@ -70,4 +70,12 @@ description: Web Components library for data dashboard decoration with SSR-safe 
 </dvk-border-box-11>
 ```
 
+<div class="datav-home-showcase">
+  <span>Product Scenarios</span>
+  <h2>Multi-case large-screen demos</h2>
+  <p>Two complete business scenes show how DataV Kit borders, decorations, counters, and fit-screen containers compose into product-ready data screens.</p>
+</div>
+
 <AviationCommandScreen />
+
+<ScenicSpotCommandScreen />

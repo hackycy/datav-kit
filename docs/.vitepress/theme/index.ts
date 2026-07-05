@@ -6,6 +6,7 @@ import { h } from 'vue'
 import AviationCommandScreen from './components/AviationCommandScreen.vue'
 import BorderChartDemo from './components/BorderChartDemo.vue'
 import PerformanceMonitor from './components/PerformanceMonitor.vue'
+import ScenicSpotCommandScreen from './components/ScenicSpotCommandScreen.vue'
 import '@datav-kit/themes/cyber-blue.css'
 import '@datav-kit/themes/ice-white.css'
 import '@datav-kit/themes/matrix-green.css'
@@ -27,5 +28,6 @@ export default {
     app.component('AviationCommandScreen', AviationCommandScreen)
     app.component('BorderChartDemo', BorderChartDemo)
     app.component('CopyOrDownloadAsMarkdownButtons', CopyOrDownloadAsMarkdownButtons)
+    app.component('ScenicSpotCommandScreen', ScenicSpotCommandScreen)
   },
 } satisfies Theme

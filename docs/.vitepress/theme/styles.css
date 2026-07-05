@@ -271,6 +271,34 @@
   line-height: 1.6;
 }
 
+.datav-home-showcase {
+  max-width: 860px;
+  margin: 42px 0 4px;
+}
+
+.datav-home-showcase span {
+  display: block;
+  color: #ffd166;
+  font-size: 13px;
+  font-weight: 780;
+  letter-spacing: 0;
+}
+
+.datav-home-showcase h2 {
+  margin: 8px 0 0;
+  color: var(--vp-c-text-1);
+  font-size: 34px;
+  line-height: 1.16;
+  letter-spacing: 0;
+}
+
+.datav-home-showcase p {
+  margin: 10px 0 0;
+  color: var(--vp-c-text-2);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
 html:not(.dark) .datav-home-hero {
   border-color: rgba(14, 116, 144, 0.18);
   background:
