@@ -1,0 +1,4 @@
+interface:
+  display_name: Optimize SVG Runtime
+  short_description: Fix costly SVG animations consistently
+  default_prompt: Use $optimize-svg-animation-runtime to migrate this high-CPU animated SVG component to the shared rasterized runtime fallback pattern.
