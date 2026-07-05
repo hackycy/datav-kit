@@ -366,6 +366,163 @@ describe('@datav-kit/elements', () => {
     expect(animations).toHaveLength(0)
   })
 
+  it('rasterizes decoration-8 animation to a webm video and keeps slot content', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    const revokeObjectURL = vi.fn()
+    vi.spyOn(HTMLCanvasElement.prototype, 'captureStream').mockReturnValue(createCanvasStream())
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL,
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-8') as Decoration8Element
+    const rasterError = vi.fn()
+    element.setAttribute('colors', '#51f0d0,#2b74ff')
+    element.setAttribute('dur', '5')
+    element.setAttribute('raster-renderer', 'video')
+    element.innerHTML = '<span>98</span>'
+    element.addEventListener('dvk-raster-error', rasterError)
+    document.body.append(element)
+
+    emitResize(180, 180)
+    await element.updateComplete
+    await vi.runAllTimersAsync()
+    await element.updateComplete
+
+    const video = element.shadowRoot?.querySelector('video')
+    const content = element.shadowRoot?.querySelector('[part="content"]')
+
+    expect(rasterError).not.toHaveBeenCalled()
+    expect(createObjectURL).toHaveBeenCalledWith(expect.objectContaining({ type: 'video/webm;codecs=vp9' }))
+    expect(video?.getAttribute('src')).toContain('blob:video/webm')
+    expect(video?.getAttribute('part')).toBe('graphic raster')
+    expect(video?.hasAttribute('loop')).toBe(true)
+    expect(video?.hasAttribute('muted')).toBe(true)
+    expect(content).not.toBeNull()
+    expect(element.shadowRoot?.querySelector('svg')).toBeNull()
+    expect(revokeObjectURL).toHaveBeenCalled()
+  }, 15000)
+
+  it('keeps decoration-8 on live SVG animation when rasterization is disabled', async () => {
+    vi.useFakeTimers()
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}`)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-8') as Decoration8Element
+    element.setAttribute('video-rasterize', 'off')
+    document.body.append(element)
+
+    emitResize(180, 180)
+    await element.updateComplete
+    await vi.advanceTimersByTimeAsync(0)
+    await element.updateComplete
+
+    expect(element).toHaveProperty('videoRasterize', false)
+    expect(element.shadowRoot?.querySelector('canvas.raster-sprite-canvas')).toBeNull()
+    expect(element.shadowRoot?.querySelector('video')).toBeNull()
+    expect(element.shadowRoot?.querySelector('svg')).not.toBeNull()
+    expect(element.shadowRoot?.querySelectorAll('animateTransform')).toHaveLength(4)
+    expect(createObjectURL).not.toHaveBeenCalled()
+  })
+
+  it('rasterizes decoration-8 animation to a PNG sprite by default', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation((callback) => {
+      callback(new Blob(['png'], { type: 'image/png' }))
+    })
+    vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-8') as Decoration8Element
+    element.setAttribute('colors', '#72ffee,#336dff')
+    element.setAttribute('dur', '5')
+    document.body.append(element)
+
+    emitResize(180, 180)
+    await element.updateComplete
+    await vi.runAllTimersAsync()
+    await element.updateComplete
+
+    const sprite = element.shadowRoot?.querySelector('canvas.raster-sprite-canvas')
+    const content = element.shadowRoot?.querySelector('[part="content"]')
+    const pngBlobCalls = createObjectURL.mock.calls
+      .filter(([blob]) => blob instanceof Blob && blob.type === 'image/png')
+
+    expect(element).toHaveProperty('rasterRenderer', 'sprite')
+    expect(pngBlobCalls).toHaveLength(5)
+    expect(sprite?.getAttribute('part')).toBe('graphic raster')
+    expect(sprite?.getAttribute('width')).toBeTruthy()
+    expect(sprite?.getAttribute('height')).toBeTruthy()
+    expect(content).not.toBeNull()
+    expect(element.shadowRoot?.querySelector('video')).toBeNull()
+    expect(element.shadowRoot?.querySelector('svg')).toBeNull()
+  }, 15000)
+
+  it('shares one decoration-8 rasterization across matching instances', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    vi.spyOn(HTMLCanvasElement.prototype, 'captureStream').mockReturnValue(createCanvasStream())
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const first = document.createElement('dvk-decoration-8') as Decoration8Element
+    first.setAttribute('colors', '#44f5ff,#447cff')
+    first.setAttribute('dur', '5')
+    first.setAttribute('raster-renderer', 'video')
+    document.body.append(first)
+    emitResize(180, 180)
+    await first.updateComplete
+
+    const second = document.createElement('dvk-decoration-8') as Decoration8Element
+    second.setAttribute('colors', '#44f5ff,#447cff')
+    second.setAttribute('dur', '5')
+    second.setAttribute('raster-renderer', 'video')
+    document.body.append(second)
+    emitResize(180, 180)
+    await second.updateComplete
+
+    await vi.runAllTimersAsync()
+    await first.updateComplete
+    await second.updateComplete
+
+    const firstVideo = first.shadowRoot?.querySelector('video')
+    const secondVideo = second.shadowRoot?.querySelector('video')
+    const videoBlobCalls = createObjectURL.mock.calls
+      .filter(([blob]) => blob instanceof Blob && blob.type === 'video/webm;codecs=vp9')
+
+    expect(videoBlobCalls).toHaveLength(1)
+    expect(firstVideo?.getAttribute('src')).toBe(secondVideo?.getAttribute('src'))
+  }, 15000)
+
   it('renders decoration-9 as a reversible enterprise HUD rail', async () => {
     register()
 

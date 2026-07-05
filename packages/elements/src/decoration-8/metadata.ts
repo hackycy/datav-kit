@@ -3,7 +3,7 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const decoration8Metadata = {
   tagName: 'dvk-decoration-8',
   className: 'Decoration8Element',
-  description: 'Futuristic rotating HUD energy ring with segmented arcs, neon blocks, precision ticks, and a dark hollow core.',
+  description: 'Futuristic rotating HUD energy ring that can rasterize animated SVG into runtime media to avoid sustained SVG animation CPU cost.',
   props: {
     color: {
       type: 'string',
@@ -43,6 +43,18 @@ export const decoration8Metadata = {
       attribute: true,
       description: 'Stops rotation animations while keeping the static geometry visible.',
     },
+    videoRasterize: {
+      type: 'boolean',
+      default: true,
+      attribute: 'video-rasterize',
+      description: 'Enables runtime rasterization for the animated SVG. Set video-rasterize="false" to keep the live SVG animation path.',
+    },
+    rasterRenderer: {
+      type: 'string',
+      default: 'sprite',
+      attribute: 'raster-renderer',
+      description: 'Runtime raster output renderer. Defaults to "sprite" for transparent PNG atlas playback on canvas; use "video" for WebM playback.',
+    },
   },
   events: [
     {
@@ -50,9 +62,15 @@ export const decoration8Metadata = {
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },
+    {
+      name: 'dvk-raster-error',
+      detail: '{ message }',
+      description: 'Fired when runtime rasterization fails; the component keeps the SVG fallback visible.',
+    },
   ],
   parts: [
     'graphic',
+    'raster',
     'background',
     'halo',
     'ring',

@@ -1,17 +1,74 @@
+import type { SvgVideoRasterFrame } from '../internal/svg-video-rasterizer'
 import { DatavElement, ResizeController, resolveNumberValue, resolveThemeValue } from '@datav-kit/core'
 import { css, html, svg } from 'lit'
 import { property, state } from 'lit/decorators.js'
+import { rasterizeSvgToPngSprite } from '../internal/svg-png-sprite-rasterizer'
+import { rasterizeSvgToVideo } from '../internal/svg-video-rasterizer'
 
 interface Decoration8Size {
   width: number
   height: number
 }
 
+interface Decoration8RasterSize extends Decoration8Size {
+  displayWidth: number
+}
+
+interface Decoration8RasterHandle {
+  asset: Decoration8RasterAsset
+  release: () => void
+}
+
+interface Decoration8RasterCacheEntry {
+  lastUsed: number
+  asset?: Decoration8RasterAsset
+  promise?: Promise<Decoration8RasterAsset>
+  refs: number
+}
+
+interface Decoration8RasterAsset {
+  url: string
+  renderer: Decoration8RasterRenderer
+  frameCount?: number
+  columns?: number
+  rows?: number
+  frameDelay?: number
+  image?: HTMLImageElement
+  layers?: Decoration8RasterLayer[]
+  height?: number
+  width?: number
+}
+
+interface Decoration8RasterLayer {
+  image: HTMLImageElement
+  kind: Decoration8RasterLayerKind
+  url: string
+}
+
+type Decoration8RasterRenderer = 'sprite' | 'video'
+type Decoration8RasterLayerKind = 'static' | 'outer-arc-band' | 'outer-arc-trace' | 'segmented-track' | 'energy-blocks'
+
 const defaultSize: Decoration8Size = {
   width: 0,
   height: 0,
 }
 const baseSize = 100
+const minRasterWidth = 300
+const maxRasterWidth = 960
+const minRasterScale = 1.5
+const maxRasterScale = 2
+const rasterFrameRate = 24
+const minRasterFrameCount = 240
+const maxRasterFrameCount = 672
+const rasterFrameDelay = 1000 / rasterFrameRate
+const rasterLoopDurationMultiplier = 4
+const rasterVideoBitsPerSecond = 8_000_000
+const spriteMaxRasterWidth = 640
+const spriteMinRasterWidth = 300
+const spriteRasterFrameRate = 24
+const spriteRasterFrameDelay = 1000 / spriteRasterFrameRate
+const maxRasterCacheEntries = 12
+const rasterLayerKinds: Decoration8RasterLayerKind[] = ['static', 'outer-arc-band', 'outer-arc-trace', 'segmented-track', 'energy-blocks']
 const outerArcSegments = [
   { start: -94, end: -38, width: 5.9, opacity: 0.96 },
   { start: -18, end: -2, width: 4.2, opacity: 0.5 },
@@ -41,8 +98,21 @@ const microLightCount = 48
 const blockIndexes = Array.from({ length: blockCount }, (_, index) => index)
 const tickIndexes = Array.from({ length: tickCount }, (_, index) => index)
 const microLightIndexes = Array.from({ length: microLightCount }, (_, index) => index)
+const defaultTrueBooleanConverter = {
+  fromAttribute(value: string | null): boolean {
+    if (value === null)
+      return true
+
+    return !['0', 'false', 'off'].includes(value.trim().toLowerCase())
+  },
+  toAttribute(value: boolean): string {
+    return String(value)
+  },
+}
 
 let decoration8Id = 0
+let rasterQueue = Promise.resolve()
+const rasterCache = new Map<string, Decoration8RasterCacheEntry>()
 
 export class Decoration8Element extends DatavElement {
   static override styles = css`
@@ -57,12 +127,15 @@ export class Decoration8Element extends DatavElement {
       color: var(--dvk-color-primary, rgba(3, 166, 224, 0.8));
     }
 
-    svg {
+    canvas,
+    svg,
+    video {
       position: absolute;
       inset: 0;
       display: block;
       width: 100%;
       height: 100%;
+      object-fit: contain;
       overflow: visible;
       pointer-events: none;
     }
@@ -103,8 +176,17 @@ export class Decoration8Element extends DatavElement {
   @property({ type: Boolean })
   paused = false
 
+  @property({ attribute: 'video-rasterize', converter: defaultTrueBooleanConverter })
+  videoRasterize = true
+
+  @property({ attribute: 'raster-renderer' })
+  rasterRenderer: Decoration8RasterRenderer = 'sprite'
+
   @state()
   private size = defaultSize
+
+  @state()
+  private rasterAsset: Decoration8RasterAsset | undefined
 
   private readonly instanceId = ++decoration8Id
   private readonly backgroundGradientId = `dvk-decoration-8-background-${this.instanceId}`
@@ -122,8 +204,54 @@ export class Decoration8Element extends DatavElement {
     }
   })
 
+  private rasterKey = ''
+  private pendingRasterKey = ''
+  private rasterRelease: (() => void) | undefined
+  private rasterToken = 0
+  private rasterVisible = true
+  private rasterVisibilityObserver: IntersectionObserver | undefined
+  private spritePlaybackFrame = -1
+  private spritePlaybackStartedAt = 0
+  private spritePlaybackTimer: number | undefined
+  private spritePlaybackUrl = ''
+
+  private readonly handleDocumentVisibility = (): void => {
+    this.syncRasterPlayback()
+    this.requestUpdate()
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback()
+    document.addEventListener('visibilitychange', this.handleDocumentVisibility)
+
+    if (typeof IntersectionObserver !== 'undefined') {
+      this.rasterVisibilityObserver = new IntersectionObserver((entries) => {
+        this.rasterVisible = entries.at(-1)?.isIntersecting ?? true
+        this.syncRasterPlayback()
+        this.requestUpdate()
+      })
+      this.rasterVisibilityObserver.observe(this)
+    }
+  }
+
+  override disconnectedCallback(): void {
+    this.rasterToken += 1
+    document.removeEventListener('visibilitychange', this.handleDocumentVisibility)
+    this.rasterVisibilityObserver?.disconnect()
+    this.rasterVisibilityObserver = undefined
+    this.clearRaster()
+    super.disconnectedCallback()
+  }
+
   override firstUpdated(): void {
     this.emit('dvk-ready', { tagName: 'dvk-decoration-8' })
+    this.queueRasterize()
+  }
+
+  override updated(): void {
+    this.queueRasterize()
+    this.syncRasterPlayback()
+    this.syncSpritePlayback()
   }
 
   override render(): unknown {
@@ -131,10 +259,50 @@ export class Decoration8Element extends DatavElement {
     const duration = Math.max(resolveNumberValue(this.dur, 5), 0.1)
     const showAnimation = this.animated
       && !this.paused
+      && !this.rasterAsset
       && !this.prefersReducedMotion()
       && this.size.width > 0
       && this.size.height > 0
 
+    return html`
+      ${this.rasterAsset
+        ? this.renderRasterAsset()
+        : this.renderSvg(primary, secondary, duration, showAnimation)}
+
+      <div part="content" class="content">
+        <slot></slot>
+      </div>
+    `
+  }
+
+  private renderRasterAsset(): unknown {
+    if (this.rasterAsset?.renderer === 'sprite') {
+      return html`
+        <canvas
+          part="graphic raster"
+          class="raster-sprite-canvas"
+          width=${String(this.rasterAsset.width ?? baseSize)}
+          height=${String(this.rasterAsset.height ?? baseSize)}
+          aria-hidden="true"
+        ></canvas>
+      `
+    }
+
+    return html`
+      <video
+        part="graphic raster"
+        src=${this.rasterAsset?.url}
+        aria-hidden="true"
+        autoplay
+        loop
+        muted
+        playsinline
+        preload="auto"
+      ></video>
+    `
+  }
+
+  private renderSvg(primary: string, secondary: string, duration: number, showAnimation: boolean): unknown {
     return html`
       <svg
         part="graphic"
@@ -298,11 +466,238 @@ export class Decoration8Element extends DatavElement {
           <circle cx="50" cy="50" r="14.6" fill="rgba(2, 8, 20, 0.92)" stroke=${withAlpha(secondary, 0.18)} stroke-width="0.4"></circle>
         </g>
       </svg>
-
-      <div part="content" class="content">
-        <slot></slot>
-      </div>
     `
+  }
+
+  private queueRasterize(): void {
+    if (typeof window === 'undefined' || typeof document === 'undefined')
+      return
+
+    const key = this.createRasterKey()
+    if (!key) {
+      this.pendingRasterKey = ''
+      this.rasterKey = ''
+      this.clearRaster()
+      return
+    }
+
+    if (key === this.rasterKey || key === this.pendingRasterKey)
+      return
+
+    this.clearRaster()
+    this.pendingRasterKey = key
+    const token = ++this.rasterToken
+
+    window.setTimeout(() => {
+      void this.generateRaster(token, key)
+    }, 0)
+  }
+
+  private async generateRaster(token: number, key: string): Promise<void> {
+    try {
+      const sourceSvg = this.renderRoot.querySelector('svg')
+      if (!sourceSvg)
+        return
+
+      const duration = Math.max(resolveNumberValue(this.dur, 5), 0.1)
+      const rasterSize = this.resolveRasterSize()
+      const renderer = this.resolveRasterRenderer()
+      const raster = await acquireDecoration8Raster(key, sourceSvg, duration, rasterSize, renderer)
+
+      if (token !== this.rasterToken || key !== this.pendingRasterKey) {
+        raster.release()
+        return
+      }
+
+      this.pendingRasterKey = ''
+      this.rasterKey = key
+      this.rasterRelease = raster.release
+      this.rasterAsset = raster.asset
+    }
+    catch (error) {
+      if (token === this.rasterToken)
+        this.pendingRasterKey = ''
+
+      this.emit('dvk-raster-error', {
+        message: error instanceof Error ? error.message : String(error),
+      }, { bubbles: false })
+    }
+  }
+
+  private createRasterKey(): string {
+    if (!this.videoRasterize || !this.animated || this.paused || this.prefersReducedMotion())
+      return ''
+
+    if (this.size.width <= 0 || this.size.height <= 0)
+      return ''
+
+    if (typeof document === 'undefined')
+      return ''
+
+    const [primary, secondary] = this.resolveColors()
+    const duration = Math.max(resolveNumberValue(this.dur, 5), 0.1)
+    const rasterSize = this.resolveRasterSize()
+    const renderer = this.resolveRasterRenderer()
+
+    return [
+      renderer,
+      primary,
+      secondary,
+      duration,
+      rasterSize.width,
+      rasterSize.height,
+      Math.round(rasterSize.displayWidth),
+    ].join('|')
+  }
+
+  private resolveRasterSize(): Decoration8RasterSize {
+    const contentWidth = Math.min(Math.max(this.size.width, baseSize), Math.max(this.size.height, baseSize))
+    const requestedWidth = contentWidth * resolveRasterScale()
+    const width = Math.round(Math.min(Math.max(requestedWidth, minRasterWidth), maxRasterWidth))
+
+    return {
+      width,
+      height: width,
+      displayWidth: contentWidth,
+    }
+  }
+
+  private resolveRasterRenderer(): Decoration8RasterRenderer {
+    if (this.rasterRenderer === 'sprite')
+      return this.rasterRenderer
+
+    return 'video'
+  }
+
+  private clearRaster(): void {
+    this.stopSpritePlayback()
+    this.rasterRelease?.()
+    this.rasterRelease = undefined
+    this.rasterAsset = undefined
+  }
+
+  private syncRasterPlayback(): void {
+    if (typeof document === 'undefined')
+      return
+
+    const video = this.renderRoot.querySelector('video')
+    if (!(video instanceof HTMLVideoElement))
+      return
+
+    if (this.animated && !this.paused && this.rasterVisible && !document.hidden) {
+      void video.play().catch(() => undefined)
+      return
+    }
+
+    video.pause()
+  }
+
+  private shouldPlayRaster(): boolean {
+    return this.animated && !this.paused && this.rasterVisible && (typeof document === 'undefined' || !document.hidden)
+  }
+
+  private syncSpritePlayback(): void {
+    const asset = this.rasterAsset
+    if (!asset || asset.renderer !== 'sprite') {
+      this.stopSpritePlayback()
+      return
+    }
+
+    const canvas = this.renderRoot.querySelector('canvas.raster-sprite-canvas')
+    if (!(canvas instanceof HTMLCanvasElement))
+      return
+
+    if (this.spritePlaybackUrl !== asset.url) {
+      this.stopSpritePlayback()
+      this.spritePlaybackUrl = asset.url
+      this.spritePlaybackFrame = -1
+      this.spritePlaybackStartedAt = performance.now()
+      this.drawSpriteFrame(asset, canvas)
+    }
+
+    if (!this.shouldPlayRaster()) {
+      this.stopSpritePlayback()
+      return
+    }
+
+    if (this.spritePlaybackTimer === undefined)
+      this.scheduleSpritePlayback(asset, canvas)
+  }
+
+  private scheduleSpritePlayback(asset: Decoration8RasterAsset, canvas: HTMLCanvasElement): void {
+    const frameDelay = Math.max(asset.frameDelay ?? spriteRasterFrameDelay, 1)
+    const timeout = Math.max(Math.min(frameDelay, 50), 16)
+
+    this.spritePlaybackTimer = window.setTimeout(() => {
+      this.spritePlaybackTimer = undefined
+
+      if (this.rasterAsset !== asset || !this.shouldPlayRaster())
+        return
+
+      this.drawSpriteFrame(asset, canvas)
+      this.scheduleSpritePlayback(asset, canvas)
+    }, timeout)
+  }
+
+  private drawSpriteFrame(asset: Decoration8RasterAsset, canvas: HTMLCanvasElement): void {
+    const frameWidth = Math.max(asset.width ?? canvas.width, 1)
+    const frameHeight = Math.max(asset.height ?? canvas.height, 1)
+    const frameIndex = Math.floor((performance.now() - this.spritePlaybackStartedAt) / Math.max(asset.frameDelay ?? spriteRasterFrameDelay, 1))
+
+    if (canvas.width !== frameWidth)
+      canvas.width = frameWidth
+
+    if (canvas.height !== frameHeight)
+      canvas.height = frameHeight
+
+    const context = canvas.getContext('2d')
+    if (!context)
+      return
+
+    context.clearRect(0, 0, frameWidth, frameHeight)
+
+    if (asset.layers) {
+      const elapsed = performance.now() - this.spritePlaybackStartedAt
+
+      for (const layer of asset.layers) {
+        const angle = resolveRasterLayerAngle(layer.kind, elapsed, Math.max(resolveNumberValue(this.dur, 5), 0.1))
+        this.drawRasterLayer(context, layer.image, frameWidth, frameHeight, angle)
+      }
+
+      this.spritePlaybackFrame = frameIndex
+      return
+    }
+
+    if (asset.image)
+      context.drawImage(asset.image, 0, 0, frameWidth, frameHeight)
+
+    this.spritePlaybackFrame = frameIndex
+  }
+
+  private drawRasterLayer(
+    context: CanvasRenderingContext2D,
+    image: HTMLImageElement,
+    width: number,
+    height: number,
+    angle: number,
+  ): void {
+    if (angle === 0) {
+      context.drawImage(image, 0, 0, width, height)
+      return
+    }
+
+    context.save()
+    context.translate(width / 2, height / 2)
+    context.rotate(angle * Math.PI / 180)
+    context.drawImage(image, -width / 2, -height / 2, width, height)
+    context.restore()
+  }
+
+  private stopSpritePlayback(): void {
+    if (this.spritePlaybackTimer !== undefined) {
+      window.clearTimeout(this.spritePlaybackTimer)
+      this.spritePlaybackTimer = undefined
+    }
   }
 
   private renderDefs(primary: string, secondary: string): unknown {
@@ -483,6 +878,269 @@ export class Decoration8Element extends DatavElement {
       && typeof window.matchMedia === 'function'
       && window.matchMedia('(prefers-reduced-motion: reduce)').matches
   }
+}
+
+function resolveRasterScale(): number {
+  const ratio = typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1
+
+  return Math.min(Math.max(ratio, minRasterScale), maxRasterScale)
+}
+
+async function createRasterVideo(sourceSvg: SVGSVGElement, duration: number, size: Decoration8RasterSize): Promise<Decoration8RasterAsset> {
+  const loopDuration = duration * rasterLoopDurationMultiplier
+  const frameCount = Math.min(Math.max(Math.round(loopDuration * rasterFrameRate), minRasterFrameCount), maxRasterFrameCount)
+  const strokeWidthScale = size.width / Math.max(size.displayWidth, baseSize)
+
+  const url = await rasterizeSvgToVideo(sourceSvg, {
+    width: size.width,
+    height: size.height,
+    frameCount,
+    frameDelay: rasterFrameDelay,
+    prepareFrame: (svg, frame) => prepareDecoration8RasterVideoFrame(svg, frame, duration),
+    strokeWidthScale,
+    videoBitsPerSecond: rasterVideoBitsPerSecond,
+  })
+
+  return {
+    url,
+    renderer: 'video',
+  }
+}
+
+async function createRasterSprite(sourceSvg: SVGSVGElement, size: Decoration8RasterSize): Promise<Decoration8RasterAsset> {
+  const widthCeiling = Math.min(size.width, spriteMaxRasterWidth)
+  const widthFloor = Math.min(spriteMinRasterWidth, widthCeiling)
+  const width = Math.max(widthCeiling, widthFloor)
+  const strokeWidthScale = width / Math.max(size.displayWidth, baseSize)
+  const layers: Decoration8RasterLayer[] = []
+
+  for (const kind of rasterLayerKinds) {
+    const result = await rasterizeSvgToPngSprite(sourceSvg, {
+      width,
+      height: width,
+      frameCount: 1,
+      columns: 1,
+      rows: 1,
+      frameDelay: spriteRasterFrameDelay,
+      prepareFrame: svg => prepareDecoration8RasterLayer(svg, kind),
+      strokeWidthScale,
+    })
+    const image = await loadRasterImage(result.url)
+
+    layers.push({
+      image,
+      kind,
+      url: result.url,
+    })
+  }
+
+  return {
+    url: layers.map(layer => layer.url).join('|'),
+    renderer: 'sprite',
+    frameDelay: spriteRasterFrameDelay,
+    height: width,
+    layers,
+    width,
+  }
+}
+
+function loadRasterImage(url: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+
+    image.decoding = 'async'
+    image.onload = () => {
+      if (typeof image.decode !== 'function') {
+        resolve(image)
+        return
+      }
+
+      void image.decode().then(
+        () => resolve(image),
+        () => resolve(image),
+      )
+    }
+    image.onerror = () => reject(new Error('Unable to decode sprite atlas.'))
+    image.src = url
+  })
+}
+
+async function acquireDecoration8Raster(
+  key: string,
+  sourceSvg: SVGSVGElement,
+  duration: number,
+  size: Decoration8RasterSize,
+  renderer: Decoration8RasterRenderer,
+): Promise<Decoration8RasterHandle> {
+  let entry = rasterCache.get(key)
+
+  if (!entry) {
+    entry = {
+      lastUsed: Date.now(),
+      refs: 0,
+    }
+    rasterCache.set(key, entry)
+  }
+
+  entry.refs += 1
+  entry.lastUsed = Date.now()
+
+  if (!entry.asset && !entry.promise) {
+    entry.promise = enqueueRaster(sourceSvg, duration, size, renderer)
+      .then((asset) => {
+        if (rasterCache.get(key) === entry) {
+          entry.asset = asset
+          entry.promise = undefined
+          trimRasterCache()
+        }
+
+        return asset
+      })
+      .catch((error) => {
+        if (rasterCache.get(key) === entry)
+          rasterCache.delete(key)
+
+        throw error
+      })
+  }
+
+  try {
+    let asset = entry.asset
+
+    if (!asset) {
+      if (!entry.promise)
+        throw new Error('Decoration 8 rasterization did not start.')
+
+      asset = await entry.promise
+    }
+
+    return {
+      asset,
+      release: () => releaseDecoration8Raster(key),
+    }
+  }
+  catch (error) {
+    releaseDecoration8Raster(key)
+    throw error
+  }
+}
+
+function enqueueRaster(
+  sourceSvg: SVGSVGElement,
+  duration: number,
+  size: Decoration8RasterSize,
+  renderer: Decoration8RasterRenderer,
+): Promise<Decoration8RasterAsset> {
+  const run = rasterQueue.then(() => {
+    if (renderer === 'sprite')
+      return createRasterSprite(sourceSvg, size)
+
+    return createRasterVideo(sourceSvg, duration, size)
+  })
+
+  rasterQueue = run.then(
+    () => undefined,
+    () => undefined,
+  )
+
+  return run
+}
+
+function releaseDecoration8Raster(key: string): void {
+  const entry = rasterCache.get(key)
+  if (!entry)
+    return
+
+  entry.refs = Math.max(entry.refs - 1, 0)
+  entry.lastUsed = Date.now()
+  trimRasterCache()
+}
+
+function trimRasterCache(): void {
+  const releasable = [...rasterCache.entries()]
+    .filter(([, entry]) => entry.refs === 0 && entry.asset)
+    .sort(([, left], [, right]) => left.lastUsed - right.lastUsed)
+
+  while (rasterCache.size > maxRasterCacheEntries && releasable.length > 0) {
+    const [key, entry] = releasable.shift()!
+
+    if (entry.asset)
+      revokeDecoration8RasterAsset(entry.asset)
+
+    rasterCache.delete(key)
+  }
+}
+
+function revokeDecoration8RasterAsset(asset: Decoration8RasterAsset): void {
+  if (asset.layers) {
+    asset.layers.forEach(layer => URL.revokeObjectURL(layer.url))
+    return
+  }
+
+  URL.revokeObjectURL(asset.url)
+}
+
+function prepareDecoration8RasterVideoFrame(svg: SVGSVGElement, frame: SvgVideoRasterFrame, duration: number): void {
+  svg.querySelectorAll('animate, animateTransform').forEach(node => node.remove())
+
+  const elapsed = frame.elapsed * 1000
+
+  setRasterRotation(svg, 'outer-arc-band', resolveRasterLayerAngle('outer-arc-band', elapsed, duration))
+  setRasterRotation(svg, 'outer-arc-trace', resolveRasterLayerAngle('outer-arc-trace', elapsed, duration))
+  setRasterRotation(svg, 'segmented-track', resolveRasterLayerAngle('segmented-track', elapsed, duration))
+  setRasterRotation(svg, 'energy-blocks', resolveRasterLayerAngle('energy-blocks', elapsed, duration))
+}
+
+function prepareDecoration8RasterLayer(svg: SVGSVGElement, kind: Decoration8RasterLayerKind): void {
+  svg.querySelectorAll('animate, animateTransform').forEach(node => node.remove())
+
+  if (kind === 'static') {
+    hideRasterParts(svg, ['outer-arc-band', 'outer-arc-trace', 'segmented-track', 'energy-blocks'])
+    return
+  }
+
+  const hiddenParts: string[] = ['background', 'halo', 'ticks', 'micro-lights', 'inner-guide', 'core-guide', 'core']
+
+  if (kind === 'outer-arc-band')
+    hiddenParts.push('outer-arc-trace', 'segmented-track', 'energy-blocks')
+  else if (kind === 'outer-arc-trace')
+    hiddenParts.push('outer-arc-band', 'segmented-track', 'energy-blocks')
+  else
+    hiddenParts.push('outer-arcs', kind === 'segmented-track' ? 'energy-blocks' : 'segmented-track')
+
+  hideRasterParts(svg, hiddenParts)
+}
+
+function hideRasterParts(svg: SVGSVGElement, parts: string[]): void {
+  parts.forEach((part) => {
+    svg.querySelectorAll(`[part~="${part}"]`).forEach((node) => {
+      if (node instanceof SVGElement)
+        node.setAttribute('visibility', 'hidden')
+    })
+  })
+}
+
+function resolveRasterLayerAngle(kind: Decoration8RasterLayerKind, elapsed: number, duration: number): number {
+  if (kind === 'static')
+    return 0
+
+  const configs: Record<Exclude<Decoration8RasterLayerKind, 'static'>, { direction: number, multiplier: number }> = {
+    'outer-arc-band': { direction: 1, multiplier: 1.28 },
+    'outer-arc-trace': { direction: -1, multiplier: 1.85 },
+    'segmented-track': { direction: -1, multiplier: 1.8 },
+    'energy-blocks': { direction: 1, multiplier: 2.1 },
+  }
+  const config = configs[kind]
+  const period = Math.max(duration * config.multiplier * 1000, 1)
+
+  return config.direction * 360 * ((elapsed % period) / period)
+}
+
+function setRasterRotation(svg: SVGSVGElement, part: string, angle: number): void {
+  const node = svg.querySelector(`[part~="${part}"]`)
+
+  if (node instanceof SVGElement)
+    node.setAttribute('transform', `rotate(${roundTo(angle, 3)} 50 50)`)
 }
 
 function splitColors(value: string): string[] {

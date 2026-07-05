@@ -43,12 +43,15 @@ description: Rotating HUD energy ring with arcs, tick marks, neon blocks, and da
 | `dur` | `number` | `5` | Rotation duration in seconds. |
 | `animated` | `boolean` | `true` | Enables SVG rotation animations. |
 | `paused` | `boolean` | `false` | Stops rotation animations while keeping the static geometry visible. |
+| `video-rasterize` | `boolean` | `true` | Enables runtime rasterization for the animated SVG. Set `video-rasterize="false"` to keep the live SVG animation path. |
+| `raster-renderer` | `'video' \| 'sprite'` | `'sprite'` | Runtime raster output renderer. Defaults to transparent PNG atlas playback; use `video` for transparent WebM playback. |
 
 ## Events
 
 | Name | Detail |
 | --- | --- |
 | `dvk-ready` | `{ tagName }` |
+| `dvk-raster-error` | `{ message }` |
 
 ## CSS Variables
 
@@ -61,7 +64,8 @@ description: Rotating HUD energy ring with arcs, tick marks, neon blocks, and da
 
 | Part | Description |
 | --- | --- |
-| `graphic` | Internal SVG. |
+| `graphic` | Internal SVG or raster renderer. |
+| `raster` | Runtime raster renderer used after SVG rasterization succeeds. |
 | `background` | Dark radial HUD background wash. |
 | `halo` | Soft concentric glow guides. |
 | `ring` | Shared part for segmented light arcs. |
