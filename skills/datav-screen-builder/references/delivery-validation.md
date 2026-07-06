@@ -22,7 +22,9 @@ Preview/browser checks should verify at least:
 - title, main visual, side panels, and bottom/top rails do not overlap or overflow;
 - border-box content is not clipped, squeezed, or hidden by decoration;
 - chart, map, 3D, table, counter, loading, empty, and error containers have stable non-zero dimensions;
+- every meaningful data region has explicit loading, empty, and error handling, not only a populated data state;
 - no large blank regions appear because a visualization failed to size or render;
+- no empty data path leaves a blank chart, blank map, empty table shell, empty KPI panel, or decorative border around whitespace;
 - text fits its panels and buttons without unreadable shrinking.
 
 Also use preview, browser checks, or screenshots when:
@@ -45,6 +47,9 @@ If any of these appear in the generated screen, revise before delivery:
 - decorations are used as filler instead of structure, direction, status, or focus;
 - content is clipped, hidden, squeezed, or crowded by borders and decorations;
 - chart, map, 3D, table, counter, loading, empty, or error containers lack stable dimensions;
+- any chart, map, 3D scene, table, list, KPI group, counter, timeline, topology, ranking, alert feed, or custom visual lacks explicit loading, empty, and error states;
+- empty data renders as blank whitespace, empty axes, an empty table body, an empty map/canvas, or a border-box with no meaningful message;
+- error data renders as blank whitespace, stale happy-path content, or a console-only failure;
 - title, chart labels, lists, or panel content overflow at `1920 x 1080`;
 - broad `--dvk-border-box-padding` overrides are applied to root, app, screen, dashboard, or theme selectors;
 - the screen reads as one blue/cyan/purple glow field with unclear semantic color.
@@ -79,6 +84,7 @@ Avoid these:
 - placing decorations as filler instead of structure, direction, status, or focus;
 - using broad `--dvk-border-box-padding` where a component-specific padding variable or better layout would solve the issue;
 - leaving ECharts/3D containers with no stable size, resize, cleanup, loading, empty, or error state;
+- building only the happy-path data view while empty or error data leaves the panel blank;
 - adding a new visualization library while ignoring existing wrappers;
 - producing a one-note blue/cyan/purple glow screen with no information hierarchy;
 - turning a large-screen display into a dense CRUD/admin dashboard.

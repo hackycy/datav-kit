@@ -79,6 +79,7 @@ Use these defaults only when the user did not specify and the project does not i
 - Default data: create believable mock data with units, statuses, trends, and empty/loading/error branches.
 - Default title area: one lightweight symmetric decoration pair plus one centered colorized title; optionally add one weak lower divider that is not another symmetric title ornament.
 - Default hierarchy: one clear first-read visual dominates; borders and decorations are third-read support, never filler.
+- Default data regions: every chart, map, table, list, KPI group, counter, timeline, topology, and custom visual must handle loading, empty, and error states; never leave an empty bordered panel or blank visualization area.
 
 ## Concise Example Prompts
 
