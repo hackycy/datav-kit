@@ -77,6 +77,7 @@ export default defineConfig({
           items: [
             { text: 'Fit Screen', link: '/components/other/fit-screen' },
             { text: 'Count To', link: '/components/other/count-to' },
+            { text: 'Loading Orbit', link: '/components/other/loading-orbit' },
           ],
         },
       ],

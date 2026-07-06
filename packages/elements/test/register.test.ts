@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingOrbitElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingOrbit, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -162,13 +162,14 @@ describe('@datav-kit/elements', () => {
       'dvk-decoration-10',
       'dvk-decoration-11',
       'dvk-count-to',
+      'dvk-loading-orbit',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -245,6 +246,7 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration10()).toBe(false)
     expect(defineDecoration11()).toBe(false)
     expect(defineCountTo()).toBe(false)
+    expect(defineLoadingOrbit()).toBe(false)
   })
 
   it('renders decoration-5 with DataV Decoration8 coordinates and reverse mode', async () => {
@@ -950,6 +952,62 @@ describe('@datav-kit/elements', () => {
       detail: { value: 100 },
     }))
     expect(element.shadowRoot?.querySelector('[part="integer"]')?.textContent).toBe('100')
+  })
+
+  it('maps loading-orbit attributes and renders DataV-style counter-rotating rings', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-orbit') as LoadingOrbitElement
+    const ready = vi.fn()
+
+    element.setAttribute('colors', '#111,#222')
+    element.setAttribute('size', '64')
+    element.setAttribute('stroke-width', '4')
+    element.setAttribute('dur', '2')
+    element.textContent = 'Loading data'
+    element.addEventListener('dvk-ready', ready)
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const circles = [...(element.shadowRoot?.querySelectorAll('circle') ?? [])]
+    const rotations = [...(element.shadowRoot?.querySelectorAll('animateTransform') ?? [])]
+    const strokeAnimations = [...(element.shadowRoot?.querySelectorAll('animate') ?? [])]
+
+    expect(element).toHaveProperty('colors', '#111,#222')
+    expect(element).toHaveProperty('size', 64)
+    expect(element).toHaveProperty('strokeWidth', 4)
+    expect(element.getAttribute('role')).toBe('status')
+    expect(element.getAttribute('aria-live')).toBe('polite')
+    expect(ready).toHaveBeenCalledWith(expect.objectContaining({
+      detail: { tagName: 'dvk-loading-orbit' },
+    }))
+    expect(svg?.getAttribute('width')).toBe('64')
+    expect(svg?.getAttribute('height')).toBe('64')
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 50 50')
+    expect(circles.map(circle => circle.getAttribute('r'))).toEqual(['20', '10'])
+    expect(circles.map(circle => circle.getAttribute('stroke'))).toEqual(['#111', '#222'])
+    expect(circles.map(circle => circle.getAttribute('stroke-width'))).toEqual(['4', '4'])
+    expect(circles.map(circle => circle.getAttribute('stroke-dasharray'))).toEqual(['31.415, 31.415', '15.7, 15.7'])
+    expect(rotations.map(animation => animation.getAttribute('values'))).toEqual(['0, 25 25;360, 25 25', '360, 25 25;0, 25 25'])
+    expect(rotations.map(animation => animation.getAttribute('dur'))).toEqual(['2s', '2s'])
+    expect(strokeAnimations.map(animation => animation.getAttribute('values'))).toEqual(['#111;#222;#111', '#222;#111;#222'])
+    expect(element.shadowRoot?.querySelector('slot')?.assignedNodes().map(node => node.textContent).join('').trim()).toBe('Loading data')
+  })
+
+  it('keeps loading-orbit static when paused', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-orbit') as LoadingOrbitElement
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelectorAll('circle')).toHaveLength(2)
+    expect(element.shadowRoot?.querySelector('animateTransform')).toBeNull()
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
   })
 
   it('maps border-box-1 attributes to element properties and renders SVG', async () => {
