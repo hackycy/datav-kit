@@ -1,7 +1,7 @@
 {
   "name": "@datav-kit/themes",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Optional CSS variable themes for datav-kit.",
   "author": "hackycy <hackycy@outlook.com>",
   "license": "MIT",
