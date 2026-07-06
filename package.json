@@ -1,7 +1,5 @@
 {
-  "name": "datav-kit",
   "type": "module",
-  "version": "0.0.1",
   "private": true,
   "packageManager": "pnpm@11.6.0",
   "author": "hackycy <hackycy@outlook.com>",
