@@ -7,7 +7,6 @@ Framework-agnostic visual decoration components for data dashboards, powered by 
 [![License](https://img.shields.io/github/license/hackycy/datav-kit?style=flat-square)](./LICENSE)
 [![Elements Version](https://img.shields.io/npm/v/%40datav-kit%2Felements?style=flat-square&label=elements)](https://www.npmjs.com/package/@datav-kit/elements)
 [![Elements Downloads](https://img.shields.io/npm/dm/%40datav-kit%2Felements?style=flat-square&label=downloads)](https://www.npmjs.com/package/@datav-kit/elements)
-[![Core Version](https://img.shields.io/npm/v/%40datav-kit%2Fcore?style=flat-square&label=core)](https://www.npmjs.com/package/@datav-kit/core)
 
 Build expressive large-screen dashboard surfaces with SSR-safe Custom Elements, decorative borders, HUD-style decorations, animated numbers, and theme presets.
 
@@ -45,12 +44,12 @@ registerElements()
 
 ## Packages
 
-| Package | Directory | Version | Downloads | Role |
-| --- | --- | --- | --- | --- |
-| [`@datav-kit/elements`](https://www.npmjs.com/package/@datav-kit/elements) | [`packages/elements`](./packages/elements) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Felements?style=flat-square)](https://www.npmjs.com/package/@datav-kit/elements) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Felements?style=flat-square)](https://www.npmjs.com/package/@datav-kit/elements) | Public Web Components entrypoints and component registrations. |
-| [`@datav-kit/core`](https://www.npmjs.com/package/@datav-kit/core) | [`packages/core`](./packages/core) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Fcore?style=flat-square)](https://www.npmjs.com/package/@datav-kit/core) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Fcore?style=flat-square)](https://www.npmjs.com/package/@datav-kit/core) | Web Components primitives, lifecycle helpers, events, and controllers. |
-| [`@datav-kit/shared`](https://www.npmjs.com/package/@datav-kit/shared) | [`packages/shared`](./packages/shared) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Fshared?style=flat-square)](https://www.npmjs.com/package/@datav-kit/shared) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Fshared?style=flat-square)](https://www.npmjs.com/package/@datav-kit/shared) | Framework-agnostic utilities shared by DataV Kit packages. |
-| [`@datav-kit/themes`](https://www.npmjs.com/package/@datav-kit/themes) | [`packages/themes`](./packages/themes) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Fthemes?style=flat-square)](https://www.npmjs.com/package/@datav-kit/themes) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Fthemes?style=flat-square)](https://www.npmjs.com/package/@datav-kit/themes) | Optional CSS variable themes and theme exports. |
+| Package | Version | Downloads | Role |
+| --- | --- | --- | --- |
+| [`@datav-kit/elements`](./packages/elements) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Felements?style=flat-square)](https://www.npmjs.com/package/@datav-kit/elements) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Felements?style=flat-square)](https://www.npmjs.com/package/@datav-kit/elements) | Public Web Components entrypoints and component registrations. |
+| [`@datav-kit/core`](./packages/core) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Fcore?style=flat-square)](https://www.npmjs.com/package/@datav-kit/core) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Fcore?style=flat-square)](https://www.npmjs.com/package/@datav-kit/core) | Web Components primitives, lifecycle helpers, events, and controllers. |
+| [`@datav-kit/shared`](./packages/shared) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Fshared?style=flat-square)](https://www.npmjs.com/package/@datav-kit/shared) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Fshared?style=flat-square)](https://www.npmjs.com/package/@datav-kit/shared) | Framework-agnostic utilities shared by DataV Kit packages. |
+| [`@datav-kit/themes`](./packages/themes) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Fthemes?style=flat-square)](https://www.npmjs.com/package/@datav-kit/themes) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Fthemes?style=flat-square)](https://www.npmjs.com/package/@datav-kit/themes) | Optional CSS variable themes and theme exports. |
 
 ## Repository Map
 
