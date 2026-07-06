@@ -28,7 +28,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsdown && mkdir -p dist && cp src/*.css dist/ && publint",
+    "build": "tsdown",
     "dev": "tsdown --watch",
     "lint": "eslint src test",
     "test": "vitest run",
