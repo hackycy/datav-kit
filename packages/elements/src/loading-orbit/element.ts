@@ -15,7 +15,7 @@ export class LoadingOrbitElement extends DatavElement {
       height: 100%;
       min-width: 0;
       min-height: 0;
-      color: var(--dvk-color-primary, #02bcfe);
+      color: var(--dvk-color-primary, #18f0ff);
       box-sizing: border-box;
     }
 
@@ -177,13 +177,13 @@ export class LoadingOrbitElement extends DatavElement {
       explicit: this.color,
       cssVariable: '--dvk-color-primary',
       host: this,
-      fallback: '#02bcfe',
+      fallback: '#18f0ff',
     })
     const secondary = colors[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
       cssVariable: '--dvk-color-secondary',
       host: this,
-      fallback: '#3be6cb',
+      fallback: '#2b7cff',
     })
 
     return [primary, secondary]

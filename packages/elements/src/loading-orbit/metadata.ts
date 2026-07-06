@@ -3,7 +3,7 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const loadingOrbitMetadata = {
   tagName: 'dvk-loading-orbit',
   className: 'LoadingOrbitElement',
-  description: 'Two counter-rotating loading rings with blue-cyan color cycling and an optional status slot.',
+  description: 'Two counter-rotating loading rings with datav-kit color cycling and an optional status slot.',
   props: {
     color: {
       type: 'string',

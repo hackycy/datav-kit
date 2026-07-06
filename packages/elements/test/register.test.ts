@@ -1010,6 +1010,20 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector('animate')).toBeNull()
   })
 
+  it('uses datav-kit colors as loading-orbit fallback colors', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-orbit') as LoadingOrbitElement
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const circles = [...(element.shadowRoot?.querySelectorAll('circle') ?? [])]
+
+    expect(circles.map(circle => circle.getAttribute('stroke'))).toEqual(['#18f0ff', '#2b7cff'])
+  })
+
   it('maps border-box-1 attributes to element properties and renders SVG', async () => {
     register()
 

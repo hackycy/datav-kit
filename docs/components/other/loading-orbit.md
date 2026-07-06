@@ -1,10 +1,10 @@
 ---
-description: Two counter-rotating loading rings with blue-cyan color cycling and an optional status slot.
+description: Two counter-rotating loading rings with datav-kit color cycling and an optional status slot.
 ---
 
 # Loading Orbit
 
-`dvk-loading-orbit` renders a compact loading indicator based on the DataV Loading source: two concentric dashed rings rotate in opposite directions while cycling between blue and cyan.
+`dvk-loading-orbit` renders a compact loading indicator based on the DataV Loading source: two concentric dashed rings rotate in opposite directions while cycling through the datav-kit default colors.
 
 <div class="datav-demo">
   <div style="height: 180px; display: grid; place-items: center;">
@@ -20,8 +20,8 @@ description: Two counter-rotating loading rings with blue-cyan color cycling and
 
 | Name | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `color` | `string` | empty | Outer ring initial color. Falls back to `--dvk-color-primary` and then `#02bcfe`. |
-| `secondary-color` | `string` | empty | Inner ring initial color. Falls back to `--dvk-color-secondary` and then `#3be6cb`. |
+| `color` | `string` | empty | Outer ring initial color. Falls back to `--dvk-color-primary` and then `#18f0ff`. |
+| `secondary-color` | `string` | empty | Inner ring initial color. Falls back to `--dvk-color-secondary` and then `#2b7cff`. |
 | `colors` | `string` | empty | Comma-separated outer and inner ring colors. |
 | `size` | `number` | `50` | Rendered SVG size in CSS pixels. |
 | `stroke-width` | `number` | `3` | Ring stroke width in SVG units. |
