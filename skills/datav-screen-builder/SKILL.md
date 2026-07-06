@@ -56,13 +56,15 @@ Load only the references that match the task:
    - business scenario;
    - first, second, and third visual read;
    - canvas and fit behavior;
+   - title-area complexity gate;
    - layout zones;
+   - content density and sizing;
    - color system;
    - border/decor pairing;
    - visualization states;
    - interaction and motion budget.
 5. Implement by following the existing project stack and conventions.
-6. Validate with project-appropriate static checks by default. Preview/screenshot only when requested, high-risk, or easy and useful for a changed runnable project.
+6. Validate with project-appropriate static checks. For any complete runnable large-screen page, also run a browser/preview check with screenshot or DOM size inspection unless impossible.
 7. Final response: summarize files changed, design decisions, datav-kit components used, visualization-state handling, dependency/integration changes, and validation results.
 
 ## Defaults
@@ -75,6 +77,8 @@ Use these defaults only when the user did not specify and the project does not i
 - Default fit behavior: use datav-kit fit-screen for full-screen fixed-canvas dashboards when current docs confirm the API.
 - Default language: follow the user's request language or the existing project UI language.
 - Default data: create believable mock data with units, statuses, trends, and empty/loading/error branches.
+- Default title area: one lightweight symmetric decoration pair plus one centered colorized title; optionally add one weak lower divider that is not another symmetric title ornament.
+- Default hierarchy: one clear first-read visual dominates; borders and decorations are third-read support, never filler.
 
 ## Concise Example Prompts
 

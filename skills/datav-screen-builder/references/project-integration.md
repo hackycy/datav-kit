@@ -60,6 +60,24 @@ Follow existing styling:
 - Keep stable dimensions for dashboard panels, charts, toolbars, counters, and visual cells.
 - Do not scale font size directly with viewport width. Use fit-screen/canvas scaling or explicit responsive breakpoints instead.
 
+## Border Padding Variables
+
+Datav-kit border-box content padding resolves in this order:
+
+```txt
+--dvk-border-box-N-padding
+> --dvk-border-box-padding
+> computed safe-area padding
+```
+
+Use the component-specific variable first when a panel needs manual inset tuning, for example `--dvk-border-box-11-padding`.
+
+Avoid setting `--dvk-border-box-padding` on `:root`, `body`, app shells, screen roots, broad dashboard containers, or theme-level selectors by default. It can accidentally override every border-box and defeat each component's computed safe area.
+
+Use the shared `--dvk-border-box-padding` only for a deliberately small wrapper around one known group of similar border boxes. When using it, check the CSS cascade and confirm unrelated border boxes keep their intended content inset.
+
+Do not use broad shared padding to compensate for poor panel layout. Fix the panel's grid, content density, chart size, or component-specific inset instead.
+
 ## Advisory Or Copyable Example Mode
 
 When the user asks only for an example, snippet, or plan, do not edit local files. Provide a complete, copyable implementation shape based on current docs, including install/register notes, layout, styles, mock data, and visualization states.
