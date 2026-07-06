@@ -28,11 +28,23 @@ Do not use fixed templates or fixed panel counts. Let the user's data and busine
 Guide composition with hierarchy:
 
 - Make one main visual or status group dominant.
+- Default to a stable center-axis composition for large screens: centered title/status anchor, dominant center visual, balanced left/right support panels, and restrained top/bottom rails.
 - Use side panels for explanation, ranking, alerts, or secondary trends.
 - Use top/bottom rails for title, time, filters, global status, and summarized indicators.
 - Keep repeated panels quieter than the focal zone.
 - Avoid turning every metric into a card; group related metrics into readable bands.
 - Preserve distance readability: stronger type, fewer tiny labels, clear contrast, and generous internal spacing.
+
+## Title Area Defaults
+
+Use a steady command-center title area unless the user explicitly asks for an unusual title style.
+
+- Keep the screen title centered on the visual axis and make it the primary anchor of the top rail.
+- Balance title-adjacent content: put time, location, global status, or light controls in left/right groups with similar visual weight.
+- Use paired or mirrored decoration components for title wings, header separators, and focal framing.
+- Avoid asymmetrical, slanted, floating, novelty, or heavily fragmented title compositions by default.
+- Keep title decoration supportive: it may frame or emphasize the title, but it should not compete with the first-read data.
+- Keep close, back, fullscreen, and secondary utility actions in quiet edge zones so they remain reachable but subordinate.
 
 ## Border And Decoration Pairing
 
@@ -43,6 +55,7 @@ Use principles, not fixed component numbers:
 - Use fit-screen or the current documented equivalent for full-screen fixed-canvas scaling.
 - Use border components to carry content zones, not every small item.
 - Use decoration components for title wings, section separators, directional emphasis, status rhythm, and focal support.
+- Prefer paired, mirrored, or rhythmically repeated decoration for the top rail and focal zone.
 - Put stronger borders around fewer important zones.
 - Use simpler borders for repeated secondary panels.
 - Avoid complex borders around dense tables, long labels, tiny KPI cells, or controls.
@@ -73,6 +86,7 @@ Keep large-screen interaction restrained:
 
 - Default to display-first, interaction-second.
 - Prefer only necessary controls: fullscreen, time range, region switch, metric switch, alert detail, or drilldown.
+- Allow sparse forms only when they serve display context, such as time range, region, metric, or alert drilldown controls.
 - Avoid CRUD, dense forms, multi-page admin flows, and heavy filter panels unless requested.
 - Tooltips must support reading and avoid blocking the main visual.
 - Dialogs/drawers should reveal details without destroying the screen's situational overview.
