@@ -1630,7 +1630,7 @@ describe('@datav-kit/elements', () => {
       ['dvk-border-box-5', '32px 22px 16px 22px'],
       ['dvk-border-box-10', '15px 15px 15px 15px'],
       ['dvk-border-box-11', '21.94px 19px 21.94px 18.5px'],
-      ['dvk-border-box-12', '17.6px 19px 17.02px 19px'],
+      ['dvk-border-box-12', '15.07px 19px 14px 19px'],
       ['dvk-border-box-13', '16px 16px 16px 16px'],
       ['dvk-border-box-14', '14px 14px 14px 14px'],
       ['dvk-border-box-15', '10px 10px 10px 10px'],
@@ -2422,7 +2422,7 @@ describe('@datav-kit/elements', () => {
     expect(flood?.getAttribute('flood-color')).toBe('#112233')
     expect(flood?.getAttribute('flood-opacity')).toBe('0.9')
     expect(animations).toHaveLength(6)
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('17.6px 19px 17.02px 19px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('16.07px 19px 14px 19px')
   })
 
   it('extends border-box-12 straight rails without deforming fold angles', async () => {

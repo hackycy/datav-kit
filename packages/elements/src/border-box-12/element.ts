@@ -1,7 +1,6 @@
 import { DatavElement, ResizeController, resolveNumberValue, resolveThemeValue } from '@datav-kit/core'
 import { css, html, svg } from 'lit'
 import { property, state } from 'lit/decorators.js'
-import { createBorderBoxContentPadding } from '../border-box-content-padding'
 
 interface BorderBox12Size {
   width: number
@@ -40,9 +39,9 @@ const sourceViewBox: BorderBox12Rect = {
 }
 const contentRect: BorderBox12Rect = {
   x: 77,
-  y: 92,
+  y: 84,
   width: 1518,
-  height: 760,
+  height: 793,
 }
 let borderBox12Id = 0
 
@@ -146,14 +145,7 @@ export class BorderBox12Element extends DatavElement {
     const glowIntensity = Math.max(resolveNumberValue(this.glowIntensity, 1), 0)
     const geometry = this.createGeometry()
     const { width, height } = geometry
-    const contentPadding = createBorderBoxContentPadding({
-      hostWidth: width,
-      hostHeight: height,
-      viewBox: sourceViewBox,
-      contentRect,
-      minBlock: 14,
-      minInline: 19,
-    })
+    const contentPadding = createContentPadding(width, height)
 
     return html`
       <div part="frame" class="frame">
@@ -474,6 +466,29 @@ export class BorderBox12Element extends DatavElement {
 
 function round(value: number): number {
   return Number(value.toFixed(2))
+}
+
+function createContentPadding(width: number, height: number): string {
+  const moduleScale = Math.min(width / sourceViewBox.width, height / sourceViewBox.height)
+  const viewBoxRight = sourceViewBox.x + sourceViewBox.width
+  const viewBoxBottom = sourceViewBox.y + sourceViewBox.height
+  const contentRight = contentRect.x + contentRect.width
+  const contentBottom = contentRect.y + contentRect.height
+  const top = (contentRect.y - sourceViewBox.y) * moduleScale
+  const right = (viewBoxRight - contentRight) * moduleScale
+  const bottom = (viewBoxBottom - contentBottom) * moduleScale
+  const left = (contentRect.x - sourceViewBox.x) * moduleScale
+
+  return [
+    formatPaddingValue(Math.max(top, 14)),
+    formatPaddingValue(Math.max(right, 19)),
+    formatPaddingValue(Math.max(bottom, 14)),
+    formatPaddingValue(Math.max(left, 19)),
+  ].join(' ')
+}
+
+function formatPaddingValue(value: number): string {
+  return `${Number(value.toFixed(2))}px`
 }
 
 function withAlpha(color: string, alpha: number): string {
