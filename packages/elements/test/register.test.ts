@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingOrbitElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingOrbit, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -163,13 +163,14 @@ describe('@datav-kit/elements', () => {
       'dvk-decoration-11',
       'dvk-count-to',
       'dvk-loading-orbit',
+      'dvk-loading-energy',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -247,6 +248,7 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration11()).toBe(false)
     expect(defineCountTo()).toBe(false)
     expect(defineLoadingOrbit()).toBe(false)
+    expect(defineLoadingEnergy()).toBe(false)
   })
 
   it('renders decoration-5 with DataV Decoration8 coordinates and reverse mode', async () => {
@@ -1098,6 +1100,112 @@ describe('@datav-kit/elements', () => {
     const circles = [...(element.shadowRoot?.querySelectorAll('circle') ?? [])]
 
     expect(circles.map(circle => circle.getAttribute('stroke'))).toEqual(['#18f0ff', '#2b7cff'])
+  })
+
+  it('maps loading-energy attributes and renders a restrained enterprise energy module', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-energy') as LoadingEnergyElement
+    const ready = vi.fn()
+
+    element.setAttribute('colors', '#111,#222')
+    element.setAttribute('size', '72')
+    element.setAttribute('stroke-width', '3')
+    element.setAttribute('dur', '2.4')
+    element.textContent = 'Processing data'
+    element.addEventListener('dvk-ready', ready)
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const frame = element.shadowRoot?.querySelector('[part="frame"]')
+    const moduleShell = element.shadowRoot?.querySelector('[part="module-shell"]')
+    const busLine = element.shadowRoot?.querySelector('[part="bus-line"]')
+    const busFlow = element.shadowRoot?.querySelector('[part="bus-flow"]')
+    const cell = element.shadowRoot?.querySelector('[part="energy-cell"]')
+    const energyFill = element.shadowRoot?.querySelector('[part="energy-fill"]')
+    const energyFlow = element.shadowRoot?.querySelector('[part="energy-flow"]')
+    const scanLine = element.shadowRoot?.querySelector('[part="scan-line"]')
+    const chargeSegments = [...(element.shadowRoot?.querySelectorAll('[part~="charge-segment"]') ?? [])]
+    const core = element.shadowRoot?.querySelector('[part="core"]')
+    const animations = [...(element.shadowRoot?.querySelectorAll('animate') ?? [])]
+    const transforms = [...(element.shadowRoot?.querySelectorAll('animateTransform') ?? [])]
+
+    expect(element).toHaveProperty('colors', '#111,#222')
+    expect(element).toHaveProperty('size', 72)
+    expect(element).toHaveProperty('strokeWidth', 3)
+    expect(element.getAttribute('role')).toBe('status')
+    expect(element.getAttribute('aria-live')).toBe('polite')
+    expect(ready).toHaveBeenCalledWith(expect.objectContaining({
+      detail: { tagName: 'dvk-loading-energy' },
+    }))
+    expect(svg?.getAttribute('width')).toBe('72')
+    expect(svg?.getAttribute('height')).toBe('72')
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 72 72')
+    expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet')
+    expect(frame?.getAttribute('d')).toBe('M22 10 H50 M62 22 V50 M50 62 H22 M10 50 V22')
+    expect(frame?.getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.48)')
+    expect(frame?.getAttribute('stroke-width')).toBe('2.25')
+    expect(moduleShell?.getAttribute('d')).toBe('M22 13 H50 L59 22 V50 L50 59 H22 L13 50 V22 Z')
+    expect(moduleShell?.getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.58)')
+    expect(busLine?.getAttribute('d')).toBe('M18 36 H29 M43 36 H54 M36 18 V29 M36 43 V54')
+    expect(busFlow?.getAttribute('d')).toBe('M18 36 H29 M54 36 H43 M36 18 V29 M36 54 V43')
+    expect(busFlow?.getAttribute('stroke-dasharray')).toBe('3 5')
+    expect(cell?.getAttribute('x')).toBe('30')
+    expect(cell?.getAttribute('width')).toBe('12')
+    expect(cell?.getAttribute('height')).toBe('32')
+    expect(cell?.getAttribute('stroke')).toBe('#111')
+    expect(cell?.getAttribute('stroke-width')).toBe('3')
+    expect(energyFill?.getAttribute('fill')).toBe('rgba(17, 17, 17, 0.18)')
+    expect(energyFlow?.getAttribute('clip-path')).toBe('url(#dvk-loading-energy-cell-clip)')
+    expect(scanLine?.getAttribute('fill')).toBe('url(#dvk-loading-energy-scan)')
+    expect(chargeSegments).toHaveLength(4)
+    expect(chargeSegments.map(segment => segment.getAttribute('part'))).toEqual(['charge-segment charge-left', 'charge-segment charge-right', 'charge-segment charge-top', 'charge-segment charge-bottom'])
+    expect(chargeSegments.map(segment => segment.getAttribute('fill'))).toEqual(['#111', '#222', '#222', '#111'])
+    expect(core?.getAttribute('fill')).toBe('#111')
+    expect(animations.map(animation => animation.getAttribute('attributeName'))).toEqual(['stroke-dashoffset', 'y', 'y'])
+    expect(animations.map(animation => animation.getAttribute('attributeName'))).not.toContain('opacity')
+    expect(animations.map(animation => animation.getAttribute('attributeName'))).not.toContain('fill-opacity')
+    expect(transforms).toHaveLength(5)
+    expect(transforms.map(animation => animation.getAttribute('type'))).toEqual(['translate', 'translate', 'translate', 'translate', 'translate'])
+    expect(transforms.map(animation => animation.getAttribute('dur'))).toContain('2.4s')
+    expect(element.shadowRoot?.querySelector('slot')?.assignedNodes().map(node => node.textContent).join('').trim()).toBe('Processing data')
+  })
+
+  it('keeps loading-energy static when paused', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-energy') as LoadingEnergyElement
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelector('[part="core"]')).not.toBeNull()
+    expect(element.shadowRoot?.querySelectorAll('[part~="charge-segment"]')).toHaveLength(4)
+    expect(element.shadowRoot?.querySelector('animateTransform')).toBeNull()
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('uses datav-kit colors as loading-energy fallback colors', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-energy') as LoadingEnergyElement
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const moduleShell = element.shadowRoot?.querySelector('[part="module-shell"]')
+    const busLine = element.shadowRoot?.querySelector('[part="bus-line"]')
+    const energyFill = element.shadowRoot?.querySelector('[part="energy-fill"]')
+    const chargeSegments = [...(element.shadowRoot?.querySelectorAll('[part~="charge-segment"]') ?? [])]
+
+    expect(moduleShell?.getAttribute('stroke')).toBe('rgba(43, 124, 255, 0.58)')
+    expect(busLine?.getAttribute('stroke')).toBe('rgba(43, 124, 255, 0.5)')
+    expect(energyFill?.getAttribute('fill')).toBe('rgba(24, 240, 255, 0.18)')
+    expect(chargeSegments.map(segment => segment.getAttribute('fill'))).toEqual(['#18f0ff', '#2b7cff', '#2b7cff', '#18f0ff'])
   })
 
   it('maps border-box-1 attributes to element properties and renders SVG', async () => {

@@ -1,0 +1,86 @@
+import type { DatavElementMetadata } from '@datav-kit/core'
+
+export const loadingEnergyMetadata = {
+  tagName: 'dvk-loading-energy',
+  className: 'LoadingEnergyElement',
+  description: 'A restrained enterprise sci-fi loading indicator with a chamfered processor-like energy cell and continuous data-flow motion.',
+  props: {
+    color: {
+      type: 'string',
+      default: '',
+      attribute: true,
+      cssVariable: '--dvk-color-primary',
+      description: 'Energy flow, scan, and core status light color.',
+    },
+    secondaryColor: {
+      type: 'string',
+      default: '',
+      attribute: 'secondary-color',
+      cssVariable: '--dvk-color-secondary',
+      description: 'Module frame, bus line, and secondary contact color.',
+    },
+    colors: {
+      type: 'string',
+      default: '',
+      attribute: true,
+      description: 'Comma-separated energy and module frame colors.',
+    },
+    size: {
+      type: 'number',
+      default: 72,
+      attribute: true,
+      description: 'Rendered SVG size in CSS pixels.',
+    },
+    strokeWidth: {
+      type: 'number',
+      default: 2,
+      attribute: 'stroke-width',
+      description: 'Module shell and energy cell stroke width in SVG units.',
+    },
+    dur: {
+      type: 'number',
+      default: 1.9,
+      attribute: true,
+      description: 'Flow cycle duration in seconds. Bus flow and scan layers derive from this value.',
+    },
+    animated: {
+      type: 'boolean',
+      default: true,
+      attribute: true,
+      description: 'Enables continuous energy-flow, bus-flow, contact, and scan animation.',
+    },
+    paused: {
+      type: 'boolean',
+      default: false,
+      attribute: true,
+      description: 'Stops animation while keeping the static module visible.',
+    },
+  },
+  events: [
+    {
+      name: 'dvk-ready',
+      detail: '{ tagName }',
+      description: 'Fired after the element first renders.',
+    },
+  ],
+  parts: [
+    'root',
+    'graphic',
+    'aura',
+    'frame',
+    'module-shell',
+    'bus-line',
+    'bus-flow',
+    'energy-cell',
+    'energy-fill',
+    'energy-flow',
+    'scan-line',
+    'charge-segment',
+    'charge-left',
+    'charge-right',
+    'charge-top',
+    'charge-bottom',
+    'core',
+    'tip',
+  ],
+} satisfies DatavElementMetadata
