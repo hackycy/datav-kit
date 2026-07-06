@@ -11,7 +11,7 @@ Framework-agnostic visual decoration components for data dashboards, powered by 
 
 Build expressive large-screen dashboard surfaces with SSR-safe Custom Elements, decorative borders, HUD-style decorations, animated numbers, and theme presets.
 
-[Quick Start](#quick-start) | [Packages](#packages) | [Documentation](#documentation) | [Development](#development)
+[Quick Start](#quick-start) | [Packages](#packages) | [Documentation](https://hackycy.github.io/datav-kit)
 
 </div>
 
@@ -51,24 +51,6 @@ registerElements()
 | [`@datav-kit/core`](https://www.npmjs.com/package/@datav-kit/core) | [`packages/core`](./packages/core) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Fcore?style=flat-square)](https://www.npmjs.com/package/@datav-kit/core) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Fcore?style=flat-square)](https://www.npmjs.com/package/@datav-kit/core) | Web Components primitives, lifecycle helpers, events, and controllers. |
 | [`@datav-kit/shared`](https://www.npmjs.com/package/@datav-kit/shared) | [`packages/shared`](./packages/shared) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Fshared?style=flat-square)](https://www.npmjs.com/package/@datav-kit/shared) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Fshared?style=flat-square)](https://www.npmjs.com/package/@datav-kit/shared) | Framework-agnostic utilities shared by DataV Kit packages. |
 | [`@datav-kit/themes`](https://www.npmjs.com/package/@datav-kit/themes) | [`packages/themes`](./packages/themes) | [![npm](https://img.shields.io/npm/v/%40datav-kit%2Fthemes?style=flat-square)](https://www.npmjs.com/package/@datav-kit/themes) | [![npm downloads](https://img.shields.io/npm/dm/%40datav-kit%2Fthemes?style=flat-square)](https://www.npmjs.com/package/@datav-kit/themes) | Optional CSS variable themes and theme exports. |
-
-## Documentation
-
-| Section | Path | Contents |
-| --- | --- | --- |
-| Home | [`docs/index.md`](./docs/index.md) | Documentation landing page with live component previews and large-screen demos. |
-| Guide | [`docs/guide`](./docs/guide) | Introduction, installation, theming, component authoring, and framework integration. |
-| Components / Borders | [`docs/components/borders`](./docs/components/borders) | Border box component APIs, examples, CSS parts, and usage notes. |
-| Components / Decorations | [`docs/components/decorations`](./docs/components/decorations) | Decoration component APIs, examples, CSS parts, and usage notes. |
-| Components / Other | [`docs/components/other`](./docs/components/other) | Fit-screen and count-to component docs. |
-| Reference | [`docs/reference`](./docs/reference) | Architecture contracts and long-lived implementation constraints. |
-| Architecture | [`docs/architecture.md`](./docs/architecture.md) | Repository documentation architecture and content organization. |
-
-Run the VitePress documentation site locally:
-
-```bash
-pnpm docs:dev
-```
 
 ## Repository Map
 
