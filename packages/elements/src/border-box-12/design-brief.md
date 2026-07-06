@@ -105,13 +105,13 @@ Pass threshold: at least 5 dimensions different and at least 2 major structural 
 ## Content Safe Area
 
 - Reference canvas: 1672 x 941.
-- Deepest top inward reach: 92 source units to clear the lowered top rail, slant blocks, glow, and title zone.
+- Deepest top inward reach: 84 source units to clear the lowered top rail, slant blocks, and compact glow allowance.
 - Deepest right inward reach: 77 source units to clear side break accents, glow, and the requested extra horizontal padding.
-- Deepest bottom inward reach: 89 source units to clear the bottom rail and glow.
+- Deepest bottom inward reach: 64 source units to clear the bottom rail and compact glow allowance.
 - Deepest left inward reach: 77 source units to clear side break accents, glow, and the requested extra horizontal padding.
 - Glow/motion allowance: included in the reference safe panel; animated blocks change opacity only and do not move.
-- Final `contentRect`: `{ x: 77, y: 92, width: 1518, height: 760 }` on the 1672 x 941 reference canvas.
-- Padding expectations at source-ratio, wide, tall, small: source-ratio maps to about 9.8% top, 4.6% side, and 9.5% bottom; wide panels preserve the clean title zone; narrow/tall panels clamp side padding to 19 px while retaining vertical clearance.
+- Final `contentRect`: `{ x: 77, y: 84, width: 1518, height: 793 }` on the 1672 x 941 reference canvas.
+- Padding expectations at source-ratio, wide, tall, small: block padding follows the same fixed-module scale as the rail geometry, with minimum 14 px block and 19 px inline guards; wide and tall panels no longer inflate top/bottom padding from host height alone.
 - Corner usability conclusion: corners remain usable because the bevels and slant blocks sit near the outer frame and do not form bulky corner modules.
 
 ## Responsive Model
@@ -129,7 +129,7 @@ Pass threshold: at least 5 dimensions different and at least 2 major structural 
 - Why live-size is appropriate: the reference is a single minimal line-first SVG with no dense clipped source modules; fixed fold modules plus straight extensions keep the supplied implementation recognizable without angle distortion.
 - Why slicing is not better: slicing would add unnecessary module boundaries to a simple full-frame path; the live geometry already separates fixed folds from extendable straight rails.
 - Stable identity checks: source-ratio, wide, tall, small, and mobile browser checks preserve six slant blocks, two side break accents, the lowered clean top rail, continuous bottom rail, and fixed diagonal angles.
-- Inward reach calculation: content padding maps `contentRect` from the 1672 x 941 reference canvas to current host size through `createBorderBoxContentPadding`.
+- Inward reach calculation: content padding maps `contentRect` from the 1672 x 941 reference canvas through the same fixed-module scale used by the rail geometry.
 
 ## Visual Language
 
@@ -192,7 +192,7 @@ Do not link or commit screenshot files. Record manual checks only.
 - Wide check: browser validation at a wide viewport showed the docs component at 638 x 430 with 6 blocks, 2 side folds, 6 animations, `viewBox="0 0 638 430"`, and no title panel or `foreignObject`.
 - Tall check: browser validation at a taller viewport kept the same docs component geometry constraints with 6 blocks, 2 side folds, 6 animations, and the clean top-center rail.
 - Small check: browser validation at a narrow/mobile viewport showed a 297 x 680 component with 6 blocks, 2 side folds, 6 animations, side padding clamped to 19 px, and vertical safe-area padding preserved.
-- Safe-area overlay/manual inspection: content padding maps the 1672 x 941 reference `contentRect` and clears the top slant blocks, side folds, bottom rail, and glow; no title box, grid, text, or pattern is rendered inside the SVG.
+- Safe-area overlay/manual inspection: content padding maps the 1672 x 941 reference `contentRect` with fixed-module scale and clears the top slant blocks, side folds, bottom rail, and compact glow allowance; no title box, grid, text, or pattern is rendered inside the SVG.
 - Cross-slice continuity check: not applicable because this is one live-size SVG with no slices.
 - Issues found: first implementation drifted away from the supplied SVG by using a too-plain freeform rectangle and extra calibration ticks; follow-up review found the top block groups overlapped the two angled ends of the lowered top rail, the outer rail was too heavy, and independent x/y coordinate mapping deformed fold angles during free adaptation.
 - Rework completed: replaced the freeform geometry with fixed fold modules from `minimal_hud_border.svg`, removed calibration ticks, shifted the left block group outward-left and the right block group outward-right to clear the top rail折线, reduced the outer glow/main rail stroke widths by about one third, changed adaptation so only the top center rail, side straight rails outside the middle fold, and bottom rail extend, increased side content padding, and updated tests.

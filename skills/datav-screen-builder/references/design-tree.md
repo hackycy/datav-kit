@@ -30,6 +30,7 @@ Do not use fixed templates or fixed panel counts. Let the user's data and busine
 Guide composition with hierarchy:
 
 - Make one main visual or status group dominant. If the user does not specify the first read, default to a central main visual. For monitoring/list-heavy domains, default to a top status/KPI band plus one dominant trend or alert area.
+- Default to a stable center-axis composition for large screens: centered title/status anchor, dominant center visual, balanced left/right support panels, and restrained top/bottom rails.
 - Use side panels for explanation, ranking, alerts, or secondary trends.
 - Use top/bottom rails for title, time, filters, global status, and summarized indicators.
 - Keep repeated panels quieter than the focal zone.
@@ -41,11 +42,15 @@ Guide composition with hierarchy:
 The default title area must be simple and deliberate:
 
 - Use one title group: a centered large title plus one lightweight symmetric decoration pair.
+- Keep the screen title centered on the visual axis and make it the primary anchor of the top rail.
+- Balance title-adjacent content: put time, location, global status, or light controls in quiet left/right groups with similar visual weight.
 - Make the title text large-screen styled with gradient color, subtle glow, outline, or highlighted business keywords.
 - Optionally add one weak lower divider, baseline, or status strip below the title group. This lower element should not be another symmetric title ornament.
 - Keep title height around `80-120px` on a `1920 x 1080` canvas unless the project layout requires otherwise.
 - Do not wrap the entire title in a heavy border-box by default.
 - Do not stack multiple decorations, corner ornaments, border boxes, subtitle blocks, time/weather/KPI clusters, and badges into the title core.
+- Avoid asymmetrical, slanted, floating, novelty, or heavily fragmented title compositions by default.
+- Keep close, back, fullscreen, and secondary utility actions in quiet edge zones so they remain reachable but subordinate.
 - Only increase title complexity when the user explicitly asks for a complex, showcase, or highly theatrical command-center header.
 
 If a generated title area looks like a pile of components instead of one title system, simplify it before delivery.
@@ -71,6 +76,7 @@ Use principles, not fixed component numbers:
 - Use border components to carry content zones, not every small item.
 - Use decoration components for title wings, section separators, directional emphasis, status rhythm, and focal support.
 - Top title area: use lightweight decoration only by default; avoid a border-box around the whole title.
+- Prefer paired or mirrored lightweight decoration for title wings and header separators.
 - Main visual: use a stronger border-box only when the map, topology, or hero chart needs framing; otherwise an immersive unframed center is acceptable.
 - Side panels: use simple or medium border-box components consistently across repeated panels.
 - Small KPIs, tables, and long labels: prefer internal grids, thin dividers, local backgrounds, or typography over heavy border boxes.
@@ -108,6 +114,7 @@ Keep large-screen interaction restrained:
 
 - Default to display-first, interaction-second.
 - Prefer only necessary controls: fullscreen, time range, region switch, metric switch, alert detail, or drilldown.
+- Allow sparse forms only when they serve display context, such as time range, region, metric, or alert drilldown controls.
 - Avoid CRUD, dense forms, multi-page admin flows, and heavy filter panels unless requested.
 - Tooltips must support reading and avoid blocking the main visual.
 - Dialogs/drawers should reveal details without destroying the screen's situational overview.

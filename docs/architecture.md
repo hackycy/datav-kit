@@ -10,7 +10,7 @@ description: Technical architecture of datav-kit covering package responsibiliti
 
 - 组件 API、事件、metadata、SSR 等实现契约见 [Architecture Contracts](./reference/architecture-contracts.md)。
 - 安装、主题和组件编写说明放在 `guide/`。
-- 具体组件的属性和示例放在 `components/`，并按 `Decoration`、`Border`、`Other` 组织；`Other` 用于全屏适配、数字展示、按钮等不属于装饰或边框的组件。
+- 具体组件的属性和示例放在 `components/`，并按 `Decoration`、`Border`、`Other` 组织；`Other` 用于全屏适配、数字展示、加载状态、按钮等不属于装饰或边框的组件。
 
 这份文档应该回答：
 

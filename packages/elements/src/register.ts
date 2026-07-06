@@ -28,6 +28,8 @@ import { Decoration9Element } from './decoration-9/element'
 import { Decoration10Element } from './decoration-10/element'
 import { Decoration11Element } from './decoration-11/element'
 import { FitScreenElement } from './fit-screen/element'
+import { LoadingEnergyElement } from './loading-energy/element'
+import { LoadingOrbitElement } from './loading-orbit/element'
 
 export const datavElementRegistrations: DatavElementRegistration[] = [
   {
@@ -141,6 +143,14 @@ export const datavElementRegistrations: DatavElementRegistration[] = [
   {
     tagName: 'dvk-count-to',
     element: CountToElement,
+  },
+  {
+    tagName: 'dvk-loading-orbit',
+    element: LoadingOrbitElement,
+  },
+  {
+    tagName: 'dvk-loading-energy',
+    element: LoadingEnergyElement,
   },
 ]
 

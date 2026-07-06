@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -162,13 +162,15 @@ describe('@datav-kit/elements', () => {
       'dvk-decoration-10',
       'dvk-decoration-11',
       'dvk-count-to',
+      'dvk-loading-orbit',
+      'dvk-loading-energy',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -245,6 +247,8 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration10()).toBe(false)
     expect(defineDecoration11()).toBe(false)
     expect(defineCountTo()).toBe(false)
+    expect(defineLoadingOrbit()).toBe(false)
+    expect(defineLoadingEnergy()).toBe(false)
   })
 
   it('renders decoration-5 with DataV Decoration8 coordinates and reverse mode', async () => {
@@ -409,33 +413,6 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector('svg')).toBeNull()
     expect(revokeObjectURL).toHaveBeenCalled()
   }, 15000)
-
-  it('keeps decoration-8 on live SVG animation when rasterization is disabled', async () => {
-    vi.useFakeTimers()
-    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}`)
-    vi.stubGlobal('URL', {
-      ...URL,
-      createObjectURL,
-      revokeObjectURL: vi.fn(),
-    })
-    register()
-
-    const element = document.createElement('dvk-decoration-8') as Decoration8Element
-    element.setAttribute('video-rasterize', 'off')
-    document.body.append(element)
-
-    emitResize(180, 180)
-    await element.updateComplete
-    await vi.advanceTimersByTimeAsync(0)
-    await element.updateComplete
-
-    expect(element).toHaveProperty('videoRasterize', false)
-    expect(element.shadowRoot?.querySelector('canvas.raster-sprite-canvas')).toBeNull()
-    expect(element.shadowRoot?.querySelector('video')).toBeNull()
-    expect(element.shadowRoot?.querySelector('svg')).not.toBeNull()
-    expect(element.shadowRoot?.querySelectorAll('animateTransform')).toHaveLength(4)
-    expect(createObjectURL).not.toHaveBeenCalled()
-  })
 
   it('rasterizes decoration-8 animation to a PNG sprite by default', async () => {
     vi.useFakeTimers()
@@ -602,6 +579,135 @@ describe('@datav-kit/elements', () => {
     expect(animations).toHaveLength(0)
   })
 
+  it('rasterizes decoration-10 animation to a webm video and replaces SVG', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    const revokeObjectURL = vi.fn()
+    vi.spyOn(HTMLCanvasElement.prototype, 'captureStream').mockReturnValue(createCanvasStream())
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL,
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-10') as Decoration10Element
+    const rasterError = vi.fn()
+    element.setAttribute('colors', '#61f7ff,#2c91ff,#b390ff')
+    element.setAttribute('dur', '6')
+    element.setAttribute('raster-renderer', 'video')
+    element.addEventListener('dvk-raster-error', rasterError)
+    document.body.append(element)
+
+    emitResize(240, 240)
+    await element.updateComplete
+    await vi.runAllTimersAsync()
+    await element.updateComplete
+
+    const video = element.shadowRoot?.querySelector('video')
+    const content = element.shadowRoot?.querySelector('[part="content"]')
+
+    expect(rasterError).not.toHaveBeenCalled()
+    expect(createObjectURL).toHaveBeenCalledWith(expect.objectContaining({ type: 'video/webm;codecs=vp9' }))
+    expect(video?.getAttribute('src')).toContain('blob:video/webm')
+    expect(video?.getAttribute('part')).toBe('graphic raster')
+    expect(video?.hasAttribute('loop')).toBe(true)
+    expect(video?.hasAttribute('muted')).toBe(true)
+    expect(content).not.toBeNull()
+    expect(element.shadowRoot?.querySelector('svg')).toBeNull()
+    expect(revokeObjectURL).toHaveBeenCalled()
+  }, 15000)
+
+  it('rasterizes decoration-10 animation to a PNG sprite by default', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation((callback) => {
+      callback(new Blob(['png'], { type: 'image/png' }))
+    })
+    vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-10') as Decoration10Element
+    element.setAttribute('colors', '#6ffaff,#318cff,#ad88ff')
+    element.setAttribute('dur', '6')
+    document.body.append(element)
+
+    emitResize(240, 240)
+    await element.updateComplete
+    await vi.runAllTimersAsync()
+    await element.updateComplete
+
+    const sprite = element.shadowRoot?.querySelector('canvas.raster-sprite-canvas')
+    const content = element.shadowRoot?.querySelector('[part="content"]')
+    const pngBlobCalls = createObjectURL.mock.calls
+      .filter(([blob]) => blob instanceof Blob && blob.type === 'image/png')
+
+    expect(element).toHaveProperty('rasterRenderer', 'sprite')
+    expect(pngBlobCalls).toHaveLength(1)
+    expect(sprite?.getAttribute('part')).toBe('graphic raster')
+    expect(sprite?.getAttribute('width')).toBeTruthy()
+    expect(sprite?.getAttribute('height')).toBeTruthy()
+    expect(content).not.toBeNull()
+    expect(element.shadowRoot?.querySelector('video')).toBeNull()
+    expect(element.shadowRoot?.querySelector('svg')).toBeNull()
+  }, 15000)
+
+  it('shares one decoration-10 rasterization across matching instances', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    vi.spyOn(HTMLCanvasElement.prototype, 'captureStream').mockReturnValue(createCanvasStream())
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const first = document.createElement('dvk-decoration-10') as Decoration10Element
+    first.setAttribute('colors', '#49f8ff,#3d89ff,#b58cff')
+    first.setAttribute('dur', '6')
+    first.setAttribute('raster-renderer', 'video')
+    document.body.append(first)
+    emitResize(240, 240)
+    await first.updateComplete
+
+    const second = document.createElement('dvk-decoration-10') as Decoration10Element
+    second.setAttribute('colors', '#49f8ff,#3d89ff,#b58cff')
+    second.setAttribute('dur', '6')
+    second.setAttribute('raster-renderer', 'video')
+    document.body.append(second)
+    emitResize(240, 240)
+    await second.updateComplete
+
+    await vi.runAllTimersAsync()
+    await first.updateComplete
+    await second.updateComplete
+
+    const firstVideo = first.shadowRoot?.querySelector('video')
+    const secondVideo = second.shadowRoot?.querySelector('video')
+    const videoBlobCalls = createObjectURL.mock.calls
+      .filter(([blob]) => blob instanceof Blob && blob.type === 'video/webm;codecs=vp9')
+
+    expect(videoBlobCalls).toHaveLength(1)
+    expect(firstVideo?.getAttribute('src')).toBe(secondVideo?.getAttribute('src'))
+  }, 15000)
+
   it('renders decoration-11 as a subtly raised floating cyber halo', async () => {
     register()
 
@@ -729,32 +835,6 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector('svg')).toBeNull()
     expect(revokeObjectURL).toHaveBeenCalled()
   }, 15000)
-
-  it('keeps decoration-11 on live SVG animation when video rasterization is disabled', async () => {
-    vi.useFakeTimers()
-    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}`)
-    vi.stubGlobal('URL', {
-      ...URL,
-      createObjectURL,
-      revokeObjectURL: vi.fn(),
-    })
-    register()
-
-    const element = document.createElement('dvk-decoration-11') as Decoration11Element
-    element.setAttribute('video-rasterize', 'false')
-    document.body.append(element)
-
-    emitResize(320, 240)
-    await element.updateComplete
-    await vi.advanceTimersByTimeAsync(0)
-    await element.updateComplete
-
-    expect(element).toHaveProperty('videoRasterize', false)
-    expect(element.shadowRoot?.querySelector('video')).toBeNull()
-    expect(element.shadowRoot?.querySelector('svg')).not.toBeNull()
-    expect(element.shadowRoot?.querySelectorAll('animateTransform')).toHaveLength(4)
-    expect(createObjectURL).not.toHaveBeenCalled()
-  })
 
   it('rasterizes decoration-11 animation to a PNG sprite by default', async () => {
     vi.useFakeTimers()
@@ -950,6 +1030,182 @@ describe('@datav-kit/elements', () => {
       detail: { value: 100 },
     }))
     expect(element.shadowRoot?.querySelector('[part="integer"]')?.textContent).toBe('100')
+  })
+
+  it('maps loading-orbit attributes and renders DataV-style counter-rotating rings', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-orbit') as LoadingOrbitElement
+    const ready = vi.fn()
+
+    element.setAttribute('colors', '#111,#222')
+    element.setAttribute('size', '64')
+    element.setAttribute('stroke-width', '4')
+    element.setAttribute('dur', '2')
+    element.textContent = 'Loading data'
+    element.addEventListener('dvk-ready', ready)
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const circles = [...(element.shadowRoot?.querySelectorAll('circle') ?? [])]
+    const rotations = [...(element.shadowRoot?.querySelectorAll('animateTransform') ?? [])]
+    const strokeAnimations = [...(element.shadowRoot?.querySelectorAll('animate') ?? [])]
+
+    expect(element).toHaveProperty('colors', '#111,#222')
+    expect(element).toHaveProperty('size', 64)
+    expect(element).toHaveProperty('strokeWidth', 4)
+    expect(element.getAttribute('role')).toBe('status')
+    expect(element.getAttribute('aria-live')).toBe('polite')
+    expect(ready).toHaveBeenCalledWith(expect.objectContaining({
+      detail: { tagName: 'dvk-loading-orbit' },
+    }))
+    expect(svg?.getAttribute('width')).toBe('64')
+    expect(svg?.getAttribute('height')).toBe('64')
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 50 50')
+    expect(circles.map(circle => circle.getAttribute('r'))).toEqual(['20', '10'])
+    expect(circles.map(circle => circle.getAttribute('stroke'))).toEqual(['#111', '#222'])
+    expect(circles.map(circle => circle.getAttribute('stroke-width'))).toEqual(['4', '4'])
+    expect(circles.map(circle => circle.getAttribute('stroke-dasharray'))).toEqual(['31.415, 31.415', '15.7, 15.7'])
+    expect(rotations.map(animation => animation.getAttribute('values'))).toEqual(['0, 25 25;360, 25 25', '360, 25 25;0, 25 25'])
+    expect(rotations.map(animation => animation.getAttribute('dur'))).toEqual(['2s', '2s'])
+    expect(strokeAnimations.map(animation => animation.getAttribute('values'))).toEqual(['#111;#222;#111', '#222;#111;#222'])
+    expect(element.shadowRoot?.querySelector('slot')?.assignedNodes().map(node => node.textContent).join('').trim()).toBe('Loading data')
+  })
+
+  it('keeps loading-orbit static when paused', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-orbit') as LoadingOrbitElement
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelectorAll('circle')).toHaveLength(2)
+    expect(element.shadowRoot?.querySelector('animateTransform')).toBeNull()
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('uses datav-kit colors as loading-orbit fallback colors', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-orbit') as LoadingOrbitElement
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const circles = [...(element.shadowRoot?.querySelectorAll('circle') ?? [])]
+
+    expect(circles.map(circle => circle.getAttribute('stroke'))).toEqual(['#18f0ff', '#2b7cff'])
+  })
+
+  it('maps loading-energy attributes and renders a restrained enterprise energy module', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-energy') as LoadingEnergyElement
+    const ready = vi.fn()
+
+    element.setAttribute('colors', '#111,#222')
+    element.setAttribute('size', '72')
+    element.setAttribute('stroke-width', '3')
+    element.setAttribute('dur', '2.4')
+    element.textContent = 'Processing data'
+    element.addEventListener('dvk-ready', ready)
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const frame = element.shadowRoot?.querySelector('[part="frame"]')
+    const moduleShell = element.shadowRoot?.querySelector('[part="module-shell"]')
+    const busLine = element.shadowRoot?.querySelector('[part="bus-line"]')
+    const busFlow = element.shadowRoot?.querySelector('[part="bus-flow"]')
+    const cell = element.shadowRoot?.querySelector('[part="energy-cell"]')
+    const energyFill = element.shadowRoot?.querySelector('[part="energy-fill"]')
+    const energyFlow = element.shadowRoot?.querySelector('[part="energy-flow"]')
+    const scanLine = element.shadowRoot?.querySelector('[part="scan-line"]')
+    const chargeSegments = [...(element.shadowRoot?.querySelectorAll('[part~="charge-segment"]') ?? [])]
+    const core = element.shadowRoot?.querySelector('[part="core"]')
+    const animations = [...(element.shadowRoot?.querySelectorAll('animate') ?? [])]
+    const transforms = [...(element.shadowRoot?.querySelectorAll('animateTransform') ?? [])]
+
+    expect(element).toHaveProperty('colors', '#111,#222')
+    expect(element).toHaveProperty('size', 72)
+    expect(element).toHaveProperty('strokeWidth', 3)
+    expect(element.getAttribute('role')).toBe('status')
+    expect(element.getAttribute('aria-live')).toBe('polite')
+    expect(ready).toHaveBeenCalledWith(expect.objectContaining({
+      detail: { tagName: 'dvk-loading-energy' },
+    }))
+    expect(svg?.getAttribute('width')).toBe('72')
+    expect(svg?.getAttribute('height')).toBe('72')
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 72 72')
+    expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet')
+    expect(frame?.getAttribute('d')).toBe('M22 10 H50 M62 22 V50 M50 62 H22 M10 50 V22')
+    expect(frame?.getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.48)')
+    expect(frame?.getAttribute('stroke-width')).toBe('2.25')
+    expect(moduleShell?.getAttribute('d')).toBe('M22 13 H50 L59 22 V50 L50 59 H22 L13 50 V22 Z')
+    expect(moduleShell?.getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.58)')
+    expect(busLine?.getAttribute('d')).toBe('M18 36 H29 M43 36 H54 M36 18 V29 M36 43 V54')
+    expect(busFlow?.getAttribute('d')).toBe('M18 36 H29 M54 36 H43 M36 18 V29 M36 54 V43')
+    expect(busFlow?.getAttribute('stroke-dasharray')).toBe('3 5')
+    expect(cell?.getAttribute('x')).toBe('30')
+    expect(cell?.getAttribute('width')).toBe('12')
+    expect(cell?.getAttribute('height')).toBe('32')
+    expect(cell?.getAttribute('stroke')).toBe('#111')
+    expect(cell?.getAttribute('stroke-width')).toBe('3')
+    expect(energyFill?.getAttribute('fill')).toBe('rgba(17, 17, 17, 0.18)')
+    expect(energyFlow?.getAttribute('clip-path')).toBe('url(#dvk-loading-energy-cell-clip)')
+    expect(scanLine?.getAttribute('fill')).toBe('url(#dvk-loading-energy-scan)')
+    expect(chargeSegments).toHaveLength(4)
+    expect(chargeSegments.map(segment => segment.getAttribute('part'))).toEqual(['charge-segment charge-left', 'charge-segment charge-right', 'charge-segment charge-top', 'charge-segment charge-bottom'])
+    expect(chargeSegments.map(segment => segment.getAttribute('fill'))).toEqual(['#111', '#222', '#222', '#111'])
+    expect(core?.getAttribute('fill')).toBe('#111')
+    expect(animations.map(animation => animation.getAttribute('attributeName'))).toEqual(['stroke-dashoffset', 'y', 'y'])
+    expect(animations.map(animation => animation.getAttribute('attributeName'))).not.toContain('opacity')
+    expect(animations.map(animation => animation.getAttribute('attributeName'))).not.toContain('fill-opacity')
+    expect(transforms).toHaveLength(5)
+    expect(transforms.map(animation => animation.getAttribute('type'))).toEqual(['translate', 'translate', 'translate', 'translate', 'translate'])
+    expect(transforms.map(animation => animation.getAttribute('dur'))).toContain('2.4s')
+    expect(element.shadowRoot?.querySelector('slot')?.assignedNodes().map(node => node.textContent).join('').trim()).toBe('Processing data')
+  })
+
+  it('keeps loading-energy static when paused', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-energy') as LoadingEnergyElement
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelector('[part="core"]')).not.toBeNull()
+    expect(element.shadowRoot?.querySelectorAll('[part~="charge-segment"]')).toHaveLength(4)
+    expect(element.shadowRoot?.querySelector('animateTransform')).toBeNull()
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('uses datav-kit colors as loading-energy fallback colors', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-energy') as LoadingEnergyElement
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const moduleShell = element.shadowRoot?.querySelector('[part="module-shell"]')
+    const busLine = element.shadowRoot?.querySelector('[part="bus-line"]')
+    const energyFill = element.shadowRoot?.querySelector('[part="energy-fill"]')
+    const chargeSegments = [...(element.shadowRoot?.querySelectorAll('[part~="charge-segment"]') ?? [])]
+
+    expect(moduleShell?.getAttribute('stroke')).toBe('rgba(43, 124, 255, 0.58)')
+    expect(busLine?.getAttribute('stroke')).toBe('rgba(43, 124, 255, 0.5)')
+    expect(energyFill?.getAttribute('fill')).toBe('rgba(24, 240, 255, 0.18)')
+    expect(chargeSegments.map(segment => segment.getAttribute('fill'))).toEqual(['#18f0ff', '#2b7cff', '#2b7cff', '#18f0ff'])
   })
 
   it('maps border-box-1 attributes to element properties and renders SVG', async () => {
@@ -1374,7 +1630,7 @@ describe('@datav-kit/elements', () => {
       ['dvk-border-box-5', '32px 22px 16px 22px'],
       ['dvk-border-box-10', '15px 15px 15px 15px'],
       ['dvk-border-box-11', '21.94px 19px 21.94px 18.5px'],
-      ['dvk-border-box-12', '17.6px 19px 17.02px 19px'],
+      ['dvk-border-box-12', '15.07px 19px 14px 19px'],
       ['dvk-border-box-13', '16px 16px 16px 16px'],
       ['dvk-border-box-14', '14px 14px 14px 14px'],
       ['dvk-border-box-15', '10px 10px 10px 10px'],
@@ -2166,7 +2422,7 @@ describe('@datav-kit/elements', () => {
     expect(flood?.getAttribute('flood-color')).toBe('#112233')
     expect(flood?.getAttribute('flood-opacity')).toBe('0.9')
     expect(animations).toHaveLength(6)
-    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('17.6px 19px 17.02px 19px')
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('16.07px 19px 14px 19px')
   })
 
   it('extends border-box-12 straight rails without deforming fold angles', async () => {

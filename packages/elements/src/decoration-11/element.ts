@@ -95,17 +95,6 @@ const thinArcSegments: ArcSegment[] = [
   { start: 184, end: 248, radius: 63.2, width: 0.72, opacity: 0.58, accent: 'primary' },
   { start: 292, end: 338, radius: 63.2, width: 0.6, opacity: 0.44, accent: 'white' },
 ]
-const defaultTrueBooleanConverter = {
-  fromAttribute(value: string | null): boolean {
-    if (value === null)
-      return true
-
-    return !['0', 'false', 'off'].includes(value.trim().toLowerCase())
-  },
-  toAttribute(value: boolean): string {
-    return String(value)
-  },
-}
 let decoration11Id = 0
 let rasterQueue = Promise.resolve()
 const rasterCache = new Map<string, Decoration11RasterCacheEntry>()
@@ -164,9 +153,6 @@ export class Decoration11Element extends DatavElement {
 
   @property({ type: Boolean })
   paused = false
-
-  @property({ attribute: 'video-rasterize', converter: defaultTrueBooleanConverter })
-  videoRasterize = true
 
   @property({ attribute: 'raster-renderer' })
   rasterRenderer: Decoration11RasterRenderer = 'sprite'
@@ -362,7 +348,7 @@ export class Decoration11Element extends DatavElement {
   }
 
   private createRasterKey(): string {
-    if (!this.videoRasterize || !this.animated || this.paused || this.prefersReducedMotion())
+    if (!this.animated || this.paused || this.prefersReducedMotion())
       return ''
 
     if (this.size.width <= 0 || this.size.height <= 0)

@@ -1,7 +1,5 @@
 {
-  "name": "datav-kit",
   "type": "module",
-  "version": "0.0.0",
   "private": true,
   "packageManager": "pnpm@11.6.0",
   "author": "hackycy <hackycy@outlook.com>",
@@ -32,6 +30,7 @@
     "@antfu/eslint-config": "catalog:cli",
     "@antfu/ni": "catalog:cli",
     "@antfu/utils": "catalog:inlined",
+    "@tsdown/css": "catalog:cli",
     "@types/node": "catalog:types",
     "bumpp": "catalog:cli",
     "eslint": "catalog:cli",

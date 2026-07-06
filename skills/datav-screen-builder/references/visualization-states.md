@@ -28,6 +28,7 @@ When implementing or modifying ECharts:
 - Resize on window changes and, when possible, through `ResizeObserver` or the project wrapper.
 - Dispose instances on unmount or route teardown.
 - Show loading with project UI or ECharts `showLoading`; keep the panel visually intentional.
+- For datav-kit screens, check current docs for documented loading components such as `dvk-loading-orbit` or `dvk-loading-energy` and prefer them when they fit the panel style. Do not invent loading tags or props.
 - Show empty state when series data is empty. Do not leave a blank border box.
 - Show error state with readable text and retry guidance when appropriate.
 - Derive palette from the screen CSS variables or design tokens.
