@@ -412,33 +412,6 @@ describe('@datav-kit/elements', () => {
     expect(revokeObjectURL).toHaveBeenCalled()
   }, 15000)
 
-  it('keeps decoration-8 on live SVG animation when rasterization is disabled', async () => {
-    vi.useFakeTimers()
-    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}`)
-    vi.stubGlobal('URL', {
-      ...URL,
-      createObjectURL,
-      revokeObjectURL: vi.fn(),
-    })
-    register()
-
-    const element = document.createElement('dvk-decoration-8') as Decoration8Element
-    element.setAttribute('video-rasterize', 'off')
-    document.body.append(element)
-
-    emitResize(180, 180)
-    await element.updateComplete
-    await vi.advanceTimersByTimeAsync(0)
-    await element.updateComplete
-
-    expect(element).toHaveProperty('videoRasterize', false)
-    expect(element.shadowRoot?.querySelector('canvas.raster-sprite-canvas')).toBeNull()
-    expect(element.shadowRoot?.querySelector('video')).toBeNull()
-    expect(element.shadowRoot?.querySelector('svg')).not.toBeNull()
-    expect(element.shadowRoot?.querySelectorAll('animateTransform')).toHaveLength(4)
-    expect(createObjectURL).not.toHaveBeenCalled()
-  })
-
   it('rasterizes decoration-8 animation to a PNG sprite by default', async () => {
     vi.useFakeTimers()
     let urlIndex = 0
@@ -604,6 +577,135 @@ describe('@datav-kit/elements', () => {
     expect(animations).toHaveLength(0)
   })
 
+  it('rasterizes decoration-10 animation to a webm video and replaces SVG', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    const revokeObjectURL = vi.fn()
+    vi.spyOn(HTMLCanvasElement.prototype, 'captureStream').mockReturnValue(createCanvasStream())
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL,
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-10') as Decoration10Element
+    const rasterError = vi.fn()
+    element.setAttribute('colors', '#61f7ff,#2c91ff,#b390ff')
+    element.setAttribute('dur', '6')
+    element.setAttribute('raster-renderer', 'video')
+    element.addEventListener('dvk-raster-error', rasterError)
+    document.body.append(element)
+
+    emitResize(240, 240)
+    await element.updateComplete
+    await vi.runAllTimersAsync()
+    await element.updateComplete
+
+    const video = element.shadowRoot?.querySelector('video')
+    const content = element.shadowRoot?.querySelector('[part="content"]')
+
+    expect(rasterError).not.toHaveBeenCalled()
+    expect(createObjectURL).toHaveBeenCalledWith(expect.objectContaining({ type: 'video/webm;codecs=vp9' }))
+    expect(video?.getAttribute('src')).toContain('blob:video/webm')
+    expect(video?.getAttribute('part')).toBe('graphic raster')
+    expect(video?.hasAttribute('loop')).toBe(true)
+    expect(video?.hasAttribute('muted')).toBe(true)
+    expect(content).not.toBeNull()
+    expect(element.shadowRoot?.querySelector('svg')).toBeNull()
+    expect(revokeObjectURL).toHaveBeenCalled()
+  }, 15000)
+
+  it('rasterizes decoration-10 animation to a PNG sprite by default', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.spyOn(HTMLCanvasElement.prototype, 'toBlob').mockImplementation((callback) => {
+      callback(new Blob(['png'], { type: 'image/png' }))
+    })
+    vi.spyOn(document, 'hidden', 'get').mockReturnValue(true)
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const element = document.createElement('dvk-decoration-10') as Decoration10Element
+    element.setAttribute('colors', '#6ffaff,#318cff,#ad88ff')
+    element.setAttribute('dur', '6')
+    document.body.append(element)
+
+    emitResize(240, 240)
+    await element.updateComplete
+    await vi.runAllTimersAsync()
+    await element.updateComplete
+
+    const sprite = element.shadowRoot?.querySelector('canvas.raster-sprite-canvas')
+    const content = element.shadowRoot?.querySelector('[part="content"]')
+    const pngBlobCalls = createObjectURL.mock.calls
+      .filter(([blob]) => blob instanceof Blob && blob.type === 'image/png')
+
+    expect(element).toHaveProperty('rasterRenderer', 'sprite')
+    expect(pngBlobCalls).toHaveLength(1)
+    expect(sprite?.getAttribute('part')).toBe('graphic raster')
+    expect(sprite?.getAttribute('width')).toBeTruthy()
+    expect(sprite?.getAttribute('height')).toBeTruthy()
+    expect(content).not.toBeNull()
+    expect(element.shadowRoot?.querySelector('video')).toBeNull()
+    expect(element.shadowRoot?.querySelector('svg')).toBeNull()
+  }, 15000)
+
+  it('shares one decoration-10 rasterization across matching instances', async () => {
+    vi.useFakeTimers()
+    let urlIndex = 0
+    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}:${urlIndex += 1}`)
+    vi.spyOn(HTMLCanvasElement.prototype, 'captureStream').mockReturnValue(createCanvasStream())
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(createCanvasContext())
+    vi.stubGlobal('Image', MockImage)
+    vi.stubGlobal('MediaRecorder', MockMediaRecorder)
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL,
+      revokeObjectURL: vi.fn(),
+    })
+    register()
+
+    const first = document.createElement('dvk-decoration-10') as Decoration10Element
+    first.setAttribute('colors', '#49f8ff,#3d89ff,#b58cff')
+    first.setAttribute('dur', '6')
+    first.setAttribute('raster-renderer', 'video')
+    document.body.append(first)
+    emitResize(240, 240)
+    await first.updateComplete
+
+    const second = document.createElement('dvk-decoration-10') as Decoration10Element
+    second.setAttribute('colors', '#49f8ff,#3d89ff,#b58cff')
+    second.setAttribute('dur', '6')
+    second.setAttribute('raster-renderer', 'video')
+    document.body.append(second)
+    emitResize(240, 240)
+    await second.updateComplete
+
+    await vi.runAllTimersAsync()
+    await first.updateComplete
+    await second.updateComplete
+
+    const firstVideo = first.shadowRoot?.querySelector('video')
+    const secondVideo = second.shadowRoot?.querySelector('video')
+    const videoBlobCalls = createObjectURL.mock.calls
+      .filter(([blob]) => blob instanceof Blob && blob.type === 'video/webm;codecs=vp9')
+
+    expect(videoBlobCalls).toHaveLength(1)
+    expect(firstVideo?.getAttribute('src')).toBe(secondVideo?.getAttribute('src'))
+  }, 15000)
+
   it('renders decoration-11 as a subtly raised floating cyber halo', async () => {
     register()
 
@@ -731,32 +833,6 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector('svg')).toBeNull()
     expect(revokeObjectURL).toHaveBeenCalled()
   }, 15000)
-
-  it('keeps decoration-11 on live SVG animation when video rasterization is disabled', async () => {
-    vi.useFakeTimers()
-    const createObjectURL = vi.fn((blob: Blob) => `blob:${blob.type}`)
-    vi.stubGlobal('URL', {
-      ...URL,
-      createObjectURL,
-      revokeObjectURL: vi.fn(),
-    })
-    register()
-
-    const element = document.createElement('dvk-decoration-11') as Decoration11Element
-    element.setAttribute('video-rasterize', 'false')
-    document.body.append(element)
-
-    emitResize(320, 240)
-    await element.updateComplete
-    await vi.advanceTimersByTimeAsync(0)
-    await element.updateComplete
-
-    expect(element).toHaveProperty('videoRasterize', false)
-    expect(element.shadowRoot?.querySelector('video')).toBeNull()
-    expect(element.shadowRoot?.querySelector('svg')).not.toBeNull()
-    expect(element.shadowRoot?.querySelectorAll('animateTransform')).toHaveLength(4)
-    expect(createObjectURL).not.toHaveBeenCalled()
-  })
 
   it('rasterizes decoration-11 animation to a PNG sprite by default', async () => {
     vi.useFakeTimers()

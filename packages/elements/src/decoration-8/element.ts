@@ -98,18 +98,6 @@ const microLightCount = 48
 const blockIndexes = Array.from({ length: blockCount }, (_, index) => index)
 const tickIndexes = Array.from({ length: tickCount }, (_, index) => index)
 const microLightIndexes = Array.from({ length: microLightCount }, (_, index) => index)
-const defaultTrueBooleanConverter = {
-  fromAttribute(value: string | null): boolean {
-    if (value === null)
-      return true
-
-    return !['0', 'false', 'off'].includes(value.trim().toLowerCase())
-  },
-  toAttribute(value: boolean): string {
-    return String(value)
-  },
-}
-
 let decoration8Id = 0
 let rasterQueue = Promise.resolve()
 const rasterCache = new Map<string, Decoration8RasterCacheEntry>()
@@ -175,9 +163,6 @@ export class Decoration8Element extends DatavElement {
 
   @property({ type: Boolean })
   paused = false
-
-  @property({ attribute: 'video-rasterize', converter: defaultTrueBooleanConverter })
-  videoRasterize = true
 
   @property({ attribute: 'raster-renderer' })
   rasterRenderer: Decoration8RasterRenderer = 'sprite'
@@ -525,7 +510,7 @@ export class Decoration8Element extends DatavElement {
   }
 
   private createRasterKey(): string {
-    if (!this.videoRasterize || !this.animated || this.paused || this.prefersReducedMotion())
+    if (!this.animated || this.paused || this.prefersReducedMotion())
       return ''
 
     if (this.size.width <= 0 || this.size.height <= 0)

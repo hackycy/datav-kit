@@ -3,7 +3,7 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const decoration10Metadata = {
   tagName: 'dvk-decoration-10',
   className: 'Decoration10Element',
-  description: 'Futuristic HUD radar with concentric rings, precision ticks, a clockwise scanning beam, pulsing target points, sparse particles, and restrained cyan-blue neon glow.',
+  description: 'Futuristic HUD radar with concentric rings, precision ticks, a clockwise scanning beam, pulsing target points, sparse particles, restrained cyan-blue neon glow, and runtime rasterization for lower SVG animation CPU cost.',
   props: {
     color: {
       type: 'string',
@@ -43,6 +43,12 @@ export const decoration10Metadata = {
       attribute: true,
       description: 'Stops all animations while keeping the static radar geometry visible.',
     },
+    rasterRenderer: {
+      type: 'string',
+      default: 'sprite',
+      attribute: 'raster-renderer',
+      description: 'Runtime raster output renderer. Defaults to "sprite" for transparent PNG atlas playback on canvas; use "video" for WebM playback.',
+    },
   },
   events: [
     {
@@ -50,9 +56,15 @@ export const decoration10Metadata = {
       detail: '{ tagName }',
       description: 'Fired after the element first renders.',
     },
+    {
+      name: 'dvk-raster-error',
+      detail: '{ message }',
+      description: 'Fired when runtime rasterization fails; the component keeps the SVG fallback visible.',
+    },
   ],
   parts: [
     'graphic',
+    'raster',
     'grid',
     'background-nodes',
     'background-node',

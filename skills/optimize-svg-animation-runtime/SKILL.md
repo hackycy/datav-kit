@@ -1,6 +1,6 @@
 ---
 name: optimize-svg-animation-runtime
-description: Diagnose and fix high CPU usage from complex animated SVG components in datav-kit by applying the shared runtime rasterization pattern with PNG sprite as the default renderer, optional WebM video renderer, feature switch, cache/queue lifecycle, SSR safety, and validation workflow. Use when a decoration, border, HUD frame, or other SVG-heavy component causes Chrome Renderer/Google Chrome Helper CPU spikes, when adding the decoration-11 rasterization approach to another component, or when deciding whether to keep SVG, simplify animation, or use a rasterized runtime asset.
+description: Diagnose and fix high CPU usage from complex animated SVG components in datav-kit by applying the shared runtime rasterization pattern with PNG sprite as the default renderer, optional WebM video renderer, cache/queue lifecycle, SSR safety, and validation workflow. Use when a decoration, border, HUD frame, or other SVG-heavy component causes Chrome Renderer/Google Chrome Helper CPU spikes, when adding the decoration-11 rasterization approach to another component, or when deciding whether to keep SVG, simplify animation, or use a rasterized runtime asset.
 ---
 
 # Optimize SVG Animation Runtime
@@ -47,10 +47,7 @@ Before editing, read:
 
 Every component using runtime rasterization must expose:
 
-- An opt-out property named `videoRasterize`, backed by the `video-rasterize` attribute and a default-true boolean converter.
 - A renderer property named `rasterRenderer`, backed by the `raster-renderer` attribute.
-
-Support `video-rasterize="false"`, `"0"`, and `"off"` as false. Default must remain true unless the user explicitly asks otherwise. When disabled, the component must keep the original live SVG path and must not create canvas/video resources.
 
 For new integrations, `rasterRenderer` must default to `"sprite"` and support:
 
@@ -62,7 +59,7 @@ Unknown renderer values should fall back to `"video"` or the component's establi
 Document the property in metadata and docs:
 
 ```html
-<dvk-some-component video-rasterize="false"></dvk-some-component>
+<dvk-some-component raster-renderer="sprite"></dvk-some-component>
 <dvk-some-component raster-renderer="video"></dvk-some-component>
 ```
 
@@ -96,7 +93,6 @@ Follow the decoration-11 structure unless there is a strong component-specific r
 
 1. Render the normal SVG first.
 2. Gate rasterization on:
-   - `videoRasterize`
    - `animated`
    - not `paused`
    - not reduced motion
@@ -112,7 +108,7 @@ Follow the decoration-11 structure unless there is a strong component-specific r
 4. Acquire a shared raster handle from a module-level cache.
 5. Default replacement is a `<canvas part="graphic raster">` that draws either decoded PNG atlas frames or decoded raster layers with one playback clock.
 6. Optional video replacement is `<video part="graphic raster" autoplay loop muted playsinline preload="auto">`.
-7. On prop/size changes, disconnection, or opt-out, release the raster handle and fall back safely.
+7. On prop/size changes or disconnection, release the raster handle and fall back safely.
 8. Emit a component event such as `dvk-raster-error` and keep SVG visible if generation fails.
 
 ## Shared Queue And Cache Rules
@@ -186,7 +182,6 @@ Add or update tests for every component integration:
 - Default path eventually replaces SVG with sprite when rasterization succeeds.
 - `raster-renderer="video"` replaces SVG with video when rasterization succeeds.
 - `raster-renderer="sprite"` or no renderer attribute uses sprite.
-- `video-rasterize="false"` keeps live SVG and does not call `URL.createObjectURL`.
 - Matching instances share one generated media URL.
 - Raster errors keep SVG fallback visible.
 - For components with independent animation periods, test or manually verify that sprite playback preserves the original per-layer direction/speed and does not introduce a loop-boundary stutter.
@@ -205,7 +200,7 @@ Run docs build separately from tests that rebuild `packages/elements/dist`; conc
 
 ## Review Checklist
 
-- Public opt-out property is documented and tested.
+- Public renderer property is documented and tested.
 - Existing props, parts, and events remain compatible.
 - Fallback SVG is still the source of truth.
 - Runtime cache is bounded.

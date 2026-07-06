@@ -33,6 +33,11 @@ description: Enterprise radar HUD with concentric rings, scanning beam, target s
 </dvk-decoration-10>
 ```
 
+```html
+<dvk-decoration-10 raster-renderer="sprite"></dvk-decoration-10>
+<dvk-decoration-10 raster-renderer="video"></dvk-decoration-10>
+```
+
 ## Props
 
 | Name | Type | Default | Notes |
@@ -43,12 +48,14 @@ description: Enterprise radar HUD with concentric rings, scanning beam, target s
 | `dur` | `number` | `8` | Clockwise scanner rotation duration in seconds. Values are clamped to the 6-10 second radar range. |
 | `animated` | `boolean` | `true` | Enables scanner, pulse, flowing arc, ripple, and data-line animations. |
 | `paused` | `boolean` | `false` | Stops all animations while keeping the static radar geometry visible. |
+| `raster-renderer` | `string` | `sprite` | Runtime raster output renderer. Defaults to transparent PNG sprite playback on a canvas; use `video` for WebM playback. |
 
 ## Events
 
 | Name | Detail |
 | --- | --- |
 | `dvk-ready` | `{ tagName }` |
+| `dvk-raster-error` | `{ message }` |
 
 ## CSS Variables
 
@@ -63,6 +70,7 @@ description: Enterprise radar HUD with concentric rings, scanning beam, target s
 | Part | Description |
 | --- | --- |
 | `graphic` | Internal SVG. |
+| `raster` | Runtime raster replacement canvas or video. |
 | `background` | Deep black-blue radial HUD background. |
 | `grid` | Low-opacity technical grid overlay. |
 | `background-nodes` | Group containing subtle background flicker nodes. |

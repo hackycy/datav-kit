@@ -43,7 +43,6 @@ description: Rotating HUD energy ring with arcs, tick marks, neon blocks, and da
 | `dur` | `number` | `5` | Rotation duration in seconds. |
 | `animated` | `boolean` | `true` | Enables SVG rotation animations. |
 | `paused` | `boolean` | `false` | Stops rotation animations while keeping the static geometry visible. |
-| `video-rasterize` | `boolean` | `true` | Enables runtime rasterization for the animated SVG. Set `video-rasterize="false"` to keep the live SVG animation path. |
 | `raster-renderer` | `'video' \| 'sprite'` | `'sprite'` | Runtime raster output renderer. Defaults to transparent PNG atlas playback; use `video` for transparent WebM playback. |
 
 ## Events
