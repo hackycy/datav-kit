@@ -4,6 +4,8 @@ import { property } from 'lit/decorators.js'
 
 const baseSize = 72
 const defaultStrokeWidth = 2
+const laneWidth = 38
+const laneActiveWidth = 14
 
 export class LoadingEnergyElement extends DatavElement {
   static override styles = css`
@@ -15,7 +17,7 @@ export class LoadingEnergyElement extends DatavElement {
       height: 100%;
       min-width: 0;
       min-height: 0;
-      color: var(--dvk-color-primary, #18f0ff);
+      color: var(--dvk-color-primary, #1677ff);
       box-sizing: border-box;
     }
 
@@ -38,8 +40,8 @@ export class LoadingEnergyElement extends DatavElement {
     }
 
     .tip {
-      color: var(--dvk-loading-energy-tip-color, currentColor);
-      font-size: var(--dvk-loading-energy-tip-font-size, 15px);
+      color: var(--dvk-loading-energy-tip-color, #64748b);
+      font-size: var(--dvk-loading-energy-tip-font-size, 14px);
       line-height: var(--dvk-loading-energy-tip-line-height, 1.4);
       text-align: center;
       white-space: normal;
@@ -102,156 +104,76 @@ export class LoadingEnergyElement extends DatavElement {
           aria-hidden="true"
         >
           <defs>
-            <radialGradient id="dvk-loading-energy-glow" cx="50%" cy="50%" r="52%">
-              <stop offset="0%" stop-color=${withAlpha(primary, 0.28)}></stop>
-              <stop offset="58%" stop-color=${withAlpha(secondary, 0.1)}></stop>
-              <stop offset="100%" stop-color=${withAlpha(primary, 0)}></stop>
-            </radialGradient>
-            <linearGradient id="dvk-loading-energy-shell" x1="12" y1="12" x2="60" y2="60">
-              <stop offset="0%" stop-color=${withAlpha(secondary, 0.08)}></stop>
-              <stop offset="50%" stop-color=${withAlpha(primary, 0.12)}></stop>
-              <stop offset="100%" stop-color=${withAlpha(secondary, 0.08)}></stop>
+            <linearGradient id="dvk-loading-energy-panel" x1="10" y1="14" x2="62" y2="58">
+              <stop offset="0%" stop-color=${withAlpha(primary, 0.1)}></stop>
+              <stop offset="46%" stop-color=${withAlpha(secondary, 0.08)}></stop>
+              <stop offset="100%" stop-color=${withAlpha(secondary, 0.03)}></stop>
             </linearGradient>
-            <linearGradient id="dvk-loading-energy-cell" x1="30" y1="20" x2="42" y2="52">
-              <stop offset="0%" stop-color=${withAlpha(primary, 0.16)}></stop>
-              <stop offset="50%" stop-color=${withAlpha(secondary, 0.22)}></stop>
-              <stop offset="100%" stop-color=${withAlpha(primary, 0.16)}></stop>
-            </linearGradient>
-            <linearGradient id="dvk-loading-energy-scan" x1="0" y1="0" x2="0" y2="8">
+            <linearGradient id="dvk-loading-energy-lane-flow" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stop-color=${withAlpha(primary, 0)}></stop>
-              <stop offset="50%" stop-color=${withAlpha(primary, 0.64)}></stop>
+              <stop offset="50%" stop-color=${withAlpha(primary, 0.68)}></stop>
               <stop offset="100%" stop-color=${withAlpha(primary, 0)}></stop>
             </linearGradient>
-            <linearGradient id="dvk-loading-energy-flow" x1="36" y1="50" x2="36" y2="22">
-              <stop offset="0%" stop-color=${withAlpha(primary, 0.18)}></stop>
-              <stop offset="50%" stop-color=${withAlpha(primary, 0.78)}></stop>
-              <stop offset="100%" stop-color=${withAlpha(secondary, 0.36)}></stop>
-            </linearGradient>
-            <clipPath id="dvk-loading-energy-cell-clip">
-              <rect x="31" y="21" width="10" height="30" rx="2"></rect>
-            </clipPath>
           </defs>
 
-          <circle part="aura" cx="36" cy="36" r="30" fill="url(#dvk-loading-energy-glow)" opacity="0.5"></circle>
-
-          <path
+          <rect
+            part="panel"
+            x="10"
+            y="14"
+            width="52"
+            height="44"
+            rx="6"
+            fill="url(#dvk-loading-energy-panel)"
+          ></rect>
+          <rect
             part="frame"
-            d="M22 10 H50 M62 22 V50 M50 62 H22 M10 50 V22"
+            x="10"
+            y="14"
+            width="52"
+            height="44"
+            rx="6"
             fill="transparent"
-            stroke=${withAlpha(secondary, 0.48)}
-            stroke-width=${formatNumber(strokeWidth * 0.75)}
+            stroke=${withAlpha(secondary, 0.38)}
+            stroke-width=${formatNumber(strokeWidth * 0.7)}
+          ></rect>
+          <path
+            part="header-line"
+            d="M18 24 H40"
+            fill="transparent"
+            stroke=${withAlpha(secondary, 0.38)}
+            stroke-width=${formatNumber(strokeWidth * 0.55)}
             stroke-linecap="round"
           ></path>
-
           <path
-            part="module-shell"
-            d="M22 13 H50 L59 22 V50 L50 59 H22 L13 50 V22 Z"
-            fill="url(#dvk-loading-energy-shell)"
-            stroke=${withAlpha(secondary, 0.58)}
-            stroke-width=${formatNumber(strokeWidth * 0.65)}
-          ></path>
-
-          <path
-            part="bus-line"
-            d="M18 36 H29 M43 36 H54 M36 18 V29 M36 43 V54"
+            part="divider"
+            d="M16 30.5 H56"
             fill="transparent"
-            stroke=${withAlpha(secondary, 0.5)}
+            stroke=${withAlpha(secondary, 0.18)}
             stroke-width=${formatNumber(strokeWidth * 0.45)}
             stroke-linecap="round"
           ></path>
-
-          <path
-            part="bus-flow"
-            d="M18 36 H29 M54 36 H43 M36 18 V29 M36 54 V43"
-            fill="transparent"
-            stroke=${primary}
-            stroke-width=${formatNumber(strokeWidth * 0.52)}
-            stroke-dasharray="3 5"
-            stroke-dashoffset="0"
-            stroke-linecap="round"
-            opacity="0.78"
-          >
+          <circle part="status-dot" cx="53" cy="24" r="2.3" fill=${primary} opacity="0.86">
             ${showAnimation
               ? svg`
                 <animate
-                  attributeName="stroke-dashoffset"
-                  values="8;0"
-                  dur=${`${duration * 0.9}s`}
+                  attributeName="opacity"
+                  values="0.38;0.94;0.38"
+                  dur=${`${duration * 1.3}s`}
+                  repeatCount="indefinite"
+                ></animate>
+                <animate
+                  attributeName="r"
+                  values="2.1;2.8;2.1"
+                  dur=${`${duration * 1.3}s`}
                   repeatCount="indefinite"
                 ></animate>
               `
               : null}
-          </path>
+          </circle>
 
-          <rect
-            part="energy-cell"
-            x="30"
-            y="20"
-            width="12"
-            height="32"
-            rx="2.5"
-            fill="url(#dvk-loading-energy-cell)"
-            stroke=${primary}
-            stroke-width=${formatNumber(strokeWidth)}
-          ></rect>
-
-          <rect
-            part="energy-fill"
-            x="32"
-            y="22"
-            width="8"
-            height="28"
-            rx="1.8"
-            fill=${withAlpha(primary, 0.18)}
-          ></rect>
-
-          <g part="energy-flow" clip-path="url(#dvk-loading-energy-cell-clip)">
-            <rect x="33" y="46" width="6" height="10" rx="1.5" fill="url(#dvk-loading-energy-flow)"></rect>
-            <rect x="33" y="30" width="6" height="10" rx="1.5" fill="url(#dvk-loading-energy-flow)"></rect>
-            <rect x="33" y="14" width="6" height="10" rx="1.5" fill="url(#dvk-loading-energy-flow)"></rect>
-            ${showAnimation
-              ? svg`
-                <animateTransform
-                  attributeName="transform"
-                  type="translate"
-                  values="0 0;0 -16"
-                  dur=${`${duration}s`}
-                  repeatCount="indefinite"
-                ></animateTransform>
-              `
-              : null}
-          </g>
-
-          <rect part="scan-line" x="31" y="21" width="10" height="6" rx="1.4" fill="url(#dvk-loading-energy-scan)" opacity="0.5">
-            ${showAnimation
-              ? svg`
-                <animate
-                  attributeName="y"
-                  values="21;45;21"
-                  dur=${`${duration * 1.25}s`}
-                  repeatCount="indefinite"
-                ></animate>
-              `
-              : null}
-          </rect>
-
-          ${this.renderChargeSegment('left', 0, 18, 31, 2, 10, primary, duration, showAnimation)}
-          ${this.renderChargeSegment('right', 0, 52, 31, 2, 10, secondary, duration, showAnimation)}
-          ${this.renderChargeSegment('top', 0, 31, 18, 10, 2, secondary, duration, showAnimation)}
-          ${this.renderChargeSegment('bottom', 0, 31, 52, 10, 2, primary, duration, showAnimation)}
-
-          <rect part="core" x="33" y="33" width="6" height="6" rx="1.5" fill=${primary} opacity="0.88">
-            ${showAnimation
-              ? svg`
-                <animate
-                  attributeName="y"
-                  values="26;40;26"
-                  dur=${`${duration * 1.15}s`}
-                  repeatCount="indefinite"
-                ></animate>
-              `
-              : null}
-          </rect>
+          ${this.renderDataLane(0, 36, primary, secondary, duration, showAnimation)}
+          ${this.renderDataLane(1, 44, primary, secondary, duration, showAnimation)}
+          ${this.renderDataLane(2, 52, primary, secondary, duration, showAnimation)}
         </svg>
         <div part="tip" class="tip">
           <slot></slot>
@@ -260,48 +182,52 @@ export class LoadingEnergyElement extends DatavElement {
     `
   }
 
-  private renderChargeSegment(
-    side: 'left' | 'right' | 'top' | 'bottom',
+  private renderDataLane(
     index: number,
-    x: number,
     y: number,
-    width: number,
-    height: number,
-    color: string,
+    primary: string,
+    secondary: string,
     duration: number,
     showAnimation: boolean,
   ): unknown {
-    const direction = {
-      left: '0 0;5 0;0 0',
-      right: '0 0;-5 0;0 0',
-      top: '0 0;0 5;0 0',
-      bottom: '0 0;0 -5;0 0',
-    }[side]
+    const activeStart = 18
+    const activeEnd = activeStart + laneWidth - laneActiveWidth
 
     return svg`
-      <rect
-        part=${`charge-segment charge-${side}`}
-        x=${String(x)}
-        y=${String(y)}
-        width=${String(width)}
-        height=${String(height)}
-        rx="0.8"
-        fill=${color}
-        opacity=${String(0.38 + index * 0.08)}
-      >
-        ${showAnimation
-          ? svg`
-            <animateTransform
-              attributeName="transform"
-              type="translate"
-              values=${direction}
-              dur=${`${duration * 1.1}s`}
-              begin=${`${index * 0.16}s`}
-              repeatCount="indefinite"
-            ></animateTransform>
-          `
-          : null}
-      </rect>
+      <g part="data-lane">
+        <rect part="lane-marker" x="14" y=${String(y - 1)} width="2.6" height="2.6" rx="0.8" fill=${withAlpha(primary, 0.46)}></rect>
+        <rect
+          part="lane-track"
+          x="18"
+          y=${String(y - 2)}
+          width=${String(laneWidth)}
+          height="4"
+          rx="2"
+          fill=${withAlpha(secondary, 0.16)}
+        ></rect>
+        <rect
+          part="lane-progress"
+          x=${String(activeStart)}
+          y=${String(y - 2)}
+          width=${String(laneActiveWidth)}
+          height="4"
+          rx="2"
+          fill="url(#dvk-loading-energy-lane-flow)"
+          opacity="0.88"
+        >
+          ${showAnimation
+            ? svg`
+              <animate
+                attributeName="x"
+                values=${`${activeStart};${activeEnd};${activeStart}`}
+                dur=${`${duration * 1.25}s`}
+                begin=${`${index * 0.22}s`}
+                repeatCount="indefinite"
+              ></animate>
+            `
+            : null}
+        </rect>
+      </g>
     `
   }
 
@@ -311,13 +237,13 @@ export class LoadingEnergyElement extends DatavElement {
       explicit: this.color,
       cssVariable: '--dvk-color-primary',
       host: this,
-      fallback: '#18f0ff',
+      fallback: '#1677ff',
     })
     const secondary = colors[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
       cssVariable: '--dvk-color-secondary',
       host: this,
-      fallback: '#2b7cff',
+      fallback: '#8a99ad',
     })
 
     return [primary, secondary]
