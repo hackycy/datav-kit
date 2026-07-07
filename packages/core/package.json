@@ -5,6 +5,12 @@
   "description": "Core Web Components primitives for datav-kit.",
   "author": "hackycy <hackycy@outlook.com>",
   "license": "MIT",
+  "homepage": "https://github.com/hackycy/datav-kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hackycy/datav-kit.git"
+  },
+  "bugs": "https://github.com/hackycy/datav-kit/issues",
   "sideEffects": false,
   "exports": {
     ".": {

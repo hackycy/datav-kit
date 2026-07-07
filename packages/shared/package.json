@@ -5,6 +5,12 @@
   "description": "Framework-agnostic utilities shared by datav-kit packages.",
   "author": "hackycy <hackycy@outlook.com>",
   "license": "MIT",
+  "homepage": "https://github.com/hackycy/datav-kit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hackycy/datav-kit.git"
+  },
+  "bugs": "https://github.com/hackycy/datav-kit/issues",
   "sideEffects": false,
   "exports": {
     ".": {
