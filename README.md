@@ -75,18 +75,6 @@ pnpm test
 pnpm lint
 ```
 
-Common scripts:
-
-| Command | Description |
-| --- | --- |
-| `pnpm dev` | Run package development tasks through Turbo. |
-| `pnpm build` | Build all packages through Turbo. |
-| `pnpm test` | Run package tests through Turbo. |
-| `pnpm typecheck` | Run TypeScript checks. |
-| `pnpm lint` | Lint the repository. |
-| `pnpm docs:dev` | Start the local VitePress docs site. |
-| `pnpm docs:build` | Build the documentation site. |
-
 ## Inspire
 
 - [datav-vue3](https://github.com/vaemusic/datav-vue3)
