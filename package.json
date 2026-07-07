@@ -18,7 +18,7 @@
     "docs:dev": "pnpm --filter @datav-kit/docs dev",
     "dev": "turbo dev",
     "lint": "eslint --cache .",
-    "prepublishOnly": "pnpm build",
+    "prepublishOnly": "turbo build",
     "release": "bumpp -r",
     "test": "turbo test",
     "typecheck": "turbo typecheck",
