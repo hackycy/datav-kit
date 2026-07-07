@@ -2,6 +2,9 @@ name: Pages
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
 
 permissions:
   contents: read
@@ -14,10 +17,13 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
