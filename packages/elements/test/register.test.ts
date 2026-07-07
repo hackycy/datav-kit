@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, PerformanceMonitorElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, definePerformanceMonitor, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -81,6 +81,28 @@ function createCanvasStream(): MediaStream {
     getTracks: vi.fn(() => [{ stop: vi.fn() }]),
     getVideoTracks: vi.fn(() => [{ requestFrame: vi.fn() }]),
   } as unknown as MediaStream
+}
+
+function createPointerEvent(type: string, options: {
+  button?: number
+  clientX: number
+  clientY: number
+  pointerId?: number
+}): PointerEvent {
+  const event = new Event(type, {
+    bubbles: true,
+    cancelable: true,
+    composed: true,
+  }) as PointerEvent
+
+  Object.defineProperties(event, {
+    button: { value: options.button ?? 0 },
+    clientX: { value: options.clientX },
+    clientY: { value: options.clientY },
+    pointerId: { value: options.pointerId ?? 1 },
+  })
+
+  return event
 }
 
 function emitResize(width: number, height: number): void {
@@ -164,13 +186,14 @@ describe('@datav-kit/elements', () => {
       'dvk-count-to',
       'dvk-loading-orbit',
       'dvk-loading-energy',
+      'dvk-performance-monitor',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-performance-monitor']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-performance-monitor']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -249,6 +272,94 @@ describe('@datav-kit/elements', () => {
     expect(defineCountTo()).toBe(false)
     expect(defineLoadingOrbit()).toBe(false)
     expect(defineLoadingEnergy()).toBe(false)
+    expect(definePerformanceMonitor()).toBe(false)
+  })
+
+  it('renders performance monitor as a disabled tool when enabled is false', async () => {
+    register()
+
+    const element = document.createElement('dvk-performance-monitor') as PerformanceMonitorElement
+    element.setAttribute('enabled', 'false')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(element.enabled).toBe(false)
+    expect(element.shadowRoot?.textContent).toContain('disabled')
+  })
+
+  it('collects scoped performance inventory and excludes monitor instances', async () => {
+    register()
+
+    const target = document.createElement('section')
+    target.id = 'screen-root'
+    const datav = document.createElement('dvk-test-widget')
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate')
+    const canvas = document.createElement('canvas')
+
+    canvas.width = 3840
+    canvas.height = 2160
+    svg.append(animate)
+    datav.append(svg)
+    target.append(datav, canvas)
+    document.body.append(target)
+
+    const element = document.createElement('dvk-performance-monitor') as PerformanceMonitorElement
+    element.targetElement = target
+    document.body.append(element)
+    element.refresh()
+
+    await element.updateComplete
+
+    const snapshot = element.getSnapshot()
+
+    expect(snapshot.inventory.datav).toBe(1)
+    expect(snapshot.inventory.svg).toBe(1)
+    expect(snapshot.inventory.animations).toBe(1)
+    expect(snapshot.canvas.largestWidth).toBe(3840)
+    expect(snapshot.canvas.largestHeight).toBe(2160)
+    expect(snapshot.hotspots.datav).toEqual([{ owner: 'dvk-test-widget', count: 1 }])
+    expect(snapshot.hotspots.datav.find(item => item.owner === 'dvk-performance-monitor')).toBeUndefined()
+  })
+
+  it('allows overlay performance monitor to be dragged and reset', async () => {
+    register()
+
+    const element = document.createElement('dvk-performance-monitor') as PerformanceMonitorElement
+    element.setAttribute('enabled', 'false')
+    document.body.append(element)
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({
+      bottom: 110,
+      height: 100,
+      left: 10,
+      right: 300,
+      top: 10,
+      width: 290,
+      x: 10,
+      y: 10,
+      toJSON: () => ({}),
+    } as DOMRect)
+
+    await element.updateComplete
+
+    const header = element.shadowRoot?.querySelector('.header')
+
+    header?.dispatchEvent(createPointerEvent('pointerdown', { clientX: 20, clientY: 30 }))
+    window.dispatchEvent(createPointerEvent('pointermove', { clientX: 120, clientY: 150 }))
+    window.dispatchEvent(createPointerEvent('pointerup', { clientX: 120, clientY: 150 }))
+
+    expect(element.style.left).toBe('110px')
+    expect(element.style.top).toBe('130px')
+    expect(element.style.right).toBe('auto')
+    expect(element.style.bottom).toBe('auto')
+
+    element.resetPosition()
+
+    expect(element.style.left).toBe('')
+    expect(element.style.top).toBe('')
+    expect(element.style.right).toBe('')
+    expect(element.style.bottom).toBe('')
   })
 
   it('renders decoration-5 with DataV Decoration8 coordinates and reverse mode', async () => {
