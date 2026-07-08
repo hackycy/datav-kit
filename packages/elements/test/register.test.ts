@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -150,6 +150,7 @@ describe('@datav-kit/elements', () => {
       'dvk-border-box-13',
       'dvk-border-box-14',
       'dvk-border-box-15',
+      'dvk-border-box-16',
       'dvk-decoration-1',
       'dvk-decoration-2',
       'dvk-decoration-3',
@@ -169,8 +170,8 @@ describe('@datav-kit/elements', () => {
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -216,6 +217,9 @@ describe('@datav-kit/elements', () => {
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-15')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-15')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-15')?.props).not.toHaveProperty('viewBox')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-16')?.props).not.toHaveProperty('width')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-16')?.props).not.toHaveProperty('height')
+    expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-16')?.props).not.toHaveProperty('viewBox')
   })
 
   it('supports single-element registration helpers', () => {
@@ -235,6 +239,7 @@ describe('@datav-kit/elements', () => {
     expect(defineBorderBox13()).toBe(false)
     expect(defineBorderBox14()).toBe(false)
     expect(defineBorderBox15()).toBe(false)
+    expect(defineBorderBox16()).toBe(false)
     expect(defineDecoration1()).toBe(false)
     expect(defineDecoration2()).toBe(false)
     expect(defineDecoration3()).toBe(false)
@@ -1634,6 +1639,7 @@ describe('@datav-kit/elements', () => {
       ['dvk-border-box-13', '16px 16px 16px 16px'],
       ['dvk-border-box-14', '14px 14px 14px 14px'],
       ['dvk-border-box-15', '10px 10px 10px 10px'],
+      ['dvk-border-box-16', '20px 20px 20px 20px'],
     ] as const
 
     for (const [tagName, expectedPadding] of cases) {
@@ -2912,6 +2918,148 @@ describe('@datav-kit/elements', () => {
     expect(element.shadowRoot?.querySelector('polygon')?.getAttribute('fill')).toBe('rgba(1, 2, 3, 0.34)')
     expect(element.shadowRoot?.querySelector('circle')?.getAttribute('fill')).toBe('#718299')
     expect(element.shadowRoot?.querySelector('polyline')?.getAttribute('stroke')).toBe('#ccd8e8')
+  })
+
+  it('maps border-box-16 public attributes and renders a floating thin CPU laminate rail', async () => {
+    register()
+
+    const element = document.createElement('dvk-border-box-16')
+    element.setAttribute('colors', '#112233,#445566,#ddeeff')
+    element.setAttribute('glow-intensity', '1.25')
+    element.setAttribute('width', '800')
+    element.setAttribute('height', '450')
+    element.setAttribute('view-box', '0 0 800 450')
+    document.body.append(element)
+
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+    emitResize(320, 180)
+    await (element as HTMLElement & { updateComplete: Promise<boolean> }).updateComplete
+
+    const panel = element.shadowRoot?.querySelector('.panel')
+    const outerRail = element.shadowRoot?.querySelector('[data-outer-rail]')
+    const outerSegments = [...(element.shadowRoot?.querySelectorAll('[data-outer-segment]') ?? [])]
+    const innerHairline = element.shadowRoot?.querySelector('[data-inner-hairline]')
+    const innerRails = [...(element.shadowRoot?.querySelectorAll('[data-inner-rail]') ?? [])]
+    const underlayRails = [...(element.shadowRoot?.querySelectorAll('[data-underlay-rail]') ?? [])]
+    const pinLayer = element.shadowRoot?.querySelector('[data-layer="chip-pins"]')
+    const padLayer = element.shadowRoot?.querySelector('[data-layer="chip-pads"]')
+    const pins = [...(element.shadowRoot?.querySelectorAll('[data-chip-pin]') ?? [])]
+    const activePins = [...(element.shadowRoot?.querySelectorAll('[data-active-pin="true"]') ?? [])]
+    const pads = [...(element.shadowRoot?.querySelectorAll('[data-chip-pad]') ?? [])]
+    const activePads = [...(element.shadowRoot?.querySelectorAll('[data-active-pad="true"]') ?? [])]
+    const stops = [...(element.shadowRoot?.querySelectorAll('stop') ?? [])]
+      .map(stop => stop.getAttribute('stop-color'))
+    const blur = element.shadowRoot?.querySelector('feGaussianBlur')
+    const animations = element.shadowRoot?.querySelectorAll('animate') ?? []
+
+    expect(element).toHaveProperty('colors', '#112233,#445566,#ddeeff')
+    expect(element).toHaveProperty('glowIntensity', 1.25)
+    expect(element).not.toHaveProperty('viewBox')
+    expect(panel?.getAttribute('width')).toBe('320')
+    expect(panel?.getAttribute('height')).toBe('180')
+    expect(panel?.getAttribute('viewBox')).toBe('0 0 320 180')
+    expect(outerRail?.getAttribute('stroke')).toContain('dvk-border-box-16-rail-')
+    expect(outerRail?.getAttribute('stroke-width')).toBe('1.25')
+    expect(outerSegments.map(segment => segment.getAttribute('d')).slice(0, 5)).toEqual([
+      'M 18 5 L 124.8 5',
+      'M 150.4 5 L 169.6 5',
+      'M 195.2 5 L 302 5',
+      'M 315 18 L 315 75.6',
+      'M 315 104.4 L 315 162',
+    ])
+    expect(outerSegments.map(segment => segment.getAttribute('d')).slice(-4)).toEqual([
+      'M 302 5 L 315 18',
+      'M 315 162 L 302 175',
+      'M 18 175 L 5 162',
+      'M 5 18 L 18 5',
+    ])
+    expect(underlayRails).toHaveLength(8)
+    expect(underlayRails[0].getAttribute('y1')).toBe('9')
+    expect(innerHairline?.getAttribute('stroke-width')).toBe('0.75')
+    expect(innerRails.map(rail => [
+      rail.getAttribute('data-inner-rail'),
+      rail.getAttribute('x1'),
+      rail.getAttribute('y1'),
+      rail.getAttribute('x2'),
+      rail.getAttribute('y2'),
+    ])).toEqual([
+      ['top', '30', '14', '290', '14'],
+      ['right', '306', '30', '306', '150'],
+      ['bottom', '290', '166', '30', '166'],
+      ['left', '14', '150', '14', '30'],
+    ])
+    expect(pinLayer?.getAttribute('stroke')).toContain('dvk-border-box-16-pin-')
+    expect(pinLayer?.getAttribute('stroke-width')).toBe('1.15')
+    expect(padLayer?.getAttribute('fill')).toBe('#ddeeff')
+    expect(pins).toHaveLength(20)
+    expect(activePins).toHaveLength(5)
+    expect(pads).toHaveLength(12)
+    expect(activePads).toHaveLength(3)
+    expect(stops).toEqual([
+      'rgba(17, 34, 51, 0.94)',
+      'rgba(68, 85, 102, 0.72)',
+      'rgba(17, 34, 51, 0.94)',
+      'rgba(68, 85, 102, 0.5)',
+      'rgba(221, 238, 255, 0.92)',
+      'rgba(68, 85, 102, 0.5)',
+    ])
+    expect(blur?.getAttribute('stdDeviation')).toBe('3')
+    expect(animations).toHaveLength(8)
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('20px 20px 20px 20px')
+  })
+
+  it('resolves border-box-16 colors from CSS variables and supports paused pin pulses', async () => {
+    register()
+
+    const element = document.createElement('dvk-border-box-16') as HTMLElement & { updateComplete: Promise<boolean> }
+    element.style.setProperty('--dvk-color-primary', '#203040')
+    element.style.setProperty('--dvk-color-secondary', '#506070')
+    element.style.setProperty('--dvk-color-accent', '#90e0ff')
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(320, 180)
+    await element.updateComplete
+
+    const outerRail = element.shadowRoot?.querySelector('[data-outer-rail]')
+    const pinLayer = element.shadowRoot?.querySelector('[data-layer="chip-pins"]')
+    const padLayer = element.shadowRoot?.querySelector('[data-layer="chip-pads"]')
+    const stops = [...(element.shadowRoot?.querySelectorAll('stop') ?? [])]
+      .map(stop => stop.getAttribute('stop-color'))
+
+    expect(outerRail?.getAttribute('stroke')).toContain('dvk-border-box-16-rail-')
+    expect(pinLayer?.getAttribute('stroke')).toContain('dvk-border-box-16-pin-')
+    expect(padLayer?.getAttribute('fill')).toBe('#90e0ff')
+    expect(stops).toEqual([
+      'rgba(32, 48, 64, 0.94)',
+      'rgba(80, 96, 112, 0.72)',
+      'rgba(32, 48, 64, 0.94)',
+      'rgba(80, 96, 112, 0.5)',
+      'rgba(144, 224, 255, 0.92)',
+      'rgba(80, 96, 112, 0.5)',
+    ])
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+  })
+
+  it('keeps border-box-16 pin count bounded across extreme host sizes', async () => {
+    register()
+
+    const element = document.createElement('dvk-border-box-16') as HTMLElement & { updateComplete: Promise<boolean> }
+    document.body.append(element)
+
+    await element.updateComplete
+    emitResize(960, 120)
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelectorAll('[data-chip-pin]')).toHaveLength(16)
+    expect(element.shadowRoot?.querySelector<HTMLElement>('[part="content"]')?.style.getPropertyValue('--dvk-border-box-auto-padding')).toBe('20px 20px 20px 20px')
+
+    emitResize(1, 1200)
+    await element.updateComplete
+
+    expect(element.shadowRoot?.querySelectorAll('[data-chip-pin]')).toHaveLength(12)
+    expect(element.shadowRoot?.querySelectorAll('[data-chip-pad]')).toHaveLength(12)
   })
 
   it('maps decoration-1 attributes and renders animated bars', async () => {
