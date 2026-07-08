@@ -1,0 +1,73 @@
+import type { DatavElementMetadata } from '@datav-kit/core'
+
+export const title2Metadata = {
+  tagName: 'dvk-title-2',
+  className: 'Title2Element',
+  description: 'Deep glass large-screen top title bar based on a thin cyber-blue mechanical wing layout, with a central low-brightness flow line and gold title focus.',
+  props: {
+    color: {
+      type: 'string',
+      default: '',
+      attribute: true,
+      cssVariable: '--dvk-color-primary',
+      description: 'Primary cyan color for luminous rails, micro grid strokes, flow lines, and small HUD details. Also accepts a DataV-compatible color array when set as a property.',
+    },
+    secondaryColor: {
+      type: 'string',
+      default: '',
+      attribute: 'secondary-color',
+      cssVariable: '--dvk-color-secondary',
+      description: 'Secondary deep blue color for wing surfaces, outer strokes, and edge gradients.',
+    },
+    accentColor: {
+      type: 'string',
+      default: '',
+      attribute: 'accent-color',
+      cssVariable: '--dvk-title-2-accent',
+      description: 'Accent color for the centered title text.',
+    },
+    colors: {
+      type: 'string',
+      default: '',
+      attribute: true,
+      description: 'Comma-separated primary, secondary, and accent colors.',
+    },
+    titleText: {
+      type: 'string',
+      default: '',
+      attribute: 'title-text',
+      description: 'Optional centered system name. When omitted, the default slot is rendered inside the title area.',
+    },
+  },
+  events: [
+    {
+      name: 'dvk-ready',
+      detail: '{ tagName }',
+      description: 'Fired after the element first renders.',
+    },
+  ],
+  parts: [
+    'graphic',
+    'background',
+    'micro-grid',
+    'wing',
+    'left-wing',
+    'right-wing',
+    'wing-surface',
+    'wing-inner-line',
+    'glass-sheen',
+    'edge-line',
+    'detail-line',
+    'glow-accent',
+    'center-panel',
+    'title-panel',
+    'title-inner-panel',
+    'center-edge',
+    'quiet-line',
+    'side-connector',
+    'flow-line',
+    'content',
+    'title',
+    'title-text',
+  ],
+} satisfies DatavElementMetadata

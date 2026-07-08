@@ -32,6 +32,7 @@ import { loadingEnergyMetadata } from './loading-energy/metadata'
 import { loadingOrbitMetadata } from './loading-orbit/metadata'
 import { performanceMonitorMetadata } from './performance-monitor/metadata'
 import { title1Metadata } from './title-1/metadata'
+import { title2Metadata } from './title-2/metadata'
 
 export type ElementMetadata = DatavElementMetadata
 
@@ -65,6 +66,7 @@ export const elementMetadata: ElementMetadata[] = [
   decoration10Metadata,
   decoration11Metadata,
   title1Metadata,
+  title2Metadata,
   countToMetadata,
   loadingOrbitMetadata,
   loadingEnergyMetadata,

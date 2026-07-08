@@ -56,6 +56,7 @@ export default defineConfig({
           text: 'Title',
           items: [
             { text: 'Title 1', link: '/components/titles/title-1' },
+            { text: 'Title 2', link: '/components/titles/title-2' },
           ],
         },
         {

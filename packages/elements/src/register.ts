@@ -33,6 +33,7 @@ import { LoadingEnergyElement } from './loading-energy/element'
 import { LoadingOrbitElement } from './loading-orbit/element'
 import { PerformanceMonitorElement } from './performance-monitor/element'
 import { Title1Element } from './title-1/element'
+import { Title2Element } from './title-2/element'
 
 export const datavElementRegistrations: DatavElementRegistration[] = [
   {
@@ -150,6 +151,10 @@ export const datavElementRegistrations: DatavElementRegistration[] = [
   {
     tagName: 'dvk-title-1',
     element: Title1Element,
+  },
+  {
+    tagName: 'dvk-title-2',
+    element: Title2Element,
   },
   {
     tagName: 'dvk-count-to',
