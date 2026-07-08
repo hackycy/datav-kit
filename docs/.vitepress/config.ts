@@ -53,6 +53,12 @@ export default defineConfig({
           ],
         },
         {
+          text: 'Title',
+          items: [
+            { text: 'Title 1', link: '/components/titles/title-1' },
+          ],
+        },
+        {
           text: 'Border',
           items: [
             { text: 'Border Box 1', link: '/components/borders/border-box-1' },

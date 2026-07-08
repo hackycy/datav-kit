@@ -31,6 +31,7 @@ import { fitScreenMetadata } from './fit-screen/metadata'
 import { loadingEnergyMetadata } from './loading-energy/metadata'
 import { loadingOrbitMetadata } from './loading-orbit/metadata'
 import { performanceMonitorMetadata } from './performance-monitor/metadata'
+import { title1Metadata } from './title-1/metadata'
 
 export type ElementMetadata = DatavElementMetadata
 
@@ -63,6 +64,7 @@ export const elementMetadata: ElementMetadata[] = [
   decoration9Metadata,
   decoration10Metadata,
   decoration11Metadata,
+  title1Metadata,
   countToMetadata,
   loadingOrbitMetadata,
   loadingEnergyMetadata,

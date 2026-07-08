@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, PerformanceMonitorElement } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, PerformanceMonitorElement, Title1Element } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, definePerformanceMonitor, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, definePerformanceMonitor, defineTitle1, elementMetadata, register } from '../src/index'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -184,6 +184,7 @@ describe('@datav-kit/elements', () => {
       'dvk-decoration-9',
       'dvk-decoration-10',
       'dvk-decoration-11',
+      'dvk-title-1',
       'dvk-count-to',
       'dvk-loading-orbit',
       'dvk-loading-energy',
@@ -193,8 +194,8 @@ describe('@datav-kit/elements', () => {
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-performance-monitor']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-performance-monitor']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-performance-monitor']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-performance-monitor']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -274,6 +275,7 @@ describe('@datav-kit/elements', () => {
     expect(defineDecoration9()).toBe(false)
     expect(defineDecoration10()).toBe(false)
     expect(defineDecoration11()).toBe(false)
+    expect(defineTitle1()).toBe(false)
     expect(defineCountTo()).toBe(false)
     expect(defineLoadingOrbit()).toBe(false)
     expect(defineLoadingEnergy()).toBe(false)
@@ -647,6 +649,43 @@ describe('@datav-kit/elements', () => {
     expect(firstBlock?.getAttribute('points')).toBe('392.64,11.34 360,11.34 365.76,17.01 398.4,17.01')
     expect(stops[6].getAttribute('stop-color')).toBe('#2b7cff')
     expect(stops[12].getAttribute('stop-color')).toBe('#60e7ff')
+  })
+
+  it('renders title-1 as a symmetric futuristic header banner', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-1') as Title1Element
+    element.setAttribute('colors', '#76f6ff,#2f8cff,#52f0b5')
+    element.setAttribute('title-text', 'SMART COCKPIT')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const sides = [...element.shadowRoot?.querySelectorAll('[part~="side"]') ?? []]
+    const rightSide = element.shadowRoot?.querySelector('[part~="right-side"]')
+    const titlePanel = element.shadowRoot?.querySelector('[part="title-panel"]')
+    const titleText = element.shadowRoot?.querySelector('[part="title-text"]')
+    const sideSurfaces = [...element.shadowRoot?.querySelectorAll('[part="side-surface"]') ?? []]
+    const rails = [...element.shadowRoot?.querySelectorAll('[part~="rail"]') ?? []]
+    const surfaceAccents = [...element.shadowRoot?.querySelectorAll('[part="surface-accent"]') ?? []]
+    const centerEdges = [...element.shadowRoot?.querySelectorAll('[part="center-edge"]') ?? []]
+    const animations = [...element.shadowRoot?.querySelectorAll('animate, animateTransform') ?? []]
+    const stops = [...element.shadowRoot?.querySelectorAll('linearGradient stop') ?? []]
+
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 1200 72')
+    expect(svg?.getAttribute('preserveAspectRatio')).toBe('none')
+    expect(sides).toHaveLength(2)
+    expect(rightSide?.getAttribute('transform')).toBe('translate(1200 0) scale(-1 1)')
+    expect(titlePanel?.getAttribute('points')).toBe('286,36 340,13 860,13 914,36 860,59 340,59')
+    expect(titleText?.textContent).toBe('SMART COCKPIT')
+    expect(sideSurfaces).toHaveLength(2)
+    expect(sideSurfaces[0]?.getAttribute('points')).toBe('0,13 306,13 370,36 306,59 0,59')
+    expect(rails).toHaveLength(4)
+    expect(surfaceAccents).toHaveLength(2)
+    expect(centerEdges).toHaveLength(1)
+    expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#76f6ff', '#2f8cff', '#52f0b5']))
+    expect(animations).toHaveLength(0)
   })
 
   it('renders decoration-10 as a futuristic radar HUD', async () => {

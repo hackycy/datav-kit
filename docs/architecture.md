@@ -10,7 +10,7 @@ description: Technical architecture of datav-kit covering package responsibiliti
 
 - 组件 API、事件、metadata、SSR 等实现契约见 [Architecture Contracts](./reference/architecture-contracts.md)。
 - 安装、主题和组件编写说明放在 `guide/`。
-- 具体组件的属性和示例放在 `components/`，并按 `Decoration`、`Border`、`Other` 组织；`Other` 用于全屏适配、数字展示、加载状态、按钮、开发期诊断辅助等不属于装饰或边框的组件。
+- 具体组件的属性和示例放在 `components/`，并按 `Decoration`、`Title`、`Border`、`Other` 组织；`Title` 用于顶部标题栏、标题横幅等大屏标题装饰组件；`Other` 用于全屏适配、数字展示、加载状态、按钮、开发期诊断辅助等不属于装饰、标题或边框的组件。
 
 这份文档应该回答：
 
@@ -191,6 +191,16 @@ Vue、React 等适配包只包装 Custom Elements，不重写组件实现。
 - content safe area：业务内容可以放置的安全矩形区域。
 
 这类组件不能用固定像素 padding 或单纯按宿主尺寸比例推断内容区域。内容内距应来自组件自身 SVG 坐标系中的 `content safe area`，再按当前 `viewBox` 与宿主实际尺寸映射成 CSS padding。这样组件才能在不同尺寸下保持“内容在边框内部”的语义，而不是只得到视觉上大致可用的留白。
+
+Title 系列用于大屏顶部标题栏、标题横幅和系统名称承载，不应退化成普通装饰线条，也不应做成厚重边框容器。
+
+Title 系列的长期视觉边界：
+
+- 以横向整体构图为主，优先保持上下边界等高、中心和两侧连续，不让两端收缩成零散细线。
+- 以半透明面和少量导向线组合建立科技感；面负责气质和稳定性，线负责边界、节奏和指向。
+- 标题区域应是视觉焦点，但不能堆叠多层边框、强辉光、复杂节点或密集刻度。
+- 装饰细节应服务于标题可读性和大屏中台气质，避免碎片化拼贴、按钮化、图标化或插画化。
+- 默认实现应是静态 SVG，除非明确需要状态表达，否则不为标题组件引入持续动画。
 
 3D 能力不进入核心包；如果需要，应作为独立扩展包存在。
 
