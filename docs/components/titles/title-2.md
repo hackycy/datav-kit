@@ -6,7 +6,7 @@ description: Deep glass large-screen top title bar with cyber-blue mechanical wi
 
 `dvk-title-2` is a deep glass large-screen top title bar based on the provided SVG. It keeps the dark blue-black background band, symmetric mechanical wing panels, thin cyber-blue rails, a restrained center flow line, and a gold title focus for command-center dashboards.
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 80px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
   <div class="datav-decoration-shell">
     <dvk-title-2 title-text="智慧指挥平台"></dvk-title-2>
   </div>
@@ -16,7 +16,7 @@ description: Deep glass large-screen top title bar with cyber-blue mechanical wi
 <dvk-title-2 title-text="智慧指挥平台"></dvk-title-2>
 ```
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 80px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
   <div class="datav-decoration-shell">
     <dvk-title-2 colors="#7cf6ff,#2f70ff,#ffd36d">
       <span>作战指挥中心</span>
@@ -30,7 +30,7 @@ description: Deep glass large-screen top title bar with cyber-blue mechanical wi
 </dvk-title-2>
 ```
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1080px; --datav-decoration-height: 72px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1080px; --datav-decoration-height: 58px;">
   <div class="datav-decoration-shell">
     <dvk-title-2 colors="#52f0b5,#1487ff,#f9e7a0" title-text="CITY"></dvk-title-2>
   </div>
@@ -65,7 +65,8 @@ description: Deep glass large-screen top title bar with cyber-blue mechanical wi
 | `--dvk-title-2-accent` | Accent fallback color for the title text. |
 | `--dvk-title-2-title-width` | Maximum title content width. |
 | `--dvk-title-2-title-min-width` | Minimum title content width. |
-| `--dvk-title-2-title-height` | Title content height. |
+| `--dvk-title-2-title-top` | Title content area top offset, aligned to the inner title panel by default. |
+| `--dvk-title-2-title-height` | Title content area height, aligned to the inner title panel by default. |
 | `--dvk-title-2-title-color` | Title text color override. |
 | `--dvk-title-2-title-font` | Title font shorthand. |
 | `--dvk-title-2-title-letter-spacing` | Title letter spacing. |

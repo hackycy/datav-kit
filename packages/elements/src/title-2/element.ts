@@ -33,23 +33,23 @@ export class Title2Element extends DatavElement {
 
     .content {
       position: absolute;
-      top: 40.5%;
+      top: var(--dvk-title-2-title-top, 17.25%);
       left: 50%;
       z-index: 1;
       display: grid;
       place-items: center;
       width: min(36%, var(--dvk-title-2-title-width, 760px));
       min-width: var(--dvk-title-2-title-min-width, 260px);
-      height: var(--dvk-title-2-title-height, 32%);
+      height: var(--dvk-title-2-title-height, 46.55%);
       min-height: 0;
       color: var(--dvk-title-2-title-color, var(--dvk-title-2-resolved-title-color, #f5cf70));
-      font: var(--dvk-title-2-title-font, 700 24px/1.15 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
+      font: var(--dvk-title-2-title-font, 700 24px/1 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
       letter-spacing: var(--dvk-title-2-title-letter-spacing, 0.18em);
       text-align: center;
       text-shadow:
         0 0 2px var(--dvk-title-2-title-stroke, rgba(255, 234, 165, 0.88)),
         0 0 10px var(--dvk-title-2-title-glow, rgba(245, 207, 112, 0.46));
-      transform: translate(-50%, -50%);
+      transform: translateX(-50%);
       pointer-events: none;
     }
 
