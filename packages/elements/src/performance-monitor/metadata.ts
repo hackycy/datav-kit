@@ -1,0 +1,153 @@
+import type { DatavElementMetadata } from '@datav-kit/core'
+
+export const performanceMonitorMetadata = {
+  tagName: 'dvk-performance-monitor',
+  className: 'PerformanceMonitorElement',
+  description: 'Runtime diagnostics overlay for FPS, long tasks, memory, DOM inventory, and datav-kit hotspots.',
+  props: {
+    mode: {
+      type: 'string',
+      default: 'overlay',
+      attribute: true,
+      description: 'Display mode: overlay or inline.',
+    },
+    placement: {
+      type: 'string',
+      default: 'bottom-right',
+      attribute: true,
+      description: 'Overlay placement: top-left, top-right, bottom-left, or bottom-right.',
+    },
+    enabled: {
+      type: 'boolean',
+      default: true,
+      attribute: true,
+      description: 'Starts or stops sampling while keeping the panel mounted.',
+    },
+    collapsed: {
+      type: 'boolean',
+      default: false,
+      attribute: true,
+      description: 'Shows only the compact summary when true.',
+    },
+    persist: {
+      type: 'boolean',
+      default: 'auto',
+      attribute: true,
+      description: 'Persists collapsed state. Defaults to true in overlay mode and false in inline mode.',
+    },
+    persistKey: {
+      type: 'string',
+      default: 'datav-kit-performance-monitor-collapsed',
+      attribute: 'persist-key',
+      description: 'localStorage key used for collapsed state.',
+    },
+    emitSamples: {
+      type: 'boolean',
+      default: true,
+      attribute: 'emit-samples',
+      description: 'Emits dvk-performance-sample after each sample window.',
+    },
+    dragEnabled: {
+      type: 'boolean',
+      default: true,
+      attribute: 'drag-enabled',
+      description: 'Allows dragging the overlay panel by its header. Inline mode ignores dragging.',
+    },
+    sampleInterval: {
+      type: 'number',
+      default: 1000,
+      attribute: 'sample-interval',
+      description: 'Frame and long-task sample interval in milliseconds.',
+    },
+    scanInterval: {
+      type: 'number',
+      default: 3000,
+      attribute: 'scan-interval',
+      description: 'DOM, SVG, Canvas, video, and animation scan interval in milliseconds.',
+    },
+    target: {
+      type: 'string',
+      default: '',
+      attribute: true,
+      description: 'CSS selector for the DOM scope to scan. Falls back to document.body.',
+    },
+    targetElement: {
+      type: 'object',
+      default: null,
+      attribute: false,
+      description: 'Element property used as the scan scope. Takes precedence over target.',
+    },
+    dangerThreshold: {
+      type: 'number',
+      default: 70,
+      attribute: 'danger-threshold',
+      description: 'Pressure threshold that triggers danger tone and alerts.',
+    },
+    minFpsThreshold: {
+      type: 'number',
+      default: 30,
+      attribute: 'min-fps-threshold',
+      description: 'FPS threshold used by dvk-performance-alert.',
+    },
+    longTaskThreshold: {
+      type: 'number',
+      default: 200,
+      attribute: 'long-task-threshold',
+      description: 'Long-task milliseconds threshold used by dvk-performance-alert.',
+    },
+    alertCooldown: {
+      type: 'number',
+      default: 10000,
+      attribute: 'alert-cooldown',
+      description: 'Minimum milliseconds between dvk-performance-alert events.',
+    },
+    offset: {
+      type: 'number',
+      default: 14,
+      attribute: true,
+      cssVariable: '--dvk-performance-monitor-offset',
+      description: 'Overlay edge offset in CSS pixels.',
+    },
+    zIndex: {
+      type: 'number',
+      default: 2147483000,
+      attribute: 'z-index',
+      cssVariable: '--dvk-performance-monitor-z-index',
+      description: 'Overlay z-index.',
+    },
+  },
+  events: [
+    {
+      name: 'dvk-performance-sample',
+      detail: 'PerformanceMonitorSnapshot',
+      description: 'Fired after each sample window when emit-samples is true.',
+    },
+    {
+      name: 'dvk-performance-alert',
+      detail: 'PerformanceMonitorAlertDetail',
+      description: 'Fired when pressure, FPS, or long-task thresholds are exceeded.',
+    },
+    {
+      name: 'dvk-collapse-change',
+      detail: '{ collapsed }',
+      description: 'Fired after collapsed state changes.',
+    },
+    {
+      name: 'dvk-enabled-change',
+      detail: '{ enabled }',
+      description: 'Fired after enabled state changes.',
+    },
+  ],
+  parts: [
+    'root',
+    'header',
+    'toggle',
+    'pressure',
+    'details',
+    'section',
+    'section-title',
+    'metric',
+    'metric-label',
+    'metric-value',
+  ],
+} satisfies DatavElementMetadata

@@ -80,6 +80,7 @@ export default defineConfig({
             { text: 'Count To', link: '/components/other/count-to' },
             { text: 'Loading Orbit', link: '/components/other/loading-orbit' },
             { text: 'Loading Energy', link: '/components/other/loading-energy' },
+            { text: 'Performance Monitor', link: '/components/other/performance-monitor' },
           ],
         },
       ],

@@ -5,7 +5,6 @@ import DefaultTheme from 'vitepress/theme'
 import { h } from 'vue'
 import AviationCommandScreen from './components/AviationCommandScreen.vue'
 import BorderChartDemo from './components/BorderChartDemo.vue'
-import PerformanceMonitor from './components/PerformanceMonitor.vue'
 import ScenicSpotCommandScreen from './components/ScenicSpotCommandScreen.vue'
 import '@datav-kit/themes/cyber-blue.css'
 import '@datav-kit/themes/ice-white.css'
@@ -21,7 +20,7 @@ export default {
   extends: DefaultTheme,
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      'layout-bottom': () => h(PerformanceMonitor),
+      'layout-bottom': () => h('dvk-performance-monitor'),
     })
   },
   enhanceApp({ app }) {
