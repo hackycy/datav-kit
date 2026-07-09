@@ -34,6 +34,7 @@ import { LoadingOrbitElement } from './loading-orbit/element'
 import { PerformanceMonitorElement } from './performance-monitor/element'
 import { Title1Element } from './title-1/element'
 import { Title2Element } from './title-2/element'
+import { Title3Element } from './title-3/element'
 
 export const datavElementRegistrations: DatavElementRegistration[] = [
   {
@@ -155,6 +156,10 @@ export const datavElementRegistrations: DatavElementRegistration[] = [
   {
     tagName: 'dvk-title-2',
     element: Title2Element,
+  },
+  {
+    tagName: 'dvk-title-3',
+    element: Title3Element,
   },
   {
     tagName: 'dvk-count-to',
