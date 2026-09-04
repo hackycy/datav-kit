@@ -1,4 +1,0 @@
-interface:
-  display_name: Create Datav Border
-  short_description: Design audited Datav border components
-  default_prompt: Use $create-complex-border to design a Datav border component through the required brief, inventory, safe-area, implementation, and validation gates.

@@ -1,4 +1,0 @@
-interface:
-  display_name: Replicate Complex SVG
-  short_description: Rebuild complex SVG frames faithfully
-  default_prompt: Use $replicate-complex-svg to rebuild this ornate SVG border as a responsive component without losing source details.

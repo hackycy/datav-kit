@@ -1,4 +1,0 @@
-interface:
-  display_name: Datav Screen Builder
-  short_description: Build datav-kit large-screen dashboards.
-  default_prompt: 'Use $datav-screen-builder to build a datav-kit large-screen dashboard for my project, following the existing tech stack and current docs.'
