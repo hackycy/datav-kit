@@ -124,6 +124,31 @@ skills/datav-kit/
 
 **必须写明**：16 个 border-box 一律没有 `#header`/`#title` slot，面板标题写进默认 slot。
 
+**P6 border-box 选型合同（由“面板容器 border-box 变体的场景选型规则”锁定）**：先判断是否需要独立 `surface`，再按场景角色选择，随后按动效语义筛选，最后才按视觉接近度选择。`surface` 仅指组件支持 `background-color`；`HUD`/状态框保持透明，由宿主或屏幕提供底色。P6 必须维护下列角色入口与固定回退链：
+
+| 场景角色 | 首选 | 固定回退链 |
+| --- | --- | --- |
+| 主视图焦点 | `4` | `4 → 2 → 6 → 3 → 5 → 1` |
+| 密集数据主视图 | `3` | `3 → 6 → 5 → 2 → 1` |
+| 透明自由尺寸 HUD | `5` | `5 → 3 → 6 → 2 → 1` |
+| 精密技术主视图 | `6` | `6 → 3 → 5 → 2 → 1` |
+| cyber/HUD 主视图 | `2` | `2 → 4 → 3 → 5 → 1` |
+| 普通矩形/内容自适应 | `1` | `1 → 15` |
+| 斜切 Surface 面板 | `7` | `7 → 10 → 9 → 15` |
+| 动态多边形 Surface 面板 | `8` | `8 → 10 → 7 → 15` |
+| 静态克制 Surface 面板 | `9` | `9 → 15 → 7 → 10` |
+| 圆角辉光 Surface 面板 | `10` | `10 → 9 → 15 → 7` |
+| 重复轻量卡 | `15` | `15 → 9 → 10 → 7` |
+| 运营状态轨 | `11` | `11 → 13 → 12 → 14 → 1` |
+| 顶部装饰轨结构框 | `12` | `12 → 13 → 14 → 11 → 1` |
+| 底部承载脊结构框 | `13` | `13 → 12 → 14 → 11 → 1` |
+| 信号端口技术区 | `14` | `14 → 13 → 12 → 11 → 1` |
+| 紧凑 KPI/拓扑/设备健康 | `16` | `16 → 15 → 9` |
+
+回退只在同一能力族内进行；`16 → 15 → 9` 是紧凑角色的明确降级例外，省略回退组件的 `background-color` 以保持透明，并登记视觉契约降级。运行时必须在元素包完成注册后用 `customElements.get(tag)` 检查可用性，不可用组件的 props 不得传递；若整条链均不可用则停止并报告缺包。`border-box-16` 标为 main-only 可选增强，`title-4` 永不引用。
+
+动效不是默认选型理由：只有具名数据/交互映射才启用；`prefers-reduced-motion` 下优先 `paused`，`border-box-1` 使用 `animated=false`。所有变体保留 `contentRect` 自动内距，只有实际遮挡、溢出或可读性问题才允许覆盖 `--dvk-border-box-N-padding` 并登记；不得用内距数值反推变体。`references/patterns.md` 的 P6 是唯一运行时选型矩阵；本节表格是供实现交接的锁定快照，不构成第二套独立规则。`references/components.md` 只记录能力/发布状态/运行时检测，`references/design-rules.md` 只记录通用红线。
+
 ### 3.5 `references/components.md`（常驻）
 
 - **可用性清单**（以 `customElements.get(tag)` 运行时检测为准，清单只作提示）：
@@ -135,7 +160,8 @@ skills/datav-kit/
 | 不存在 | — | **title-4**（空目录，禁止引用） |
 
 - **取数判据**：判断"要不要用"→ 用线上 `llms.txt` 索引；写 props / events / CSS 变量 / `::part()` → **必须 fetch 详情页**；同 session 不重复 fetch。
-- **回退源**：线上 404 或索引缺该组件 → `https://raw.githubusercontent.com/hackycy/datav-kit/main/docs/<path>`，**必须标注"来自 main，可能尚未发布"**。
+- **回退源**：线上 404 或索引缺该组件 → `https://raw.githubusercontent.com/hackycy/datav-kit/main/docs/<path>`，**必须标注“来自 main，可能尚未发布”**。
+- **border-box 能力字段**：组件能力表至少标注 `background-color`、`animated/paused`、`auto-height`、默认 `glow-intensity` 与内容安全区来源；角色矩阵只在 `references/patterns.md` 的 P6 维护。
 
 ### 3.6 `references/tokens.md`（常驻）
 
@@ -314,4 +340,5 @@ skills/datav-kit/
 - [ ] 七个图表模板跑得起来。
 - [ ] `contrast-check.js` 对四组对象输出正确。
 - [ ] 中文 README 的覆盖范围声明准确。
+- [ ] P6 选型矩阵、固定回退链与 `customElements.get(tag)` 降级行为已写入 references 并与本 spec 一致。
 - [ ] 发版后 checklist 六项写进 README（新增组件 / 改名改属性 / 令牌键名 / 原型可跑 / 图表可跑 / 空目录变真组件）。

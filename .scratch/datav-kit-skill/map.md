@@ -60,6 +60,11 @@ Label: `wayfinder:map` · Effort: `.scratch/datav-kit-skill/` · Tracker: local-
 **自由区**：业务内容与数据驱动结构，无需登记。
 **偏离清单**：项目内的显式文件，逐条记录偏离与理由；未声明即缺陷。
 
+**Surface 面板**：组件自身支持 `background-color` 的可选独立底色能力；省略该属性时仍可透明。
+**HUD 框**：透明装饰框，底色由宿主或屏幕提供，不承担独立 surface 能力。
+**场景角色**：容器在大屏中的语义用途，用于能力分组后的具体变体选择。
+**能力组**：共享 surface、动效、几何或尺寸边界的一组变体，不等同于主题。
+
 ## Decisions so far
 
 - [规格汇编与锁定](issues/13-spec-assembly.md): `.scratch/datav-kit-skill/spec.md` 已汇编并锁定（交付物 / 目录树 / 逐文件规格 / 流程闸门 / 数值速查 / 实现顺序 / 交接清单）；实现方按它写代码，无需回读 ticket。
@@ -79,11 +84,11 @@ Label: `wayfinder:map` · Effort: `.scratch/datav-kit-skill/` · Tracker: local-
 - [大屏设计规范的行业事实基线](issues/01-design-conventions-baseline.md): 10 个规范维度 + 可引用阈值（WCAG 对比度/动效、SMPTE/EBU/ITU 安全边距、ISO 弧分字号、T/CIDADS 数字大屏团标）+ OpenAI 质量门原文；**"装饰预算"与"主色上限"无标准，安全边距无 px 值，21:9 无标准**——这三项必须自定并标注。
 - [ECharts 主题化与 datav-kit 令牌映射](issues/02-echarts-theming.md): 令牌注入用 `init(dom, themeObject)` + `getComputedStyle` 读最近 `.dvk-theme-*` 载体；`setTheme(obj)` 切主题不丢状态；图表动效**不沿用** `--dvk-motion-duration`；6.1.0 的 `resize()` 不刷新 DPR；缩放对 canvas 清晰度的影响已量化。
 - [组合模式提取（组件文档 + 两套 Demo）](issues/03-composition-patterns.md): 提取 19 个可复用模式（骨架 P1–P5 / 面板 P6–P8 / 指标 P9–P16 / 地图 P17–P19）+ 35 组件放置速查 + 16 条 Demo 不一致清单；结论是**任何从 Demo 提取的配色与面板选型都不得当规范**。
+- [面板容器 border-box 变体的场景选型规则](issues/18-border-box-selection.md): P6 采用 `surface → 场景角色 → 动效语义 → 视觉接近度` 的能力优先决策；16 个变体有固定入口与同组回退链，`16` 是 main-only 可选增强，`contentRect` 与默认 slot 约束不变。
 
 ## Not yet specified
 
-（雾区已清空——到期项均已毕业为 ticket 或划出范围）
-- 面板容器的 border-box 变体选型规则（16 个变体如何按场景收敛）— 等 09 判定是并入知识库还是单独成票
+无。
 
 ## Out of scope
 
