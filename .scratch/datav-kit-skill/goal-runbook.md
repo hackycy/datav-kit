@@ -67,8 +67,8 @@
 
 | Gate | Status | Depends on | Plan contract | Unlock evidence |
 | --- | --- | --- | --- | --- |
-| G0: Token and Design-Rule Foundation | active | none | `implementation-plan.md` → `G0: Token and Design-Rule Foundation` | no predecessor |
-| G1: Knowledge-Base Routing | planned | G0 | `implementation-plan.md` → `G1: Knowledge-Base Routing` | G0 pending |
+| G0: Token and Design-Rule Foundation | passed | none | `implementation-plan.md` → `G0: Token and Design-Rule Foundation` | no predecessor; all Exit conditions met 2026-09-09 |
+| G1: Knowledge-Base Routing | active | G0 | `implementation-plan.md` → `G1: Knowledge-Base Routing` | G0 passed 2026-09-09; activated, implementation not started |
 | G2: Skill Entrypoint | planned | G1 | `implementation-plan.md` → `G2: Skill Entrypoint` | G1 pending |
 | G3: Prototype Skeletons | planned | G2 | `implementation-plan.md` → `G3: Prototype Skeletons` | G2 pending |
 | G4: Chart Guidance and Templates | planned | G3 | `implementation-plan.md` → `G4: Chart Guidance and Templates` | G3 pending |
@@ -80,6 +80,13 @@
 ### G0: Token and Design-Rule Foundation
 
 - 2026-09-08: initialized as `active`; implementation has not started.
+
+- 2026-09-09: slice 1 — wrote `skills/datav-kit/assets/tokens.css` (78 lines). 37 `--dvk-screen-*` tokens across five groups (spacing 9 / typography 12 / layering 4 / motion 6 / layout 6), declared only on `.dvk-screen`, no `:root`, no color declaration or color literal. Directed check: every token name and default value compared against `spec.md` §5 → all groups PASS (spacing 4/8/12/16/24/32/48/64/96; type 14/18/24/32/44 + hero 56; weight 400/500/600; line-height 1.25/1.5; z 0/10/100/1000; duration 150/250/300ms + three ease curves; layout 48/12/24/104/104/24). Variance noted, no Stop condition: issue 04 §2.1 lists `40` inside the 8pt scale, while issue 05 (the token-set decision) and `spec.md` §5 omit it; the token authority is issue 05 + spec §5, so 40 remains a legal 8pt multiple but is not a token.
+- 2026-09-09: slice 2 — wrote `skills/datav-kit/references/tokens.md` (130 lines). Directed parity: 37/37 token names and values match `tokens.css` (no missing, no extra, no value mismatch); scope stated as `.dvk-screen` / never `:root`; precedence stated as `project override > skill default > component fallback`; calibration contract `(viewing distance / 200) x (1080 / screen height)` plus raise-the-whole-scale and monitor/laptop rules; motion coexistence documented (interaction 150–300ms via `--dvk-screen-duration-*`, decoration keeps theme `--dvk-motion-duration` 2200–2600ms, charts 200–400ms); hero 56 marked as a metric exception, not a sixth text level. Color-declaration scan over both token files: no `--dvk-color-*` declaration, no color literal.
+- 2026-09-09: slice 3 — wrote `skills/datav-kit/references/design-rules.md` (144 lines): six groups, 41 entries (9 `[redline]` / 32 `[advisory]`), 8 🅰 accessibility markers, all seven source labels in use, no-rounding contrast rule (`4.499:1 is not 4.5:1`), one-theme-per-screen rule, and rubric derivation (1:1, binary redline, three-level advisory, no total score, writeback). Colors referenced only as `--dvk-color-*`; no color literal or second color source.
+- 2026-09-09: repository verification — `pnpm lint` exit 0 (eslint processed `references/design-rules.md` and `references/tokens.md`, 0 messages; `assets/tokens.css` falls outside the antfu lint scope and is covered by the directed checks above); `git diff --check` exit 0 with empty output, run via `git add -N` on the three new files followed by `git reset` to restore the untracked working-tree state. Source Baseline: all 48 listed SHA-256 inputs match, so execution used the locked baseline. Language basis: `map.md` 已定决策 “正文英文；业务文案中文；另附中文 README.md”, so the three foundation files are written in English.
+- 2026-09-09: Exit conditions — (1) PASS: `assets/tokens.css` holds the complete five-group `--dvk-screen-*` reference implementation under `.dvk-screen` (37 tokens, single selector). (2) PASS: `references/tokens.md` and `assets/tokens.css` agree on names, values, scope, precedence, and calibration formula. (3) PASS: `references/design-rules.md` holds the six groups, accessibility cross-rules, thresholds with source labels, and rubric derivation, with no second color source. (4) PASS: directed checks clean, `pnpm lint` exit 0, `git diff --check` exit 0. Manual acceptance: 无. Risks: none open; only carry-forward note is that lint does not cover CSS, so `assets/tokens.css` relies on the directed value/scope/color checks in later Gates.
+- 2026-09-09: G0 `active` → `passed`; G1 `planned` → `active` — 已激活，尚未开始实施. Effort continues in a new Goal; this Goal ends here.
 
 ### G1: Knowledge-Base Routing
 
