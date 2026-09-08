@@ -11,3 +11,8 @@ node_modules
 temp
 cache
 .eslintcache
+
+# AI
+.agents
+.claude
+skills-lock.json
