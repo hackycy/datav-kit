@@ -43,12 +43,35 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build packages
-        run: pnpm build
+        run: pnpm exec turbo build --filter='!@datav-kit/docs'
 
       - name: Build docs
         run: pnpm docs:build
         env:
           VITEPRESS_BASE: /${{ github.event.repository.name }}/
+
+      - name: Check documentation and example sources
+        run: pnpm docs:check
+        env:
+          VITEPRESS_BASE: /${{ github.event.repository.name }}/
+
+      - name: Install browser
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Verify example previews
+        run: pnpm examples:test
+        env:
+          VITEPRESS_BASE: /${{ github.event.repository.name }}/
+
+      - name: Upload browser verification
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: example-browser-verification
+          path: |
+            .cache/playwright-report
+            .cache/playwright-results
+            .cache/example-screenshots
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

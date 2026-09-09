@@ -5,6 +5,10 @@ trustPolicy: no-downgrade
 packages:
   - docs
   - packages/*
+catalog:
+  '@playwright/test': 1.58.2
+  markdown-it: 14.1.1
+  pngjs: 7.0.0
 catalogs:
   cli:
     '@antfu/eslint-config': ^6.7.3
