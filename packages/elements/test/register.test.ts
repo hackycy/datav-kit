@@ -1343,16 +1343,15 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     const svg = element.shadowRoot?.querySelector('svg')
+    const panel = element.shadowRoot?.querySelector('[part="panel"]')
     const frame = element.shadowRoot?.querySelector('[part="frame"]')
-    const moduleShell = element.shadowRoot?.querySelector('[part="module-shell"]')
-    const busLine = element.shadowRoot?.querySelector('[part="bus-line"]')
-    const busFlow = element.shadowRoot?.querySelector('[part="bus-flow"]')
-    const cell = element.shadowRoot?.querySelector('[part="energy-cell"]')
-    const energyFill = element.shadowRoot?.querySelector('[part="energy-fill"]')
-    const energyFlow = element.shadowRoot?.querySelector('[part="energy-flow"]')
-    const scanLine = element.shadowRoot?.querySelector('[part="scan-line"]')
-    const chargeSegments = [...(element.shadowRoot?.querySelectorAll('[part~="charge-segment"]') ?? [])]
-    const core = element.shadowRoot?.querySelector('[part="core"]')
+    const headerLine = element.shadowRoot?.querySelector('[part="header-line"]')
+    const divider = element.shadowRoot?.querySelector('[part="divider"]')
+    const statusDot = element.shadowRoot?.querySelector('[part="status-dot"]')
+    const lanes = [...(element.shadowRoot?.querySelectorAll('[part="data-lane"]') ?? [])]
+    const markers = [...(element.shadowRoot?.querySelectorAll('[part="lane-marker"]') ?? [])]
+    const tracks = [...(element.shadowRoot?.querySelectorAll('[part="lane-track"]') ?? [])]
+    const progress = [...(element.shadowRoot?.querySelectorAll('[part="lane-progress"]') ?? [])]
     const animations = [...(element.shadowRoot?.querySelectorAll('animate') ?? [])]
     const transforms = [...(element.shadowRoot?.querySelectorAll('animateTransform') ?? [])]
 
@@ -1368,32 +1367,40 @@ describe('@datav-kit/elements', () => {
     expect(svg?.getAttribute('height')).toBe('72')
     expect(svg?.getAttribute('viewBox')).toBe('0 0 72 72')
     expect(svg?.getAttribute('preserveAspectRatio')).toBe('xMidYMid meet')
-    expect(frame?.getAttribute('d')).toBe('M22 10 H50 M62 22 V50 M50 62 H22 M10 50 V22')
-    expect(frame?.getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.48)')
-    expect(frame?.getAttribute('stroke-width')).toBe('2.25')
-    expect(moduleShell?.getAttribute('d')).toBe('M22 13 H50 L59 22 V50 L50 59 H22 L13 50 V22 Z')
-    expect(moduleShell?.getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.58)')
-    expect(busLine?.getAttribute('d')).toBe('M18 36 H29 M43 36 H54 M36 18 V29 M36 43 V54')
-    expect(busFlow?.getAttribute('d')).toBe('M18 36 H29 M54 36 H43 M36 18 V29 M36 54 V43')
-    expect(busFlow?.getAttribute('stroke-dasharray')).toBe('3 5')
-    expect(cell?.getAttribute('x')).toBe('30')
-    expect(cell?.getAttribute('width')).toBe('12')
-    expect(cell?.getAttribute('height')).toBe('32')
-    expect(cell?.getAttribute('stroke')).toBe('#111')
-    expect(cell?.getAttribute('stroke-width')).toBe('3')
-    expect(energyFill?.getAttribute('fill')).toBe('rgba(17, 17, 17, 0.18)')
-    expect(energyFlow?.getAttribute('clip-path')).toBe('url(#dvk-loading-energy-cell-clip)')
-    expect(scanLine?.getAttribute('fill')).toBe('url(#dvk-loading-energy-scan)')
-    expect(chargeSegments).toHaveLength(4)
-    expect(chargeSegments.map(segment => segment.getAttribute('part'))).toEqual(['charge-segment charge-left', 'charge-segment charge-right', 'charge-segment charge-top', 'charge-segment charge-bottom'])
-    expect(chargeSegments.map(segment => segment.getAttribute('fill'))).toEqual(['#111', '#222', '#222', '#111'])
-    expect(core?.getAttribute('fill')).toBe('#111')
-    expect(animations.map(animation => animation.getAttribute('attributeName'))).toEqual(['stroke-dashoffset', 'y', 'y'])
-    expect(animations.map(animation => animation.getAttribute('attributeName'))).not.toContain('opacity')
-    expect(animations.map(animation => animation.getAttribute('attributeName'))).not.toContain('fill-opacity')
-    expect(transforms).toHaveLength(5)
-    expect(transforms.map(animation => animation.getAttribute('type'))).toEqual(['translate', 'translate', 'translate', 'translate', 'translate'])
-    expect(transforms.map(animation => animation.getAttribute('dur'))).toContain('2.4s')
+    expect(panel?.getAttribute('x')).toBe('10')
+    expect(panel?.getAttribute('y')).toBe('14')
+    expect(panel?.getAttribute('width')).toBe('52')
+    expect(panel?.getAttribute('height')).toBe('44')
+    expect(panel?.getAttribute('rx')).toBe('6')
+    expect(panel?.getAttribute('fill')).toBe('url(#dvk-loading-energy-panel)')
+    expect(frame?.getAttribute('x')).toBe('10')
+    expect(frame?.getAttribute('width')).toBe('52')
+    expect(frame?.getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.38)')
+    expect(frame?.getAttribute('stroke-width')).toBe('2.1')
+    expect(headerLine?.getAttribute('d')).toBe('M18 24 H40')
+    expect(headerLine?.getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.38)')
+    expect(headerLine?.getAttribute('stroke-width')).toBe('1.65')
+    expect(divider?.getAttribute('d')).toBe('M16 30.5 H56')
+    expect(divider?.getAttribute('stroke')).toBe('rgba(34, 34, 34, 0.18)')
+    expect(divider?.getAttribute('stroke-width')).toBe('1.35')
+    expect(statusDot?.getAttribute('cx')).toBe('53')
+    expect(statusDot?.getAttribute('cy')).toBe('24')
+    expect(statusDot?.getAttribute('r')).toBe('2.3')
+    expect(statusDot?.getAttribute('fill')).toBe('#111')
+    expect(statusDot?.getAttribute('opacity')).toBe('0.86')
+    expect(lanes).toHaveLength(3)
+    expect(markers.map(marker => marker.getAttribute('y'))).toEqual(['35', '43', '51'])
+    expect(markers.map(marker => marker.getAttribute('fill'))).toEqual(['rgba(17, 17, 17, 0.46)', 'rgba(17, 17, 17, 0.46)', 'rgba(17, 17, 17, 0.46)'])
+    expect(tracks.map(track => track.getAttribute('y'))).toEqual(['34', '42', '50'])
+    expect(tracks.map(track => track.getAttribute('width'))).toEqual(['38', '38', '38'])
+    expect(tracks.map(track => track.getAttribute('fill'))).toEqual(['rgba(34, 34, 34, 0.16)', 'rgba(34, 34, 34, 0.16)', 'rgba(34, 34, 34, 0.16)'])
+    expect(progress.map(lane => lane.getAttribute('x'))).toEqual(['18', '18', '18'])
+    expect(progress.map(lane => lane.getAttribute('width'))).toEqual(['14', '14', '14'])
+    expect(progress.map(lane => lane.getAttribute('fill'))).toEqual(['url(#dvk-loading-energy-lane-flow)', 'url(#dvk-loading-energy-lane-flow)', 'url(#dvk-loading-energy-lane-flow)'])
+    expect(animations.map(animation => animation.getAttribute('attributeName'))).toEqual(['opacity', 'r', 'x', 'x', 'x'])
+    expect(animations.map(animation => animation.getAttribute('dur'))).toEqual(['3.12s', '3.12s', '3s', '3s', '3s'])
+    expect(animations.filter(animation => animation.getAttribute('attributeName') === 'x').map(animation => animation.getAttribute('begin'))).toEqual(['0s', '0.22s', '0.44s'])
+    expect(transforms).toHaveLength(0)
     expect(element.shadowRoot?.querySelector('slot')?.assignedNodes().map(node => node.textContent).join('').trim()).toBe('Processing data')
   })
 
@@ -1406,8 +1413,9 @@ describe('@datav-kit/elements', () => {
 
     await element.updateComplete
 
-    expect(element.shadowRoot?.querySelector('[part="core"]')).not.toBeNull()
-    expect(element.shadowRoot?.querySelectorAll('[part~="charge-segment"]')).toHaveLength(4)
+    expect(element.shadowRoot?.querySelector('[part="frame"]')).not.toBeNull()
+    expect(element.shadowRoot?.querySelectorAll('[part="data-lane"]')).toHaveLength(3)
+    expect(element.shadowRoot?.querySelectorAll('[part="lane-progress"]')).toHaveLength(3)
     expect(element.shadowRoot?.querySelector('animateTransform')).toBeNull()
     expect(element.shadowRoot?.querySelector('animate')).toBeNull()
   })
@@ -1415,21 +1423,32 @@ describe('@datav-kit/elements', () => {
   it('uses datav-kit colors as loading-energy fallback colors', async () => {
     register()
 
-    const element = document.createElement('dvk-loading-energy') as LoadingEnergyElement
-    element.setAttribute('paused', '')
-    document.body.append(element)
+    const themed = document.createElement('dvk-loading-energy') as LoadingEnergyElement
+    themed.style.setProperty('--dvk-color-primary', '#18f0ff')
+    themed.style.setProperty('--dvk-color-secondary', '#2b7cff')
+    themed.setAttribute('paused', '')
+    document.body.append(themed)
 
-    await element.updateComplete
+    const fallback = document.createElement('dvk-loading-energy') as LoadingEnergyElement
+    fallback.setAttribute('paused', '')
+    document.body.append(fallback)
 
-    const moduleShell = element.shadowRoot?.querySelector('[part="module-shell"]')
-    const busLine = element.shadowRoot?.querySelector('[part="bus-line"]')
-    const energyFill = element.shadowRoot?.querySelector('[part="energy-fill"]')
-    const chargeSegments = [...(element.shadowRoot?.querySelectorAll('[part~="charge-segment"]') ?? [])]
+    await themed.updateComplete
+    await fallback.updateComplete
 
-    expect(moduleShell?.getAttribute('stroke')).toBe('rgba(43, 124, 255, 0.58)')
-    expect(busLine?.getAttribute('stroke')).toBe('rgba(43, 124, 255, 0.5)')
-    expect(energyFill?.getAttribute('fill')).toBe('rgba(24, 240, 255, 0.18)')
-    expect(chargeSegments.map(segment => segment.getAttribute('fill'))).toEqual(['#18f0ff', '#2b7cff', '#2b7cff', '#18f0ff'])
+    const themedFrame = themed.shadowRoot?.querySelector('[part="frame"]')
+    const themedDivider = themed.shadowRoot?.querySelector('[part="divider"]')
+    const themedDot = themed.shadowRoot?.querySelector('[part="status-dot"]')
+    const themedMarkers = [...(themed.shadowRoot?.querySelectorAll('[part="lane-marker"]') ?? [])]
+    const themedTracks = [...(themed.shadowRoot?.querySelectorAll('[part="lane-track"]') ?? [])]
+    const fallbackFrame = fallback.shadowRoot?.querySelector('[part="frame"]')
+
+    expect(themedFrame?.getAttribute('stroke')).toBe('rgba(43, 124, 255, 0.38)')
+    expect(themedDivider?.getAttribute('stroke')).toBe('rgba(43, 124, 255, 0.18)')
+    expect(themedDot?.getAttribute('fill')).toBe('#18f0ff')
+    expect(themedMarkers.map(marker => marker.getAttribute('fill'))).toEqual(['rgba(24, 240, 255, 0.46)', 'rgba(24, 240, 255, 0.46)', 'rgba(24, 240, 255, 0.46)'])
+    expect(themedTracks.map(track => track.getAttribute('fill'))).toEqual(['rgba(43, 124, 255, 0.16)', 'rgba(43, 124, 255, 0.16)', 'rgba(43, 124, 255, 0.16)'])
+    expect(fallbackFrame?.getAttribute('stroke')).toBe('rgba(138, 153, 173, 0.38)')
   })
 
   it('maps border-box-1 attributes to element properties and renders SVG', async () => {
