@@ -2,17 +2,13 @@
    datav-kit screen design tokens — reference implementation
    --------------------------------------------------------------------------
    Scope:      `.dvk-screen` (the large-screen root container). Never `:root`.
-   Companion:  `references/tokens.md` (full table + calibration contract).
-   Source:     issue 05 (token set), issue 07 (grid and layout values),
-               spec.md section 5 (locked values).
+   Companion:  `references/tokens.md` (scope and physical calibration).
+   This file is the maintained source of adjustable preview defaults.
 
    Rules enforced here:
-   - No color tokens. Colors come only from the theme's `--dvk-color-*` values.
+   - Colors belong to the scoped project theme, including application roles.
    - Precedence: project override > these skill defaults > component fallback.
-   - Font sizes are calibrated for a 4m x 2.25m screen at 6m viewing distance.
-     Recalibrate `--dvk-screen-font-size-xs` per project with
-     `min size = (viewing distance / 200) x (1080 / screen height)`
-     and raise the whole scale when the result exceeds 14px.
+   - Recalibrate type and spacing for the actual display and viewing distance.
    ========================================================================== */
 
 .dvk-screen {

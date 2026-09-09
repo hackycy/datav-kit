@@ -21,7 +21,7 @@
 import * as echarts from 'echarts'
 
 const CHART_MOTION = 300
-const MIN_WIDTH = 160 // charts.md §5: below this the chart degrades to a value card
+const MIN_WIDTH = 160 // Starter size guard: below this, render a value card
 const MIN_HEIGHT = 100
 
 /* ---------- 1. token injection: --dvk-* -> ECharts theme object ---------- */
@@ -143,7 +143,7 @@ function buildOption(data, t) {
       startAngle: 210,
       endAngle: -30,
       splitNumber: 4,
-      // One pointer only; the design cap is 3 (design-rules 6.2).
+      // One pointer only; this starter uses one pointer.
       progress: {
         show: true,
         width: 8,
@@ -312,7 +312,7 @@ export function createGauge(el, data, tokens = readDatavTokens(el)) {
     applyState()
   }
 
-  /* Below the guard the chart is replaced by a value card (charts.md §5). */
+  /* Below the guard the chart is replaced by a value card. */
   function degrade() {
     if (degraded)
       return

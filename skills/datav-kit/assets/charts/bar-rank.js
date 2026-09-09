@@ -21,7 +21,7 @@
 import * as echarts from 'echarts'
 
 const CHART_MOTION = 300
-const MIN_WIDTH = 160 // charts.md §5: below this the chart degrades to a value card
+const MIN_WIDTH = 160 // Starter size guard: below this, render a value card
 const MIN_HEIGHT = 100
 const LARGE_THRESHOLD = 400 // large mode drops per-item styles and labels
 
@@ -131,7 +131,7 @@ function buildOption(data, t) {
     // Explicit grid: the right gutter holds the direct value label.
     grid: { left: 8, right: 56, top: 8, bottom: 8, outerBoundsMode: 'same', outerBoundsContain: 'axisLabel' },
     tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-    // Ranking bars start at 0; a truncated axis misleads (design-rules 6.4).
+    // Ranking bars start at 0; a truncated axis misleads.
     xAxis: { type: 'value', min: 0 },
     yAxis: { type: 'category', inverse: true, data: items.map(item => item.name), axisTick: { show: false } },
     series: [{
@@ -141,7 +141,7 @@ function buildOption(data, t) {
       barWidth: 12,
       large: true,
       largeThreshold: LARGE_THRESHOLD,
-      // Direct labels beat a detached legend (design-rules 6.1).
+      // Direct labels beat a detached legend.
       label: {
         show: true,
         position: 'right',
@@ -298,7 +298,7 @@ export function createBarRank(el, data, tokens = readDatavTokens(el)) {
     applyState()
   }
 
-  /* Below the guard the chart is replaced by a value card (charts.md §5). */
+  /* Below the guard the chart is replaced by a value card. */
   function degrade() {
     if (degraded)
       return
