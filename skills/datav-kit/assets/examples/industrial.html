@@ -1,0 +1,1326 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="工业监控大屏：原创 Three.js 厂区、设备选取、视角控制和二维降级。"
+    />
+    <title>东川智造 · 生产监控</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "@datav-kit/elements": "https://cdn.jsdelivr.net/npm/@datav-kit/elements@0.0.5/+esm",
+          "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/",
+          "echarts": "https://cdn.jsdelivr.net/npm/echarts@6.1.0/dist/echarts.esm.min.js",
+          "lucide": "https://cdn.jsdelivr.net/npm/lucide@0.468.0/+esm"
+        }
+      }
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #22282c;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+        border: 0;
+        background: none;
+        color: inherit;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+      }
+      button:disabled {
+        cursor: default;
+      }
+      button svg {
+        width: 22px;
+        height: 22px;
+      }
+      svg {
+        display: block;
+      }
+      button:focus-visible {
+        outline: 3px solid var(--app-selected);
+        outline-offset: 5px;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .dvk-screen {
+        --app-background: #22282c;
+        --app-surface: #2b3439;
+        --app-text: #e6edef;
+        --app-muted: #a0b0b7;
+        --app-rule: #445057;
+        --app-selected: #e9bd6a;
+        --app-positive: #8fd3b3;
+        --app-warning: #e9bd6a;
+        --app-danger: #f79e8b;
+        --app-series: #9ec4d3;
+        --app-ground: #58656a;
+        --app-road: #353e44;
+        --app-wall: #b7c3c8;
+        --app-roof: #d7e0df;
+        --app-machine: #508996;
+        --app-window: #3c5762;
+        --app-solar: #354e64;
+        --app-pallet: #bea074;
+        --dvk-color-primary: #6c8794;
+        --dvk-color-secondary: #7c949b;
+        --dvk-color-accent: #e9bd6a;
+        --dvk-color-surface: #22282c;
+        --dvk-count-to-color: var(--app-text);
+        --dvk-count-to-font-size: 42px;
+        --dvk-count-to-font-weight: 500;
+        width: 1920px;
+        height: 1080px;
+        background: var(--app-background);
+        color: var(--app-text);
+        font:
+          21px/1.5 'Inter',
+          'PingFang SC',
+          'Microsoft YaHei',
+          sans-serif;
+        letter-spacing: 0;
+        padding: 32px 44px;
+        display: grid;
+        grid-template-rows: 98px minmax(0, 1fr) 30px;
+        gap: 22px;
+        position: relative;
+      }
+      .screen-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--app-rule);
+        padding-bottom: 20px;
+      }
+      .identity {
+        display: flex;
+        align-items: center;
+        gap: 21px;
+      }
+      .identity > svg {
+        width: 40px;
+        height: 40px;
+        color: var(--app-selected);
+      }
+      h1 {
+        font-size: 34px;
+        font-weight: 500;
+      }
+      .identity p {
+        font-size: 14px;
+        color: var(--app-muted);
+        margin-top: 5px;
+      }
+      .header-info {
+        display: flex;
+        gap: 42px;
+        align-items: center;
+        font-size: 19px;
+      }
+      .header-info span {
+        display: block;
+        font-size: 14px;
+        color: var(--app-muted);
+      }
+      .header-info strong {
+        font-weight: 400;
+      }
+      .status {
+        color: var(--app-positive);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .status:before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: currentColor;
+        border-radius: 50%;
+      }
+      [data-state='stale'] .status {
+        color: var(--app-warning);
+      }
+      main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 336px;
+        gap: 28px;
+        min-height: 0;
+      }
+      .plant-region {
+        display: grid;
+        grid-template-rows: 92px minmax(0, 1fr) 171px;
+        gap: 12px;
+        min-height: 0;
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 24px;
+        padding: 0 20px;
+      }
+      .metric {
+        border-right: 1px solid var(--app-rule);
+        padding-right: 16px;
+      }
+      .metric:last-child {
+        border: 0;
+      }
+      .metric p {
+        font-size: 16px;
+        color: var(--app-muted);
+      }
+      .metric .value {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        font-variant-numeric: tabular-nums;
+      }
+      .metric strong {
+        font-size: 42px;
+        font-weight: 500;
+      }
+      .metric .unit {
+        font-size: 16px;
+        color: var(--app-muted);
+      }
+      .metric:nth-child(3) strong {
+        color: var(--app-selected);
+      }
+      .scene-wrap {
+        position: relative;
+        min-height: 0;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        touch-action: none;
+      }
+      .scene canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .scene-heading {
+        position: absolute;
+        top: 14px;
+        left: 20px;
+        pointer-events: none;
+      }
+      .scene-heading h2 {
+        font-size: 21px;
+        font-weight: 500;
+      }
+      .scene-heading p {
+        font-size: 14px;
+        color: var(--app-muted);
+        margin-top: 4px;
+      }
+      .scene-controls {
+        position: absolute;
+        right: 20px;
+        top: 14px;
+        display: flex;
+        gap: 9px;
+      }
+      .icon-button {
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--app-rule);
+        background: var(--app-background);
+        border-radius: 4px;
+        color: var(--app-text);
+      }
+      .icon-button:hover {
+        color: var(--app-selected);
+      }
+      .scene-caption {
+        position: absolute;
+        bottom: 9px;
+        left: 20px;
+        font-size: 14px;
+        color: var(--app-muted);
+      }
+      .scene-caption b {
+        font-weight: 400;
+        color: var(--app-selected);
+        margin-right: 16px;
+      }
+      .asset-label {
+        position: absolute;
+        font-size: 15px;
+        pointer-events: none;
+        padding: 3px 9px;
+        border-left: 2px solid var(--app-selected);
+        background: var(--app-background);
+        color: var(--app-text);
+        white-space: nowrap;
+        transform: translate(-50%, -100%);
+      }
+      .production {
+        border-top: 1px solid var(--app-rule);
+        padding-top: 19px;
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 24px;
+        min-height: 0;
+      }
+      .production h2 {
+        font-size: 21px;
+        font-weight: 500;
+      }
+      .production p {
+        font-size: 15px;
+        color: var(--app-muted);
+        margin-top: 5px;
+      }
+      .production strong {
+        display: block;
+        font-size: 28px;
+        font-weight: 500;
+        color: var(--app-positive);
+        margin-top: 13px;
+      }
+      #output-chart {
+        height: 132px;
+        width: 100%;
+        min-height: 0;
+      }
+      .sidebar {
+        border-left: 1px solid var(--app-rule);
+        padding-left: 28px;
+        display: grid;
+        grid-template-rows: 36px 196px minmax(0, 1fr) 100px;
+        gap: 16px;
+        min-height: 0;
+      }
+      .sidebar-heading {
+        font-size: 23px;
+        font-weight: 500;
+      }
+      .equipment-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .equipment-list button {
+        justify-content: flex-start;
+        align-items: start;
+        flex-direction: column;
+        padding: 10px 12px;
+        border: 1px solid var(--app-rule);
+        border-radius: 4px;
+        text-align: left;
+        font-size: 17px;
+        background: var(--app-surface);
+      }
+      .equipment-list button span {
+        font-size: 12px;
+        color: var(--app-muted);
+      }
+      .equipment-list button[aria-pressed='true'] {
+        border-color: var(--app-selected);
+        color: var(--app-selected);
+      }
+      .asset-detail {
+        padding-top: 13px;
+      }
+      .kicker {
+        font-size: 13px;
+        color: var(--app-muted);
+      }
+      .asset-detail h2 {
+        font-size: 29px;
+        font-weight: 500;
+        margin-top: 7px;
+      }
+      .asset-status {
+        font-size: 17px;
+        color: var(--app-positive);
+        margin-top: 8px;
+      }
+      .asset-detail dl {
+        font-size: 17px;
+        margin: 20px 0 0;
+      }
+      .asset-detail dl div {
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid var(--app-rule);
+        padding: 13px 0;
+      }
+      .asset-detail dt {
+        color: var(--app-muted);
+      }
+      .asset-detail dd {
+        margin: 0;
+        font-variant-numeric: tabular-nums;
+      }
+      .asset-note {
+        font-size: 16px;
+        color: var(--app-muted);
+        border-top: 1px solid var(--app-rule);
+        padding-top: 16px;
+        margin-top: 3px;
+      }
+      .shift {
+        display: block;
+        height: 100px;
+      }
+      .shift-inner {
+        padding: 12px 18px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+      }
+      .shift-inner p {
+        color: var(--app-muted);
+        font-size: 15px;
+      }
+      .shift-inner strong {
+        font-size: 22px;
+        font-weight: 400;
+        color: var(--app-selected);
+      }
+      footer {
+        border-top: 1px solid var(--app-rule);
+        padding-top: 11px;
+        display: flex;
+        justify-content: space-between;
+        color: var(--app-muted);
+        font-size: 14px;
+      }
+      .fallback {
+        position: absolute;
+        inset: 86px 38px 60px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 35px 85px;
+        align-content: center;
+      }
+      .fallback button {
+        position: relative;
+        border: 1px solid var(--app-rule);
+        height: 126px;
+        background: var(--app-surface);
+        flex-direction: column;
+        font-size: 23px;
+      }
+      .fallback button span {
+        font-size: 16px;
+        color: var(--app-muted);
+      }
+      .fallback button[aria-pressed='true'] {
+        border-color: var(--app-selected);
+      }
+      .fallback button svg {
+        width: 36px;
+        height: 36px;
+        color: var(--app-series);
+      }
+      .state-layer {
+        position: absolute;
+        inset: 154px 44px 76px;
+        display: none;
+        place-content: center;
+        text-align: center;
+        gap: 18px;
+        background: var(--app-background);
+      }
+      .state-layer h2 {
+        font-size: 30px;
+      }
+      .state-layer p {
+        color: var(--app-muted);
+      }
+      .state-layer button {
+        justify-self: center;
+        padding: 12px;
+        color: var(--app-selected);
+      }
+      .dvk-screen:is(
+          [data-state='loading'],
+          [data-state='empty'],
+          [data-state='failed']
+        )
+        main {
+        visibility: hidden;
+      }
+      .dvk-screen:is(
+          [data-state='loading'],
+          [data-state='empty'],
+          [data-state='failed']
+        )
+        .state-layer {
+        display: grid;
+      }
+    </style>
+  </head>
+  <body>
+    <dvk-fit-screen
+      width="1920"
+      height="1080"
+      mode="contain"
+      align="center center"
+    >
+      <div
+        class="dvk-screen dvk-theme-industrial"
+        id="screen"
+        data-state="loading"
+      >
+        <header class="screen-header">
+          <div class="identity">
+            <i data-lucide="factory"></i>
+            <div>
+              <h1>东川智造 · 生产监控</h1>
+              <p>DONGCHUAN MANUFACTURING / PLANT OPERATIONS</p>
+            </div>
+          </div>
+          <div class="header-info">
+            <div><strong>一号工厂</strong><span>智能制造园区 / 东区</span></div>
+            <div>
+              <strong>日班 08:00 - 16:00</strong
+              ><span>2026.09.09 / 14:30:00</span>
+            </div>
+            <div class="status" id="status">正在加载</div>
+          </div>
+        </header>
+        <main>
+          <section class="plant-region">
+            <div class="metrics">
+              <div class="metric">
+                <p>本班累计产量</p>
+                <div class="value">
+                  <dvk-count-to id="output" disabled></dvk-count-to
+                  ><span class="unit">件</span>
+                </div>
+              </div>
+              <div class="metric">
+                <p>目标完成率</p>
+                <div class="value">
+                  <strong id="target"></strong><span class="unit">%</span>
+                </div>
+              </div>
+              <div class="metric">
+                <p>待巡检设备</p>
+                <div class="value">
+                  <strong id="inspection"></strong><span class="unit">台</span>
+                </div>
+              </div>
+              <div class="metric">
+                <p>设备开机率</p>
+                <div class="value">
+                  <strong id="uptime"></strong><span class="unit">%</span>
+                </div>
+              </div>
+            </div>
+            <div class="scene-wrap" data-primary-visual>
+              <div
+                class="scene"
+                id="scene"
+                role="img"
+                aria-label="东川示范厂区三维场景，包含装配车间、精加工、能源站与物流中心"
+              ></div>
+              <div class="scene-heading">
+                <h2>厂区运行态势</h2>
+                <p>PLANT 01 / EAST CAMPUS</p>
+              </div>
+              <div class="scene-controls">
+                <button
+                  class="icon-button"
+                  id="reset-camera"
+                  title="复位视角"
+                  aria-label="复位视角"
+                >
+                  <i data-lucide="rotate-ccw"></i></button
+                ><button
+                  class="icon-button"
+                  id="toggle-motion"
+                  title="暂停动态"
+                  aria-label="暂停动态"
+                  aria-pressed="false"
+                >
+                  <i data-lucide="pause"></i>
+                </button>
+              </div>
+              <div id="asset-label" class="asset-label" hidden></div>
+              <div
+                class="fallback"
+                id="fallback"
+                hidden
+                aria-label="厂区二维设备拓扑"
+              ></div>
+              <div class="scene-caption">
+                <b id="scene-mode">3D / ISOMETRIC</b
+                ><span>设备状态 14:30 快照</span>
+              </div>
+            </div>
+            <section class="production">
+              <div>
+                <h2>分时产量</h2>
+                <p>08:00 - 14:00 / 件</p>
+                <strong id="production-peak"></strong>
+              </div>
+              <div id="output-chart" data-chart aria-label="本班分时产量"></div>
+            </section>
+          </section>
+          <aside class="sidebar">
+            <h2 class="sidebar-heading">设备与产线</h2>
+            <div class="equipment-list" role="group" aria-label="设备选择">
+              <button data-asset="assembly" aria-pressed="true">
+                装配车间<span>LINE A / ASSEMBLY</span></button
+              ><button data-asset="machining" aria-pressed="false">
+                精加工<span>LINE B / MACHINING</span></button
+              ><button data-asset="energy" aria-pressed="false">
+                能源站<span>UTILITIES / ENERGY</span></button
+              ><button data-asset="logistics" aria-pressed="false">
+                物流中心<span>HUB / LOGISTICS</span>
+              </button>
+            </div>
+            <section class="asset-detail">
+              <p class="kicker" id="asset-code"></p>
+              <h2 id="asset-name"></h2>
+              <p class="asset-status" id="asset-status"></p>
+              <dl>
+                <div>
+                  <dt>运行设备</dt>
+                  <dd id="asset-online"></dd>
+                </div>
+                <div>
+                  <dt>当前负荷</dt>
+                  <dd id="asset-load"></dd>
+                </div>
+                <div>
+                  <dt>设备温度</dt>
+                  <dd id="asset-temperature"></dd>
+                </div>
+                <div>
+                  <dt>运行时长</dt>
+                  <dd id="asset-hours"></dd>
+                </div>
+              </dl>
+              <p class="asset-note" id="asset-note"></p>
+            </section>
+            <dvk-border-box-15 class="shift"
+              ><div class="shift-inner">
+                <p>下次计划巡检</p>
+                <strong>15:00 / 日班维护组</strong>
+              </div></dvk-border-box-15
+            >
+          </aside>
+        </main>
+        <footer>
+          <span>示范厂区 · 原创程序化场景 · 运行指标为示例数据</span
+          ><span>最后更新 2026.09.09 14:30</span
+          ><span>DONGCHUAN / MANUFACTURING INTELLIGENCE</span>
+        </footer>
+        <section class="state-layer" role="status">
+          <h2 id="state-title">正在加载厂区态势</h2>
+          <p id="state-message">一号工厂</p>
+          <button id="retry" hidden>
+            <i data-lucide="refresh-cw"></i>重新加载
+          </button>
+        </section>
+      </div>
+    </dvk-fit-screen>
+    <script type="module">
+      const screen = document.querySelector('#screen'),
+        params = new URLSearchParams(location.search),
+        reduced = matchMedia('(prefers-reduced-motion: reduce)')
+      const assets = {
+        assembly: {
+          name: '装配车间',
+          code: 'LINE A / ASSEMBLY',
+          total: 24,
+          online: 24,
+          load: 87,
+          temperature: 42,
+          hours: 6.5,
+          inspection: 0,
+          note: '装配节拍稳定，当前执行订单 DC-0926。',
+          point: [-10, 7, -7],
+        },
+        machining: {
+          name: '精加工',
+          code: 'LINE B / MACHINING',
+          total: 18,
+          online: 17,
+          load: 79,
+          temperature: 58,
+          hours: 6.2,
+          inspection: 1,
+          note: 'M-07 设备温度偏高，已安排计划巡检。',
+          point: [12, 6, -7],
+        },
+        energy: {
+          name: '能源站',
+          code: 'UTILITIES / ENERGY',
+          total: 8,
+          online: 8,
+          load: 64,
+          temperature: 36,
+          hours: 24,
+          inspection: 0,
+          note: '储气与循环冷却系统运行正常。',
+          point: [17, 7, 10],
+        },
+        logistics: {
+          name: '物流中心',
+          code: 'HUB / LOGISTICS',
+          total: 12,
+          online: 11,
+          load: 72,
+          temperature: 31,
+          hours: 6.5,
+          inspection: 1,
+          note: 'AGV-04 充电中，出库任务按计划执行。',
+          point: [-13, 6, 11],
+        },
+      }
+      const hourly = [420, 510, 565, 610, 585, 632, 590]
+      let chart,
+        observer,
+        resizeFrame,
+        retryTimer,
+        renderer,
+        scene,
+        camera,
+        controls,
+        three,
+        plant,
+        selection,
+        animationFrame,
+        lastTime,
+        elapsed = 0,
+        paused = reduced.matches,
+        selected = 'assembly',
+        disposed = false,
+        drawCount = 0,
+        frameTotal = 0,
+        frameSamples = 0,
+        createIcons,
+        icons
+      const moving = [],
+        pickables = [],
+        materials = new Set(),
+        geometries = new Set()
+      const color = (role) =>
+        getComputedStyle(screen).getPropertyValue(`--app-${role}`).trim()
+      function setState(state) {
+        screen.dataset.state = ['loading', 'empty', 'failed', 'stale'].includes(
+          state,
+        )
+          ? state
+          : 'ready'
+        document.querySelector('#status').textContent = {
+          ready: '生产运行正常',
+          loading: '正在加载',
+          empty: '暂无设备数据',
+          failed: '同步失败',
+          stale: '数据已过期',
+        }[screen.dataset.state]
+        document.querySelector('#state-title').textContent =
+          {
+            loading: '正在加载厂区态势',
+            empty: '当前厂区暂无数据',
+            failed: '厂区数据加载失败',
+          }[state] || ''
+        document.querySelector('#state-message').textContent =
+          state === 'failed' ? '请检查网络连接后重试' : '一号工厂'
+        document.querySelector('#retry').hidden = !['empty', 'failed'].includes(
+          state,
+        )
+        document
+          .querySelectorAll('[data-asset],.scene-controls button')
+          .forEach(
+            (b) =>
+              (b.disabled = !['ready', 'stale'].includes(screen.dataset.state)),
+          )
+        syncLoop()
+      }
+      function selectAsset(key) {
+        const asset = assets[key]
+        if (!asset) return
+        selected = key
+        screen.dataset.asset = key
+        document
+          .querySelectorAll('[data-asset]')
+          .forEach((b) =>
+            b.setAttribute('aria-pressed', String(b.dataset.asset === key)),
+          )
+        document.querySelector('#asset-code').textContent = asset.code
+        document.querySelector('#asset-name').textContent = asset.name
+        document.querySelector('#asset-status').textContent = asset.inspection
+          ? '运行中 / 已安排巡检'
+          : '运行正常'
+        document.querySelector('#asset-status').style.color = color(
+          asset.inspection ? 'warning' : 'positive',
+        )
+        document.querySelector('#asset-online').textContent =
+          `${asset.online} / ${asset.total} 台`
+        document.querySelector('#asset-load').textContent = `${asset.load}%`
+        document.querySelector('#asset-temperature').textContent =
+          `${asset.temperature} °C`
+        document.querySelector('#asset-hours').textContent =
+          `${asset.hours.toFixed(1)} h`
+        document.querySelector('#asset-note').textContent = asset.note
+        document.querySelector('#asset-label').textContent = asset.name
+        if (selection) {
+          const p = asset.point
+          selection.position.set(p[0], 0.13, p[2])
+          draw()
+        }
+      }
+      function draw() {
+        if (!renderer || disposed) return
+        renderer.render(scene, camera)
+        drawCount++
+        screen.dataset.frames = drawCount
+        const p = new three.Vector3(...assets[selected].point).project(camera),
+          container = document.querySelector('#scene'),
+          label = document.querySelector('#asset-label')
+        label.style.left = `${((p.x + 1) * container.clientWidth) / 2}px`
+        label.style.top = `${((-p.y + 1) * container.clientHeight) / 2}px`
+        label.hidden = p.z < -1 || p.z > 1
+      }
+      function animate(time) {
+        animationFrame = undefined
+        if (disposed) return
+        const delta = lastTime ? Math.min((time - lastTime) / 1000, 0.1) : 0
+        lastTime = time
+        elapsed += delta
+        for (const item of moving) {
+          item.position.x = -23 + ((elapsed * 2.3 + item.userData.offset) % 34)
+        }
+        if (delta > 0) {
+          frameTotal += delta * 1000
+          frameSamples++
+          screen.dataset.frameMs = (frameTotal / frameSamples).toFixed(2)
+        }
+        draw()
+        animationFrame = requestAnimationFrame(animate)
+      }
+      function syncLoop() {
+        cancelAnimationFrame(animationFrame)
+        animationFrame = undefined
+        lastTime = undefined
+        screen.dataset.paused = String(paused || reduced.matches)
+        if (
+          renderer &&
+          !disposed &&
+          !paused &&
+          !reduced.matches &&
+          !document.hidden &&
+          ['ready', 'stale'].includes(screen.dataset.state)
+        )
+          animationFrame = requestAnimationFrame(animate)
+      }
+      function syncPauseButton() {
+        const button = document.querySelector('#toggle-motion'),
+          isPaused = paused || reduced.matches
+        button.disabled =
+          reduced.matches || !['ready', 'stale'].includes(screen.dataset.state)
+        button.setAttribute('aria-pressed', String(isPaused))
+        button.setAttribute(
+          'aria-label',
+          reduced.matches
+            ? '系统已减少动态'
+            : isPaused
+              ? '播放动态'
+              : '暂停动态',
+        )
+        button.title = isPaused ? '播放动态' : '暂停动态'
+        button.innerHTML = `<i data-lucide="${isPaused ? 'play' : 'pause'}"></i>`
+        createIcons?.({ icons })
+        syncLoop()
+      }
+      function showFallback() {
+        cancelAnimationFrame(animationFrame)
+        controls?.dispose()
+        renderer?.dispose()
+        renderer = undefined
+        document.querySelector('#scene-mode').textContent =
+          '2D / EQUIPMENT TOPOLOGY'
+        screen.dataset.renderer = '2d'
+        document.querySelector('#fallback').hidden = false
+        document.querySelector('#scene').hidden = true
+        document.querySelector('#asset-label').hidden = true
+        document.querySelector('.scene-controls').hidden = true
+        document.querySelector('#fallback').innerHTML = Object.entries(assets)
+          .map(
+            ([key, asset]) =>
+              `<button data-asset="${key}" aria-pressed="${key === selected}"><i data-lucide="${key === 'energy' ? 'cylinder' : key === 'logistics' ? 'warehouse' : 'factory'}"></i>${asset.name}<span>${asset.online} / ${asset.total} 台运行</span></button>`,
+          )
+          .join('')
+        createIcons({ icons })
+        document
+          .querySelectorAll('#fallback [data-asset]')
+          .forEach((b) =>
+            b.addEventListener('click', () => selectAsset(b.dataset.asset)),
+          )
+      }
+      async function buildScene() {
+        if (params.get('webgl') === 'off') {
+          showFallback()
+          return
+        }
+        try {
+          const [THREE, { OrbitControls }] = await Promise.all([
+            import('three'),
+            import('three/addons/controls/OrbitControls.js'),
+          ])
+          three = THREE
+          const host = document.querySelector('#scene')
+          renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+            preserveDrawingBuffer: true,
+          })
+          renderer.setPixelRatio(Math.min(devicePixelRatio, 2))
+          renderer.shadowMap.enabled = true
+          renderer.shadowMap.type = THREE.PCFSoftShadowMap
+          renderer.outputColorSpace = THREE.SRGBColorSpace
+          renderer.setClearColor(0x000000, 0)
+          host.append(renderer.domElement)
+          scene = new THREE.Scene()
+          scene.add(new THREE.HemisphereLight(0xe9f4ff, 0x79887a, 2.8))
+          const sun = new THREE.DirectionalLight(0xfff3d9, 3.6)
+          sun.position.set(-20, 45, 20)
+          sun.castShadow = true
+          sun.shadow.mapSize.set(2048, 2048)
+          Object.assign(sun.shadow.camera, {
+            left: -45,
+            right: 45,
+            top: 45,
+            bottom: -45,
+            near: 0.5,
+            far: 150,
+          })
+          sun.shadow.normalBias = 0.06
+          scene.add(sun)
+          camera = new THREE.OrthographicCamera(-40, 40, 25, -25, 0.1, 250)
+          camera.position.set(54, 55, 65)
+          camera.lookAt(0, 0, 0)
+          controls = new OrbitControls(camera, host)
+          controls.enableDamping = false
+          controls.enablePan = false
+          controls.minZoom = 0.65
+          controls.maxZoom = 2.3
+          controls.minPolarAngle = 0.25
+          controls.maxPolarAngle = Math.PI * 0.45
+          controls.target.set(0, 1, 0)
+          controls.addEventListener('change', draw)
+          plant = new THREE.Group()
+          scene.add(plant)
+          function material(role) {
+            const m = new THREE.MeshStandardMaterial({
+              color: color(role),
+              roughness: 0.75,
+              metalness: 0.12,
+            })
+            materials.add(m)
+            return m
+          }
+          const mat = Object.fromEntries(
+            [
+              'ground',
+              'road',
+              'wall',
+              'roof',
+              'machine',
+              'window',
+              'solar',
+              'pallet',
+              'selected',
+              'positive',
+            ].map((role) => [role, material(role)]),
+          )
+          function box(x, y, z, w, h, d, m, key) {
+            const geometry = new THREE.BoxGeometry(w, h, d)
+            geometries.add(geometry)
+            const mesh = new THREE.Mesh(geometry, mat[m])
+            mesh.position.set(x, y, z)
+            mesh.castShadow = true
+            mesh.receiveShadow = true
+            if (key) {
+              mesh.userData.asset = key
+              pickables.push(mesh)
+            }
+            plant.add(mesh)
+            return mesh
+          }
+          function cylinder(x, y, z, radius, height, m, key) {
+            const geometry = new THREE.CylinderGeometry(
+              radius,
+              radius,
+              height,
+              32,
+            )
+            geometries.add(geometry)
+            const mesh = new THREE.Mesh(geometry, mat[m])
+            mesh.position.set(x, y, z)
+            mesh.castShadow = true
+            mesh.receiveShadow = true
+            if (key) {
+              mesh.userData.asset = key
+              pickables.push(mesh)
+            }
+            plant.add(mesh)
+            return mesh
+          }
+          box(0, -0.45, 0, 59, 0.8, 39, 'ground')
+          box(0, 0.01, 2, 57, 0.08, 4.3, 'road')
+          box(1, 0.01, -5, 3.4, 0.08, 29, 'road')
+          box(0, 0.01, 17, 57, 0.08, 2, 'road')
+          for (let x = -26; x <= 26; x += 4)
+            box(x, 0.07, 2, 1.6, 0.04, 0.12, 'roof')
+          for (let z = -15; z < 16; z += 4)
+            box(1, 0.07, z, 0.12, 0.04, 1.6, 'roof')
+          // Buildings are authored from repeated structural bays; all pickable meshes use the same asset IDs as the DOM list.
+          function building(x, z, w, d, h, key) {
+            box(x, h / 2, z, w, h, d, 'wall', key)
+            box(x, h + 0.18, z, w + 0.4, 0.36, d + 0.4, 'roof', key)
+            for (let dx = -w / 2 + 1; dx < w / 2; dx += 2.3) {
+              box(
+                x + dx,
+                h * 0.63,
+                z + d / 2 + 0.035,
+                1.5,
+                1,
+                0.07,
+                'window',
+                key,
+              )
+              box(
+                x + dx,
+                h * 0.63,
+                z - d / 2 - 0.035,
+                1.5,
+                1,
+                0.07,
+                'window',
+                key,
+              )
+            }
+            for (let dz = -d / 2 + 1; dz < d / 2; dz += 2.3)
+              box(
+                x + w / 2 + 0.035,
+                h * 0.62,
+                z + dz,
+                0.07,
+                1,
+                1.4,
+                'window',
+                key,
+              )
+            for (let dx = -w / 2 + 0.8; dx < w / 2; dx += 2.7)
+              box(x + dx, h + 0.44, z, 0.14, 0.12, d, 'wall', key)
+          }
+          building(-12, -8, 21, 11, 4.6, 'assembly')
+          building(13, -8, 15, 11, 3.8, 'machining')
+          building(-15, 11, 17, 9, 4, 'logistics')
+          building(19, 12, 7, 8, 3.2, 'energy')
+          for (let x = -20; x < -4; x += 3.3)
+            for (let z = -11; z < -4; z += 2.5) {
+              const panel = box(x, 5.1, z, 2.4, 0.14, 1.6, 'solar', 'assembly')
+              panel.rotation.x = -0.14
+            }
+          for (let x = 8; x < 20; x += 4) {
+            box(x, 4.4, -8, 2.4, 0.8, 2.1, 'machine', 'machining')
+            for (let z = -8.6; z < -7; z += 0.5)
+              box(x, 4.83, z, 1.7, 0.06, 0.1, 'roof', 'machining')
+          }
+          for (let x = 7; x <= 13; x += 5) {
+            cylinder(x, 2.9, 11, 1.9, 5.6, 'roof', 'energy')
+            cylinder(x, 5.75, 11, 1.94, 0.15, 'selected', 'energy')
+            box(x, 1.6, 14, 1, 0.45, 3, 'machine', 'energy')
+          }
+          box(12, 6, -0.5, 25, 0.34, 0.34, 'selected', 'energy')
+          box(23, 3, -0.5, 0.34, 6, 0.34, 'selected', 'energy')
+          box(23, 1, 8, 0.34, 0.34, 17, 'selected', 'energy')
+          for (let x = 4; x < 24; x += 6)
+            box(x, 2.5, -0.5, 0.16, 5, 0.16, 'wall', 'energy')
+          for (let x = -22; x < -8; x += 4) {
+            box(x, 0.85, 6.3, 2.4, 1.6, 1.4, 'pallet', 'logistics')
+            box(x, 0.3, 7.5, 3, 0.4, 1, 'machine', 'logistics')
+          }
+          box(-7, 3, 5.4, 31, 0.25, 1.1, 'machine', 'logistics')
+          for (let x = -22; x < 9; x += 4)
+            box(x, 1.5, 5.4, 0.2, 3, 0.25, 'wall', 'logistics')
+          for (let i = 0; i < 6; i++) {
+            const pallet = box(
+              -23 + i * 5,
+              3.6,
+              5.4,
+              1.4,
+              0.9,
+              0.85,
+              'selected',
+              'logistics',
+            )
+            pallet.userData.offset = i * 5
+            moving.push(pallet)
+          }
+          for (let x = -27; x < 29; x += 3) {
+            box(x, 0.75, -18.4, 0.14, 1.5, 0.14, 'wall')
+            box(x, 0.75, 18.4, 0.14, 1.5, 0.14, 'wall')
+          }
+          box(0, 1.2, -18.4, 57, 0.1, 0.1, 'wall')
+          box(0, 1.2, 18.4, 57, 0.1, 0.1, 'wall')
+          for (let x = -25; x < 28; x += 5) {
+            cylinder(x, 2.5, 16, 0.07, 5, 'wall')
+            box(x + 0.35, 5, 16, 0.9, 0.15, 0.4, 'roof')
+          }
+          const ringGeometry = new THREE.RingGeometry(3.5, 3.62, 64)
+          geometries.add(ringGeometry)
+          const ringMaterial = new THREE.MeshBasicMaterial({
+            color: color('selected'),
+            side: THREE.DoubleSide,
+          })
+          materials.add(ringMaterial)
+          selection = new THREE.Mesh(ringGeometry, ringMaterial)
+          selection.rotation.x = -Math.PI / 2
+          plant.add(selection)
+          function fitCamera() {
+            const aspect = host.clientWidth / host.clientHeight
+            camera.left = -30 * aspect
+            camera.right = 30 * aspect
+            camera.top = 30
+            camera.bottom = -30
+            camera.zoom = 1
+            camera.position.set(54, 55, 65)
+            controls.target.set(0, 1, 0)
+            camera.lookAt(controls.target)
+            camera.updateMatrixWorld()
+            const bounds = new THREE.Box3().setFromObject(plant)
+            let maxX = 0,
+              maxY = 0
+            for (const x of [bounds.min.x, bounds.max.x])
+              for (const y of [bounds.min.y, bounds.max.y])
+                for (const z of [bounds.min.z, bounds.max.z]) {
+                  const v = new THREE.Vector3(x, y, z).applyMatrix4(
+                    camera.matrixWorldInverse,
+                  )
+                  maxX = Math.max(maxX, Math.abs(v.x))
+                  maxY = Math.max(maxY, Math.abs(v.y))
+                }
+            const halfHeight = Math.max(maxY, maxX / aspect) * 1.1
+            camera.top = halfHeight
+            camera.bottom = -halfHeight
+            camera.left = -halfHeight * aspect
+            camera.right = halfHeight * aspect
+            camera.updateProjectionMatrix()
+            controls.update()
+            draw()
+          }
+          function resizeScene() {
+            if (!renderer) return
+            const scale = host.getBoundingClientRect().width / host.clientWidth
+            renderer.setPixelRatio(
+              Math.min(devicePixelRatio * Math.max(1, scale), 2),
+            )
+            renderer.setSize(host.clientWidth, host.clientHeight)
+            fitCamera()
+          }
+          resizeScene()
+          observer.observe(host)
+          host.addEventListener('pointerdown', (event) => {
+            host.dataset.pointerStart = `${event.clientX},${event.clientY}`
+          })
+          host.addEventListener('pointerup', (event) => {
+            const start = (host.dataset.pointerStart || '')
+              .split(',')
+              .map(Number)
+            if (
+              Math.hypot(event.clientX - start[0], event.clientY - start[1]) >
+                5 ||
+              !['ready', 'stale'].includes(screen.dataset.state)
+            )
+              return
+            const rect = host.getBoundingClientRect()
+            const pointer = new THREE.Vector2(
+              ((event.clientX - rect.left) / rect.width) * 2 - 1,
+              (-(event.clientY - rect.top) / rect.height) * 2 + 1,
+            )
+            const raycaster = new THREE.Raycaster()
+            raycaster.setFromCamera(pointer, camera)
+            const hit = raycaster.intersectObjects(pickables)[0]
+            if (hit) selectAsset(hit.object.userData.asset)
+          })
+          host.addEventListener('contextmenu', (event) =>
+            event.preventDefault(),
+          )
+          renderer.domElement.addEventListener('webglcontextlost', (event) => {
+            event.preventDefault()
+            cancelAnimationFrame(animationFrame)
+            showFallback()
+          })
+          document
+            .querySelector('#reset-camera')
+            .addEventListener('click', fitCamera)
+          screen.dataset.renderer = 'webgl'
+          screen.dataset.sceneObjects = plant.children.length
+          screen.dataset.resizeScene = 'ready'
+          host.resizeScene = resizeScene
+          document
+            .querySelector('dvk-fit-screen')
+            .addEventListener('dvk-resize', resizeScene)
+        } catch (error) {
+          renderer?.dispose()
+          renderer = undefined
+          showFallback()
+          screen.dataset.webglReason = error.message
+        }
+      }
+      try {
+        const [{ register }, echarts, lucide] = await Promise.all([
+          import('@datav-kit/elements'),
+          import('echarts'),
+          import('lucide'),
+        ])
+        register()
+        await Promise.all(
+          [...document.querySelectorAll('dvk-fit-screen')].map(
+            (el) => el.updateComplete,
+          ),
+        )
+        await new Promise(requestAnimationFrame)
+        ;({ createIcons, icons } = lucide)
+        createIcons({ icons })
+        const output = hourly.reduce((a, b) => a + b, 0),
+          all = Object.values(assets),
+          total = all.reduce((s, a) => s + a.total, 0),
+          online = all.reduce((s, a) => s + a.online, 0)
+        document.querySelector('#output').setAttribute('end-val', output)
+        document.querySelector('#target').textContent = (
+          (output / 4600) *
+          100
+        ).toFixed(1)
+        document.querySelector('#inspection').textContent = all.reduce(
+          (s, a) => s + a.inspection,
+          0,
+        )
+        document.querySelector('#uptime').textContent = (
+          (online / total) *
+          100
+        ).toFixed(1)
+        document.querySelector('#production-peak').textContent =
+          `峰值 ${Math.max(...hourly)} 件 / h`
+        screen.dataset.total = output
+        chart = echarts.init(document.querySelector('#output-chart'), null, {
+          renderer: 'svg',
+        })
+        chart.setOption({
+          animation: !reduced.matches,
+          animationDuration: 300,
+          grid: { left: 0, right: 18, top: 10, bottom: 24 },
+          xAxis: {
+            type: 'category',
+            data: hourly.map((_, i) => `${String(i + 8).padStart(2, '0')}:00`),
+            axisTick: { show: false },
+            axisLine: { show: false },
+            axisLabel: { color: color('muted'), fontSize: 14 },
+          },
+          yAxis: { type: 'value', show: false, min: 0 },
+          series: [
+            {
+              type: 'bar',
+              data: hourly,
+              barWidth: 32,
+              itemStyle: { color: color('series') },
+              label: {
+                show: true,
+                position: 'top',
+                color: color('text'),
+                fontSize: 14,
+              },
+            },
+          ],
+        })
+        observer = new ResizeObserver(() => {
+          cancelAnimationFrame(resizeFrame)
+          resizeFrame = requestAnimationFrame(() => {
+            chart.resize()
+            document.querySelector('#scene').resizeScene?.()
+          })
+        })
+        observer.observe(document.querySelector('#output-chart'))
+        await buildScene()
+        selectAsset('assembly')
+        setState(params.get('state') || 'ready')
+        syncPauseButton()
+        document
+          .querySelectorAll('.equipment-list [data-asset]')
+          .forEach((b) =>
+            b.addEventListener('click', () => selectAsset(b.dataset.asset)),
+          )
+        document
+          .querySelector('#toggle-motion')
+          .addEventListener('click', () => {
+            paused = !(paused || reduced.matches)
+            if (reduced.matches) paused = true
+            syncPauseButton()
+          })
+        document.querySelector('#retry').addEventListener('click', () => {
+          setState('loading')
+          retryTimer = setTimeout(() => setState('ready'), 400)
+        })
+        reduced.addEventListener('change', () => {
+          paused = reduced.matches
+          chart.setOption({ animation: !reduced.matches })
+          syncPauseButton()
+        })
+        document.addEventListener('visibilitychange', syncLoop)
+        screen.dataset.ready = 'true'
+      } catch (error) {
+        setState('failed')
+        document.querySelector('#state-message').textContent =
+          '依赖加载失败，请联网后重新打开'
+        document.querySelector('#retry').onclick = () => location.reload()
+        screen.dataset.ready = 'error'
+        console.error(error)
+      }
+      addEventListener(
+        'pagehide',
+        () => {
+          disposed = true
+          observer?.disconnect()
+          cancelAnimationFrame(resizeFrame)
+          cancelAnimationFrame(animationFrame)
+          clearTimeout(retryTimer)
+          controls?.dispose()
+          renderer?.dispose()
+          chart?.dispose()
+          for (const geometry of geometries) geometry.dispose()
+          for (const material of materials) material.dispose()
+        },
+        { once: true },
+      )
+    </script>
+  </body>
+</html>
