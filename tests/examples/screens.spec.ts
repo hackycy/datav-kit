@@ -11,7 +11,6 @@ const directory = path.resolve('skills/datav-kit/assets/examples')
 const examples = (await readdir(directory)).filter(name => name.endsWith('.html'))
 const base = process.env.VITEPRESS_BASE || '/'
 const previewBase = `http://127.0.0.1:4173${base}examples/`
-const chartLibrary = 'https://cdn.jsdelivr.net/npm/echarts@6.1.0/dist/echarts.esm.min.js'
 
 async function openExample(page: Page, url: string) {
   const errors: string[] = []
@@ -35,7 +34,8 @@ async function expectRegistered(page: Page) {
     .map(element => element.localName))
   expect(missing).toEqual([])
   const invalid = await page.evaluate(async () => {
-    const { elementMetadata } = await import('https://cdn.jsdelivr.net/npm/@datav-kit/elements@0.0.5/+esm')
+    const imports = JSON.parse(document.querySelector('script[type="importmap"]')!.textContent!).imports
+    const { elementMetadata } = await import(imports['@datav-kit/elements'])
     const result: string[] = []
     for (const element of document.querySelectorAll('*')) {
       if (!element.localName.startsWith('dvk-'))
@@ -56,8 +56,9 @@ async function expectRegistered(page: Page) {
 }
 
 async function expectCharts(page: Page) {
-  const chartResults = await page.evaluate(async (url) => {
-    const echarts = await import(/* @vite-ignore */ url)
+  const chartResults = await page.evaluate(async () => {
+    const imports = JSON.parse(document.querySelector('script[type="importmap"]')!.textContent!).imports
+    const echarts = await import(imports.echarts)
     return [...document.querySelectorAll<HTMLElement>('[data-chart]')].map((element) => {
       const chart = echarts.getInstanceByDom(element)
       const options = chart.getOption()
@@ -68,7 +69,7 @@ async function expectCharts(page: Page) {
         .some(attribute => roles.includes((mark.getAttribute(attribute) || '').toLowerCase())))
       return { id: element.id, width: chart.getWidth(), height: chart.getHeight(), series: options.series.length, coloredMarks: marks.length }
     })
-  }, chartLibrary)
+  })
   for (const result of chartResults) {
     expect(result.width, result.id).toBeGreaterThan(100)
     expect(result.height, result.id).toBeGreaterThan(80)
@@ -173,10 +174,11 @@ for (const name of examples) {
         await page.screenshot({ path: path.join(directory, 'previews', name.replace('.html', '.png')) })
       }
     }
-    const animation = await page.evaluate(async (url) => {
-      const echarts = await import(/* @vite-ignore */ url)
+    const animation = await page.evaluate(async () => {
+      const imports = JSON.parse(document.querySelector('script[type="importmap"]')!.textContent!).imports
+      const echarts = await import(imports.echarts)
       return [...document.querySelectorAll('[data-chart]')].map(element => echarts.getInstanceByDom(element).getOption().animation)
-    }, chartLibrary)
+    })
     expect(animation.every(value => value === false)).toBe(true)
     if (name === 'industrial.html') {
       await expect(page.locator('#screen')).toHaveAttribute('data-paused', 'true')
@@ -285,6 +287,10 @@ test('minimal starter registers and scales', async ({ page }) => {
   await expect(page.locator('#screen')).toHaveAttribute('data-ready', 'true')
   await expectRegistered(page)
   await expectCanvasFits(page)
+  await page.route('https://cdn.jsdelivr.net/**', route => route.abort())
+  await page.reload()
+  await expect(page.locator('#screen')).toHaveAttribute('data-ready', 'error')
+  await expect(page.getByRole('status')).toContainText('依赖加载失败')
 })
 
 test('gallery serves screenshots and downloads the maintained HTML', async ({ page }) => {

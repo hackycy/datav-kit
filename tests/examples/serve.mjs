@@ -1,12 +1,15 @@
 import { readFile } from 'node:fs/promises'
 import http from 'node:http'
 import path from 'node:path'
+import process from 'node:process'
 
 const root = path.resolve('docs/.vitepress/dist')
+const base = (process.env.VITEPRESS_BASE || '/').replace(/\/$/, '')
 const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.svg': 'image/svg+xml' }
 http.createServer(async (request, response) => {
   const url = new URL(request.url, 'http://localhost')
-  const pathname = decodeURIComponent(url.pathname).replace(/^\/datav-kit(?=\/)/, '')
+  const decoded = decodeURIComponent(url.pathname)
+  const pathname = base && decoded.startsWith(`${base}/`) ? decoded.slice(base.length) : decoded
   if (pathname === '/favicon.ico') {
     response.writeHead(204).end()
     return
