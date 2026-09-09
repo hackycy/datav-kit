@@ -1,0 +1,94 @@
+/* ==========================================================================
+   datav-kit project theme — template
+   --------------------------------------------------------------------------
+   Scope:      `.dvk-theme-<project>` only. Never `:root` — the host page
+               outside the screen must not inherit the theme.
+   Lands at:   `design/theme.css` in the project (the `design/` convention).
+   Companion:  `references/tokens.md` (token boundary), `references/design-rules.md`
+               group 4 (colour roles + contrast), `assets/tools/contrast-check.js`.
+   Source:     issue 15 (project theme generation), issue 06 (customization
+               boundary), issue 16 (one theme per screen), spec.md section 3.12.
+
+   What a theme owns: colour, glow, line width, decorative animation period.
+   What it does NOT own: spacing, type, layering, interaction motion, layout —
+   those are the `--dvk-screen-*` tokens in `assets/tokens.css`, declared on
+   `.dvk-screen`. Never put a screen token in a theme.
+
+   Copy the block below, replace every value with your brand-derived result,
+   and keep all eight declarations. Nothing else belongs in this file: no
+   chart code, no prototype code, no component styles.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Derivation — starting points, not destinations
+
+   Every value must clear the contrast redline before it is used. Run
+   `node assets/tools/contrast-check.js` against the four object groups; do not
+   hand-wave the ratio. The text, graphic, and decorative-line floors are
+   redlines — adjust until they PASS. The adjacent-marks group is advisory and
+   conditional (design-rules 4.8): a FAIL there means two marks are not told
+   apart by colour alone, so assign colour roles so adjacent series differ, or
+   add a direct label or shape cue. On a dark surface at most two marks can be
+   mutually 3:1 apart, so do not chase an all-pairs PASS by weakening the
+   palette.
+
+   | variable                  | derive from the brand colour                          |
+   | ------------------------- | ----------------------------------------------------- |
+   | --dvk-color-primary       | the brand colour; if it misses AA, lighten it or       |
+   |                           | desaturate it until it passes (do not keep a failing   |
+   |                           | brand colour "because it is the brand")                |
+   | --dvk-color-secondary     | primary hue +/- 30-40 deg, or primary lightness -20%   |
+   | --dvk-color-accent        | primary complement (hue +180 deg) or a highly          |
+   |                           | saturated contrasting hue; dark scenes MUST desaturate |
+   | --dvk-color-surface       | a very dark primary (lightness 5-10%) + alpha 0.72;    |
+   |                           | never pure black (#000) — pure black kills depth and   |
+   |                           | makes glow read as a halo floating on a void           |
+   | --dvk-glow-soft           | primary + alpha 0.55, blur radius 12px                 |
+   | --dvk-glow-strong         | primary + alpha 0.85, blur radius 24px                 |
+   | --dvk-line-width          | 1px                                                    |
+   | --dvk-motion-duration     | 2200-2600ms (decorative period; interaction motion     |
+   |                           | keeps the screen tokens 150-300ms)                     |
+
+   The eight declarations are a complete contract, not a set of overrides.
+   Do not "inherit a library theme and change two values": a partial theme
+   makes it impossible to tell at debug time which value came from where.
+   Coexist with the library themes instead — a project theme is a sixth,
+   complete theme class, and a screen applies exactly one theme class.
+
+   One theme per screen (issue 16): never mix `.dvk-theme-a` and
+   `.dvk-theme-b` on one screen. To emphasise a region, use
+   `--dvk-color-accent`, not a second theme.
+   -------------------------------------------------------------------------- */
+
+/* Replace `<project>` with the project slug, e.g. `.dvk-theme-acme-ops`.
+
+   The values below are one worked example of the derivation above, from the
+   brand seed `#1f6fd0`: primary is the seed lightened to hsl(209, 100%, 65%)
+   so it clears AA on the surface (7.68:1); secondary is primary at lightness
+   -20%; accent is the complement (hue +180 deg) desaturated for the dark
+   scene; surface is the seed's dark version, lightness 6%, alpha 0.72.
+   At these values primary clears the body-text floor (7.68:1) and the accent
+   clears the non-text floor (10.92:1); secondary clears the non-text floor
+   (4.39:1) but not the body-text floor, so use it for graphics, lines and
+   secondary emphasis — raise its lightness before using it for body text.
+   Replace all eight with your own result. */
+.dvk-theme-<project> {
+  /* Brand-derived colour roles. These four are the only colour source:
+     no hard-coded palette, no separate chart palette, no component-local
+     colour. Charts follow through the token bridge, prototypes through the
+     root container class — neither needs its own colour code. */
+  --dvk-color-primary: #4ea8ff;
+  --dvk-color-secondary: #0077e6;
+  --dvk-color-accent: #ffb454;
+  /* Dark surface: lightness 5-10% of primary, alpha 0.72, never pure black. */
+  --dvk-color-surface: rgba(4, 15, 28, 0.72);
+
+  /* Glow: primary + alpha 0.55 / 0.85, blur radius 12px / 24px.
+     Glow is not a substitute for elevation — see design-rules 5.6. */
+  --dvk-glow-soft: 0 0 12px rgba(78, 168, 255, 0.55);
+  --dvk-glow-strong: 0 0 24px rgba(78, 168, 255, 0.85);
+
+  /* Structure and decorative motion. */
+  --dvk-line-width: 1px;
+  --dvk-motion-duration: 2400ms;
+}
