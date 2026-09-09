@@ -9,6 +9,7 @@ export default defineConfig({
   title: 'DataV Kit',
   description: 'Framework-agnostic Web Components for data dashboard decoration.',
   base,
+  head: [['link', { rel: 'icon', href: 'data:,' }]],
   buildEnd: copySkillExamples,
   cleanUrls: true,
   vite: {

@@ -14,6 +14,8 @@ jobs:
       VITEPRESS_BASE: /datav-kit/
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: pnpm/action-setup@v6
         with:
           version: 11.6.0

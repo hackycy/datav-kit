@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
     <title>DataV Kit · Minimal Screen</title>
     <script type="importmap">
       {
@@ -89,9 +90,11 @@
         register()
         await document.querySelector('dvk-fit-screen').updateComplete
         document.querySelector('#screen').dataset.ready = 'true'
-      } catch {
+      } catch (error) {
         document.querySelector('#error').textContent =
           '依赖加载失败，请联网后重新打开。'
+        document.querySelector('#screen').dataset.ready = 'error'
+        console.error(error)
       }
     </script>
   </body>
