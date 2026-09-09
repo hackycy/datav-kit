@@ -100,6 +100,23 @@ CSS variable precedence for border-box content inset is:
 
 The computed value may be stored in an internal CSS variable such as `--dvk-border-box-auto-padding`, but it is not a public authoring contract.
 
+### Authoring Slotted Content
+
+Border boxes expose a default content slot. `frame`, `graphic` and `content` are CSS parts,
+not named slots; put headings and chart wrappers in the default slot rather than assigning
+them to a `header` or `title` slot.
+
+Keep the computed inset unless the rendered result demonstrates an obstruction or overflow.
+For additional breathing room, first adjust the layout or add padding to an inner content
+wrapper. An explicit inset override affects every child and must still keep content clear
+of the frame. Insets depend on the element and its measured size; do not infer a component
+variant from padding values or copy a fixed inset across variants.
+
+An independently filled surface requires a component whose detail page documents
+`background-color`. Transparent frames can instead inherit a project-owned surface.
+Likewise, motion controls and automatic-height support belong to individual component APIs;
+verify the selected element's detail page instead of assuming all border boxes share props.
+
 ## Fullscreen
 
 Fullscreen must be requested from a user gesture. Components may expose methods such as `requestFullscreenMode()`, but they must not automatically call `requestFullscreen()` on mount.
