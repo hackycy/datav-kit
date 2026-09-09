@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="明亮经营分析大屏：收入趋势、目标差距与渠道贡献。"
+    />
+    <title>远川商业 · 经营分析</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "@datav-kit/elements": "https://cdn.jsdelivr.net/npm/@datav-kit/elements@0.0.5/+esm",
+          "echarts": "https://cdn.jsdelivr.net/npm/echarts@6.1.0/dist/echarts.esm.min.js",
+          "lucide": "https://cdn.jsdelivr.net/npm/lucide@0.468.0/+esm"
+        }
+      }
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #e7ecef;
+      }
+      button {
+        font: inherit;
+        cursor: pointer;
+      }
+      button:focus-visible,
+      a:focus-visible {
+        outline: 3px solid var(--app-selected);
+        outline-offset: 5px;
+      }
+      button:disabled {
+        cursor: default;
+      }
+      svg {
+        display: block;
+      }
+      button svg {
+        width: 22px;
+        height: 22px;
+      }
+      button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+      button {
+        border: 0;
+        background: none;
+        color: inherit;
+      }
+      button[aria-pressed='true'] {
+        color: var(--app-selected);
+      }
+      [hidden] {
+        display: none !important;
+      }
+      .dvk-screen {
+        --app-background: #f5f7f8;
+        --app-surface: #fff;
+        --app-text: #1b3039;
+        --app-muted: #5e727d;
+        --app-rule: #d6e0e5;
+        --app-selected: #176987;
+        --app-positive: #18724f;
+        --app-warning: #9a570c;
+        --app-danger: #b52d43;
+        --app-series-1: #217b9d;
+        --app-series-2: #23a184;
+        --app-series-3: #bd783b;
+        --app-series-4: #8067ad;
+        --dvk-color-primary: #99b7c2;
+        --dvk-color-secondary: #aecacb;
+        --dvk-color-accent: #217b9d;
+        --dvk-color-surface: #fff;
+        --dvk-count-to-color: var(--app-text);
+        --dvk-count-to-font-size: 64px;
+        --dvk-count-to-font-weight: 600;
+        width: 1920px;
+        height: 1080px;
+        background: var(--app-background);
+        color: var(--app-text);
+        font:
+          22px/1.5 'Inter',
+          'PingFang SC',
+          'Microsoft YaHei',
+          sans-serif;
+        letter-spacing: 0;
+        padding: 40px 56px;
+        display: grid;
+        grid-template-rows: 94px 1fr 38px;
+        gap: 28px;
+        position: relative;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--app-rule);
+        padding-bottom: 22px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+      }
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+        border: 2px solid var(--app-selected);
+        color: var(--app-selected);
+      }
+      .brand-mark svg {
+        width: 32px;
+        height: 32px;
+      }
+      .brand h1 {
+        font-size: 32px;
+        font-weight: 600;
+      }
+      .brand p {
+        font-size: 15px;
+        color: var(--app-muted);
+        margin-top: 3px;
+      }
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+      }
+      .periods {
+        display: flex;
+        border-bottom: 1px solid var(--app-rule);
+        gap: 26px;
+      }
+      .periods button {
+        padding: 10px 4px;
+        font-size: 20px;
+        border-bottom: 3px solid transparent;
+      }
+      .periods button[aria-pressed='true'] {
+        border-color: var(--app-selected);
+      }
+      .status {
+        font-size: 17px;
+        color: var(--app-muted);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .status:before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: var(--app-positive);
+        border-radius: 50%;
+      }
+      [data-state='stale'] .status:before {
+        background: var(--app-warning);
+      }
+      .content {
+        display: grid;
+        grid-template-rows: 196px minmax(0, 1fr);
+        gap: 36px;
+        min-height: 0;
+      }
+      .metrics {
+        display: grid;
+        grid-template-columns: 1.45fr 1fr 1fr 1fr;
+        border-bottom: 1px solid var(--app-rule);
+        padding: 10px 0 26px;
+      }
+      .metric {
+        padding: 0 38px;
+        border-left: 1px solid var(--app-rule);
+      }
+      .metric:first-child {
+        padding-left: 0;
+        border: 0;
+      }
+      .metric-label {
+        font-size: 19px;
+        color: var(--app-muted);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .metric-label svg {
+        width: 20px;
+        height: 20px;
+      }
+      .metric-value {
+        height: 92px;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        padding-top: 6px;
+        font-variant-numeric: tabular-nums;
+      }
+      .metric-value strong {
+        font-size: 56px;
+        font-weight: 600;
+      }
+      .metric-value .unit {
+        font-size: 21px;
+        color: var(--app-muted);
+      }
+      .delta {
+        font-size: 18px;
+        color: var(--app-positive);
+      }
+      .delta small {
+        margin-left: 12px;
+        color: var(--app-muted);
+        font-size: 16px;
+      }
+      .analysis {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 430px;
+        gap: 44px;
+        min-height: 0;
+      }
+      .trend {
+        display: grid;
+        grid-template-rows: 60px minmax(0, 1fr) 118px;
+        gap: 20px;
+        min-height: 0;
+      }
+      .section-head {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+      }
+      .section-head h2,
+      .channels h2 {
+        font-size: 25px;
+        font-weight: 600;
+      }
+      .section-head p {
+        font-size: 17px;
+        color: var(--app-muted);
+        margin-top: 4px;
+      }
+      .legend {
+        display: flex;
+        gap: 24px;
+        font-size: 17px;
+        color: var(--app-muted);
+        padding-top: 9px;
+      }
+      .legend span {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .legend i {
+        height: 3px;
+        width: 24px;
+        background: var(--app-series-1);
+      }
+      .legend span:last-child i {
+        background: transparent;
+        border-top: 2px dashed var(--app-muted);
+      }
+      #revenue-chart {
+        height: 100%;
+        min-height: 0;
+        width: 100%;
+      }
+      .insights {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        border-top: 1px solid var(--app-rule);
+        padding-top: 20px;
+        gap: 22px;
+      }
+      .insights span {
+        font-size: 17px;
+        color: var(--app-muted);
+      }
+      .insights strong {
+        display: block;
+        font-size: 26px;
+        font-weight: 500;
+        margin-top: 6px;
+      }
+      .channels {
+        border-left: 1px solid var(--app-rule);
+        padding-left: 36px;
+        display: grid;
+        grid-template-rows: 36px minmax(0, 1fr) 132px;
+        gap: 16px;
+        min-height: 0;
+      }
+      .channel {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--app-rule);
+      }
+      .channel-top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 19px;
+      }
+      .channel-top strong {
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+      }
+      .channel-track {
+        height: 7px;
+        background: var(--app-rule);
+        margin: 13px 0 8px;
+      }
+      .channel-track i {
+        display: block;
+        height: 100%;
+        width: var(--share);
+        background: var(--series);
+      }
+      .channel-meta {
+        display: flex;
+        justify-content: space-between;
+        color: var(--app-muted);
+        font-size: 15px;
+      }
+      .target {
+        display: block;
+        width: 100%;
+        height: 132px;
+      }
+      .target-inner {
+        color: var(--app-text);
+        height: 100%;
+        padding: 14px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 6px;
+      }
+      .target-inner span {
+        font-size: 16px;
+        color: var(--app-muted);
+      }
+      .target-inner strong {
+        font-size: 29px;
+        font-weight: 500;
+      }
+      .target-inner p {
+        font-size: 16px;
+        color: var(--app-positive);
+      }
+      footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid var(--app-rule);
+        padding-top: 16px;
+        font-size: 15px;
+        color: var(--app-muted);
+      }
+      .footer-brand {
+        font-size: 15px;
+        color: var(--app-selected);
+      }
+      .state-layer {
+        position: absolute;
+        inset: 170px 56px 96px;
+        display: none;
+        place-content: center;
+        text-align: center;
+        gap: 18px;
+        background: var(--app-background);
+      }
+      .state-layer h2 {
+        font-size: 30px;
+      }
+      .state-layer p {
+        color: var(--app-muted);
+      }
+      .state-layer button {
+        justify-self: center;
+        color: var(--app-selected);
+        padding: 12px;
+      }
+      .dvk-screen:is(
+          [data-state='loading'],
+          [data-state='empty'],
+          [data-state='failed']
+        )
+        .content {
+        visibility: hidden;
+      }
+      .dvk-screen:is(
+          [data-state='loading'],
+          [data-state='empty'],
+          [data-state='failed']
+        )
+        .state-layer {
+        display: grid;
+      }
+      .loading-symbol {
+        font-size: 44px;
+        color: var(--app-selected);
+      }
+    </style>
+  </head>
+  <body>
+    <dvk-fit-screen
+      width="1920"
+      height="1080"
+      mode="contain"
+      align="center center"
+    >
+      <div
+        class="dvk-screen dvk-theme-business"
+        id="screen"
+        data-state="loading"
+      >
+        <header>
+          <div class="brand">
+            <div class="brand-mark">
+              <i data-lucide="chart-no-axes-combined"></i>
+            </div>
+            <div>
+              <h1>远川商业 · 经营分析</h1>
+              <p>YUANCHUAN COMMERCE / PERFORMANCE</p>
+            </div>
+          </div>
+          <div class="header-right">
+            <div class="periods" role="group" aria-label="时间范围">
+              <button data-period="week" aria-pressed="false">近 7 天</button
+              ><button data-period="month" aria-pressed="true">近 30 天</button
+              ><button data-period="quarter" aria-pressed="false">
+                本季度
+              </button>
+            </div>
+            <span class="status" id="status">数据加载中</span>
+          </div>
+        </header>
+        <main class="content">
+          <section class="metrics" aria-label="经营指标">
+            <div class="metric">
+              <p class="metric-label"><i data-lucide="wallet"></i>营业收入</p>
+              <div class="metric-value">
+                <dvk-count-to id="revenue" decimals="1" disabled></dvk-count-to
+                ><span class="unit">万元</span>
+              </div>
+              <p class="delta" id="growth"></p>
+            </div>
+            <div class="metric">
+              <p class="metric-label">目标完成率</p>
+              <div class="metric-value">
+                <strong id="completion"></strong><span class="unit">%</span>
+              </div>
+              <p class="delta" id="gap"></p>
+            </div>
+            <div class="metric">
+              <p class="metric-label">成交订单</p>
+              <div class="metric-value">
+                <strong id="orders"></strong><span class="unit">笔</span>
+              </div>
+              <p class="delta">有效支付<small>已扣除退款订单</small></p>
+            </div>
+            <div class="metric">
+              <p class="metric-label">平均客单价</p>
+              <div class="metric-value">
+                <strong id="average"></strong><span class="unit">元</span>
+              </div>
+              <p class="delta">收入 / 订单<small>同一统计周期</small></p>
+            </div>
+          </section>
+          <div class="analysis">
+            <section class="trend">
+              <div class="section-head">
+                <div>
+                  <h2>收入表现</h2>
+                  <p id="range-label"></p>
+                </div>
+                <div class="legend">
+                  <span><i></i>实际收入</span><span><i></i>目标收入</span>
+                </div>
+              </div>
+              <div
+                id="revenue-chart"
+                data-chart
+                aria-label="实际收入与目标收入趋势"
+              ></div>
+              <div class="insights">
+                <div><span>单日收入峰值</span><strong id="peak"></strong></div>
+                <div><span>日均营业收入</span><strong id="daily"></strong></div>
+                <div><span>领先渠道</span><strong id="leading"></strong></div>
+              </div>
+            </section>
+            <section class="channels">
+              <h2>渠道贡献</h2>
+              <div id="channel-list"></div>
+              <dvk-border-box-15 class="target"
+                ><div class="target-inner">
+                  <span>距周期目标</span><strong id="target-gap"></strong>
+                  <p id="target-note"></p></div
+              ></dvk-border-box-15>
+            </section>
+          </div>
+        </main>
+        <footer>
+          <span>示例数据 · 财务口径：已支付净收入 · 人民币</span
+          ><span id="updated">最后更新 2026.09.09 14:30</span
+          ><span class="footer-brand">远川商业 / BUSINESS INTELLIGENCE</span>
+        </footer>
+        <section class="state-layer" role="status">
+          <span class="loading-symbol" aria-hidden="true">◌</span>
+          <h2 id="state-title">正在汇总经营数据</h2>
+          <p id="state-message">2026.09.09</p>
+          <button id="retry" hidden>
+            <i data-lucide="refresh-cw"></i>重新加载
+          </button>
+        </section>
+      </div>
+    </dvk-fit-screen>
+    <script type="module">
+      const screen = document.querySelector('#screen')
+      const params = new URLSearchParams(location.search)
+      const requestedState = params.get('state') || 'ready'
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)')
+      const data = {
+        week: {
+          days: 7,
+          label: '09.03 - 09.09 · 单位：万元',
+          target: 84,
+          previous: 472,
+          values: [68, 74, 79, 91, 87, 98, 106],
+        },
+        month: {
+          days: 30,
+          label: '08.11 - 09.09 · 单位：万元',
+          target: 82,
+          previous: 2120,
+          values: [
+            56, 61, 58, 64, 69, 62, 71, 73, 68, 76, 72, 79, 81, 77, 86, 89, 83,
+            87, 92, 95, 91, 99, 94, 102, 97, 104, 101, 110, 107, 118,
+          ],
+        },
+        quarter: {
+          days: 71,
+          label: '07.01 - 09.09 · 单位：万元',
+          target: 78,
+          previous: 4890,
+          values: Array.from(
+            { length: 71 },
+            (_, i) => 51 + i * 0.65 + [0, 7, 3, 12, 6, 16, 9][i % 7],
+          ),
+        },
+      }
+      let chart, resize, frame, retryTimer
+      function setState(state) {
+        screen.dataset.state = ['loading', 'empty', 'failed', 'stale'].includes(
+          state,
+        )
+          ? state
+          : 'ready'
+        document.querySelector('#status').textContent = {
+          ready: '数据已同步',
+          loading: '数据加载中',
+          empty: '暂无数据',
+          failed: '同步失败',
+          stale: '数据已过期',
+        }[screen.dataset.state]
+        document.querySelector('#state-title').textContent =
+          {
+            loading: '正在汇总经营数据',
+            empty: '此周期暂无经营数据',
+            failed: '经营数据加载失败',
+          }[state] || ''
+        document.querySelector('#state-message').textContent =
+          state === 'failed' ? '请检查网络连接后重试' : '2026.09.09'
+        document.querySelector('#retry').hidden =
+          state !== 'failed' && state !== 'empty'
+        document
+          .querySelectorAll('[data-period]')
+          .forEach(
+            (button) =>
+              (button.disabled = !['ready', 'stale'].includes(
+                screen.dataset.state,
+              )),
+          )
+      }
+      function color(role) {
+        return getComputedStyle(screen).getPropertyValue(`--app-${role}`).trim()
+      }
+      function render(period) {
+        const selected = data[period]
+        const total = selected.values.reduce((a, b) => a + b, 0)
+        const target = selected.target * selected.days
+        const orders = Math.round((total * 10000) / 386)
+        const shares = [0.42, 0.28, 0.19, 0.11]
+        const names = ['品牌直营', '线上商城', '区域合作', '企业采购']
+        screen.dataset.period = period
+        screen.dataset.total = total.toFixed(2)
+        screen.dataset.target = target
+        document
+          .querySelectorAll('[data-period]')
+          .forEach((button) =>
+            button.setAttribute(
+              'aria-pressed',
+              String(button.dataset.period === period),
+            ),
+          )
+        document
+          .querySelector('#revenue')
+          .setAttribute('end-val', total.toFixed(1))
+        document.querySelector('#growth').textContent =
+          `+${((total / selected.previous - 1) * 100).toFixed(1)}% 较上一同期`
+        document.querySelector('#completion').textContent = (
+          (total / target) *
+          100
+        ).toFixed(1)
+        document.querySelector('#gap').textContent =
+          total >= target ? '已达成周期目标' : '目标进度持续提升'
+        document.querySelector('#orders').textContent =
+          orders.toLocaleString('en-US')
+        document.querySelector('#average').textContent = Math.round(
+          (total * 10000) / orders,
+        )
+        document.querySelector('#range-label').textContent = selected.label
+        document.querySelector('#peak').textContent =
+          `${Math.max(...selected.values).toFixed(1)} 万元`
+        document.querySelector('#daily').textContent =
+          `${(total / selected.days).toFixed(1)} 万元`
+        document.querySelector('#leading').textContent = '品牌直营 / 42%'
+        document.querySelector('#target-gap').textContent =
+          `${total >= target ? '超额' : '尚差'} ${Math.abs(total - target).toFixed(1)} 万元`
+        document.querySelector('#target-note').textContent =
+          `周期目标 ${target.toLocaleString('en-US')} 万元`
+        document.querySelector('#channel-list').innerHTML = names
+          .map(
+            (name, i) =>
+              `<div class="channel"><div class="channel-top"><span>${name}</span><strong>${(total * shares[i]).toFixed(1)}</strong></div><div class="channel-track" style="--share:${(shares[i] * 100).toFixed(0)}%;--series:var(--app-series-${i + 1})"><i></i></div><div class="channel-meta"><span>收入 / 万元</span><span>${(shares[i] * 100).toFixed(0)}%</span></div></div>`,
+          )
+          .join('')
+        const end = new Date('2026-09-09T00:00:00Z')
+        const labels = selected.values.map((_, i) => {
+          const day = new Date(end)
+          day.setUTCDate(end.getUTCDate() - selected.days + i + 1)
+          return `${String(day.getUTCMonth() + 1).padStart(2, '0')}.${String(day.getUTCDate()).padStart(2, '0')}`
+        })
+        chart.setOption({
+          animation: !reduced.matches,
+          animationDuration: 300,
+          grid: { left: 60, right: 18, top: 20, bottom: 40 },
+          tooltip: {
+            trigger: 'axis',
+            backgroundColor: color('surface'),
+            borderColor: color('rule'),
+            textStyle: { color: color('text'), fontSize: 17 },
+          },
+          xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: labels,
+            axisLine: { lineStyle: { color: color('rule') } },
+            axisTick: { show: false },
+            axisLabel: {
+              color: color('muted'),
+              fontSize: 16,
+              interval: Math.floor(selected.days / 7),
+            },
+          },
+          yAxis: {
+            type: 'value',
+            min: 0,
+            axisLabel: { color: color('muted'), fontSize: 16 },
+            splitLine: { lineStyle: { color: color('rule'), type: 'dashed' } },
+          },
+          series: [
+            {
+              name: '实际收入',
+              type: 'line',
+              data: selected.values,
+              showSymbol: false,
+              lineStyle: { width: 3, color: color('series-1') },
+              itemStyle: { color: color('series-1') },
+              areaStyle: { color: color('series-1'), opacity: 0.07 },
+            },
+            {
+              name: '目标收入',
+              type: 'line',
+              data: selected.values.map(() => selected.target),
+              showSymbol: false,
+              lineStyle: { width: 2, type: 'dashed', color: color('muted') },
+            },
+          ],
+        })
+      }
+      try {
+        const [{ register }, echarts, { createIcons, icons }] =
+          await Promise.all([
+            import('@datav-kit/elements'),
+            import('echarts'),
+            import('lucide'),
+          ])
+        register()
+        await Promise.all(
+          [...document.querySelectorAll('dvk-fit-screen')].map(
+            (el) => el.updateComplete,
+          ),
+        )
+        await new Promise(requestAnimationFrame)
+        createIcons({ icons })
+        chart = echarts.init(document.querySelector('#revenue-chart'), null, {
+          renderer: 'svg',
+        })
+        render('month')
+        setState(requestedState)
+        document
+          .querySelectorAll('[data-period]')
+          .forEach((button) =>
+            button.addEventListener('click', () =>
+              render(button.dataset.period),
+            ),
+          )
+        document.querySelector('#retry').addEventListener('click', () => {
+          setState('loading')
+          retryTimer = setTimeout(() => setState('ready'), 400)
+        })
+        resize = new ResizeObserver(() => {
+          cancelAnimationFrame(frame)
+          frame = requestAnimationFrame(() => chart.resize())
+        })
+        resize.observe(document.querySelector('#revenue-chart'))
+        reduced.addEventListener('change', () =>
+          chart.setOption({ animation: !reduced.matches }),
+        )
+        screen.dataset.ready = 'true'
+      } catch (error) {
+        setState('failed')
+        document.querySelector('#state-message').textContent =
+          '依赖加载失败，请联网后重新打开'
+        document.querySelector('#retry').onclick = () => location.reload()
+        screen.dataset.ready = 'error'
+        console.error(error)
+      }
+      addEventListener(
+        'pagehide',
+        () => {
+          resize?.disconnect()
+          cancelAnimationFrame(frame)
+          clearTimeout(retryTimer)
+          chart?.dispose()
+        },
+        { once: true },
+      )
+    </script>
+  </body>
+</html>

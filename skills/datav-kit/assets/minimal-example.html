@@ -1,606 +1,98 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>datav-kit 最小示例 · minimal example</title>
-
-  <!-- ==========================================================================
-    MINIMAL EXAMPLE (spec §3.11)
-    --------------------------------------------------------------------------
-    One screen + three panels + one chart. Double-click to open; it is the
-    five-minute entrypoint and does NOT replace the four prototypes in
-    assets/prototypes/ — it carries no map, no KPI strip and no third column.
-
-    Skeleton    header var(--dvk-screen-header-height) 104 / main minmax(0, 1fr)
-                12 columns, gutter var(--dvk-screen-grid-gutter) 24, margin 48
-                left span 8 = chart panel; right span 4 = two stacked panels
-    Blocks      P2 three-part header + P3 title bar (feature-detected, P3 rails as
-                the fallback); left scope box, centred title, right update box
-                P6 + P7 + chart slot          trend line, two series
-                P6 + P7 + P9                  three progress rows
-                P6 + P7 + P15                 two secondary metrics
-                P16                           dvk-count-to for every number
-    Components  dvk-fit-screen, dvk-border-box-15 / -9, dvk-decoration-9,
-                dvk-count-to; echarts (SVG renderer) for the single chart slot
-    Theme       exactly one .dvk-theme-* class on the screen root; colours come
-                only from --dvk-color-*, screen sizing only from --dvk-screen-*
-    ========================================================================== -->
-
-  <link rel="stylesheet" href="tokens.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@datav-kit/themes@0.0.5/dist/cyber-blue.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@datav-kit/themes@0.0.5/dist/matrix-green.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@datav-kit/themes@0.0.5/dist/solar-gold.css">
-
-  <script type="importmap">
-    {
-      "imports": {
-        "@datav-kit/elements@0.0.5": "https://cdn.jsdelivr.net/npm/@datav-kit/elements@0.0.5/+esm",
-        "echarts": "https://cdn.jsdelivr.net/npm/echarts@6.1.0/dist/echarts.esm.min.js"
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DataV Kit · Minimal Screen</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "@datav-kit/elements": "https://cdn.jsdelivr.net/npm/@datav-kit/elements@0.0.5/+esm"
+        }
       }
-    }
-  </script>
-  <!-- CDN backup if jsDelivr +esm is unavailable:
-       "@datav-kit/elements@0.0.5": "https://esm.sh/@datav-kit/elements@0.0.5" -->
-
-  <style>
-    html {
-      color-scheme: dark;
-      background-color: var(--dvk-page-ground, var(--dvk-color-surface));
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: var(--dvk-screen-font-family);
-    }
-
-    .dvk-screen {
-      /* Single colour source: every colour below derives from --dvk-color-*. */
-      --dvk-text-strong: var(--dvk-color-primary);
-      --dvk-text-muted: color-mix(in srgb, var(--dvk-color-primary) 64%, transparent);
-      --dvk-text-faint: color-mix(in srgb, var(--dvk-color-primary) 38%, transparent);
-      --dvk-rule: color-mix(in srgb, var(--dvk-color-primary) 20%, transparent);
-      --dvk-fill-soft: color-mix(in srgb, var(--dvk-color-primary) 12%, transparent);
-      --dvk-fill-mid: color-mix(in srgb, var(--dvk-color-primary) 22%, transparent);
-      --dvk-surface-fill: color-mix(in srgb, var(--dvk-color-surface) 88%, transparent);
-
-      position: relative;
-      box-sizing: border-box;
-      width: 1920px;
-      height: 1080px;
-      padding: var(--dvk-screen-safe-margin);
-      display: grid;
-      grid-template-rows: var(--dvk-screen-header-height) minmax(0, 1fr);
-      gap: var(--dvk-screen-space-xl);
-      color: var(--dvk-text-muted);
-      font-size: var(--dvk-screen-font-size-xs);
-      line-height: var(--dvk-screen-line-height-base);
-      overflow: hidden;
-    }
-
-    .unit { font-size: var(--dvk-screen-font-size-sm); color: var(--dvk-text-faint); }
-
-    /* ---------- P2 + P3 title bar ---------- */
-    .screen-header {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-      align-items: center;
-      gap: var(--dvk-screen-space-xl);
-      min-height: 0;
-      border-bottom: var(--dvk-line-width) solid var(--dvk-rule);
-    }
-
-    .header-info {
-      display: grid;
-      gap: var(--dvk-screen-space-xs);
-      padding: var(--dvk-screen-space-lg) var(--dvk-screen-space-xl);
-      border-left: 4px solid var(--dvk-color-accent);
-      background: var(--dvk-surface-fill);
-    }
-
-    .header-info--right {
-      justify-self: end;
-      text-align: right;
-      border-left: 0;
-      border-right: 4px solid var(--dvk-color-secondary);
-    }
-
-    .header-info .label { font-size: var(--dvk-screen-font-size-xs); line-height: 1; color: var(--dvk-text-faint); letter-spacing: 0.12em; }
-    .header-info .value { font-size: var(--dvk-screen-font-size-sm); font-weight: var(--dvk-screen-font-weight-medium); line-height: 1.2; color: var(--dvk-text-strong); }
-
-    .title-rail {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-      align-items: center;
-      gap: var(--dvk-screen-space-xl);
-      min-width: 720px;
-    }
-
-    .rail { display: block; height: 60px; opacity: 0.85; }
-
-    .title-block {
-      padding: var(--dvk-screen-space-sm) var(--dvk-screen-space-2xl);
-      text-align: center;
-      border-top: var(--dvk-line-width) solid var(--dvk-rule);
-      border-bottom: var(--dvk-line-width) solid var(--dvk-rule);
-    }
-
-    .title-block .eyebrow {
-      display: block;
-      font-size: var(--dvk-screen-font-size-xs);
-      line-height: 1.2;
-      letter-spacing: 0.24em;
-      color: var(--dvk-text-faint);
-    }
-
-    .title-block h1 {
-      margin: var(--dvk-screen-space-xs) 0 0;
-      font-size: var(--dvk-screen-font-size-xl);
-      font-weight: var(--dvk-screen-font-weight-bold);
-      line-height: 1.1;
-      color: var(--dvk-text-strong);
-    }
-
-    /* Freshness dot (design-rules 6.7): stale-but-visible, never a blank chart. */
-    .header-info .dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin-right: var(--dvk-screen-space-xs);
-      background: var(--dvk-color-accent);
-      box-shadow: var(--dvk-glow-soft);
-    }
-
-    /* ---------- main grid: 8 / 4 of 12 columns ---------- */
-    .screen-main {
-      display: grid;
-      grid-template-columns: repeat(var(--dvk-screen-grid-columns), minmax(0, 1fr));
-      gap: var(--dvk-screen-grid-gutter);
-      min-height: 0;
-    }
-
-    .col { display: grid; gap: var(--dvk-screen-space-xl); min-height: 0; }
-    .col > * { min-height: 0; }
-    .col-main { grid-column: span 8; grid-template-rows: minmax(0, 1fr); }
-    .col-side { grid-column: span 4; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); }
-
-    /* ---------- P6 + P7 ---------- */
-    .panel-inner {
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      gap: var(--dvk-screen-space-lg);
-      height: 100%;
-      min-height: 0;
-    }
-
-    /* The component inset bottoms out at 10-15px on the small variants; the content
-       carries its own horizontal padding inside the safe area. The component inset is
-       never overridden (components.md §4). */
-    dvk-border-box-9 .panel-inner,
-    dvk-border-box-15 .panel-inner {
-      padding: 0 var(--dvk-screen-space-lg);
-    }
-
-    .panel-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: var(--dvk-screen-space-md);
-    }
-
-    .panel-heading .eyebrow {
-      margin: 0;
-      font-size: var(--dvk-screen-font-size-sm);
-      line-height: 1.2;
-      letter-spacing: 0.14em;
-      color: var(--dvk-text-faint);
-    }
-
-    .panel-heading h3 {
-      margin: 0;
-      font-size: var(--dvk-screen-font-size-md);
-      font-weight: var(--dvk-screen-font-weight-bold);
-      line-height: 1.2;
-      color: var(--dvk-text-strong);
-    }
-
-    .chip {
-      flex: 0 0 auto;
-      padding: 5px 9px;
-      border: var(--dvk-line-width) solid var(--dvk-rule);
-      font-size: var(--dvk-screen-font-size-xs);
-      line-height: 1.2;
-      color: var(--dvk-color-accent);
-      background: var(--dvk-fill-soft);
-    }
-
-    .panel-body { min-height: 0; overflow: hidden; }
-
-    .chart-slot { width: 100%; height: 100%; min-height: 0; }
-
-    /* ---------- P9 progress rows ---------- */
-    .progress-list { display: grid; gap: var(--dvk-screen-space-xl); align-content: center; height: 100%; }
-
-    .progress-line { display: grid; gap: var(--dvk-screen-space-sm); }
-
-    .progress-line .row-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: var(--dvk-screen-space-md);
-    }
-
-    .progress-line .label { font-size: var(--dvk-screen-font-size-xs); color: var(--dvk-text-muted); }
-
-    .bar {
-      height: 8px;
-      overflow: hidden;
-      background: var(--dvk-fill-soft);
-    }
-
-    .bar > i {
-      display: block;
-      width: var(--bar-value);
-      height: 100%;
-      background: linear-gradient(90deg, var(--dvk-color-secondary), var(--dvk-color-primary));
-    }
-
-    /* ---------- P15 metric stack ---------- */
-    .metric-stack {
-      display: grid;
-      grid-template-rows: repeat(2, minmax(0, 1fr));
-      gap: var(--dvk-screen-space-md);
-      height: 100%;
-      min-height: 0;
-    }
-
-    .metric-card {
-      display: grid;
-      align-content: center;
-      gap: var(--dvk-screen-space-xs);
-      padding: var(--dvk-screen-space-md) var(--dvk-screen-space-lg);
-      border: var(--dvk-line-width) solid var(--dvk-rule);
-      min-height: 0;
-    }
-
-    .metric-card .label { font-size: var(--dvk-screen-font-size-xs); color: var(--dvk-text-faint); }
-
-    /* ---------- P16 count-to sizing (host level, not per instance) ---------- */
-    .progress-line dvk-count-to {
-      --dvk-count-to-font-size: var(--dvk-screen-font-size-sm);
-      --dvk-count-to-color: var(--dvk-text-strong);
-    }
-
-    .metric-card dvk-count-to {
-      --dvk-count-to-font-size: var(--dvk-screen-font-size-md);
-      --dvk-count-to-color: var(--dvk-text-strong);
-    }
-
-    /* ---------- demo-only theme switcher (outside the 1920x1080 canvas) ---------- */
-    .demo-controls {
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border: var(--dvk-line-width) solid var(--dvk-rule);
-      background: var(--dvk-surface-fill);
-      font-size: var(--dvk-screen-font-size-xs);
-    }
-
-    .demo-controls button {
-      padding: 4px 10px;
-      border: var(--dvk-line-width) solid var(--dvk-rule);
-      background: transparent;
-      color: var(--dvk-text-muted);
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .demo-controls button.is-active { color: var(--dvk-text-strong); background: var(--dvk-fill-mid); }
-  </style>
-</head>
-
-<body>
-  <!-- Demo-only control: switches the single theme class on the screen root. -->
-  <div class="demo-controls" role="group" aria-label="主题切换">
-    <span>THEME</span>
-    <button type="button" data-theme="cyber-blue">cyber-blue</button>
-    <button type="button" data-theme="matrix-green">matrix-green</button>
-    <button type="button" data-theme="solar-gold">solar-gold</button>
-  </div>
-
-  <dvk-fit-screen width="1920" height="1080" mode="contain" align="center center" fit-target="viewport">
-    <div class="dvk-screen dvk-theme-cyber-blue" id="screen">
-
-      <header class="screen-header">
-        <div class="header-info">
-          <span class="label">SCOPE</span>
-          <strong class="value">单屏 · 3 面板 · 1 图表</strong>
-        </div>
-        <div class="title-group" id="title-group"></div>
-        <div class="header-info header-info--right">
-          <span class="label"><i class="dot"></i>UPDATED</span>
-          <strong class="value" id="freshness-text"></strong>
-        </div>
-      </header>
-
-      <main class="screen-main">
-        <div class="col col-main">
-          <dvk-border-box-15 background-color="var(--dvk-color-surface)">
-            <div class="panel-inner">
-              <header class="panel-heading">
-                <div>
-                  <p class="eyebrow">TREND</p>
-                  <h3>近 8 小时趋势</h3>
-                </div>
-                <span class="chip" id="chart-state">实时</span>
-              </header>
-              <div class="panel-body"><div class="chart-slot" id="chart-trend" data-chart-slot></div></div>
-            </div>
-          </dvk-border-box-15>
-        </div>
-
-        <div class="col col-side">
-          <dvk-border-box-9 background-color="var(--dvk-color-surface)">
-            <div class="panel-inner">
-              <header class="panel-heading">
-                <div>
-                  <p class="eyebrow">PROGRESS</p>
-                  <h3>任务完成率</h3>
-                </div>
-              </header>
-              <div class="panel-body"><div class="progress-list" id="progress-list"></div></div>
-            </div>
-          </dvk-border-box-9>
-
-          <dvk-border-box-15 background-color="var(--dvk-color-surface)">
-            <div class="panel-inner">
-              <header class="panel-heading">
-                <div>
-                  <p class="eyebrow">SECONDARY</p>
-                  <h3>次级指标</h3>
-                </div>
-              </header>
-              <div class="panel-body"><div class="metric-stack" id="metric-stack"></div></div>
-            </div>
-          </dvk-border-box-15>
-        </div>
-      </main>
-    </div>
-  </dvk-fit-screen>
-
-  <script type="application/json" id="dvk-data">
-    {
-      "header": {
-        "eyebrow": "MINIMAL EXAMPLE",
-        "title": "数据大屏最小示例"
-      },
-      "updated": "14:32:05",
-      "trend": {
-        "labels": ["08", "09", "10", "11", "12", "13", "14", "15"],
-        "series": [
-          { "name": "在线设备", "data": [42, 58, 74, 88, 66, 79, 61, 47] },
-          { "name": "活跃会话", "data": [30, 44, 62, 70, 82, 74, 58, 52] }
-        ]
-      },
-      "progress": [
-        { "label": "日巡检完成率", "value": 92, "unit": "%" },
-        { "label": "工单闭环率", "value": 78, "unit": "%" },
-        { "label": "数据接入率", "value": 64, "unit": "%" }
-      ],
-      "metrics": [
-        { "label": "节点健康度", "value": 97, "unit": "%" },
-        { "label": "今日告警", "value": 12, "unit": "条" }
-      ]
-    }
-  </script>
-
-  <script type="module">
-    import { register } from '@datav-kit/elements@0.0.5'
-    import * as echarts from 'echarts'
-
-    const THEMES = ['cyber-blue', 'matrix-green', 'solar-gold']
-    const COUNT_DURATION = 1400 // P16: one count-up duration per screen
-    const CHART_ANIMATION = 300 // chart motion 200-400ms; never --dvk-motion-duration
-    const data = JSON.parse(document.querySelector('#dvk-data').textContent)
-    const screen = document.querySelector('#screen')
-    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
-    const charts = []
-
-    register()
-
-    /* ---------- token bridge: read --dvk-* off the nearest theme host ---------- */
-    function readTokens(host) {
-      const style = getComputedStyle(host)
-      const value = name => style.getPropertyValue(name).trim()
-      return {
-        primary: value('--dvk-color-primary'),
-        secondary: value('--dvk-color-secondary'),
-        accent: value('--dvk-color-accent'),
-        surface: value('--dvk-color-surface'),
-        lineWidth: Number.parseFloat(value('--dvk-line-width')) || 1,
-        fontFamily: value('--dvk-screen-font-family'),
-        fontXs: Number.parseFloat(value('--dvk-screen-font-size-xs')) || 14,
-        fontSm: Number.parseFloat(value('--dvk-screen-font-size-sm')) || 18,
+    </script>
+    <style>
+      * {
+        box-sizing: border-box;
       }
-    }
-
-    /* ECharts has no alpha syntax, so translucent roles are derived here. */
-    function withAlpha(color, alpha) {
-      const hex = color.trim()
-      if (!hex.startsWith('#')) return hex
-      const rgb = hex.length === 4
-        ? [1, 2, 3].map(index => Number.parseInt(hex[index] + hex[index], 16))
-        : [1, 3, 5].map(index => Number.parseInt(hex.slice(index, index + 2), 16))
-      return `rgba(${rgb.join(', ')}, ${alpha})`
-    }
-
-    function buildChartTheme(t) {
-      const axisLabel = { color: withAlpha(t.primary, 0.72), fontSize: t.fontXs, fontFamily: t.fontFamily }
-      return {
-        color: [t.primary, t.secondary, t.accent],
-        backgroundColor: 'transparent',
-        textStyle: { color: withAlpha(t.primary, 0.72), fontFamily: t.fontFamily, fontSize: t.fontXs },
-        categoryAxis: {
-          axisLine: { lineStyle: { color: withAlpha(t.primary, 0.32), width: t.lineWidth } },
-          axisTick: { show: false },
-          axisLabel,
-          splitLine: { show: false },
-        },
-        valueAxis: {
-          axisLine: { show: false },
-          axisTick: { show: false },
-          axisLabel,
-          splitLine: { lineStyle: { color: withAlpha(t.primary, 0.12), width: t.lineWidth } },
-        },
-        legend: {
-          textStyle: { color: withAlpha(t.primary, 0.72), fontFamily: t.fontFamily, fontSize: t.fontXs },
-        },
-        tooltip: {
-          backgroundColor: t.surface,
-          borderColor: withAlpha(t.primary, 0.4),
-          borderWidth: t.lineWidth,
-          textStyle: { color: t.primary, fontSize: t.fontSm, fontFamily: t.fontFamily },
-        },
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #14232b;
       }
-    }
-
-    /* ---------- P3 title bar: feature-detect, otherwise the P3 fallback ---------- */
-    function mountTitle() {
-      const group = document.querySelector('#title-group')
-      // The Title 4 variant does not exist; only 1-3 are ever probed.
-      const tag = ['dvk-title-1', 'dvk-title-2', 'dvk-title-3'].find(name => customElements.get(name))
-
-      if (tag) {
-        const el = document.createElement(tag)
-        el.setAttribute('title-text', data.header.title)
-        group.append(el)
-        group.dataset.titlePath = 'component'
-        return
+      .dvk-screen {
+        --dvk-color-primary: #7db5c9;
+        --dvk-color-secondary: #8bd2ba;
+        --dvk-color-surface: #1e333d;
+        --dvk-count-to-color: #edf5f7;
+        --dvk-count-to-font-size: 96px;
+        width: 1920px;
+        height: 1080px;
+        padding: 96px;
+        color: #edf5f7;
+        background: #14232b;
+        font:
+          28px/1.5 'PingFang SC',
+          'Microsoft YaHei',
+          sans-serif;
       }
-
-      const rail = document.createElement('div')
-      rail.className = 'title-rail'
-      rail.innerHTML = `
-        <dvk-decoration-9 class="rail" reverse></dvk-decoration-9>
-        <div class="title-block">
-          <span class="eyebrow">${data.header.eyebrow}</span>
-          <h1>${data.header.title}</h1>
-        </div>
-        <dvk-decoration-9 class="rail"></dvk-decoration-9>`
-      group.append(rail)
-      group.dataset.titlePath = 'p3-fallback'
-    }
-
-    function renderProgress() {
-      document.querySelector('#progress-list').innerHTML = data.progress.map(item => `
-        <div class="progress-line">
-          <span class="row-head">
-            <span class="label">${item.label}</span>
-            <span class="value-row">
-              <dvk-count-to end-val="${item.value}" duration="${COUNT_DURATION}"></dvk-count-to>
-              <span class="unit">${item.unit}</span>
-            </span>
-          </span>
-          <div class="bar"><i style="--bar-value: ${item.value}%"></i></div>
-        </div>`).join('')
-    }
-
-    function renderMetrics() {
-      document.querySelector('#metric-stack').innerHTML = data.metrics.map(item => `
-        <article class="metric-card">
-          <span class="label">${item.label}</span>
-          <span class="value-row">
-            <dvk-count-to end-val="${item.value}" duration="${COUNT_DURATION}"></dvk-count-to>
-            <span class="unit">${item.unit}</span>
-          </span>
-        </article>`).join('')
-    }
-
-    /* ---------- the one chart slot ---------- */
-    function trendOption() {
-      return {
-        animation: !reduceMotion,
-        animationDuration: CHART_ANIMATION,
-        // Explicit grid override: the 10% / 60 default wastes most of a small panel.
-        grid: { left: 56, right: 32, top: 44, bottom: 32 },
-        legend: { top: 0, right: 8, itemWidth: 12, itemHeight: 8, data: data.trend.series.map(series => series.name) },
-        tooltip: { trigger: 'axis' },
-        xAxis: { type: 'category', boundaryGap: false, data: data.trend.labels },
-        yAxis: { type: 'value', splitNumber: 6 },
-        series: data.trend.series.map(series => ({
-          type: 'line',
-          name: series.name,
-          data: series.data,
-          smooth: false,
-          showSymbol: false,
-          lineStyle: { width: 2 },
-          areaStyle: { opacity: 0.1 },
-        })),
+      h1 {
+        margin: 0 0 64px;
+        font-size: 48px;
+        font-weight: 500;
       }
-    }
-
-    function mountChart(selector, option) {
-      const el = document.querySelector(selector)
-      const chart = echarts.init(el, buildChartTheme(readTokens(screen)), { renderer: 'svg' })
-      chart.setOption(option)
-
-      // ResizeObserver + rAF throttling; echarts@6.1.0 resize() does not refresh DPR.
-      let frame = 0
-      new ResizeObserver(() => {
-        cancelAnimationFrame(frame)
-        frame = requestAnimationFrame(() => chart.resize())
-      }).observe(el)
-
-      charts.push(chart)
-      return chart
-    }
-
-    /* One theme per screen: exactly one .dvk-theme-* class on the screen root. */
-    function applyTheme(name) {
-      THEMES.forEach(theme => screen.classList.remove(`dvk-theme-${theme}`))
-      screen.classList.add(`dvk-theme-${name}`)
-      document.documentElement.style.setProperty(
-        '--dvk-page-ground',
-        getComputedStyle(screen).getPropertyValue('--dvk-color-surface').trim(),
-      )
-      // setTheme, never dispose + re-init: ECharts does not observe CSS variable changes.
-      const tokens = readTokens(screen)
-      charts.forEach(chart => chart.setTheme(buildChartTheme(tokens)))
-      document.querySelectorAll('[data-theme]').forEach((button) => {
-        button.classList.toggle('is-active', button.dataset.theme === name)
-      })
-    }
-
-    function applyReducedMotion() {
-      if (!reduceMotion) return
-      document.querySelectorAll('dvk-count-to').forEach(el => el.setAttribute('disabled', ''))
-    }
-
-    mountTitle()
-    document.querySelector('#freshness-text').textContent = data.updated
-    renderProgress()
-    renderMetrics()
-
-    /* Theme tokens are read with getComputedStyle, so the themed boot waits for the
-       external theme stylesheets to finish loading. */
-    function boot() {
-      applyTheme('cyber-blue')
-      mountChart('#chart-trend', trendOption())
-      applyReducedMotion()
-    }
-
-    if (document.readyState === 'complete') boot()
-    else window.addEventListener('load', boot, { once: true })
-
-    document.querySelectorAll('[data-theme]').forEach((button) => {
-      button.addEventListener('click', () => applyTheme(button.dataset.theme))
-    })
-  </script>
-</body>
+      dvk-border-box-15 {
+        display: block;
+        width: 760px;
+        height: 360px;
+      }
+      .metric {
+        height: 100%;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .metric p {
+        margin: 0;
+        color: #b3c8d2;
+      }
+      #error {
+        color: #ffc59e;
+      }
+    </style>
+  </head>
+  <body>
+    <dvk-fit-screen
+      width="1920"
+      height="1080"
+      mode="contain"
+      align="center center"
+    >
+      <div class="dvk-screen dvk-theme-minimal" id="screen">
+        <h1>生产运行总览</h1>
+        <dvk-border-box-15 background-color="var(--dvk-color-surface)">
+          <section class="metric">
+            <p>本班累计产量 / 件</p>
+            <dvk-count-to end-val="3912" disabled></dvk-count-to>
+          </section>
+        </dvk-border-box-15>
+        <p id="error" role="status"></p>
+      </div>
+    </dvk-fit-screen>
+    <script type="module">
+      try {
+        const { register } = await import('@datav-kit/elements')
+        register()
+        await document.querySelector('dvk-fit-screen').updateComplete
+        document.querySelector('#screen').dataset.ready = 'true'
+      } catch {
+        document.querySelector('#error').textContent =
+          '依赖加载失败，请联网后重新打开。'
+      }
+    </script>
+  </body>
 </html>

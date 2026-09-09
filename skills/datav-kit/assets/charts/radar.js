@@ -21,9 +21,9 @@
 import * as echarts from 'echarts'
 
 const CHART_MOTION = 300
-const MIN_WIDTH = 160 // charts.md §5: below this the chart degrades to a value card
+const MIN_WIDTH = 160 // Starter size guard: below this, render a value card
 const MIN_HEIGHT = 100
-const MAX_INDICATORS = 5 // design-rules 6.2 / ECharts handbook
+const MAX_INDICATORS = 5 // Reference presentation limit; adapt to the dataset.
 
 /* ---------- 1. token injection: --dvk-* -> ECharts theme object ---------- */
 
@@ -129,7 +129,7 @@ function prefersReducedMotion() {
 function buildOption(data, t) {
   const indicators = data.indicators || []
   if (indicators.length > MAX_INDICATORS)
-    console.warn(`[datav-kit] radar: ${indicators.length} indicators exceeds the 5-axis cap (design-rules 6.2); a line chart reads exact values better.`)
+    console.warn(`[datav-kit] radar: ${indicators.length} indicators exceeds the 5-axis cap; a line chart reads exact values better.`)
 
   const series = data.series || []
   return {
@@ -148,7 +148,7 @@ function buildOption(data, t) {
     series: [{
       type: 'radar',
       symbol: 'none',
-      // Data lines sit in the 1.5-2.25px band; axes use --dvk-line-width (charts.md §5).
+      // Data lines sit in the 1.5-2.25px band; axes use --dvk-line-width.
       lineStyle: { width: Math.min(2.25, Math.max(1.5, t.lineWidth * 2)) },
       areaStyle: { opacity: 0.16 },
       data: series.map(item => ({ name: item.name, value: item.values })),
@@ -301,7 +301,7 @@ export function createRadar(el, data, tokens = readDatavTokens(el)) {
     applyState()
   }
 
-  /* Below the guard the chart is replaced by a value card (charts.md §5). */
+  /* Below the guard the chart is replaced by a value card. */
   function degrade() {
     if (degraded)
       return

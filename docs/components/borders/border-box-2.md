@@ -20,6 +20,12 @@ description: Layered neon cyber frame with corners, energy bars, tick marks, and
 </dvk-border-box-2>
 ```
 
+## Content
+
+Place headings and charts in the default slot. CSS parts are styling hooks, not named
+slots. Keep the automatic content inset; see the shared [content-area contract](/reference/architecture-contracts#authoring-slotted-content)
+for wrapper padding and explicit overrides.
+
 ## Props
 
 | Name | Type | Default | Notes |

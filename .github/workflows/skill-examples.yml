@@ -1,0 +1,37 @@
+name: Skill examples
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      VITEPRESS_BASE: /datav-kit/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.6.0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec turbo build --filter='!@datav-kit/docs'
+      - run: pnpm docs:build
+      - run: pnpm docs:check
+      - run: pnpm examples:test
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: example-browser-verification
+          path: |
+            .cache/playwright-report
+            .cache/playwright-results
+            .cache/example-screenshots

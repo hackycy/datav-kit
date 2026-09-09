@@ -21,7 +21,7 @@
 import * as echarts from 'echarts'
 
 const CHART_MOTION = 300
-const MIN_WIDTH = 160 // charts.md §5: below this the chart degrades to a value card
+const MIN_WIDTH = 160 // Starter size guard: below this, render a value card
 const MIN_HEIGHT = 100
 const LARGE_THRESHOLD = 2000 // scatter default; above it per-point symbol sizes are dropped
 
@@ -83,7 +83,7 @@ function parseGlow(value) {
 function typeTheme(t) {
   return {
     scatter: {
-      // A hairline rim lifts each mark off the dark ground (design-rules 4.8).
+      // A hairline rim lifts each mark off the dark ground.
       itemStyle: { opacity: 0.72, borderColor: withAlpha(t.primary, 0.35), borderWidth: t.lineWidth },
     },
   }
@@ -148,7 +148,7 @@ function buildOption(data, t) {
       symbolSize: point => (point?.[2] == null ? 8 : 6 + Math.sqrt(point[2]) * 2),
       large: true,
       largeThreshold: LARGE_THRESHOLD,
-      // The accent role marks the point under the pointer (charts.md §3).
+      // The accent role marks the point under the pointer.
       emphasis: { itemStyle: { opacity: 1, borderColor: withAlpha(t.accent, 0.9), borderWidth: 2 } },
     })),
   }
@@ -299,7 +299,7 @@ export function createScatter(el, data, tokens = readDatavTokens(el)) {
     applyState()
   }
 
-  /* Below the guard the chart is replaced by a value card (charts.md §5). */
+  /* Below the guard the chart is replaced by a value card. */
   function degrade() {
     if (degraded)
       return

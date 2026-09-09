@@ -20,6 +20,12 @@ description: Minimal electric-blue HUD frame with chamfered corners, title rail,
 </dvk-border-box-12>
 ```
 
+## Content
+
+Place headings and charts in the default slot. CSS parts are styling hooks, not named
+slots. Keep the automatic content inset; see the shared [content-area contract](/reference/architecture-contracts#authoring-slotted-content)
+for wrapper padding and explicit overrides.
+
 ## Props
 
 | Name | Type | Default | Notes |

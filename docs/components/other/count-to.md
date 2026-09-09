@@ -6,6 +6,10 @@ description: Animated numeric metric display with prefix, suffix, thousands sepa
 
 `dvk-count-to` renders an animated numeric metric with optional prefix, suffix, thousands separator, and decimal formatting.
 
+Numeric attributes are converted from strings. Custom `prefix` and `suffix` slot content
+takes precedence over the corresponding text properties. Use `disabled` to immediately
+show the target value when reduced motion is requested.
+
 <div class="datav-demo">
   <dvk-border-box-1 class="datav-panel" colors="#235fa7,#4fd2dd">
     <div class="datav-panel__content">

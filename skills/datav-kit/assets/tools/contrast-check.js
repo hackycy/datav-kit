@@ -1,34 +1,9 @@
 /**
- * datav-kit contrast check — zero-dependency, pure functions.
- *
- * Four object groups (spec.md 3.13 / issue 15): text / surface, graphic /
- * surface, decorative line / surface, and adjacent data marks. Each group is
- * checked against its non-rounded lower threshold (design-rules 4.1, a redline)
- * and against the advisory comfort band 7:1-15:1 (design-rules 4.5). The floor
- * decides PASS / FAIL; the band only adds an advisory note and never fails.
- *
- * Never rounds. WCAG 2.2 SC 1.4.3 is explicit that 4.499:1 is not 4.5:1, so a
- * pair at 4.4951:1 must FAIL the body-text floor even though a two-decimal
- * display reads 4.50. `ratio` is returned raw and compared raw.
- *
- * Reading a FAIL: the text / graphic / decorative-line floors are design-rules
- * 4.1 redlines. The adjacent-marks floor comes from 4.8, which is advisory and
- * conditional ("when a boundary itself carries meaning"), so a FAIL there means
- * the two marks are not told apart by colour alone — fix it by assigning colour
- * roles so adjacent series differ, or by adding a direct label / shape cue, not
- * necessarily by changing the palette. On a dark surface (`--dvk-color-surface`
- * is a 5-10% lightness of the brand colour) at most two marks can be mutually
- * 3:1 apart, so "every pair passes" is not a reachable target for a three-colour
- * theme.
- *
- * No palette lives here. Every colour is an input; in a project they come only
- * from the active theme's `--dvk-color-*` values (one colour source). A
- * translucent colour is composited over its background first — `--dvk-color-surface`
- * is rgba with alpha 0.72, so pass the screen ground as `ground`.
- *
- * Node-only, standard library only, no dependencies:
- *   node assets/tools/contrast-check.js
- * runs the four groups with representative passing and failing inputs.
+ * Numerical contrast helpers. Colors are caller-supplied application/theme roles.
+ * Alpha colors are composited over the supplied ground before comparison.
+ * Ratios are compared without rounding. Text and meaningful graphic thresholds
+ * follow the caller's usage; decorative-only colors do not need a data threshold.
+ * Run this file with Node for representative passing and failing examples.
  */
 
 import process from 'node:process'
@@ -133,35 +108,35 @@ export function contrastRatio(foreground, background, options = {}) {
 
 /* ---------- the four object groups ---------- */
 
-/** design-rules 4.5, advisory only: body text sits in this comfort band. */
+/** Optional historical comfort band; not a WCAG requirement. */
 const ADVISORY_BAND = Object.freeze([7, 15])
 
 export const GROUPS = Object.freeze({
   'text': Object.freeze({
     label: 'text / surface',
     floor: 4.5,
-    floorSource: 'design-rules 4.1 body text (WCAG 2.2 SC 1.4.3)',
+    floorSource: 'WCAG 2.2 SC 1.4.3 normal text',
   }),
   'graphic': Object.freeze({
     label: 'graphic / surface',
     floor: 3,
-    floorSource: 'design-rules 4.1 non-text and state indicators (WCAG 2.2 SC 1.4.11)',
+    floorSource: 'WCAG 2.2 SC 1.4.11 meaningful graphics',
   }),
   'decorative-line': Object.freeze({
     label: 'decorative line / surface',
     floor: 3,
-    floorSource: 'design-rules 4.1 non-text',
+    floorSource: 'Optional visibility target for decorative lines; not a conformance requirement',
   }),
   'adjacent-marks': Object.freeze({
     label: 'adjacent data marks',
     floor: 3,
-    floorSource: 'design-rules 4.1 non-text applied to 4.8 (advisory, only when the boundary carries meaning)',
+    floorSource: 'WCAG 2.2 SC 1.4.11, only when the boundary carries meaning',
   }),
 })
 
-/** design-rules 4.1 also floors large text at 3:1 — same text group, lower floor. */
+/** WCAG large text uses a 3:1 floor. */
 const LARGE_TEXT_FLOOR = 3
-const LARGE_TEXT_SOURCE = 'design-rules 4.1 large text (>= 18pt / 14pt bold / ~24px)'
+const LARGE_TEXT_SOURCE = 'WCAG 2.2 SC 1.4.3 large text (>= 18pt / 14pt bold)'
 
 function advisoryFor(ratio) {
   const [low, high] = ADVISORY_BAND

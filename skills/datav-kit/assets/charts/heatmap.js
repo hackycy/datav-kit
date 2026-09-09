@@ -21,7 +21,7 @@
 import * as echarts from 'echarts'
 
 const CHART_MOTION = 300
-const MIN_WIDTH = 160 // charts.md §5: below this the chart degrades to a value card
+const MIN_WIDTH = 160 // Starter size guard: below this, render a value card
 const MIN_HEIGHT = 100
 const PROGRESSIVE = 4000 // render in chunks above this many cells
 
@@ -146,7 +146,7 @@ function buildOption(data, t) {
       bottom: 0,
       itemWidth: 12,
       itemHeight: 80,
-      // Single-hue ramp, monotonic in alpha: never a rainbow scale (design-rules 4.6).
+      // Single-hue ramp, monotonic in alpha: never a rainbow scale.
       inRange: { color: [withAlpha(t.primary, 0.12), withAlpha(t.primary, 0.35), withAlpha(t.primary, 0.65), t.primary] },
     },
     series: [{
@@ -304,7 +304,7 @@ export function createHeatmap(el, data, tokens = readDatavTokens(el)) {
     applyState()
   }
 
-  /* Below the guard the chart is replaced by a value card (charts.md §5). */
+  /* Below the guard the chart is replaced by a value card. */
   function degrade() {
     if (degraded)
       return

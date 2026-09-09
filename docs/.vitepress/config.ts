@@ -1,14 +1,18 @@
 import process from 'node:process'
 import { defineConfig } from 'vitepress'
 import llmstxt, { copyOrDownloadAsMarkdownButtons } from 'vitepress-plugin-llms'
+import { copySkillExamples, skillExamples } from './skill-examples'
+
+const base = process.env.VITEPRESS_BASE || '/'
 
 export default defineConfig({
   title: 'DataV Kit',
   description: 'Framework-agnostic Web Components for data dashboard decoration.',
-  base: process.env.VITEPRESS_BASE || '/',
+  base,
+  buildEnd: copySkillExamples,
   cleanUrls: true,
   vite: {
-    plugins: [llmstxt()],
+    plugins: [llmstxt(), skillExamples(base)],
     server: {
       host: '0.0.0.0',
     },
@@ -16,6 +20,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/introduction' },
+      { text: 'Examples', link: '/guide/dashboard-examples' },
       { text: 'Components', link: '/components/decorations/decoration-1' },
       { text: 'Reference', link: '/reference/architecture-contracts' },
     ],
@@ -31,6 +36,7 @@ export default defineConfig({
             { text: 'Installation', link: '/guide/installation' },
             { text: 'Framework Integration', link: '/guide/framework-integration' },
             { text: 'Theming', link: '/guide/theming' },
+            { text: 'Dashboard Examples', link: '/guide/dashboard-examples' },
             { text: 'Component Authoring', link: '/guide/component-authoring' },
           ],
         },
@@ -98,15 +104,6 @@ export default defineConfig({
           items: [
             { text: 'Architecture Contracts', link: '/reference/architecture-contracts' },
             { text: 'Technical Architecture', link: '/architecture' },
-          ],
-        },
-      ],
-      '/technical-architecture': [
-        {
-          text: 'Reference',
-          items: [
-            { text: 'Architecture Contracts', link: '/reference/architecture-contracts' },
-            { text: 'Technical Architecture', link: '/technical-architecture' },
           ],
         },
       ],

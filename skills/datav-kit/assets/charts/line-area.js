@@ -21,9 +21,9 @@
 import * as echarts from 'echarts'
 
 const CHART_MOTION = 300
-const MIN_WIDTH = 160 // charts.md §5: below this the chart degrades to a value card
+const MIN_WIDTH = 160 // Starter size guard: below this, render a value card
 const MIN_HEIGHT = 100
-const MAX_SERIES = 4 // design-rules 6.2
+const MAX_SERIES = 4 // Reference presentation limit; adapt to the dataset.
 
 /* ---------- 1. token injection: --dvk-* -> ECharts theme object ---------- */
 
@@ -123,7 +123,7 @@ function buildOption(data, t) {
   const all = data.series || []
   const series = all.slice(0, MAX_SERIES)
   if (all.length > MAX_SERIES)
-    console.warn(`[datav-kit] line-area: ${all.length} series exceeds the 4-line cap (design-rules 6.2); only the first ${MAX_SERIES} are drawn.`)
+    console.warn(`[datav-kit] line-area: ${all.length} series exceeds the 4-line cap; only the first ${MAX_SERIES} are drawn.`)
 
   return {
     animation: !prefersReducedMotion(),
@@ -141,17 +141,17 @@ function buildOption(data, t) {
     legend: { show: series.length > 1, top: 0, right: 0, itemWidth: 12, itemHeight: 8 },
     tooltip: { trigger: 'axis' },
     xAxis: { type: 'category', boundaryGap: false, data: data.labels || [], axisTick: { show: false } },
-    // A line chart need not start at 0 (design-rules 6.4).
+    // A line chart need not start at 0.
     yAxis: { type: 'value', scale: true },
     series: series.map(item => ({
       type: 'line',
       name: item.name,
       data: item.data,
-      smooth: false, // no over-smoothing (design-rules 6.5)
+      smooth: false, // no over-smoothing
       showSymbol: false,
       connectNulls: false, // null means "no data here"; never invent a line across it
       sampling: 'lttb', // downsample when points far exceed pixels
-      // Data lines sit in the 1.5-2.25px band; axes use --dvk-line-width (charts.md §5).
+      // Data lines sit in the 1.5-2.25px band; axes use --dvk-line-width.
       lineStyle: { width: Math.min(2.25, Math.max(1.5, t.lineWidth * 2)) },
       areaStyle: { opacity: 0.16 },
     })),
@@ -303,7 +303,7 @@ export function createLineArea(el, data, tokens = readDatavTokens(el)) {
     applyState()
   }
 
-  /* Below the guard the chart is replaced by a value card (charts.md §5). */
+  /* Below the guard the chart is replaced by a value card. */
   function degrade() {
     if (degraded)
       return

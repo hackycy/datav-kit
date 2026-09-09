@@ -21,9 +21,9 @@
 import * as echarts from 'echarts'
 
 const CHART_MOTION = 300
-const MIN_WIDTH = 160 // charts.md §5: below this the chart degrades to a value card
+const MIN_WIDTH = 160 // Starter size guard: below this, render a value card
 const MIN_HEIGHT = 100
-const MAX_CATEGORIES = 5 // design-rules 6.2 / ECharts handbook
+const MAX_CATEGORIES = 5 // Reference presentation limit; adapt to the dataset.
 
 /* ---------- 1. token injection: --dvk-* -> ECharts theme object ---------- */
 
@@ -127,7 +127,7 @@ function prefersReducedMotion() {
 function buildOption(data, t) {
   const items = data.items || []
   if (items.length > MAX_CATEGORIES)
-    console.warn(`[datav-kit] pie-doughnut: ${items.length} categories exceeds the 5-slice cap (design-rules 6.2); a stacked bar compares them better.`)
+    console.warn(`[datav-kit] pie-doughnut: ${items.length} categories exceeds the 5-slice cap; a stacked bar compares them better.`)
 
   return {
     animation: !prefersReducedMotion(),
@@ -142,11 +142,11 @@ function buildOption(data, t) {
       avoidLabelOverlap: true,
       minAngle: 6,
       percentPrecision: 2,
-      showEmptyCircle: false, // datav-kit owns the empty state (charts.md §6)
-      // Direct labels beat a detached legend (design-rules 6.1).
+      showEmptyCircle: false, // datav-kit owns the empty state
+      // Direct labels beat a detached legend.
       label: { show: true, formatter: '{b} {d}%' },
       labelLine: { length: 8, length2: 8 },
-      // A hairline in the surface colour separates adjacent slices (design-rules 4.8).
+      // A hairline in the surface colour separates adjacent slices.
       itemStyle: { borderColor: t.surface, borderWidth: t.lineWidth },
       emphasis: { scale: false },
       data: items,
@@ -299,7 +299,7 @@ export function createPieDoughnut(el, data, tokens = readDatavTokens(el)) {
     applyState()
   }
 
-  /* Below the guard the chart is replaced by a value card (charts.md §5). */
+  /* Below the guard the chart is replaced by a value card. */
   function degrade() {
     if (degraded)
       return
