@@ -230,7 +230,9 @@ top title rail on `-12` are decorative graphics, not text containers.
 - **Parameters**: `grid-template-columns: repeat(N, minmax(0, 1fr))`; column gap
   `--dvk-screen-space-2xl` (32px); row height `--dvk-screen-kpi-height` (104px); value
   `--dvk-count-to-font-size` = `--dvk-screen-font-size-lg` (32px); label
-  `--dvk-screen-font-size-xs` (14px).
+  `--dvk-screen-font-size-xs` (14px); the card's inner wrapper carries
+  `padding: 0 --dvk-screen-space-lg` — the frame's inset bottoms out at 10px, which otherwise
+  puts the label and value too close to the frame edge.
 - **Grid position**: second row, fixed height, equal cards, not part of the `1fr` distribution.
 - **Replacements**: T4 enlarges the strip to 208px and uses P14/P16 for six cards; on an
   analysis screen the strip may be replaced by P15.
@@ -449,10 +451,13 @@ top title rail on `-12` are decorative graphics, not text containers.
 
 - **Purpose**: a point on the map — hub, node, flight.
 - **Construction**: an absolutely positioned `div` (percentage `left`/`top`) → diamond point `i`
-  (`transform: rotate(45deg)`) + `strong` code + `span` name + an optional `em` value.
+  (`transform: rotate(45deg)`) + a label plate `div` holding `strong` code + `span` name + an
+  optional `em` value.
 - **Parameters**: `position: absolute; transform: translate(-50%, -50%); display: grid;
   justify-items: center; gap` `--dvk-screen-space-xs` (4px); `min-width: 88px`; the point is
-  14–16px with a 2px border and a theme glow; tone colour per role; `pointer-events: none`.
+  14–16px with a 2px border and a theme glow; tone colour per role; `pointer-events: none`; the
+  label plate carries a `--dvk-color-surface` backing and `--dvk-screen-space-xs` inline padding
+  so the map's connection lines never cross the code or the name.
 - **Grid position**: inside the map container; coordinates are percentages, decoupled from the
   SVG `viewBox`.
 - **Replacements**: a symbol layer once markers exceed ~20 (DOM markers stop scaling); P19 for a

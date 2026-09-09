@@ -103,7 +103,13 @@ Precedence for the content inset:
 > computed contentRect padding
 ```
 
-- The computed value is an internal implementation detail, not an authoring contract.
+- The computed inset **is** the safe distance between content and frame. It differs per variant
+  and per host size, so its numbers are an implementation detail, not an authoring contract.
+- Keep it. When content needs more room than the inset gives — the small variants bottom out at
+  10px — add padding on an **inner wrapper** (`.panel-inner`, `.kpi-card`, a marker's label
+  plate), never on the component. Prefer horizontal padding: a fixed-height panel rarely has
+  vertical slack. An inset override moves every child, including the ones that were already
+  clear, and can pull content closer to the frame than the safe distance.
 - An override is justified only by an observed obstruction, overflow, or readability problem,
   and is recorded as a deviation.
 - Padding numbers must never be used to infer which variant is in play.

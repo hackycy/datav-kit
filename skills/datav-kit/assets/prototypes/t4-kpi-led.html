@@ -255,6 +255,17 @@
       min-height: 0;
     }
 
+    /* The component's content inset bottoms out at 10-15px on the small variants, which
+       leaves text too close to the frame. The content carries its own horizontal padding
+       inside the safe area; the component inset is never overridden (components.md §4).
+       Horizontal only: these panels have no vertical slack to give. */
+    dvk-border-box-7 .panel-inner,
+    dvk-border-box-9 .panel-inner,
+    dvk-border-box-10 .panel-inner,
+    .kpi-card {
+      padding: 0 var(--dvk-screen-space-lg);
+    }
+
     .panel-heading {
       display: flex;
       justify-content: space-between;

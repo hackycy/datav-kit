@@ -49,7 +49,10 @@
                         background-color="var(--dvk-color-surface)"
     dvk-border-box-7    P10 panel, chamfered surface (P6 role)
                         background-color="var(--dvk-color-surface)"
-    dvk-border-box-4    P17 primary view, focal primary view (P6 role), HUD, no background
+    dvk-border-box-1    P17 primary view (P6 role: focal primary view). Registered
+                        deviation from the matrix's preferred `4`: the prototype's focal
+                        frame stays plain (issue: -4's ornament crowded the head and read
+                        too cyberpunk), so the chain's last candidate `1` is used.
     dvk-border-box-13   P12 strip, bottom carrier-spine frame (P6 role), HUD
     dvk-border-box-11   P11 triage, operational status rail (P6 role), HUD
     dvk-decoration-9    P3 fallback rails x2, left instance carries reverse,
@@ -274,6 +277,18 @@
       min-height: 0;
     }
 
+    /* The component's content inset bottoms out at 10-15px on the small variants, which
+       leaves text too close to the frame. The content carries its own horizontal padding
+       inside the safe area; the component inset is never overridden (components.md §4).
+       Horizontal only: these panels have no vertical slack to give. */
+    dvk-border-box-1 .panel-inner,
+    dvk-border-box-7 .panel-inner,
+    dvk-border-box-9 .panel-inner,
+    dvk-border-box-15 .panel-inner,
+    .kpi-card {
+      padding: 0 var(--dvk-screen-space-lg);
+    }
+
     .panel-heading {
       display: flex;
       justify-content: space-between;
@@ -311,15 +326,6 @@
 
     .panel-body { min-height: 0; overflow: hidden; }
 
-    /* Registered deviation (components.md content-area rule): border-box-4's ornate
-       top-left ornament intrudes past the automatic contentRect inset at this panel
-       size, so the content inset is overridden to clear it — observed obstruction. */
-    .panel--map {
-      --dvk-border-box-4-padding:
-        var(--dvk-screen-space-5xl)
-        var(--dvk-screen-space-2xl)
-        var(--dvk-screen-space-xl);
-    }
 
     /* ---------- P9 horizontal progress row ---------- */
     .progress-list { display: grid; gap: var(--dvk-screen-space-lg); align-content: start; }
@@ -430,6 +436,16 @@
       box-shadow: var(--dvk-glow-soft);
     }
 
+    /* A label plate keeps the map's connection lines from crossing the text; the padding
+       lives on this wrapper, not on the component (components.md §4). */
+    .marker__label {
+      display: grid;
+      justify-items: center;
+      gap: var(--dvk-screen-space-xs);
+      padding: 0 var(--dvk-screen-space-xs);
+      background: var(--dvk-color-surface);
+    }
+
     .marker strong { font-size: var(--dvk-screen-font-size-xs); color: var(--dvk-text-strong); }
     .marker span { font-size: var(--dvk-screen-font-size-xs); color: var(--dvk-text-faint); }
 
@@ -504,16 +520,17 @@
     .triage-card time { font-size: var(--dvk-screen-font-size-xs); color: var(--dvk-text-muted); text-align: right; }
 
     /* ---------- P13 ring gauge ---------- */
+    /* P13 ring gauge: the gauge and its caption are one centred group. */
     .ring {
-      display: grid;
-      grid-template-columns: 128px minmax(0, 1fr);
+      display: flex;
       align-items: center;
+      justify-content: center;
       gap: var(--dvk-screen-space-lg);
       height: 100%;
       min-height: 0;
     }
 
-    .ring__gauge { width: 128px; height: 128px; }
+    .ring__gauge { flex: 0 0 128px; width: 128px; height: 128px; }
 
     .ring__gauge dvk-count-to {
       --dvk-count-to-font-size: var(--dvk-screen-font-size-sm);
@@ -627,7 +644,7 @@
         </div>
 
         <div class="col col-centre">
-          <dvk-border-box-4 class="panel--map">
+          <dvk-border-box-1 class="panel--map">
             <div class="panel-inner">
               <header class="panel-heading">
                 <div>
@@ -652,7 +669,7 @@
                 </div>
               </div>
             </div>
-          </dvk-border-box-4>
+          </dvk-border-box-1>
 
           <dvk-border-box-13>
             <div class="panel-inner">
@@ -862,8 +879,10 @@
       container.insertAdjacentHTML('beforeend', markers.map(item => `
         <div class="marker" style="left: ${item.left}; top: ${item.top}">
           <i></i>
-          <strong>${item.code}</strong>
-          <span>${item.name}</span>
+          <div class="marker__label">
+            <strong>${item.code}</strong>
+            <span>${item.name}</span>
+          </div>
         </div>`).join(''))
 
       container.insertAdjacentHTML('beforeend', `

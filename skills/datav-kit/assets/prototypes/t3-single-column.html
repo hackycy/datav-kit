@@ -41,7 +41,10 @@
     --------------------------------------------------------------------------
     dvk-fit-screen      width="1920" height="1080" mode="contain"
                         align="center center" fit-target="viewport"
-    dvk-border-box-4    P17 primary view, focal primary view (P6 role), HUD
+    dvk-border-box-1    P17 primary view (P6 role: focal primary view). Registered
+                        deviation from the matrix's preferred `4`: the prototype's focal
+                        frame stays plain (issue: -4's ornament crowded the head and read
+                        too cyberpunk), so the chain's last candidate `1` is used.
     dvk-border-box-9    P9 panel, restrained static surface (P6 role)
                         background-color="var(--dvk-color-surface)"
     dvk-border-box-10   P14 hero panel, rounded glow surface panel (P6 role)
@@ -255,6 +258,17 @@
       min-height: 0;
     }
 
+    /* The component's content inset bottoms out at 10-15px on the small variants, which
+       leaves text too close to the frame. The content carries its own horizontal padding
+       inside the safe area; the component inset is never overridden (components.md §4).
+       Horizontal only: these panels have no vertical slack to give. */
+    dvk-border-box-1 .panel-inner,
+    dvk-border-box-9 .panel-inner,
+    dvk-border-box-10 .panel-inner,
+    dvk-border-box-15 .panel-inner {
+      padding: 0 var(--dvk-screen-space-lg);
+    }
+
     .panel-heading {
       display: flex;
       justify-content: space-between;
@@ -291,16 +305,6 @@
     }
 
     .panel-body { min-height: 0; overflow: hidden; }
-
-    /* Registered deviation (components.md content-area rule): border-box-4's ornate
-       top-left ornament intrudes past the automatic contentRect inset at this panel
-       size, so the content inset is overridden to clear it — observed obstruction. */
-    .panel--map {
-      --dvk-border-box-4-padding:
-        var(--dvk-screen-space-5xl)
-        var(--dvk-screen-space-2xl)
-        var(--dvk-screen-space-xl);
-    }
 
     /* ---------- P17 map stage + P18 markers + P19 overlay ---------- */
     .map-shell { display: grid; grid-template-rows: minmax(0, 1fr); height: 100%; min-height: 0; }
@@ -340,6 +344,16 @@
       background: var(--dvk-color-secondary);
       transform: rotate(45deg);
       box-shadow: var(--dvk-glow-soft);
+    }
+
+    /* A label plate keeps the map's connection lines from crossing the text; the padding
+       lives on this wrapper, not on the component (components.md §4). */
+    .marker__label {
+      display: grid;
+      justify-items: center;
+      gap: var(--dvk-screen-space-xs);
+      padding: 0 var(--dvk-screen-space-xs);
+      background: var(--dvk-color-surface);
     }
 
     .marker strong { font-size: var(--dvk-screen-font-size-xs); color: var(--dvk-text-strong); }
@@ -432,15 +446,6 @@
     }
 
     /* ---------- P12 rhythm bars (104px footer strip) ---------- */
-    /* Registered deviation (components.md content-area rule): the footer strip is a
-       fixed 104px row, so the carrier-spine frame's content inset is reduced to keep
-       the 72px bar slot and its label inside — no obstruction, measured overflow. */
-    .rhythm-strip {
-      --dvk-border-box-13-padding:
-        var(--dvk-screen-space-xs)
-        var(--dvk-screen-space-xl)
-        var(--dvk-screen-space-md);
-    }
 
     .rhythm {
       display: grid;
@@ -527,7 +532,7 @@
       </header>
 
       <main class="screen-main">
-        <dvk-border-box-4 class="panel-primary panel--map">
+        <dvk-border-box-1 class="panel-primary panel--map">
           <div class="panel-inner">
             <header class="panel-heading">
               <div>
@@ -553,7 +558,7 @@
               </div>
             </div>
           </div>
-        </dvk-border-box-4>
+        </dvk-border-box-1>
 
         <div class="small-row">
           <dvk-border-box-9 background-color="var(--dvk-color-surface)">
@@ -734,8 +739,10 @@
       container.insertAdjacentHTML('beforeend', data.primary.markers.map(item => `
         <div class="marker" style="left: ${item.left}; top: ${item.top}">
           <i></i>
-          <strong>${item.code}</strong>
-          <span>${item.name}</span>
+          <div class="marker__label">
+            <strong>${item.code}</strong>
+            <span>${item.name}</span>
+          </div>
         </div>`).join(''))
 
       container.insertAdjacentHTML('beforeend', `
