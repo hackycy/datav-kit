@@ -10,10 +10,6 @@ http.createServer(async (request, response) => {
   const url = new URL(request.url, 'http://localhost')
   const decoded = decodeURIComponent(url.pathname)
   const pathname = base && decoded.startsWith(`${base}/`) ? decoded.slice(base.length) : decoded
-  if (pathname === '/favicon.ico') {
-    response.writeHead(204).end()
-    return
-  }
   const filename = pathname.endsWith('/') ? `${pathname}index.html` : path.extname(pathname) ? pathname : `${pathname}.html`
   const file = path.resolve(root, `.${filename}`)
   if (!file.startsWith(`${root}${path.sep}`)) {
