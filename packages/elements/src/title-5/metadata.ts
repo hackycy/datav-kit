@@ -1,0 +1,72 @@
+import type { DatavElementMetadata } from '@datav-kit/core'
+
+export const title5Metadata = {
+  tagName: 'dvk-title-5',
+  className: 'Title5Element',
+  description: 'Recessed large-screen title header whose top guide rail steps down through a shoulder on each side into a flat bright bottom edge, with a recess that widens to follow the measured title box.',
+  props: {
+    color: {
+      type: 'string',
+      default: '',
+      attribute: true,
+      cssVariable: '--dvk-color-primary',
+      description: 'Primary cyan color for the guide rails, the recess bottom edge, the outer ticks and the title text glow. Also accepts a DataV-compatible color array when set as a property.',
+    },
+    secondaryColor: {
+      type: 'string',
+      default: '',
+      attribute: 'secondary-color',
+      cssVariable: '--dvk-color-secondary',
+      description: 'Secondary blue color for the header surface, the recess fill, the inner rail and the slash accents.',
+    },
+    accentColor: {
+      type: 'string',
+      default: '',
+      attribute: 'accent-color',
+      cssVariable: '--dvk-title-5-accent',
+      description: 'Accent cyan color for the bright centre of the recess bottom edge.',
+    },
+    colors: {
+      type: 'string',
+      default: '',
+      attribute: true,
+      description: 'Comma-separated primary, secondary, and accent colors.',
+    },
+    titleText: {
+      type: 'string',
+      default: '',
+      attribute: 'title-text',
+      description: 'Optional centered system name. When omitted, the default slot is rendered inside the title area.',
+    },
+  },
+  events: [
+    {
+      name: 'dvk-ready',
+      detail: '{ tagName }',
+      description: 'Fired after the element first renders.',
+    },
+  ],
+  parts: [
+    'graphic',
+    'top-edge',
+    'surface',
+    'guide-rail',
+    'guide-rail-left',
+    'guide-rail-right',
+    'recess',
+    'inner-rail',
+    'rail',
+    'rail-glow',
+    'rail-core',
+    'accent',
+    'accent-glow',
+    'accent-core',
+    'slash',
+    'slash-left',
+    'slash-right',
+    'tick',
+    'content',
+    'title',
+    'title-text',
+  ],
+} satisfies DatavElementMetadata
