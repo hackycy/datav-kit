@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, PerformanceMonitorElement, Title1Element, Title2Element, Title3Element, Title4Element, Title5Element } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, LoadingPulseElement, PerformanceMonitorElement, Title1Element, Title2Element, Title3Element, Title4Element, Title5Element } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, definePerformanceMonitor, defineTitle1, defineTitle2, defineTitle3, defineTitle4, defineTitle5, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, defineLoadingPulse, definePerformanceMonitor, defineTitle1, defineTitle2, defineTitle3, defineTitle4, defineTitle5, elementMetadata, register } from '../src/index'
 import { resolveRailGap } from '../src/title-4/element'
 import { resolveRecessHalf, resolveShoulderRun } from '../src/title-5/element'
 
@@ -194,14 +194,15 @@ describe('@datav-kit/elements', () => {
       'dvk-count-to',
       'dvk-loading-orbit',
       'dvk-loading-energy',
+      'dvk-loading-pulse',
       'dvk-performance-monitor',
     ])
 
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-performance-monitor']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-performance-monitor']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -289,6 +290,7 @@ describe('@datav-kit/elements', () => {
     expect(defineCountTo()).toBe(false)
     expect(defineLoadingOrbit()).toBe(false)
     expect(defineLoadingEnergy()).toBe(false)
+    expect(defineLoadingPulse()).toBe(false)
     expect(definePerformanceMonitor()).toBe(false)
   })
 
@@ -1614,6 +1616,101 @@ describe('@datav-kit/elements', () => {
     expect(themedMarkers.map(marker => marker.getAttribute('fill'))).toEqual(['rgba(24, 240, 255, 0.46)', 'rgba(24, 240, 255, 0.46)', 'rgba(24, 240, 255, 0.46)'])
     expect(themedTracks.map(track => track.getAttribute('fill'))).toEqual(['rgba(43, 124, 255, 0.16)', 'rgba(43, 124, 255, 0.16)', 'rgba(43, 124, 255, 0.16)'])
     expect(fallbackFrame?.getAttribute('stroke')).toBe('rgba(138, 153, 173, 0.38)')
+  })
+
+  it('maps loading-pulse attributes and renders five phase-shifted pulse bars', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-pulse') as LoadingPulseElement
+    const ready = vi.fn()
+
+    element.setAttribute('colors', '#111,#222')
+    element.setAttribute('size', '64')
+    element.setAttribute('dur', '2')
+    element.textContent = 'Loading data'
+    element.addEventListener('dvk-ready', ready)
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const bars = [...(element.shadowRoot?.querySelectorAll('[part="bar"]') ?? [])]
+    const tracks = [...(element.shadowRoot?.querySelectorAll('[part="bar-track"]') ?? [])]
+    const fills = [...(element.shadowRoot?.querySelectorAll('[part="bar-fill"]') ?? [])]
+    const scales = [...(element.shadowRoot?.querySelectorAll('animateTransform') ?? [])]
+    const opacities = [...(element.shadowRoot?.querySelectorAll('animate') ?? [])]
+
+    expect(element).toHaveProperty('colors', '#111,#222')
+    expect(element).toHaveProperty('size', 64)
+    expect(element).toHaveProperty('dur', 2)
+    expect(element.getAttribute('role')).toBe('status')
+    expect(element.getAttribute('aria-live')).toBe('polite')
+    expect(ready).toHaveBeenCalledWith(expect.objectContaining({
+      detail: { tagName: 'dvk-loading-pulse' },
+    }))
+    expect(svg?.getAttribute('width')).toBe('64')
+    expect(svg?.getAttribute('height')).toBe('54.261')
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 46 39')
+    expect(bars.map(bar => bar.getAttribute('transform'))).toEqual(['translate(0 19.5)', 'translate(0 19.5)', 'translate(0 19.5)', 'translate(0 19.5)', 'translate(0 19.5)'])
+    expect(tracks.map(track => track.getAttribute('x'))).toEqual(['0', '10', '20', '30', '40'])
+    expect(tracks.map(track => track.getAttribute('y'))).toEqual(['-19.5', '-19.5', '-19.5', '-19.5', '-19.5'])
+    expect(tracks.map(track => track.getAttribute('fill'))).toEqual(['rgba(34, 34, 34, 0.16)', 'rgba(34, 34, 34, 0.16)', 'rgba(34, 34, 34, 0.16)', 'rgba(34, 34, 34, 0.16)', 'rgba(34, 34, 34, 0.16)'])
+    expect(fills.map(fill => fill.getAttribute('fill'))).toEqual(['#111', '#111', '#111', '#111', '#111'])
+    expect(fills.map(fill => fill.getAttribute('transform'))).toEqual(['scale(1 0.28)', 'scale(1 0.48)', 'scale(1 0.72)', 'scale(1 0.48)', 'scale(1 0.28)'])
+    expect(scales.map(animation => animation.getAttribute('type'))).toEqual(['scale', 'scale', 'scale', 'scale', 'scale'])
+    expect(scales.map(animation => animation.getAttribute('begin'))).toEqual(['1.2s', '1.6s', '0s', '1.6s', '1.2s'])
+    expect(scales.map(animation => animation.getAttribute('dur'))).toEqual(['2s', '2s', '2s', '2s', '2s'])
+    expect(scales.map(animation => animation.getAttribute('repeatCount'))).toEqual(['indefinite', 'indefinite', 'indefinite', 'indefinite', 'indefinite'])
+    expect(new Set(scales.map(animation => animation.getAttribute('values')))).toEqual(new Set(['1 0.24;1 1;1 0.24']))
+    expect(opacities.map(animation => animation.getAttribute('attributeName'))).toEqual(['opacity', 'opacity', 'opacity', 'opacity', 'opacity'])
+    expect(opacities.map(animation => animation.getAttribute('begin'))).toEqual(['1.2s', '1.6s', '0s', '1.6s', '1.2s'])
+    expect(new Set(opacities.map(animation => animation.getAttribute('values')))).toEqual(new Set(['0.48;0.8;1;0.8;0.48']))
+    expect(element.shadowRoot?.querySelector('slot')?.assignedNodes().map(node => node.textContent).join('').trim()).toBe('Loading data')
+  })
+
+  it('keeps loading-pulse static when paused', async () => {
+    register()
+
+    const element = document.createElement('dvk-loading-pulse') as LoadingPulseElement
+    element.setAttribute('paused', '')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const fills = [...(element.shadowRoot?.querySelectorAll('[part="bar-fill"]') ?? [])]
+
+    expect(element.shadowRoot?.querySelectorAll('[part="bar-track"]')).toHaveLength(5)
+    expect(fills).toHaveLength(5)
+    expect(element.shadowRoot?.querySelector('animate')).toBeNull()
+    expect(element.shadowRoot?.querySelector('animateTransform')).toBeNull()
+    expect(fills.map(fill => fill.getAttribute('transform'))).toEqual(['scale(1 0.28)', 'scale(1 0.48)', 'scale(1 0.72)', 'scale(1 0.48)', 'scale(1 0.28)'])
+  })
+
+  it('uses datav-kit colors as loading-pulse fallback colors', async () => {
+    register()
+
+    const themed = document.createElement('dvk-loading-pulse') as LoadingPulseElement
+    themed.style.setProperty('--dvk-color-primary', '#ffc857')
+    themed.style.setProperty('--dvk-color-secondary', '#7a5cff')
+    themed.setAttribute('paused', '')
+    document.body.append(themed)
+
+    const fallback = document.createElement('dvk-loading-pulse') as LoadingPulseElement
+    fallback.setAttribute('paused', '')
+    document.body.append(fallback)
+
+    await themed.updateComplete
+    await fallback.updateComplete
+
+    const themedFill = themed.shadowRoot?.querySelector('[part="bar-fill"]')
+    const themedTrack = themed.shadowRoot?.querySelector('[part="bar-track"]')
+    const fallbackFill = fallback.shadowRoot?.querySelector('[part="bar-fill"]')
+    const fallbackTrack = fallback.shadowRoot?.querySelector('[part="bar-track"]')
+
+    expect(themedFill?.getAttribute('fill')).toBe('#ffc857')
+    expect(themedTrack?.getAttribute('fill')).toBe('rgba(122, 92, 255, 0.16)')
+    expect(fallbackFill?.getAttribute('fill')).toBe('#18f0ff')
+    expect(fallbackTrack?.getAttribute('fill')).toBe('rgba(43, 124, 255, 0.16)')
   })
 
   it('maps border-box-1 attributes to element properties and renders SVG', async () => {

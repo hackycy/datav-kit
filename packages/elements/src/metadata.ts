@@ -30,6 +30,7 @@ import { decoration11Metadata } from './decoration-11/metadata'
 import { fitScreenMetadata } from './fit-screen/metadata'
 import { loadingEnergyMetadata } from './loading-energy/metadata'
 import { loadingOrbitMetadata } from './loading-orbit/metadata'
+import { loadingPulseMetadata } from './loading-pulse/metadata'
 import { performanceMonitorMetadata } from './performance-monitor/metadata'
 import { title1Metadata } from './title-1/metadata'
 import { title2Metadata } from './title-2/metadata'
@@ -76,5 +77,6 @@ export const elementMetadata: ElementMetadata[] = [
   countToMetadata,
   loadingOrbitMetadata,
   loadingEnergyMetadata,
+  loadingPulseMetadata,
   performanceMonitorMetadata,
 ]
