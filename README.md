@@ -61,7 +61,6 @@ datav-kit
 |   +-- shared     # shared framework-agnostic utilities
 |   +-- themes     # optional CSS variable theme presets
 +-- docs           # VitePress documentation site
-+-- skills         # repository-specific Codex/agent workflows
 +-- turbo.json     # monorepo task pipeline
 ```
 
@@ -71,7 +70,7 @@ datav-kit
 pnpm install
 pnpm build
 pnpm typecheck
-pnpm test
+pnpm -r test
 pnpm lint
 ```
 

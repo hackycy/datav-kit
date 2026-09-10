@@ -1,7 +1,6 @@
 import process from 'node:process'
 import { defineConfig } from 'vitepress'
 import llmstxt, { copyOrDownloadAsMarkdownButtons } from 'vitepress-plugin-llms'
-import { copySkillExamples, skillExamples } from './skill-examples'
 
 const base = process.env.VITEPRESS_BASE || '/'
 
@@ -10,10 +9,9 @@ export default defineConfig({
   description: 'Framework-agnostic Web Components for data dashboard decoration.',
   base,
   head: [['link', { rel: 'icon', href: 'data:,' }]],
-  buildEnd: copySkillExamples,
   cleanUrls: true,
   vite: {
-    plugins: [llmstxt(), skillExamples(base)],
+    plugins: [llmstxt()],
     server: {
       host: '0.0.0.0',
     },
@@ -21,7 +19,6 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Guide', link: '/guide/introduction' },
-      { text: 'Examples', link: '/guide/dashboard-examples' },
       { text: 'Components', link: '/components/decorations/decoration-1' },
       { text: 'Reference', link: '/reference/architecture-contracts' },
     ],
@@ -37,7 +34,6 @@ export default defineConfig({
             { text: 'Installation', link: '/guide/installation' },
             { text: 'Framework Integration', link: '/guide/framework-integration' },
             { text: 'Theming', link: '/guide/theming' },
-            { text: 'Dashboard Examples', link: '/guide/dashboard-examples' },
             { text: 'Component Authoring', link: '/guide/component-authoring' },
           ],
         },

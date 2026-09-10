@@ -91,6 +91,3 @@ Chart and 3D libraries usually need concrete color values. Read inherited custom
 properties with `getComputedStyle(screen)`. Resolve expressions such as `color-mix()`
 through a computed `color` property before passing them to a library that does not parse
 CSS expressions. Reapply colors when the project theme changes.
-
-See [Dashboard Examples](/guide/dashboard-examples) for complete dark analytical, map,
-topology and 3D compositions using this approach.

@@ -5,10 +5,6 @@ trustPolicy: no-downgrade
 packages:
   - docs
   - packages/*
-catalog:
-  '@playwright/test': 1.58.2
-  markdown-it: 14.1.1
-  pngjs: 7.0.0
 catalogs:
   cli:
     '@antfu/eslint-config': ^6.7.3
@@ -20,7 +16,6 @@ catalogs:
     publint: ^0.3.18
     simple-git-hooks: ^2.13.1
     tsdown: ^0.22.3
-    tsx: ^4.21.0
     turbo: ^2.9.18
     typescript: ^5.9.3
     vite: ^7.3.2
