@@ -35,6 +35,7 @@ import { PerformanceMonitorElement } from './performance-monitor/element'
 import { Title1Element } from './title-1/element'
 import { Title2Element } from './title-2/element'
 import { Title3Element } from './title-3/element'
+import { Title4Element } from './title-4/element'
 
 export const datavElementRegistrations: DatavElementRegistration[] = [
   {
@@ -160,6 +161,10 @@ export const datavElementRegistrations: DatavElementRegistration[] = [
   {
     tagName: 'dvk-title-3',
     element: Title3Element,
+  },
+  {
+    tagName: 'dvk-title-4',
+    element: Title4Element,
   },
   {
     tagName: 'dvk-count-to',

@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DataV Kit · Title 4 / Flat Rail</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg-0: #061018;
+    --bg-1: #081722;
+    --panel: rgba(9, 31, 45, .72);
+    --text: #effcff;
+    --muted: rgba(225, 247, 255, .52);
+    --cyan: 87, 243, 255;
+    --blue: 47, 140, 255;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; min-height: 100%; background: var(--bg-0); }
+
+  body {
+    min-height: 100vh;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: var(--text);
+    overflow-x: hidden;
+  }
+
+  .page {
+    min-height: 100vh;
+    padding: 56px 28px 72px;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(var(--blue), .10), transparent 34%),
+      linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px),
+      linear-gradient(180deg, #07121b 0%, #061018 100%);
+    background-size: auto, 48px 48px, 48px 48px, auto;
+  }
+
+  .intro {
+    width: min(1180px, 100%);
+    margin: 0 auto 34px;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(143, 227, 255, .58);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(24px, 3vw, 42px);
+    line-height: 1.06;
+    letter-spacing: -.03em;
+  }
+
+  .desc {
+    margin: 10px 0 0;
+    max-width: 760px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .badge {
+    flex: none;
+    padding: 8px 11px;
+    border: 1px solid rgba(var(--cyan), .18);
+    background: rgba(var(--cyan), .045);
+    color: rgba(210, 251, 255, .72);
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .stage {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: 44px 34px 38px;
+    border: 1px solid rgba(142, 218, 255, .08);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.014), transparent),
+      rgba(2, 13, 21, .68);
+    box-shadow: 0 20px 60px rgba(0,0,0,.26);
+  }
+
+  .section + .section { margin-top: 46px; }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-size: 12px;
+    letter-spacing: .12em;
+    color: rgba(220, 246, 255, .58);
+    text-transform: uppercase;
+  }
+
+  .measure {
+    font: 11px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: rgba(153, 216, 235, .36);
+  }
+
+  .preview {
+    position: relative;
+    padding: 28px 20px;
+    overflow: hidden;
+    border: 1px solid rgba(var(--cyan), .055);
+    background:
+      linear-gradient(180deg, rgba(var(--cyan), .022), transparent 70%),
+      rgba(4, 18, 28, .54);
+  }
+
+  .preview::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, transparent 49.94%, rgba(var(--cyan), .055) 50%, transparent 50.06%);
+    opacity: .7;
+  }
+
+  /* ----------------------------------------------------------
+     Title 4 / Flat Rail
+     Design principle: text first, decoration second.
+     ---------------------------------------------------------- */
+  .flat-rail {
+    --title-size: 22px;
+    --title-width: 420px;
+    --rail-opacity: .36;
+    --surface-opacity: .045;
+    --accent-opacity: .68;
+    position: relative;
+    width: 100%;
+    height: 56px;
+    isolation: isolate;
+  }
+
+  .flat-rail svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .surface {
+    fill: rgba(var(--blue), var(--surface-opacity));
+    stroke: rgba(var(--cyan), .10);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .rail {
+    fill: none;
+    stroke: rgba(var(--cyan), var(--rail-opacity));
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+    shape-rendering: geometricPrecision;
+  }
+
+  .rail-soft {
+    fill: none;
+    stroke: rgba(var(--blue), .18);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .accent {
+    fill: rgba(var(--cyan), var(--accent-opacity));
+  }
+
+  .accent-dim {
+    fill: rgba(var(--cyan), .18);
+  }
+
+  .title-wrap {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+  }
+
+  .title-text {
+    position: relative;
+    z-index: 2;
+    width: min(var(--title-width), 48vw);
+    max-width: 70%;
+    padding: 0 18px;
+    overflow: hidden;
+    text-align: center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: var(--title-size);
+    line-height: 1;
+    font-weight: 720;
+    letter-spacing: .09em;
+    color: #effcff;
+    text-shadow: 0 0 6px rgba(var(--cyan), .16);
+  }
+
+  .title-text::before,
+  .title-text::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 3px;
+    height: 3px;
+    margin-top: -1px;
+    background: rgba(var(--cyan), .72);
+    box-shadow: 0 0 7px rgba(var(--cyan), .18);
+  }
+
+  .title-text::before { left: 1px; }
+  .title-text::after { right: 1px; }
+
+  .compact { max-width: 820px; margin-inline: auto; }
+  .compact .flat-rail {
+    --title-size: 19px;
+    --title-width: 360px;
+  }
+
+  .light-bg {
+    background:
+      linear-gradient(180deg, rgba(150, 222, 255, .035), transparent 76%),
+      #091923;
+  }
+
+  .notes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .note {
+    min-height: 92px;
+    padding: 14px;
+    border: 1px solid rgba(141, 221, 255, .07);
+    background: rgba(255,255,255,.018);
+  }
+
+  .note b {
+    display: block;
+    margin-bottom: 7px;
+    color: rgba(232, 251, 255, .82);
+    font-size: 13px;
+    font-weight: 650;
+  }
+
+  .note span {
+    display: block;
+    color: rgba(195, 228, 239, .46);
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  @media (max-width: 760px) {
+    .page { padding: 30px 14px 48px; }
+    .intro { align-items: flex-start; flex-direction: column; }
+    .stage { padding: 26px 12px 24px; }
+    .preview { padding-inline: 8px; }
+    .flat-rail {
+      --title-size: 16px;
+      --title-width: 300px;
+    }
+    .notes { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 480px) {
+    .notes { grid-template-columns: 1fr; }
+    .flat-rail { --title-size: 14px; }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <header class="intro">
+      <div>
+        <p class="eyebrow">DataV Kit · Title 4 concept</p>
+        <h1>Flat Rail / 平轨标题</h1>
+        <p class="desc">文字是第一视觉焦点；装饰只承担“建立秩序、锁定中心、延展横向空间”的作用。整体保持平直、薄、近矩形、近似对称，不使用六边形主体、大面积斜切、厚重底板或动态流光。</p>
+      </div>
+      <div class="badge">1200 × 56</div>
+    </header>
+
+    <section class="stage">
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">01 · Default / 标准宽屏</div>
+          <div class="measure">建议高度 48–56px</div>
+        </div>
+        <div class="preview">
+          <div class="flat-rail" role="img" aria-label="智慧城市运行中心">
+            <svg viewBox="0 0 1200 56" preserveAspectRatio="none" aria-hidden="true">
+              <rect class="surface" x="24" y="8" width="1152" height="40" rx="0" />
+
+              <path class="rail" d="M24 10 H408 M792 10 H1176" />
+              <path class="rail" d="M24 46 H408 M792 46 H1176" />
+
+              <path class="rail-soft" d="M64 18 H338 M862 18 H1136" />
+              <path class="rail-soft" d="M64 38 H338 M862 38 H1136" />
+
+              <rect class="accent" x="42" y="25" width="20" height="2" />
+              <rect class="accent" x="1138" y="25" width="20" height="2" />
+              <rect class="accent-dim" x="70" y="25" width="76" height="2" />
+              <rect class="accent-dim" x="1054" y="25" width="76" height="2" />
+            </svg>
+            <div class="title-wrap">
+              <div class="title-text">智慧城市运行中心</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section compact">
+        <div class="section-head">
+          <div class="section-title">02 · Compact / 中等容器</div>
+          <div class="measure">约 820px 宽</div>
+        </div>
+        <div class="preview light-bg">
+          <div class="flat-rail" role="img" aria-label="综合态势感知平台">
+            <svg viewBox="0 0 1200 56" preserveAspectRatio="none" aria-hidden="true">
+              <rect class="surface" x="24" y="8" width="1152" height="40" />
+              <path class="rail" d="M24 10 H390 M810 10 H1176" />
+              <path class="rail" d="M24 46 H390 M810 46 H1176" />
+              <path class="rail-soft" d="M72 18 H310 M890 18 H1128" />
+              <path class="rail-soft" d="M72 38 H310 M890 38 H1128" />
+              <rect class="accent" x="42" y="25" width="20" height="2" />
+              <rect class="accent" x="1138" y="25" width="20" height="2" />
+              <rect class="accent-dim" x="72" y="25" width="64" height="2" />
+              <rect class="accent-dim" x="1064" y="25" width="64" height="2" />
+            </svg>
+            <div class="title-wrap">
+              <div class="title-text">综合态势感知平台</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title">03 · Long title / 长标题压力测试</div>
+          <div class="measure">文字优先，装饰主动让位</div>
+        </div>
+        <div class="preview">
+          <div class="flat-rail" style="--title-width: 620px; --title-size: 20px;" role="img" aria-label="城市综合交通智能运行监测中心">
+            <svg viewBox="0 0 1200 56" preserveAspectRatio="none" aria-hidden="true">
+              <rect class="surface" x="24" y="8" width="1152" height="40" />
+              <path class="rail" d="M24 10 H330 M870 10 H1176" />
+              <path class="rail" d="M24 46 H330 M870 46 H1176" />
+              <path class="rail-soft" d="M72 18 H272 M928 18 H1128" />
+              <path class="rail-soft" d="M72 38 H272 M928 38 H1128" />
+              <rect class="accent" x="42" y="25" width="20" height="2" />
+              <rect class="accent" x="1138" y="25" width="20" height="2" />
+              <rect class="accent-dim" x="72" y="25" width="58" height="2" />
+              <rect class="accent-dim" x="1070" y="25" width="58" height="2" />
+            </svg>
+            <div class="title-wrap">
+              <div class="title-text">城市综合交通智能运行监测中心</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="notes" aria-label="设计说明">
+        <div class="note"><b>文字第一</b><span>标题使用近白色与更高对比度；线条、底板和节点都退到第二层级。</span></div>
+        <div class="note"><b>横向平直</b><span>所有主要构成均为水平线和矩形，不依赖六边形、弧线或大面积斜切。</span></div>
+        <div class="note"><b>近似对称</b><span>左右轨道、节点和留白保持镜像关系，让视觉中心稳定落在标题文字。</span></div>
+        <div class="note"><b>薄型占位</b><span>基准设计高度仅 56，推荐实际使用 48–56px，减少大屏顶部垂直消耗。</span></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
