@@ -92,5 +92,5 @@ properties with `getComputedStyle(screen)`. Resolve expressions such as `color-m
 through a computed `color` property before passing them to a library that does not parse
 CSS expressions. Reapply colors when the project theme changes.
 
-See [Dashboard Examples](/guide/dashboard-examples) for complete dark, light, map and
-3D compositions using this approach.
+See [Dashboard Examples](/guide/dashboard-examples) for complete dark analytical, map,
+topology and 3D compositions using this approach.

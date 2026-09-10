@@ -2,19 +2,19 @@
    Official contract: https://hackycy.github.io/datav-kit/guide/theming.md
    --app-* variables belong to the application, not the datav-kit API. */
 .dvk-theme-project {
-  --app-background: #f4f6f8;
-  --app-surface: #ffffff;
-  --app-text: #17252d;
-  --app-muted: #52646e;
-  --app-rule: #d9e1e5;
-  --app-selected: #126c94;
-  --app-positive: #197448;
-  --app-warning: #9a5300;
-  --app-danger: #be3545;
-  --app-series-1: #167ba5;
-  --app-series-2: #168268;
-  --app-series-3: #b66019;
-  --app-series-4: #7a54a4;
+  --app-background: #10151f;
+  --app-surface: #1a2332;
+  --app-text: #edf3fb;
+  --app-muted: #a7b7cd;
+  --app-rule: #354357;
+  --app-selected: #75baff;
+  --app-positive: #83dcb2;
+  --app-warning: #f2bf6c;
+  --app-danger: #ff8f9c;
+  --app-series-1: #75baff;
+  --app-series-2: #70d7ce;
+  --app-series-3: #d6a4eb;
+  --app-series-4: #b8c880;
 
   --dvk-color-primary: var(--app-selected);
   --dvk-color-secondary: var(--app-series-2);

@@ -1,6 +1,6 @@
 ---
 name: datav-kit
-description: Build and refine large-screen data dashboards with datav-kit Web Components. Use for data walls, command screens, and business cockpits using dvk-* elements, including visual composition and browser verification. Not for ordinary administration interfaces.
+description: Turn plain-language large-screen requirements into datav-kit dashboards, prototype ambiguous scenes for selection, or refine existing data walls and command screens. Includes composition, dvk-* integration and browser verification. Not for ordinary administration interfaces.
 ---
 
 # DataV Kit Large-Screen Development
@@ -34,11 +34,18 @@ If the site is unavailable or a page is missing:
 Discover the official examples page through the same index. Its previews and downloads
 come from this skill's `assets/examples/` HTML files, not a separate implementation.
 
-## 2. Establish the brief
+## 2. Establish the brief and choose an interaction mode
 
-Extract what is already known: business question, core metrics, data source and refresh,
-physical screen size and resolution and viewing distance, visual identity, interactions,
-and delivery framework. Ask only for missing information that materially changes the work.
+Extract what is already known: audience and decision, business question, core metrics and
+units, data source and refresh, physical screen size and resolution and viewing distance,
+visual identity, interactions, data states and delivery framework. Ask only for missing
+information that materially changes the work.
+
+For a clear brief, summarize the decision, primary metric, main visual and layout, then
+implement. For an ambiguous scene or visual direction, read the
+[prototype workflow](references/prototyping.md): ask 3-5 relevant questions, produce
+2-3 selectable directions, and wait for the user's choice before production integration.
+An explicit request to choose autonomously authorizes selecting the recommended direction.
 
 For drafts with unspecified hardware, use a 1920 x 1080 canvas and state that physical
 viewing-distance calibration is pending. Production delivery requires checking readability
@@ -46,14 +53,15 @@ on the actual installation.
 
 ## 3. Choose a visual direction
 
-Read [composition guidance](references/patterns.md) for a new composition. Choose the
-primary visual from the business question, then arrange supporting information and select
-documented components. Examples are design references, not mandatory layouts.
+Read [composition guidance](references/patterns.md) and the [example catalog](references/example-catalog.md)
+for a new composition. Choose the primary visual from the business question, then arrange
+supporting information and select documented components. Match by question, visual and
+layout; do not reuse an example's grid merely because the industry is similar. Examples
+are design references, not mandatory layouts.
 
 - Existing design or local change: preserve its direction and implement the change.
 - New screen with a clear brief or reference: state the direction and implement it.
-- New screen with materially ambiguous styling: offer a small set of different directions
-  and resolve the choice before investing in the full composition.
+- New screen with an ambiguous scene or styling: follow the prototype workflow above.
 
 Directions should differ in layout, data visual, typography and decoration density, as
 well as palette. Use [design checks](references/design-rules.md) to evaluate the result.
@@ -64,15 +72,18 @@ when persistent design history benefits the task.
 
 Coordinate backgrounds, text, status, data series and component accents through one scoped
 project theme. The official theming guide owns CSS contracts. The editable
-[project theme starter](assets/themes/theme-template.css) demonstrates a light palette.
+[project theme starter](assets/themes/theme-template.css) demonstrates a dark palette.
+Default new large screens to dark themes. The examples span several dark palettes; choose
+one that fits the subject, reserving separate roles for data, selection and warnings.
 
 Use [screen tokens](assets/tokens.css) as adjustable defaults, with
 [calibration guidance](references/tokens.md). Read [chart guidance](references/charts.md)
 when adding charts; `assets/charts/` contains optional ECharts starting points. Reuse an
 existing project chart library when available.
 
-For standalone delivery, adapt a single `assets/examples/*.html`: inline application
-styles, scripts and required scene data, pin CDN imports, and test opening the file directly.
+For standalone delivery, use a relevant example's implementation techniques with the
+selected layout: inline application styles, scripts and required scene data, pin CDN
+imports, and test opening the file directly.
 `assets/minimal-example.html` is the small registration-and-scaling starting point.
 Verify example APIs against project dependencies before adapting them.
 

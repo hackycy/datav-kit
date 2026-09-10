@@ -11,6 +11,7 @@ const directory = path.resolve('skills/datav-kit/assets/examples')
 const examples = (await readdir(directory)).filter(name => name.endsWith('.html'))
 const base = process.env.VITEPRESS_BASE || '/'
 const previewBase = `http://127.0.0.1:4173${base}examples/`
+const catalog: { file: string, scene: string, layout: string, palette: string, tone: string }[] = JSON.parse(await readFile(path.join(directory, 'catalog.json'), 'utf8'))
 
 async function openExample(page: Page, url: string) {
   const errors: string[] = []
@@ -90,7 +91,7 @@ async function expectCanvasFits(page: Page) {
   expect(geometry.bottom).toBeLessThanOrEqual(geometry.viewport[1] + 1)
   const overflow = await page.locator('#screen').evaluate((screen) => {
     const result: string[] = []
-    for (const element of screen.querySelectorAll<HTMLElement>('main,aside,section,.channels,.equipment-list,.metrics')) {
+    for (const element of screen.querySelectorAll<HTMLElement>('main,aside,section,.channels,.equipment-list,.metrics,.workbench')) {
       if (element.scrollHeight > element.clientHeight + 3 || element.scrollWidth > element.clientWidth + 3)
         result.push(element.id || element.className || element.tagName)
     }
@@ -108,6 +109,16 @@ for (const name of examples) {
       await expectCharts(page)
       await expectCanvasFits(page)
       const screen = page.locator('#screen')
+      const entry = catalog.find(entry => entry.file === name)!
+      await expect(screen).toHaveAttribute('data-scene', entry.scene)
+      await expect(screen).toHaveAttribute('data-layout', entry.layout)
+      await expect(screen).toHaveAttribute('data-palette', entry.palette)
+      const luminance = await screen.evaluate((element) => {
+        const rgb = getComputedStyle(element).backgroundColor.match(/[\d.]+/g)!.slice(0, 3).map(Number)
+        const linear = rgb.map(value => value / 255 <= 0.04045 ? value / 255 / 12.92 : ((value / 255 + 0.055) / 1.055) ** 2.4)
+        return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722
+      })
+      expect(luminance, `${name} has a dark rendered base`).toBeLessThan(0.06)
       if (name === 'business.html') {
         await page.getByRole('button', { name: '近 7 天' }).click()
         await expect(screen).toHaveAttribute('data-period', 'week')
@@ -134,6 +145,71 @@ for (const name of examples) {
         await page.getByRole('button', { name: /精加工/ }).click()
         await expect(page.locator('#asset-temperature')).toHaveText('58 °C')
         await expect(page.locator('#asset-name')).toHaveText('精加工')
+      }
+      else if (name === 'spatial.html') {
+        expect(await page.locator('#base-map path.road').count()).toBeGreaterThan(100)
+        expect(await page.locator('#base-map path.building').count()).toBeGreaterThan(100)
+        await expect(page.locator('#sensors .sensor')).toHaveCount(140)
+        await expect(page.locator('[data-sensor-zone="finance"]')).toHaveCount(60)
+        await expect(page.locator('[data-sensor-zone="finance"].warning')).toHaveCount(2)
+        await page.getByRole('button', { name: /^金融城/ }).click()
+        await expect(page.locator('#zone-name')).toHaveText('金融城')
+        await expect(screen).toHaveAttribute('data-total', '2010')
+        await expect(page.locator('#event-title')).toHaveText('地下通道积水预警')
+        const withSensors = await page.locator('#spatial-map').screenshot()
+        await page.getByRole('checkbox', { name: '监测点位' }).uncheck()
+        await expect(page.locator('#sensors')).toBeHidden()
+        expect(Buffer.compare(withSensors, await page.locator('#spatial-map').screenshot())).not.toBe(0)
+        await page.getByRole('checkbox', { name: '监测点位' }).check()
+        await page.getByRole('checkbox', { name: '建筑轮廓' }).uncheck()
+        await expect(page.locator('#base-map .building').first()).toBeHidden()
+        await page.getByRole('checkbox', { name: '建筑轮廓' }).check()
+        await page.getByRole('checkbox', { name: '道路网络' }).uncheck()
+        await expect(page.locator('#base-map .road').first()).toBeHidden()
+        await page.getByRole('checkbox', { name: '道路网络' }).check()
+        await page.getByRole('button', { name: '放大地图' }).click()
+        await expect(screen).toHaveAttribute('data-zoom', '1.25')
+        await page.getByRole('button', { name: '复位地图' }).click()
+        await expect(screen).toHaveAttribute('data-zoom', '1.00')
+        const marker = page.getByRole('button', { name: '地图选区：外滩片区' })
+        await marker.focus()
+        await page.keyboard.press('Enter')
+        await expect(page.locator('#zone-name')).toHaveText('外滩片区')
+        await expect(page.getByRole('link', { name: /OpenStreetMap/ })).toBeVisible()
+      }
+      else if (name === 'topology.html') {
+        await expect(page.locator('#online-count')).toHaveText('10')
+        await expect(page.locator('#link-count')).toHaveText('9 / 10')
+        await expect(page.locator('#attention-count')).toHaveText('2')
+        await page.locator('#network-chart text').filter({ hasText: /^计算集群$/ }).click()
+        await expect(page.locator('#device-name')).toHaveText('计算集群')
+        await expect(page.locator('#device-load')).toHaveText('62')
+        const nodesBefore = await page.evaluate(async () => {
+          const imports = JSON.parse(document.querySelector('script[type="importmap"]')!.textContent!).imports
+          const echarts = await import(imports.echarts)
+          const series = echarts.getInstanceByDom(document.querySelector('#network-chart')).getOption().series[0]
+          return { positions: series.data.map((d: { x: number, y: number }) => [d.x, d.y]), nodes: series.data.length, links: series.links.length }
+        })
+        expect(nodesBefore.nodes).toBe(11)
+        expect(nodesBefore.links).toBe(10)
+        await page.getByRole('button', { name: '异常关联', exact: true }).click()
+        await expect(screen).toHaveAttribute('data-filter', 'attention')
+        const filtered = await page.evaluate(async () => {
+          const imports = JSON.parse(document.querySelector('script[type="importmap"]')!.textContent!).imports
+          const echarts = await import(imports.echarts)
+          const series = echarts.getInstanceByDom(document.querySelector('#network-chart')).getOption().series[0]
+          return { positions: series.data.map((d: { x: number, y: number }) => [d.x, d.y]), dimmed: series.data.filter((d: { itemStyle: { opacity: number } }) => d.itemStyle.opacity < 1).length }
+        })
+        expect(filtered.positions).toEqual(nodesBefore.positions)
+        expect(filtered.dimmed).toBeGreaterThan(0)
+        await page.getByRole('combobox', { name: '设备定位' }).selectOption('sensor')
+        await expect(page.locator('#device-state')).toContainText('离线')
+        await expect(page.locator('#device-load')).toHaveText('--')
+        await expect(page.locator('#traffic-chart')).toContainText('暂无实时吞吐')
+        await page.getByRole('button', { name: /接入交换机 B/ }).click()
+        await expect(page.locator('#device-load')).toHaveText('92')
+        await page.getByRole('button', { name: '全部连接', exact: true }).click()
+        await expect(screen).toHaveAttribute('data-filter', 'all')
       }
       expect(errors).toEqual([])
     })

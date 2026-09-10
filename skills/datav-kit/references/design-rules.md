@@ -24,6 +24,11 @@ to evaluate layering and text over geographic or 3D content.
 
 ## Design review
 
+For new directions, compare thumbnails with the labels hidden: the primary visual's
+placement, reading order and region proportions should remain distinguishable. For this
+example collection, keep all six bases dark and at least three perceptibly different
+dark palette families. Metadata describes intent; inspect screenshots to verify it.
+
 - Establish a primary visual and reading order. Supporting regions should answer the same
   business question rather than occupy arbitrary grid cells.
 - Use one project theme with distinct roles for neutral text, surfaces, data, selection

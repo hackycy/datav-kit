@@ -1,0 +1,8 @@
+[
+  { "file": "business.html", "scene": "business", "layout": "kpi-led-asymmetric", "palette": "navy-electric", "tone": "dark" },
+  { "file": "energy.html", "scene": "energy", "layout": "flow-led-split", "palette": "green-mint", "tone": "dark" },
+  { "file": "city.html", "scene": "city", "layout": "map-right-rail", "palette": "ink-teal", "tone": "dark" },
+  { "file": "industrial.html", "scene": "industrial", "layout": "scene-led-split", "palette": "charcoal-amber", "tone": "dark" },
+  { "file": "spatial.html", "scene": "spatial", "layout": "map-floating-overlays", "palette": "violet-cyan", "tone": "dark" },
+  { "file": "topology.html", "scene": "topology", "layout": "topology-layered", "palette": "graphite-magenta", "tone": "dark" }
+]

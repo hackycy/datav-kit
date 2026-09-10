@@ -19,6 +19,11 @@ or code that must be copied verbatim. Verify APIs against the actual library ver
 Prefer direct labels. Separate incompatible units rather than using an ambiguous second
 axis. Reduce crowded series and labels. Avoid 3D magnitude charts and rainbow continuous scales.
 
+For topology graphs, keep node positions stable between updates, encode health with both
+color and shape/status text, and show selected-node dependencies in a nearby detail region.
+For spatial maps, keep geographic attribution visible, separate base layers from data
+layers, and pair markers with a list or label so status is not conveyed by color alone.
+
 ## Theme and lifecycle
 
 Read resolved colors from the screen root rather than `document.documentElement`. Separate
@@ -44,7 +49,7 @@ Derive totals, percentages and comparisons from the same dataset. Unknown values
 zero. Show update time and implement loading, empty, failed and stale states. Retained old
 data needs explicit stale labeling; retries must perform an actual state transition.
 
-For standalone HTML, embed scene data and pin external libraries. The four screen examples
+For standalone HTML, embed scene data and pin external libraries. The six screen examples
 support `?state=loading|empty|failed|stale` for verification; normal operation defaults to ready.
 This is an example convention, not a new datav-kit API.
 

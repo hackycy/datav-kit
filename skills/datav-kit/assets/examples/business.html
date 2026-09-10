@@ -6,7 +6,7 @@
     <link rel="icon" href="data:," />
     <meta
       name="description"
-      content="明亮经营分析大屏：收入趋势、目标差距与渠道贡献。"
+      content="深色经营分析大屏：纵向关键指标、收入趋势、目标差距与渠道贡献。"
     />
     <title>远川商业 · 经营分析</title>
     <script type="importmap">
@@ -28,7 +28,7 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background: #e7ecef;
+        background: #10151f;
       }
       button {
         font: inherit;
@@ -73,23 +73,23 @@
         display: none !important;
       }
       .dvk-screen {
-        --app-background: #f5f7f8;
-        --app-surface: #fff;
-        --app-text: #1b3039;
-        --app-muted: #5e727d;
-        --app-rule: #d6e0e5;
-        --app-selected: #176987;
-        --app-positive: #18724f;
-        --app-warning: #9a570c;
-        --app-danger: #b52d43;
-        --app-series-1: #217b9d;
-        --app-series-2: #23a184;
-        --app-series-3: #bd783b;
-        --app-series-4: #8067ad;
-        --dvk-color-primary: #99b7c2;
-        --dvk-color-secondary: #aecacb;
-        --dvk-color-accent: #217b9d;
-        --dvk-color-surface: #fff;
+        --app-background: #10151f;
+        --app-surface: #1a2332;
+        --app-text: #edf3fb;
+        --app-muted: #a7b7cd;
+        --app-rule: #354357;
+        --app-selected: #75baff;
+        --app-positive: #83dcb2;
+        --app-warning: #f2bf6c;
+        --app-danger: #ff8f9c;
+        --app-series-1: #75baff;
+        --app-series-2: #70d7ce;
+        --app-series-3: #d6a4eb;
+        --app-series-4: #b8c880;
+        --dvk-color-primary: #587799;
+        --dvk-color-secondary: #70d7ce;
+        --dvk-color-accent: #75baff;
+        --dvk-color-surface: #1a2332;
         --dvk-count-to-color: var(--app-text);
         --dvk-count-to-font-size: 64px;
         --dvk-count-to-font-weight: 600;
@@ -179,22 +179,23 @@
       }
       .content {
         display: grid;
-        grid-template-rows: 196px minmax(0, 1fr);
-        gap: 36px;
+        grid-template-columns: 360px minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr);
+        gap: 48px;
         min-height: 0;
       }
       .metrics {
         display: grid;
-        grid-template-columns: 1.45fr 1fr 1fr 1fr;
-        border-bottom: 1px solid var(--app-rule);
-        padding: 10px 0 26px;
+        grid-template-rows: repeat(4, minmax(0, 1fr));
+        border-right: 1px solid var(--app-rule);
+        padding: 0 36px 0 0;
       }
       .metric {
-        padding: 0 38px;
-        border-left: 1px solid var(--app-rule);
+        padding: 16px 0 8px;
+        border-top: 1px solid var(--app-rule);
       }
       .metric:first-child {
-        padding-left: 0;
+        padding-top: 8px;
         border: 0;
       }
       .metric-label {
@@ -209,7 +210,7 @@
         height: 20px;
       }
       .metric-value {
-        height: 92px;
+        height: 84px;
         display: flex;
         align-items: baseline;
         gap: 12px;
@@ -229,19 +230,20 @@
         color: var(--app-positive);
       }
       .delta small {
-        margin-left: 12px;
+        display: block;
+        margin-top: 4px;
         color: var(--app-muted);
         font-size: 16px;
       }
       .analysis {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) 430px;
-        gap: 44px;
+        grid-template-rows: minmax(0, 1fr) 236px;
+        gap: 32px;
         min-height: 0;
       }
       .trend {
         display: grid;
-        grid-template-rows: 60px minmax(0, 1fr) 118px;
+        grid-template-rows: 60px minmax(0, 1fr) 96px;
         gap: 20px;
         min-height: 0;
       }
@@ -304,12 +306,17 @@
         margin-top: 6px;
       }
       .channels {
-        border-left: 1px solid var(--app-rule);
-        padding-left: 36px;
+        border-top: 1px solid var(--app-rule);
+        padding-top: 24px;
         display: grid;
-        grid-template-rows: 36px minmax(0, 1fr) 132px;
-        gap: 16px;
+        grid-template-columns: 150px minmax(0, 1fr) 272px;
+        gap: 26px;
         min-height: 0;
+      }
+      #channel-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px 28px;
       }
       .channel {
         padding: 10px 0;
@@ -344,7 +351,7 @@
       .target {
         display: block;
         width: 100%;
-        height: 132px;
+        height: 190px;
       }
       .target-inner {
         color: var(--app-text);
@@ -433,6 +440,9 @@
         class="dvk-screen dvk-theme-business"
         id="screen"
         data-state="loading"
+        data-scene="business"
+        data-layout="kpi-led-asymmetric"
+        data-palette="navy-electric"
       >
         <header>
           <div class="brand">

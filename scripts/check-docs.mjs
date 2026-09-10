@@ -63,10 +63,27 @@ for (const tag of pageByTag.keys())
 const known = new Set(elementMetadata.map(meta => meta.tagName))
 const exampleDirectory = path.resolve('skills/datav-kit/assets/examples')
 const examples = (await readdir(exampleDirectory)).filter(name => name.endsWith('.html'))
+const catalog = JSON.parse(await readFile(path.join(exampleDirectory, 'catalog.json'), 'utf8'))
+const referenceCatalog = await readFile('skills/datav-kit/references/example-catalog.md', 'utf8')
+assert.deepEqual(catalog.map(entry => entry.file).sort(), [...examples].sort(), 'Catalog must cover each HTML exactly once')
+for (const field of ['scene', 'layout'])
+  assert.equal(new Set(catalog.map(entry => entry[field])).size, catalog.length, `Duplicate example ${field}`)
+assert.ok(new Set(catalog.map(entry => entry.palette)).size >= 3, 'Examples need at least three dark palettes')
+for (const entry of catalog) {
+  assert.equal(entry.tone, 'dark', `Example must use a dark base: ${entry.file}`)
+  for (const field of ['scene', 'layout', 'palette'])
+    assert.match(entry[field], /^[a-z]+(?:-[a-z]+)*$/, `Invalid ${field} for ${entry.file}`)
+  assert.ok(referenceCatalog.includes(`\`${entry.file}\``), `Missing skill catalog entry: ${entry.file}`)
+}
 const window = new Window()
 for (const name of examples) {
   const source = await readFile(path.join(exampleDirectory, name), 'utf8')
   const html = new window.DOMParser().parseFromString(source, 'text/html')
+  const entry = catalog.find(entry => entry.file === name)
+  const screen = html.querySelector('#screen')
+  assert.ok(screen, `Missing screen in ${name}`)
+  for (const field of ['scene', 'layout', 'palette'])
+    assert.equal(screen.getAttribute(`data-${field}`), entry[field], `Catalog ${field} differs from ${name}`)
   // Includes tags in inline templates; the browser suite also examines the rendered DOM.
   const tags = new Set([...source.matchAll(/<\/?(dvk-[a-z\d-]+)/g)].map(match => match[1]))
   for (const tag of tags) {
@@ -83,6 +100,8 @@ for (const name of examples) {
 const guide = 'guide/dashboard-examples.md'
 assert.ok(indexLinks.includes(guide), 'Examples guide missing from llms.txt')
 const guideText = await readFile(path.join(docs, guide), 'utf8')
-for (const name of examples)
+for (const name of examples) {
   assert.ok(guideText.includes(`/examples/${name}`), `Example missing from gallery: ${name}`)
+  assert.ok(guideText.includes(`/examples/${name.replace('.html', '.png')}`), `Screenshot missing from gallery: ${name}`)
+}
 console.log(`Verified ${elementMetadata.length} components, ${indexLinks.length} index links and ${examples.length} standalone previews.`)
