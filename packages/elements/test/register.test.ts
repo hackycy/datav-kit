@@ -830,12 +830,12 @@ describe('@datav-kit/elements', () => {
   })
 
   it('resolves the title-5 shoulder run from the host aspect ratio', () => {
-    expect(resolveShoulderRun(1600, 88)).toBe(30)
-    expect(resolveShoulderRun(1200, 88)).toBe(40)
-    expect(resolveShoulderRun(638, 88)).toBeCloseTo(75.235, 2)
-    expect(resolveShoulderRun(400, 88)).toBe(84)
-    expect(resolveShoulderRun(0, 88)).toBe(30)
-    expect(resolveShoulderRun(1600, 0)).toBe(30)
+    expect(resolveShoulderRun(1600, 64)).toBeCloseTo(26.7, 2)
+    expect(resolveShoulderRun(1200, 64)).toBeCloseTo(35.6, 2)
+    expect(resolveShoulderRun(638, 64)).toBeCloseTo(66.96, 2)
+    expect(resolveShoulderRun(400, 64)).toBe(74.7)
+    expect(resolveShoulderRun(0, 64)).toBeCloseTo(26.7, 2)
+    expect(resolveShoulderRun(1600, 0)).toBeCloseTo(26.7, 2)
   })
 
   it('renders title-5 from its built-in fallbacks without any theme CSS', async () => {
@@ -880,44 +880,44 @@ describe('@datav-kit/elements', () => {
     const titleText = element.shadowRoot?.querySelector('[part="title-text"]')
     const animations = [...element.shadowRoot?.querySelectorAll('animate, animateTransform') ?? []]
 
-    expect(svg?.getAttribute('viewBox')).toBe('0 0 1600 88')
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 1600 64')
     expect(svg?.getAttribute('preserveAspectRatio')).toBe('none')
     expect(surface?.getAttribute('fill')).toBe('rgba(122, 168, 255, 0.03)')
     // happy-dom performs no layout, so both measurements read zero and the header
     // keeps the prototype's default geometry verbatim.
     expect(guideRails.map(rail => rail.getAttribute('d'))).toEqual([
-      'M0 8 H505',
-      'M1095 8 H1600',
+      'M0 7 H508.3',
+      'M1091.7 7 H1600',
     ])
-    expect(recess?.getAttribute('d')).toBe('M505 12 L535 58 H1065 L1095 12 Z')
-    expect(innerRail?.getAttribute('d')).toBe('M0 7 H509 L539 53 H1061 L1091 7 H1600')
+    expect(recess?.getAttribute('d')).toBe('M508.3 10.5 L535 51.5 H1065 L1091.7 10.5 Z')
+    expect(innerRail?.getAttribute('d')).toBe('M0 6 H512.3 L539 47 H1061 L1087.7 6 H1600')
     expect(rails.map(rail => rail.getAttribute('d'))).toEqual([
-      'M0 12 H505 L535 58 H1065 L1095 12 H1600',
-      'M0 12 H505 L535 58 H1065 L1095 12 H1600',
+      'M0 10.5 H508.3 L535 51.5 H1065 L1091.7 10.5 H1600',
+      'M0 10.5 H508.3 L535 51.5 H1065 L1091.7 10.5 H1600',
     ])
     expect(accents.map(accent => accent.getAttribute('d'))).toEqual([
-      'M535 58 H1065',
-      'M535 58 H1065',
+      'M535 51.5 H1065',
+      'M535 51.5 H1065',
     ])
     expect(slashes.map(slash => slash.getAttribute('d'))).toEqual([
-      'M430 24 l9 10',
-      'M442 24 l9 10',
-      'M454 24 l9 10',
-      'M466 24 l9 10',
-      'M478 24 l9 10',
-      'M490 24 l9 10',
-      'M1170 24 l-9 10',
-      'M1158 24 l-9 10',
-      'M1146 24 l-9 10',
-      'M1134 24 l-9 10',
-      'M1122 24 l-9 10',
-      'M1110 24 l-9 10',
+      'M433.3 21 l9 9',
+      'M445.3 21 l9 9',
+      'M457.3 21 l9 9',
+      'M469.3 21 l9 9',
+      'M481.3 21 l9 9',
+      'M493.3 21 l9 9',
+      'M1166.7 21 l-9 9',
+      'M1154.7 21 l-9 9',
+      'M1142.7 21 l-9 9',
+      'M1130.7 21 l-9 9',
+      'M1118.7 21 l-9 9',
+      'M1106.7 21 l-9 9',
     ])
     expect(ticks.map(tick => tick.getAttribute('d'))).toEqual([
-      'M110 31 H182',
-      'M1418 31 H1490',
-      'M92 36 H150',
-      'M1450 36 H1508',
+      'M110 27.5 H182',
+      'M1418 27.5 H1490',
+      'M92 32 H150',
+      'M1450 32 H1508',
     ])
     expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#39f6c8', '#7aa8ff', '#ff7bd5']))
     expect(titleText?.textContent).toBe('RECESS OPS')

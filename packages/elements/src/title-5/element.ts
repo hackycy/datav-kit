@@ -3,15 +3,17 @@ import { css, html, svg } from 'lit'
 import { property, state } from 'lit/decorators.js'
 
 const VIEW_BOX_WIDTH = 1600
-const VIEW_BOX_HEIGHT = 88
+const VIEW_BOX_HEIGHT = 64
 const CENTER = 800
-const SHOULDER_RUN = 30
-const MAX_SHOULDER_RUN = 84
+const RAIL_TOP = 10.5
+const RAIL_BOTTOM = 51.5
+const SHOULDER_RUN = 26.7
+const MAX_SHOULDER_RUN = 74.7
 const RECESS_MARGIN = 116
 const MIN_HALF = 265
 const MAX_HALF = 390
 const INNER_INSET_X = 4
-const INNER_INSET_Y = 5
+const INNER_INSET_Y = 4.5
 const SLASH_COUNT = 6
 const SLASH_STEP = 12
 const SLASH_GAP = 6
@@ -28,7 +30,7 @@ export function resolveRecessHalf(titleWidth: number, hostWidth: number): number
 }
 
 // `preserveAspectRatio="none"` shears the shoulder slant, so the run is solved back
-// from the host aspect to keep the rendered angle at the prototype's 54 degrees.
+// from the host aspect to keep the rendered angle at the prototype's 57 degrees.
 export function resolveShoulderRun(hostWidth: number, hostHeight: number): number {
   if (!(hostWidth > 0) || !(hostHeight > 0))
     return SHOULDER_RUN
@@ -78,9 +80,9 @@ export class Title5Element extends DatavElement {
 
     .content {
       position: absolute;
-      /* y=32 of 88, deliberately above the recess centre (y=35) so the bright
+      /* y=28.5 of 64, deliberately above the recess centre (y=31) so the bright
          bottom edge and its glow do not crowd the text. */
-      top: var(--dvk-title-5-title-top, 36.36%);
+      top: var(--dvk-title-5-title-top, 44.53%);
       left: 50%;
       z-index: 1;
       max-width: min(var(--dvk-title-5-title-max-width, 560px), 100%);
@@ -93,7 +95,7 @@ export class Title5Element extends DatavElement {
       padding: 0 18px;
       overflow: hidden;
       color: var(--dvk-title-5-title-color, #f3fbff);
-      font: var(--dvk-title-5-title-font, 700 26px/1 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
+      font: var(--dvk-title-5-title-font, 700 19px/1 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
       letter-spacing: var(--dvk-title-5-title-letter-spacing, 0.16em);
       text-align: center;
       white-space: nowrap;
@@ -172,7 +174,7 @@ export class Title5Element extends DatavElement {
       >
         <defs>${this.renderDefs(primary, secondary, accent)}</defs>
 
-        <rect part="surface" x="0" y="6" width=${VIEW_BOX_WIDTH} height="66" fill=${withAlpha(secondary, surfaceOpacity)}></rect>
+        <rect part="surface" x="0" y="5.5" width=${VIEW_BOX_WIDTH} height="58.5" fill=${withAlpha(secondary, surfaceOpacity)}></rect>
 
         <path part="guide-rail guide-rail-left" d=${guideRailPath(shoulderX, false)} fill="none" stroke=${withAlpha(primary, 0.16)} stroke-width="1"></path>
         <path part="guide-rail guide-rail-right" d=${guideRailPath(shoulderX, true)} fill="none" stroke=${withAlpha(primary, 0.16)} stroke-width="1"></path>
@@ -195,10 +197,10 @@ export class Title5Element extends DatavElement {
         </g>
 
         <g part="tick" fill="none" stroke=${withAlpha(primary, 0.28)} stroke-width="1.2">
-          <path d="M110 31 H182"></path>
-          <path d="M1418 31 H1490"></path>
-          <path d="M92 36 H150"></path>
-          <path d="M1450 36 H1508"></path>
+          <path d="M110 27.5 H182"></path>
+          <path d="M1418 27.5 H1490"></path>
+          <path d="M92 32 H150"></path>
+          <path d="M1450 32 H1508"></path>
         </g>
       </svg>
       <div
@@ -242,11 +244,11 @@ export class Title5Element extends DatavElement {
         <stop offset="1" stop-color=${secondary} stop-opacity="0.62"></stop>
       </linearGradient>
 
-      <filter id=${this.railGlowId} filterUnits="userSpaceOnUse" x="-20" y="-20" width="1640" height="130">
+      <filter id=${this.railGlowId} filterUnits="userSpaceOnUse" x="-20" y="-18" width="1640" height="100">
         <feGaussianBlur stdDeviation="2.1"></feGaussianBlur>
       </filter>
 
-      <filter id=${this.centerGlowId} filterUnits="userSpaceOnUse" x="310" y="34" width="980" height="50">
+      <filter id=${this.centerGlowId} filterUnits="userSpaceOnUse" x="310" y="30" width="980" height="44">
         <feGaussianBlur stdDeviation="3"></feGaussianBlur>
       </filter>
     `
@@ -336,36 +338,36 @@ function guideRailPath(shoulderX: number, mirrored: boolean): string {
   const outer = formatUnit(VIEW_BOX_WIDTH - shoulderX)
 
   return mirrored
-    ? `M${outer} 8 H${VIEW_BOX_WIDTH}`
-    : `M0 8 H${formatUnit(shoulderX)}`
+    ? `M${outer} 7 H${VIEW_BOX_WIDTH}`
+    : `M0 7 H${formatUnit(shoulderX)}`
 }
 
 function recessPath(half: number, shoulderX: number): string {
-  return `M${formatUnit(shoulderX)} 12 L${formatUnit(CENTER - half)} 58 H${formatUnit(CENTER + half)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX)} 12 Z`
+  return `M${formatUnit(shoulderX)} ${RAIL_TOP} L${formatUnit(CENTER - half)} ${RAIL_BOTTOM} H${formatUnit(CENTER + half)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX)} ${RAIL_TOP} Z`
 }
 
 function mainRailPath(half: number, shoulderX: number): string {
-  return `M0 12 H${formatUnit(shoulderX)} L${formatUnit(CENTER - half)} 58 H${formatUnit(CENTER + half)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX)} 12 H${VIEW_BOX_WIDTH}`
+  return `M0 ${RAIL_TOP} H${formatUnit(shoulderX)} L${formatUnit(CENTER - half)} ${RAIL_BOTTOM} H${formatUnit(CENTER + half)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX)} ${RAIL_TOP} H${VIEW_BOX_WIDTH}`
 }
 
-// Parallel to the main rail: corners inset 4 inward on x and 5 up on y. The H
+// Parallel to the main rail: corners inset 4 inward on x and 4.5 up on y. The H
 // segments carry x only — an extra number after H would draw a line across the bar.
 function innerRailPath(half: number, shoulderX: number): string {
   const near = CENTER - half + INNER_INSET_X
   const far = CENTER + half - INNER_INSET_X
 
-  return `M0 ${12 - INNER_INSET_Y} H${formatUnit(shoulderX + INNER_INSET_X)} L${formatUnit(near)} ${58 - INNER_INSET_Y} H${formatUnit(far)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX - INNER_INSET_X)} ${12 - INNER_INSET_Y} H${VIEW_BOX_WIDTH}`
+  return `M0 ${RAIL_TOP - INNER_INSET_Y} H${formatUnit(shoulderX + INNER_INSET_X)} L${formatUnit(near)} ${RAIL_BOTTOM - INNER_INSET_Y} H${formatUnit(far)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX - INNER_INSET_X)} ${RAIL_TOP - INNER_INSET_Y} H${VIEW_BOX_WIDTH}`
 }
 
 function centerAccentPath(half: number): string {
-  return `M${formatUnit(CENTER - half)} 58 H${formatUnit(CENTER + half)}`
+  return `M${formatUnit(CENTER - half)} ${RAIL_BOTTOM} H${formatUnit(CENTER + half)}`
 }
 
 function slashPath(start: number, index: number, mirrored: boolean): string {
   const offset = index * SLASH_STEP
   const x = mirrored ? VIEW_BOX_WIDTH - start - offset : start + offset
 
-  return `M${formatUnit(x)} 24 ${mirrored ? 'l-9 10' : 'l9 10'}`
+  return `M${formatUnit(x)} 21 ${mirrored ? 'l-9 9' : 'l9 9'}`
 }
 
 function formatUnit(value: number): number {

@@ -4,9 +4,9 @@ description: Recessed large-screen title header whose top guide rail steps down 
 
 # Title 5
 
-`dvk-title-5` is a recessed large-screen title header for command centers, city operations screens, and data visualization systems. Its top guide rail steps down through a shoulder on each side into a flat, brightly lit bottom edge, so the title sits inside a shallow trapezoidal recess instead of on a plain band. The recess is measured from the title box — a long name pushes the shoulders outward, a short one lets them close in — and the shoulder slant is solved against the host's aspect ratio so it keeps its angle on any screen. Use it at 72–88px tall.
+`dvk-title-5` is a recessed large-screen title header for command centers, city operations screens, and data visualization systems. Its top guide rail steps down through a shoulder on each side into a flat, brightly lit bottom edge, so the title sits inside a shallow trapezoidal recess instead of on a plain band. The recess is measured from the title box — a long name pushes the shoulders outward, a short one lets them close in — and the shoulder slant is solved against the host's aspect ratio so it keeps its angle on any screen. Use it at 56–64px tall.
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 88px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
   <div class="datav-decoration-shell">
     <dvk-title-5 title-text="态势感知"></dvk-title-5>
   </div>
@@ -16,7 +16,7 @@ description: Recessed large-screen title header whose top guide rail steps down 
 <dvk-title-5 title-text="态势感知"></dvk-title-5>
 ```
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 88px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
   <div class="datav-decoration-shell">
     <dvk-title-5 title-text="实时人数监控中心"></dvk-title-5>
   </div>
@@ -26,7 +26,7 @@ description: Recessed large-screen title header whose top guide rail steps down 
 <dvk-title-5 title-text="实时人数监控中心"></dvk-title-5>
 ```
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 88px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
   <div class="datav-decoration-shell">
     <dvk-title-5 colors="#52f0b5,#2f8cff,#b7f8ff">
       <span>综合态势感知平台</span>
