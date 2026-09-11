@@ -1,10 +1,10 @@
 ---
-description: Flat rail large-screen title header built from one thin equal-height surface, straight horizontal rails, and short end ticks, with a title-first opening that follows the title box.
+description: Flat rail large-screen title header built from straight horizontal rails, quiet inner guides, and short end ticks, with a title-first opening that follows the title box.
 ---
 
 # Title 4
 
-`dvk-title-4` is a flat rail large-screen title header for command-center dashboards, city operations screens, and data visualization systems. It stays deliberately plain: one thin translucent surface, straight horizontal rails, quiet inner guides, and a short bright tick at each end. The text is the first visual focus and the decoration moves aside — the center opening is measured from the title box, so a wide title pushes the rails outward and a narrow one lets them extend inward. Use it at 48–56px tall.
+`dvk-title-4` is a flat rail large-screen title header for command-center dashboards, city operations screens, and data visualization systems. It stays deliberately plain: straight horizontal rails, quiet inner guides, and a short bright tick at each end. The text is the first visual focus and the decoration moves aside — the center opening is measured from the title box, so a wide title pushes the rails outward and a narrow one lets them extend inward. Use it at 48–56px tall.
 
 <div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 56px;">
   <div class="datav-decoration-shell">
@@ -44,8 +44,8 @@ description: Flat rail large-screen title header built from one thin equal-heigh
 
 | Name | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `color` | `string` | CSS variable fallback | Primary cyan color for the surface stroke, the main rails, the long quiet ticks, and the title edge dots. When set as a JavaScript property, a DataV-style color array is also accepted. |
-| `secondary-color` | `string` | CSS variable fallback | Secondary blue color for the translucent surface fill and the inner soft rails. |
+| `color` | `string` | CSS variable fallback | Primary cyan color for the main rails, the long quiet ticks, and the title edge dots. When set as a JavaScript property, a DataV-style color array is also accepted. |
+| `secondary-color` | `string` | CSS variable fallback | Secondary blue color for the inner soft rails. |
 | `accent-color` | `string` | CSS variable fallback | Accent cyan color for the short bright ticks at each end of the rail pair. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and accent colors. |
 | `title-text` | `string` | empty | Optional centered system name. When omitted, the default slot is rendered inside the title area. |
@@ -63,10 +63,10 @@ description: Flat rail large-screen title header built from one thin equal-heigh
 | `--dvk-color-primary` | Primary cyan fallback color. |
 | `--dvk-color-secondary` | Secondary blue fallback color. |
 | `--dvk-title-4-accent` | Accent cyan fallback color for the end ticks. |
-| `--dvk-title-4-surface-opacity` | Opacity of the translucent surface fill. |
 | `--dvk-title-4-rail-opacity` | Opacity of the main rails. |
 | `--dvk-title-4-accent-opacity` | Opacity of the short bright end ticks. |
-| `--dvk-title-4-title-width` | Title box width, capped at the host width. Wider boxes push the rails outward. |
+| `--dvk-title-4-title-width` | Title box width, never exceeding the host. When unset the box follows its own text. Wider boxes push the rails outward. |
+| `--dvk-title-4-title-gap` | Padding between the title text and the rail opening. Any CSS length, defaulting to `0.8em` so it scales with the title font. The measured box includes it, so the rails open one gap beyond the text. |
 | `--dvk-title-4-title-color` | Title text color. |
 | `--dvk-title-4-title-font` | Title font shorthand. |
 | `--dvk-title-4-title-letter-spacing` | Title letter spacing. |
@@ -77,7 +77,6 @@ description: Flat rail large-screen title header built from one thin equal-heigh
 | Part | Description |
 | --- | --- |
 | `graphic` | Internal SVG. |
-| `surface` | Thin translucent equal-height surface band. |
 | `rail` | Shared part for the horizontal rails. |
 | `main-rail` | Upper and lower boundary rails. |
 | `soft-rail` | Quiet inner guide rails. |

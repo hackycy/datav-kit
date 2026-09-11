@@ -1,12 +1,14 @@
 import { DatavElement, ResizeController, resolveThemeValue } from '@datav-kit/core'
 import { css, html } from 'lit'
 import { property, state } from 'lit/decorators.js'
+import { observeElementSize } from '../internal/element-size-observer'
 
 const VIEW_BOX_WIDTH = 1200
 const DEFAULT_GAP = 228
-const MIN_GAP = 170
-const MAX_GAP = 380
 const SOFT_RAIL_INSET = 64
+// `softRailPath` draws `M64 ${y} H(${536 - gap})`, so its left arm reverses once the
+// gap passes 600 - 2 * SOFT_RAIL_INSET. That binds before the main rail's 576.
+const MAX_RAIL_GAP = 600 - 2 * SOFT_RAIL_INSET
 
 export function resolveRailGap(titleWidth: number, hostWidth: number): number {
   if (!(titleWidth > 0) || !(hostWidth > 0))
@@ -14,7 +16,7 @@ export function resolveRailGap(titleWidth: number, hostWidth: number): number {
 
   const gap = titleWidth / 2 * VIEW_BOX_WIDTH / hostWidth
 
-  return Math.min(Math.max(gap, MIN_GAP), MAX_GAP)
+  return Math.min(Math.max(gap, 0), MAX_RAIL_GAP)
 }
 
 export class Title4Element extends DatavElement {
@@ -47,8 +49,11 @@ export class Title4Element extends DatavElement {
     .content {
       position: absolute;
       inset: 0;
-      display: grid;
-      place-items: center;
+      /* Flex, not grid: an auto grid track sizes to the item's max-content, which
+         makes the title's percentage max-width resolve against itself and overflow. */
+      display: flex;
+      align-items: center;
+      justify-content: center;
       pointer-events: none;
     }
 
@@ -56,8 +61,9 @@ export class Title4Element extends DatavElement {
       position: relative;
       z-index: 1;
       box-sizing: border-box;
-      width: min(var(--dvk-title-4-title-width, 420px), 100%);
-      padding: 0 18px;
+      width: var(--dvk-title-4-title-width, max-content);
+      max-width: 100%;
+      padding: 0 var(--dvk-title-4-title-gap, 0.8em);
       overflow: hidden;
       color: var(--dvk-title-4-title-color, #effcff);
       font: var(--dvk-title-4-title-font, 700 22px/1 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
@@ -117,18 +123,45 @@ export class Title4Element extends DatavElement {
     this.syncRailGap(size.width)
   })
 
+  private stopObservingTitle: (() => void) | null = null
+
+  override connectedCallback(): void {
+    super.connectedCallback()
+    this.observeTitle()
+  }
+
+  override disconnectedCallback(): void {
+    this.stopObservingTitle?.()
+    this.stopObservingTitle = null
+    super.disconnectedCallback()
+  }
+
   override firstUpdated(): void {
     this.emit('dvk-ready', { tagName: 'dvk-title-4' })
+    this.observeTitle()
   }
 
   override updated(): void {
     this.syncRailGap()
   }
 
+  // The host ResizeController only fires when the host box changes, so a width or font
+  // variable set at runtime would otherwise leave the rails on their previous opening.
+  private observeTitle(): void {
+    if (this.stopObservingTitle)
+      return
+
+    const title = this.renderRoot.querySelector<HTMLElement>('.title')
+
+    if (!title)
+      return
+
+    this.stopObservingTitle = observeElementSize(title, () => this.syncRailGap())
+  }
+
   override render(): unknown {
     const [primary, secondary, accent] = this.resolveColors()
     const gap = this.railGap
-    const surfaceOpacity = this.resolveOpacity('--dvk-title-4-surface-opacity', 0.045)
     const railOpacity = this.resolveOpacity('--dvk-title-4-rail-opacity', 0.36)
     const accentOpacity = this.resolveOpacity('--dvk-title-4-accent-opacity', 0.68)
 
@@ -140,17 +173,6 @@ export class Title4Element extends DatavElement {
         aria-hidden="true"
         shape-rendering="geometricPrecision"
       >
-        <rect
-          part="surface"
-          x="24"
-          y="8"
-          width="1152"
-          height="40"
-          fill=${withAlpha(secondary, surfaceOpacity)}
-          stroke=${withAlpha(primary, 0.1)}
-          stroke-width="1"
-        ></rect>
-
         <path part="rail main-rail" d=${mainRailPath(gap, 10)} fill="none" stroke=${withAlpha(primary, railOpacity)} stroke-width="1"></path>
         <path part="rail main-rail" d=${mainRailPath(gap, 46)} fill="none" stroke=${withAlpha(primary, railOpacity)} stroke-width="1"></path>
         <path part="rail soft-rail" d=${softRailPath(gap, 18)} fill="none" stroke=${withAlpha(secondary, 0.18)} stroke-width="1"></path>

@@ -769,8 +769,9 @@ describe('@datav-kit/elements', () => {
     expect(resolveRailGap(420, 1200)).toBe(210)
     expect(resolveRailGap(620, 1200)).toBe(310)
     expect(resolveRailGap(360, 820)).toBeCloseTo(263.41, 2)
-    expect(resolveRailGap(100, 1200)).toBe(170)
-    expect(resolveRailGap(1000, 1200)).toBe(380)
+    expect(resolveRailGap(100, 1200)).toBe(50)
+    expect(resolveRailGap(940, 1200)).toBe(470)
+    expect(resolveRailGap(1000, 1200)).toBe(472)
     expect(resolveRailGap(0, 1200)).toBe(228)
     expect(resolveRailGap(420, 0)).toBe(228)
   })
@@ -786,7 +787,6 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     const svg = element.shadowRoot?.querySelector('svg')
-    const surface = element.shadowRoot?.querySelector('[part="surface"]')
     const mainRails = [...element.shadowRoot?.querySelectorAll('[part~="main-rail"]') ?? []]
     const softRails = [...element.shadowRoot?.querySelectorAll('[part~="soft-rail"]') ?? []]
     const cores = [...element.shadowRoot?.querySelectorAll('[part~="accent-core"]') ?? []]
@@ -798,8 +798,6 @@ describe('@datav-kit/elements', () => {
 
     expect(svg?.getAttribute('viewBox')).toBe('0 0 1200 56')
     expect(svg?.getAttribute('preserveAspectRatio')).toBe('none')
-    expect(surface?.getAttribute('fill')).toBe('rgba(122, 168, 255, 0.045)')
-    expect(surface?.getAttribute('stroke')).toBe('rgba(57, 246, 200, 0.1)')
     // happy-dom performs no layout, so both measurements read zero and the header keeps its design default.
     expect(mainRails.map(rail => rail.getAttribute('d'))).toEqual([
       'M24 10 H372 M828 10 H1176',
@@ -820,13 +818,43 @@ describe('@datav-kit/elements', () => {
     expect(animations).toHaveLength(0)
   })
 
+  it('drives the title-4 rails from the measured title box', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-4') as Title4Element
+    element.setAttribute('title-text', 'FLAT RAIL OPS')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const title = element.shadowRoot?.querySelector<HTMLElement>('.title')
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 1200, height: 56 } as DOMRect)
+    vi.spyOn(title as HTMLElement, 'getBoundingClientRect').mockReturnValue({ width: 420 } as DOMRect)
+
+    element.requestUpdate()
+    await element.updateComplete
+    await element.updateComplete
+
+    const rails = [...element.shadowRoot?.querySelectorAll('[part~="main-rail"]') ?? []]
+    expect(rails.map(rail => rail.getAttribute('d'))).toEqual([
+      'M24 10 H390 M810 10 H1176',
+      'M24 46 H390 M810 46 H1176',
+    ])
+  })
+
   it('resolves the title-5 recess width from the measured title box', () => {
-    expect(resolveRecessHalf(420, 1600)).toBe(326)
-    expect(resolveRecessHalf(620, 1200)).toBe(390)
-    expect(resolveRecessHalf(140, 638)).toBeCloseTo(291.55, 2)
-    expect(resolveRecessHalf(100, 1600)).toBe(265)
+    expect(resolveRecessHalf(420, 1600)).toBe(210)
+    expect(resolveRecessHalf(620, 1200)).toBeCloseTo(413.33, 2)
+    expect(resolveRecessHalf(140, 638)).toBeCloseTo(175.55, 2)
+    expect(resolveRecessHalf(100, 1600)).toBe(50)
     expect(resolveRecessHalf(0, 1600)).toBe(265)
     expect(resolveRecessHalf(420, 0)).toBe(265)
+  })
+
+  it('holds the title-5 recess short of the slash group at any host aspect', () => {
+    expect(resolveRecessHalf(1600, 1600, 26.7)).toBeCloseTo(698.3, 2)
+    expect(resolveRecessHalf(1600, 1600, 74.7)).toBeCloseTo(650.3, 2)
+    expect(resolveRecessHalf(1300, 1600, 26.7)).toBe(650)
   })
 
   it('resolves the title-5 shoulder run from the host aspect ratio', () => {
@@ -846,12 +874,10 @@ describe('@datav-kit/elements', () => {
 
     await element.updateComplete
 
-    const surface = element.shadowRoot?.querySelector('[part="surface"]')
     const rail = element.shadowRoot?.querySelector('[part="rail rail-core"]')
     const guideRail = element.shadowRoot?.querySelector('[part="guide-rail guide-rail-left"]')
     const accent = element.shadowRoot?.querySelector('[part="accent accent-core"]')
 
-    expect(surface?.getAttribute('fill')).toBe('rgba(19, 153, 255, 0.03)')
     expect(rail?.getAttribute('stroke')).toBe('url(#dvk-title-5-fade-rail-1)')
     expect(guideRail?.getAttribute('stroke')).toBe('rgba(66, 221, 255, 0.16)')
     expect(accent?.getAttribute('stroke')).toBe('url(#dvk-title-5-center-line-1)')
@@ -868,7 +894,6 @@ describe('@datav-kit/elements', () => {
     await element.updateComplete
 
     const svg = element.shadowRoot?.querySelector('svg')
-    const surface = element.shadowRoot?.querySelector('[part="surface"]')
     const guideRails = [...element.shadowRoot?.querySelectorAll('[part~="guide-rail"]') ?? []]
     const recess = element.shadowRoot?.querySelector('[part="recess"]')
     const innerRail = element.shadowRoot?.querySelector('[part="inner-rail"]')
@@ -882,7 +907,6 @@ describe('@datav-kit/elements', () => {
 
     expect(svg?.getAttribute('viewBox')).toBe('0 0 1600 64')
     expect(svg?.getAttribute('preserveAspectRatio')).toBe('none')
-    expect(surface?.getAttribute('fill')).toBe('rgba(122, 168, 255, 0.03)')
     // happy-dom performs no layout, so both measurements read zero and the header
     // keeps the prototype's default geometry verbatim.
     expect(guideRails.map(rail => rail.getAttribute('d'))).toEqual([
@@ -922,6 +946,27 @@ describe('@datav-kit/elements', () => {
     expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#39f6c8', '#7aa8ff', '#ff7bd5']))
     expect(titleText?.textContent).toBe('RECESS OPS')
     expect(animations).toHaveLength(0)
+  })
+
+  it('drives the title-5 recess from the measured title box', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-5') as Title5Element
+    element.setAttribute('title-text', 'RECESS OPS')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const title = element.shadowRoot?.querySelector<HTMLElement>('.title')
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 1600, height: 64 } as DOMRect)
+    vi.spyOn(title as HTMLElement, 'getBoundingClientRect').mockReturnValue({ width: 420 } as DOMRect)
+
+    element.requestUpdate()
+    await element.updateComplete
+    await element.updateComplete
+
+    const recess = element.shadowRoot?.querySelector('[part="recess"]')
+    expect(recess?.getAttribute('d')).toBe('M563.3 10.5 L590 51.5 H1010 L1036.7 10.5 Z')
   })
 
   it('renders decoration-10 as a futuristic radar HUD', async () => {

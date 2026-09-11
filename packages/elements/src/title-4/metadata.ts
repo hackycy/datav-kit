@@ -3,21 +3,21 @@ import type { DatavElementMetadata } from '@datav-kit/core'
 export const title4Metadata = {
   tagName: 'dvk-title-4',
   className: 'Title4Element',
-  description: 'Flat rail large-screen title header built from one thin equal-height surface, straight horizontal rails, and short end ticks, with a title-first opening that widens or narrows to match the title box.',
+  description: 'Flat rail large-screen title header built from straight horizontal rails, quiet inner guides, and short end ticks, with a title-first opening that widens or narrows to match the title box.',
   props: {
     color: {
       type: 'string',
       default: '',
       attribute: true,
       cssVariable: '--dvk-color-primary',
-      description: 'Primary cyan color for the surface stroke, the main rails, the long quiet ticks, and the title edge dots. Also accepts a DataV-compatible color array when set as a property.',
+      description: 'Primary cyan color for the main rails, the long quiet ticks, and the title edge dots. Also accepts a DataV-compatible color array when set as a property.',
     },
     secondaryColor: {
       type: 'string',
       default: '',
       attribute: 'secondary-color',
       cssVariable: '--dvk-color-secondary',
-      description: 'Secondary blue color for the translucent surface fill and the inner soft rails.',
+      description: 'Secondary blue color for the inner soft rails.',
     },
     accentColor: {
       type: 'string',
@@ -48,7 +48,6 @@ export const title4Metadata = {
   ],
   parts: [
     'graphic',
-    'surface',
     'rail',
     'main-rail',
     'soft-rail',

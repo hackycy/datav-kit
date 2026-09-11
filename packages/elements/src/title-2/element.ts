@@ -38,8 +38,8 @@ export class Title2Element extends DatavElement {
       z-index: 1;
       display: grid;
       place-items: center;
-      width: min(36%, var(--dvk-title-2-title-width, 760px));
-      min-width: var(--dvk-title-2-title-min-width, 260px);
+      width: var(--dvk-title-2-title-width, max-content);
+      max-width: 100%;
       height: var(--dvk-title-2-title-height, 46.55%);
       min-height: 0;
       color: var(--dvk-title-2-title-color, var(--dvk-title-2-resolved-title-color, #f5cf70));

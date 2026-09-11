@@ -63,8 +63,7 @@ description: Deep glass large-screen top title bar with cyber-blue mechanical wi
 | `--dvk-color-primary` | Primary cyan fallback color. |
 | `--dvk-color-secondary` | Secondary blue fallback color. |
 | `--dvk-title-2-accent` | Accent fallback color for the title text. |
-| `--dvk-title-2-title-width` | Maximum title content width. |
-| `--dvk-title-2-title-min-width` | Minimum title content width. |
+| `--dvk-title-2-title-width` | Title box width. When unset the box follows its own text. Wider than the centre panel, the text overlaps the side decoration. |
 | `--dvk-title-2-title-top` | Title content area top offset, aligned to the inner title panel by default. |
 | `--dvk-title-2-title-height` | Title content area height, aligned to the inner title panel by default. |
 | `--dvk-title-2-title-color` | Title text color override. |

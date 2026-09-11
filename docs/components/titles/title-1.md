@@ -63,8 +63,7 @@ description: Slim enterprise large-screen header banner redesigned as one equal-
 | `--dvk-color-primary` | Primary cyan fallback color. |
 | `--dvk-color-secondary` | Secondary blue fallback color. |
 | `--dvk-title-1-accent` | Accent fallback color for small highlights. |
-| `--dvk-title-1-title-width` | Maximum title content width. |
-| `--dvk-title-1-title-min-width` | Minimum title content width. |
+| `--dvk-title-1-title-width` | Title box width. When unset the box follows its own text. Wider than the centre panel, the text overlaps the side decoration. |
 | `--dvk-title-1-title-height` | Title content height. |
 | `--dvk-title-1-title-color` | Title text color. |
 | `--dvk-title-1-title-font` | Title font shorthand. |

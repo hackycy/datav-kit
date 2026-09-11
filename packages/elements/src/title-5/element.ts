@@ -1,6 +1,7 @@
 import { DatavElement, ResizeController, resolveThemeValue } from '@datav-kit/core'
 import { css, html, svg } from 'lit'
 import { property, state } from 'lit/decorators.js'
+import { observeElementSize } from '../internal/element-size-observer'
 
 const VIEW_BOX_WIDTH = 1600
 const VIEW_BOX_HEIGHT = 64
@@ -9,9 +10,7 @@ const RAIL_TOP = 10.5
 const RAIL_BOTTOM = 51.5
 const SHOULDER_RUN = 26.7
 const MAX_SHOULDER_RUN = 74.7
-const RECESS_MARGIN = 116
-const MIN_HALF = 265
-const MAX_HALF = 390
+const DEFAULT_HALF = 265
 const INNER_INSET_X = 4
 const INNER_INSET_Y = 4.5
 const SLASH_COUNT = 6
@@ -20,13 +19,16 @@ const SLASH_GAP = 6
 const SLASH_SPAN = (SLASH_COUNT - 1) * SLASH_STEP + 9
 const SLASH_INDICES = Array.from({ length: SLASH_COUNT }, (_, index) => index)
 
-export function resolveRecessHalf(titleWidth: number, hostWidth: number): number {
+export function resolveRecessHalf(titleWidth: number, hostWidth: number, shoulderRun = SHOULDER_RUN): number {
   if (!(titleWidth > 0) || !(hostWidth > 0))
-    return MIN_HALF
+    return DEFAULT_HALF
 
-  const half = titleWidth / 2 * VIEW_BOX_WIDTH / hostWidth + RECESS_MARGIN
+  const half = titleWidth / 2 * VIEW_BOX_WIDTH / hostWidth
+  // The left slash group starts at `CENTER - half - shoulderRun - SLASH_GAP - SLASH_SPAN`,
+  // so it leaves the viewBox 75 units before the shoulder, recess or rail would.
+  const maxHalf = CENTER - shoulderRun - SLASH_GAP - SLASH_SPAN
 
-  return Math.min(Math.max(half, MIN_HALF), MAX_HALF)
+  return Math.min(Math.max(half, 0), maxHalf)
 }
 
 // `preserveAspectRatio="none"` shears the shoulder slant, so the run is solved back
@@ -83,16 +85,22 @@ export class Title5Element extends DatavElement {
       /* y=28.5 of 64, deliberately above the recess centre (y=31) so the bright
          bottom edge and its glow do not crowd the text. */
       top: var(--dvk-title-5-title-top, 44.53%);
-      left: 50%;
+      /* Both insets, so the box has a definite width for the title's percentage
+         max-width to resolve against instead of a shrink-to-fit parent. */
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
       z-index: 1;
-      max-width: min(var(--dvk-title-5-title-max-width, 560px), 100%);
       pointer-events: none;
-      transform: translate(-50%, -50%);
+      transform: translateY(-50%);
     }
 
     .title {
       box-sizing: border-box;
-      padding: 0 18px;
+      width: var(--dvk-title-5-title-width, max-content);
+      max-width: 100%;
+      padding: 0 var(--dvk-title-5-title-gap, 2em);
       overflow: hidden;
       color: var(--dvk-title-5-title-color, #f3fbff);
       font: var(--dvk-title-5-title-font, 700 19px/1 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
@@ -130,7 +138,7 @@ export class Title5Element extends DatavElement {
   titleText = ''
 
   @state()
-  private recessHalf = MIN_HALF
+  private recessHalf = DEFAULT_HALF
 
   @state()
   private shoulderRun = SHOULDER_RUN
@@ -146,12 +154,40 @@ export class Title5Element extends DatavElement {
     this.syncGeometry(size.width, size.height)
   })
 
+  private stopObservingTitle: (() => void) | null = null
+
+  override connectedCallback(): void {
+    super.connectedCallback()
+    this.observeTitle()
+  }
+
+  override disconnectedCallback(): void {
+    this.stopObservingTitle?.()
+    this.stopObservingTitle = null
+    super.disconnectedCallback()
+  }
+
   override firstUpdated(): void {
     this.emit('dvk-ready', { tagName: 'dvk-title-5' })
+    this.observeTitle()
   }
 
   override updated(): void {
     this.syncGeometry()
+  }
+
+  // The host ResizeController only fires when the host box changes, so a width or font
+  // variable set at runtime would otherwise leave the recess on its previous width.
+  private observeTitle(): void {
+    if (this.stopObservingTitle)
+      return
+
+    const title = this.renderRoot.querySelector<HTMLElement>('.title')
+
+    if (!title)
+      return
+
+    this.stopObservingTitle = observeElementSize(title, () => this.syncGeometry())
   }
 
   override render(): unknown {
@@ -159,7 +195,6 @@ export class Title5Element extends DatavElement {
     const half = this.recessHalf
     const shoulderX = CENTER - half - this.shoulderRun
     const slashStart = shoulderX - SLASH_GAP - SLASH_SPAN
-    const surfaceOpacity = this.resolveOpacity('--dvk-title-5-surface-opacity', 0.03)
     const glowOpacity = this.resolveOpacity('--dvk-title-5-glow-opacity', 0.3)
     const railPath = mainRailPath(half, shoulderX)
     const accentPath = centerAccentPath(half)
@@ -173,8 +208,6 @@ export class Title5Element extends DatavElement {
         shape-rendering="geometricPrecision"
       >
         <defs>${this.renderDefs(primary, secondary, accent)}</defs>
-
-        <rect part="surface" x="0" y="5.5" width=${VIEW_BOX_WIDTH} height="58.5" fill=${withAlpha(secondary, surfaceOpacity)}></rect>
 
         <path part="guide-rail guide-rail-left" d=${guideRailPath(shoulderX, false)} fill="none" stroke=${withAlpha(primary, 0.16)} stroke-width="1"></path>
         <path part="guide-rail guide-rail-right" d=${guideRailPath(shoulderX, true)} fill="none" stroke=${withAlpha(primary, 0.16)} stroke-width="1"></path>
@@ -261,8 +294,8 @@ export class Title5Element extends DatavElement {
     const width = hostWidth ?? rect?.width ?? 0
     const height = hostHeight ?? rect?.height ?? 0
     const title = this.renderRoot.querySelector<HTMLElement>('.title')
-    const nextHalf = resolveRecessHalf(title?.getBoundingClientRect().width ?? 0, width)
     const nextRun = resolveShoulderRun(width, height)
+    const nextHalf = resolveRecessHalf(title?.getBoundingClientRect().width ?? 0, width, nextRun)
 
     if (Math.abs(nextHalf - this.recessHalf) < 0.5 && Math.abs(nextRun - this.shoulderRun) < 0.5)
       return

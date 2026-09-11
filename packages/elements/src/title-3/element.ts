@@ -40,8 +40,8 @@ export class Title3Element extends DatavElement {
       z-index: 1;
       display: grid;
       place-items: center;
-      width: min(38%, var(--dvk-title-3-title-width, 520px));
-      min-width: var(--dvk-title-3-title-min-width, 240px);
+      width: var(--dvk-title-3-title-width, max-content);
+      max-width: 100%;
       height: var(--dvk-title-3-title-height, 46%);
       min-height: 0;
       color: var(--dvk-title-3-title-color, #f6fffb);

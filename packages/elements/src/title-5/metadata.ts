@@ -17,7 +17,7 @@ export const title5Metadata = {
       default: '',
       attribute: 'secondary-color',
       cssVariable: '--dvk-color-secondary',
-      description: 'Secondary blue color for the header surface, the recess fill, the inner rail and the slash accents.',
+      description: 'Secondary blue color for the recess fill, the inner rail and the slash accents.',
     },
     accentColor: {
       type: 'string',
@@ -49,7 +49,6 @@ export const title5Metadata = {
   parts: [
     'graphic',
     'top-edge',
-    'surface',
     'guide-rail',
     'guide-rail-left',
     'guide-rail-right',

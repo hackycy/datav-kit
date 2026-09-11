@@ -63,8 +63,7 @@ description: Aurora arc large-screen title header with open curved light tracks,
 | `--dvk-color-primary` | Primary aurora green fallback color. |
 | `--dvk-color-secondary` | Secondary cool blue fallback color. |
 | `--dvk-title-3-accent` | Accent aurora pink fallback color. |
-| `--dvk-title-3-title-width` | Maximum title content width. |
-| `--dvk-title-3-title-min-width` | Minimum title content width. |
+| `--dvk-title-3-title-width` | Title box width. When unset the box follows its own text. Wider than the centre panel, the text overlaps the side decoration. |
 | `--dvk-title-3-title-top` | Title content vertical center. |
 | `--dvk-title-3-title-height` | Title content height. |
 | `--dvk-title-3-title-color` | Title text color. |
