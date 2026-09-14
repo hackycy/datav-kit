@@ -2,6 +2,7 @@ import { DatavElement, ResizeController, resolveThemeValue } from '@datav-kit/co
 import { css, html, svg } from 'lit'
 import { property, state } from 'lit/decorators.js'
 import { observeElementSize } from '../internal/element-size-observer'
+import { resolveTitleCenterHalf } from '../internal/title-center'
 
 const VIEW_BOX_WIDTH = 1600
 const VIEW_BOX_HEIGHT = 64
@@ -20,15 +21,15 @@ const SLASH_SPAN = (SLASH_COUNT - 1) * SLASH_STEP + 9
 const SLASH_INDICES = Array.from({ length: SLASH_COUNT }, (_, index) => index)
 
 export function resolveRecessHalf(titleWidth: number, hostWidth: number, shoulderRun = SHOULDER_RUN): number {
-  if (!(titleWidth > 0) || !(hostWidth > 0))
-    return DEFAULT_HALF
-
-  const half = titleWidth / 2 * VIEW_BOX_WIDTH / hostWidth
-  // The left slash group starts at `CENTER - half - shoulderRun - SLASH_GAP - SLASH_SPAN`,
-  // so it leaves the viewBox 75 units before the shoulder, recess or rail would.
-  const maxHalf = CENTER - shoulderRun - SLASH_GAP - SLASH_SPAN
-
-  return Math.min(Math.max(half, 0), maxHalf)
+  return resolveTitleCenterHalf({
+    titleWidth,
+    hostWidth,
+    viewBoxWidth: VIEW_BOX_WIDTH,
+    fallback: DEFAULT_HALF,
+    // The left slash group starts at `CENTER - half - shoulderRun - SLASH_GAP - SLASH_SPAN`,
+    // so it leaves the viewBox 75 units before the shoulder, recess or rail would.
+    limit: CENTER - shoulderRun - SLASH_GAP - SLASH_SPAN,
+  })
 }
 
 // `preserveAspectRatio="none"` shears the shoulder slant, so the run is solved back

@@ -117,6 +117,38 @@ An independently filled surface requires a component whose detail page documents
 Likewise, motion controls and automatic-height support belong to individual component APIs;
 verify the selected element's detail page instead of assuming all border boxes share props.
 
+## Title Middle Span
+
+`dvk-title-4`, `dvk-title-5` and `dvk-title-6` each open a middle span that is measured from the
+title box rather than fixed at design time. All three resolve it through one internal helper,
+`resolveTitleCenterHalf` in `packages/elements/src/internal/title-center.ts`:
+
+```txt
+half = clamp(measuredTitleWidth / 2 * viewBoxWidth / hostWidth, 0, limit)
+```
+
+- The measured width is the `.title` **border box**, so the text's horizontal padding is part of the
+  span. `observeElementSize` reads the border box for exactly this reason; `ResizeController` reports
+  the content box and is used only for the host.
+- `--dvk-title-N-title-width` and `--dvk-title-N-title-gap` seed that measured box. They are not
+  solver overrides — no variable sets the span directly.
+- `limit` stays with each component, because each ceiling protects different side furniture: a soft
+  rail reversing on itself (title-4), the slash group leaving the viewBox (title-5), the bend crossing
+  the edge ticks (title-6). Do not hoist a ceiling into the shared helper.
+- `fallback` is the value used when nothing is measurable. It must reproduce the design's own
+  geometry, so a layout-less environment renders the design instead of an arbitrary width.
+
+Extra clearance beyond the text always comes from `--dvk-title-N-title-gap`, expressed against the
+title font. Keep new title variants on that mechanism rather than adding a viewBox-unit offset to the
+span, or the family stops being uniform.
+
+The middle does not mean the same shape in every variant — an interruption in the rails, a filled
+recess, or the span of a continuous baseline. Only the width solve is shared; path builders stay with
+their component.
+
+`dvk-title-1`, `dvk-title-2` and `dvk-title-3` are static designs with no measured span, so this
+mechanism applies only to variants that adapt to their title.
+
 ## Fullscreen
 
 Fullscreen must be requested from a user gesture. Components may expose methods such as `requestFullscreenMode()`, but they must not automatically call `requestFullscreen()` on mount.

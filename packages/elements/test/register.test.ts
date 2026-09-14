@@ -1,9 +1,10 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, LoadingPulseElement, PerformanceMonitorElement, Title1Element, Title2Element, Title3Element, Title4Element, Title5Element } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, LoadingPulseElement, PerformanceMonitorElement, Title1Element, Title2Element, Title3Element, Title4Element, Title5Element, Title6Element } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, defineLoadingPulse, definePerformanceMonitor, defineTitle1, defineTitle2, defineTitle3, defineTitle4, defineTitle5, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, defineLoadingPulse, definePerformanceMonitor, defineTitle1, defineTitle2, defineTitle3, defineTitle4, defineTitle5, defineTitle6, elementMetadata, register } from '../src/index'
 import { resolveRailGap } from '../src/title-4/element'
 import { resolveRecessHalf, resolveShoulderRun } from '../src/title-5/element'
+import { resolveFrameHalf, resolveShoulderRun as resolveTitle6ShoulderRun, resolveTitleSize } from '../src/title-6/element'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -191,6 +192,7 @@ describe('@datav-kit/elements', () => {
       'dvk-title-3',
       'dvk-title-4',
       'dvk-title-5',
+      'dvk-title-6',
       'dvk-count-to',
       'dvk-loading-orbit',
       'dvk-loading-energy',
@@ -201,8 +203,8 @@ describe('@datav-kit/elements', () => {
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-title-6', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-title-6', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -287,6 +289,7 @@ describe('@datav-kit/elements', () => {
     expect(defineTitle3()).toBe(false)
     expect(defineTitle4()).toBe(false)
     expect(defineTitle5()).toBe(false)
+    expect(defineTitle6()).toBe(false)
     expect(defineCountTo()).toBe(false)
     expect(defineLoadingOrbit()).toBe(false)
     expect(defineLoadingEnergy()).toBe(false)
@@ -967,6 +970,156 @@ describe('@datav-kit/elements', () => {
 
     const recess = element.shadowRoot?.querySelector('[part="recess"]')
     expect(recess?.getAttribute('d')).toBe('M563.3 10.5 L590 51.5 H1010 L1036.7 10.5 Z')
+  })
+
+  it('resolves the title-6 shoulder run from the host aspect ratio', () => {
+    expect(resolveTitle6ShoulderRun(2048, 150)).toBe(88)
+    expect(resolveTitle6ShoulderRun(1200, 100)).toBeCloseTo(100.12, 2)
+    expect(resolveTitle6ShoulderRun(638, 100)).toBeCloseTo(188.32, 2)
+    expect(resolveTitle6ShoulderRun(1200, 64)).toBeCloseTo(64.08, 2)
+    expect(resolveTitle6ShoulderRun(0, 100)).toBe(88)
+    expect(resolveTitle6ShoulderRun(1200, 0)).toBe(88)
+  })
+
+  it('resolves the title-6 frame half from the measured title box', () => {
+    // The design box is the 1056-wide text plus an 80-unit gap on each side.
+    expect(resolveFrameHalf(1216, 2048, 88)).toBe(608)
+    expect(resolveFrameHalf(420, 1600, 88)).toBeCloseTo(268.8, 2)
+    expect(resolveFrameHalf(328, 638, 188.32)).toBeCloseTo(526.45, 2)
+    expect(resolveFrameHalf(0, 2048, 88)).toBe(608)
+    expect(resolveFrameHalf(1216, 0, 88)).toBe(608)
+  })
+
+  it('holds the title-6 frame clear of the edge ticks on an over-wide title', () => {
+    // 867 - shoulderRun: the bend must stay outside the ticks.
+    expect(resolveFrameHalf(2000, 2048, 88)).toBe(779)
+    expect(resolveFrameHalf(2000, 2048, 188.32)).toBeCloseTo(678.68, 2)
+  })
+
+  it('sizes the title-6 font from whichever host dimension is tighter', () => {
+    expect(resolveTitleSize(1200, 100)).toBeCloseTo(42.19, 2)
+    expect(resolveTitleSize(638, 100)).toBeCloseTo(22.43, 2)
+    expect(resolveTitleSize(1200, 64)).toBeCloseTo(30.72, 2)
+    expect(resolveTitleSize(2048, 150)).toBe(72)
+    expect(resolveTitleSize(0, 100)).toBe(0)
+    expect(resolveTitleSize(1200, 0)).toBe(0)
+  })
+
+  it('renders title-6 from its built-in fallbacks without any theme CSS', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-6') as Title6Element
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const rail = element.shadowRoot?.querySelector('[part~="rail-core"]')
+    const tick = element.shadowRoot?.querySelector('[part~="tick-bright"]')
+    const core = element.shadowRoot?.querySelector('[part~="core-line"]')
+
+    expect(rail?.getAttribute('stroke')).toBe('url(#dvk-title-6-upper-rail-left-1)')
+    expect(tick?.getAttribute('stroke')).toBe('#58b4ff')
+    expect(core?.getAttribute('stroke')).toBe('rgba(223, 246, 255, 0.88)')
+  })
+
+  it('renders title-6 as a horizon framed by a shoulder and an upper rail on each side', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-6') as Title6Element
+    element.setAttribute('colors', '#39f6c8,#7aa8ff,#ff7bd5')
+    element.setAttribute('title-text', 'SMART CAMPUS')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const ribbons = [...element.shadowRoot?.querySelectorAll('[part~="ribbon"]') ?? []]
+    const rails = [...element.shadowRoot?.querySelectorAll('[part~="rail-core"]') ?? []]
+    const supportRails = [...element.shadowRoot?.querySelectorAll('[part~="support-rail"]') ?? []]
+    const ticks = [...element.shadowRoot?.querySelectorAll('[part~="tick"] path') ?? []]
+    const horizonCore = element.shadowRoot?.querySelector('[part~="horizon-core"]')
+    const horizonHalo = element.shadowRoot?.querySelector('[part~="horizon-halo"]')
+    const coreLine = element.shadowRoot?.querySelector('[part~="core-line"]')
+    const core = element.shadowRoot?.querySelector('[part~="core-blur"]')
+    const stops = [...element.shadowRoot?.querySelectorAll('stop') ?? []]
+    const titleText = element.shadowRoot?.querySelector('[part="title-text"]')
+    const animations = [...element.shadowRoot?.querySelectorAll('animate, animateTransform') ?? []]
+
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 2048 150')
+    expect(svg?.getAttribute('preserveAspectRatio')).toBe('none')
+    // happy-dom performs no layout, so both measurements read zero and the header
+    // keeps the design's default geometry verbatim.
+    expect(ribbons.map(ribbon => ribbon.getAttribute('d'))).toEqual([
+      'M321.8 33 H365.8 L440.4 117 H396.4 Z',
+      'M1726.2 33 H1682.2 L1607.6 117 H1651.6 Z',
+    ])
+    expect(rails.map(rail => rail.getAttribute('d'))).toEqual([
+      'M0 40 H328 L416 139',
+      'M2048 40 H1720 L1632 139',
+    ])
+    expect(supportRails.map(rail => rail.getAttribute('d'))).toEqual([
+      'M37 117 H530',
+      'M2011 117 H1518',
+    ])
+    expect(ticks.map(tick => tick.getAttribute('d'))).toEqual([
+      'M37 117 H72',
+      'M2011 117 H1976',
+      'M72 117 H97',
+      'M1976 117 H1951',
+    ])
+    expect(horizonCore?.getAttribute('d')).toBe('M416 139 H1632')
+    expect(horizonHalo?.getAttribute('d')).toBe('M790 139 H1258')
+    expect(coreLine?.getAttribute('d')).toBe('M1008 139 H1040')
+    expect(core?.getAttribute('cx')).toBe('1024')
+    expect(core?.getAttribute('cy')).toBe('139')
+    expect(core?.getAttribute('rx')).toBe('54')
+    expect(core?.getAttribute('ry')).toBe('5.6')
+    expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#39f6c8', '#7aa8ff', '#ff7bd5']))
+    expect(titleText?.textContent).toBe('SMART CAMPUS')
+    expect(animations).toHaveLength(0)
+  })
+
+  it('drives the title-6 frame from the measured title box', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-6') as Title6Element
+    element.setAttribute('title-text', 'SMART CAMPUS')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const title = element.shadowRoot?.querySelector<HTMLElement>('.title')
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 1200, height: 100 } as DOMRect)
+    vi.spyOn(title as HTMLElement, 'getBoundingClientRect').mockReturnValue({ width: 420 } as DOMRect)
+
+    element.requestUpdate()
+    await element.updateComplete
+    await element.updateComplete
+
+    const rails = [...element.shadowRoot?.querySelectorAll('[part~="rail-core"]') ?? []]
+    expect(rails.map(rail => rail.getAttribute('d'))).toEqual([
+      'M0 40 H565.5 L665.6 139',
+      'M2048 40 H1482.5 L1382.4 139',
+    ])
+  })
+
+  it('keeps an explicit --dvk-title-6-title-size ahead of the measured font size', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-6') as Title6Element
+    element.setAttribute('title-text', 'SMART CAMPUS')
+    element.style.setProperty('--dvk-title-6-title-size', '30px')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 1200, height: 100 } as DOMRect)
+    element.requestUpdate()
+    await element.updateComplete
+    await element.updateComplete
+
+    const title = element.shadowRoot?.querySelector<HTMLElement>('.title')
+    expect(title?.getAttribute('style')).toContain('--dvk-title-6-title-size: 30px')
   })
 
   it('renders decoration-10 as a futuristic radar HUD', async () => {

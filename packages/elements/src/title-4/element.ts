@@ -2,6 +2,7 @@ import { DatavElement, ResizeController, resolveThemeValue } from '@datav-kit/co
 import { css, html } from 'lit'
 import { property, state } from 'lit/decorators.js'
 import { observeElementSize } from '../internal/element-size-observer'
+import { resolveTitleCenterHalf } from '../internal/title-center'
 
 const VIEW_BOX_WIDTH = 1200
 const DEFAULT_GAP = 228
@@ -11,12 +12,13 @@ const SOFT_RAIL_INSET = 64
 const MAX_RAIL_GAP = 600 - 2 * SOFT_RAIL_INSET
 
 export function resolveRailGap(titleWidth: number, hostWidth: number): number {
-  if (!(titleWidth > 0) || !(hostWidth > 0))
-    return DEFAULT_GAP
-
-  const gap = titleWidth / 2 * VIEW_BOX_WIDTH / hostWidth
-
-  return Math.min(Math.max(gap, 0), MAX_RAIL_GAP)
+  return resolveTitleCenterHalf({
+    titleWidth,
+    hostWidth,
+    viewBoxWidth: VIEW_BOX_WIDTH,
+    fallback: DEFAULT_GAP,
+    limit: MAX_RAIL_GAP,
+  })
 }
 
 export class Title4Element extends DatavElement {
