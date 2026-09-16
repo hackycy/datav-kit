@@ -64,6 +64,7 @@ export default defineConfig({
             { text: 'Title 4', link: '/components/titles/title-4' },
             { text: 'Title 5', link: '/components/titles/title-5' },
             { text: 'Title 6', link: '/components/titles/title-6' },
+            { text: 'Title 7', link: '/components/titles/title-7' },
           ],
         },
         {

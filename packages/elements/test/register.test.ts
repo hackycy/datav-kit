@@ -1,10 +1,11 @@
 // @vitest-environment happy-dom
-import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, LoadingPulseElement, PerformanceMonitorElement, Title1Element, Title2Element, Title3Element, Title4Element, Title5Element, Title6Element } from '../src/index'
+import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, LoadingPulseElement, PerformanceMonitorElement, Title1Element, Title2Element, Title3Element, Title4Element, Title5Element, Title6Element, Title7Element } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, defineLoadingPulse, definePerformanceMonitor, defineTitle1, defineTitle2, defineTitle3, defineTitle4, defineTitle5, defineTitle6, elementMetadata, register } from '../src/index'
+import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, defineLoadingPulse, definePerformanceMonitor, defineTitle1, defineTitle2, defineTitle3, defineTitle4, defineTitle5, defineTitle6, defineTitle7, elementMetadata, register } from '../src/index'
 import { resolveRailGap } from '../src/title-4/element'
 import { resolveRecessHalf, resolveShoulderRun } from '../src/title-5/element'
 import { resolveFrameHalf, resolveShoulderRun as resolveTitle6ShoulderRun, resolveTitleSize } from '../src/title-6/element'
+import { resolveFrameHalf as resolveTitle7FrameHalf, resolveShoulderRun as resolveTitle7ShoulderRun, resolveTitleSize as resolveTitle7Size } from '../src/title-7/element'
 
 type ResizeObserverCallback = ConstructorParameters<typeof ResizeObserver>[0]
 
@@ -193,6 +194,7 @@ describe('@datav-kit/elements', () => {
       'dvk-title-4',
       'dvk-title-5',
       'dvk-title-6',
+      'dvk-title-7',
       'dvk-count-to',
       'dvk-loading-orbit',
       'dvk-loading-energy',
@@ -203,8 +205,8 @@ describe('@datav-kit/elements', () => {
     const first = register()
     const second = register()
 
-    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-title-6', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
-    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-title-6', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
+    expect(first.defined).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-title-6', 'dvk-title-7', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
+    expect(second.skipped).toEqual(expect.arrayContaining(['dvk-fit-screen', 'dvk-border-box-1', 'dvk-border-box-2', 'dvk-border-box-3', 'dvk-border-box-4', 'dvk-border-box-5', 'dvk-border-box-6', 'dvk-border-box-7', 'dvk-border-box-8', 'dvk-border-box-9', 'dvk-border-box-10', 'dvk-border-box-11', 'dvk-border-box-12', 'dvk-border-box-13', 'dvk-border-box-14', 'dvk-border-box-15', 'dvk-border-box-16', 'dvk-decoration-1', 'dvk-decoration-2', 'dvk-decoration-3', 'dvk-decoration-4', 'dvk-decoration-5', 'dvk-decoration-6', 'dvk-decoration-7', 'dvk-decoration-8', 'dvk-decoration-9', 'dvk-decoration-10', 'dvk-decoration-11', 'dvk-title-1', 'dvk-title-2', 'dvk-title-3', 'dvk-title-4', 'dvk-title-5', 'dvk-title-6', 'dvk-title-7', 'dvk-count-to', 'dvk-loading-orbit', 'dvk-loading-energy', 'dvk-loading-pulse', 'dvk-performance-monitor']))
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('width')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('height')
     expect(elementMetadata.find(meta => meta.tagName === 'dvk-border-box-2')?.props).not.toHaveProperty('viewBox')
@@ -290,6 +292,7 @@ describe('@datav-kit/elements', () => {
     expect(defineTitle4()).toBe(false)
     expect(defineTitle5()).toBe(false)
     expect(defineTitle6()).toBe(false)
+    expect(defineTitle7()).toBe(false)
     expect(defineCountTo()).toBe(false)
     expect(defineLoadingOrbit()).toBe(false)
     expect(defineLoadingEnergy()).toBe(false)
@@ -1120,6 +1123,229 @@ describe('@datav-kit/elements', () => {
 
     const title = element.shadowRoot?.querySelector<HTMLElement>('.title')
     expect(title?.getAttribute('style')).toContain('--dvk-title-6-title-size: 30px')
+  })
+
+  it('resolves the title-7 shoulder run from the host aspect ratio', () => {
+    expect(resolveTitle7ShoulderRun(1672, 84)).toBe(59)
+    expect(resolveTitle7ShoulderRun(1200, 100)).toBeCloseTo(97.87, 2)
+    expect(resolveTitle7ShoulderRun(640, 64)).toBeCloseTo(117.44, 2)
+    expect(resolveTitle7ShoulderRun(0, 84)).toBe(59)
+    expect(resolveTitle7ShoulderRun(1672, 0)).toBe(59)
+  })
+
+  it('resolves the title-7 frame half from the measured title box', () => {
+    // The design box is 12 advances of 1.013542em plus a 1.6em gap on each side: 15.3625em,
+    // so 7.68125em at the 60px design font.
+    expect(resolveTitle7FrameHalf(921.75, 1672, 59)).toBeCloseTo(460.88, 2)
+    expect(resolveTitle7FrameHalf(420, 1200, 97.87)).toBeCloseTo(292.6, 2)
+    expect(resolveTitle7FrameHalf(0, 1672, 59)).toBe(460.9)
+    expect(resolveTitle7FrameHalf(921.75, 0, 59)).toBe(460.9)
+  })
+
+  it('holds the title-7 frame short of the side rails on an over-wide title', () => {
+    // 836 - 143 - 77.1 - 14 - 0.4054 * shoulderRun: the rail's inner end, which tracks the
+    // fold through the node, must stay outboard of its own fixed outer start.
+    expect(resolveTitle7FrameHalf(4000, 1672, 59)).toBeCloseTo(577.98, 2)
+    expect(resolveTitle7FrameHalf(4000, 1672, 117.44)).toBeCloseTo(554.29, 2)
+    // The ceiling is what stops the rail inverting: at it, the rail has zero length.
+    expect(resolveTitle7FrameHalf(4000, 1672, 59)).toBeLessThan(601.9)
+  })
+
+  it('sizes the title-7 font from whichever host dimension is tighter', () => {
+    expect(resolveTitle7Size(1672, 84)).toBe(60)
+    expect(resolveTitle7Size(1200, 100)).toBeCloseTo(43.06, 2)
+    expect(resolveTitle7Size(640, 64)).toBeCloseTo(22.97, 2)
+    expect(resolveTitle7Size(0, 84)).toBe(0)
+    expect(resolveTitle7Size(1672, 0)).toBe(0)
+  })
+
+  it('renders title-7 from its built-in fallbacks without any theme CSS', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-7') as Title7Element
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const ribbon = element.shadowRoot?.querySelector('[part~="ribbon-left"]')
+    const diagonal = element.shadowRoot?.querySelector('[part~="diagonal-left"]')
+    const node = element.shadowRoot?.querySelector('[part~="node-left"]')
+    const blade = element.shadowRoot?.querySelector('[part~="slash-left"] polygon')
+
+    expect(ribbon?.getAttribute('fill')).toBe('url(#dvk-title-7-ribbon-left-1)')
+    expect(diagonal?.getAttribute('stroke')).toBe('url(#dvk-title-7-diag-left-1)')
+    expect(node?.getAttribute('fill')).toBe('url(#dvk-title-7-node-left-1)')
+    // The prototype's own palette, not the family's — un-composited from its dark navy.
+    expect(blade?.getAttribute('fill')).toBe('rgba(22, 69, 134, 0.8)')
+  })
+
+  it('renders title-7 as a folded ribbon over a flat horizon with a centre beam', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-7') as Title7Element
+    element.setAttribute('colors', '#39f6c8,#7aa8ff,#ff7bd5')
+    element.setAttribute('title-text', 'SMART CAMPUS')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const svg = element.shadowRoot?.querySelector('svg')
+    const ribbons = [...element.shadowRoot?.querySelectorAll('[part~="ribbon"]') ?? []]
+    const diagonals = [...element.shadowRoot?.querySelectorAll('[part~="diagonal-left"], [part~="diagonal-right"]') ?? []]
+    const sideRails = [...element.shadowRoot?.querySelectorAll('[part~="side-rail-left"], [part~="side-rail-right"]') ?? []]
+    const blades = [...element.shadowRoot?.querySelectorAll('[part~="slash-left"] polygon, [part~="slash-right"] polygon') ?? []]
+    const underlines = [...element.shadowRoot?.querySelectorAll('[part~="slash-underline"]') ?? []]
+    const nodes = [...element.shadowRoot?.querySelectorAll('[part~="node-left"], [part~="node-right"]') ?? []]
+    const flanks = [...element.shadowRoot?.querySelectorAll('[part~="horizon-flank"]') ?? []]
+    const beamTop = element.shadowRoot?.querySelector('[part~="horizon-beam"]')
+    const beamGlow = element.shadowRoot?.querySelector('[part~="beam-glow"]')
+    const beamCore = element.shadowRoot?.querySelector('[part~="beam-core"]')
+    const stops = [...element.shadowRoot?.querySelectorAll('stop') ?? []]
+    const titleText = element.shadowRoot?.querySelector('[part="title-text"]')
+    const animations = [...element.shadowRoot?.querySelectorAll('animate, animateTransform') ?? []]
+
+    expect(svg?.getAttribute('viewBox')).toBe('0 0 1672 84')
+    expect(svg?.getAttribute('preserveAspectRatio')).toBe('none')
+    // happy-dom performs no layout, so both measurements read zero and the header keeps
+    // the design's default geometry verbatim.
+    expect(ribbons.map(ribbon => ribbon.getAttribute('d'))).toEqual([
+      'M0 19 H316.1 L367.1 67 H318.6 L277.2 28 H0 Z',
+      'M1672 19 H1355.9 L1304.9 67 H1353.4 L1394.8 28 H1672 Z',
+    ])
+    expect(diagonals.map(diagonal => diagonal.getAttribute('d'))).toEqual([
+      'M324.1 19 L383.1 74.5',
+      'M1347.9 19 L1288.9 74.5',
+    ])
+    expect(sideRails.map(rail => rail.getAttribute('d'))).toEqual([
+      'M143 56.5 H260.1',
+      'M143 57.5 H260.1',
+      'M143 58.5 H259.1',
+      'M1529 56.5 H1411.9',
+      'M1529 57.5 H1411.9',
+      'M1529 58.5 H1412.9',
+    ])
+    expect(blades.map(blade => blade.getAttribute('points'))).toEqual([
+      '55,50 69,50 79,63 65,63',
+      '75,50 84,50 94,63 85,63',
+      '90,50 98,50 108,63 100,63',
+      '104,50 118,50 128,63 114,63',
+      '1617,50 1603,50 1593,63 1607,63',
+      '1597,50 1588,50 1578,63 1587,63',
+      '1582,50 1574,50 1564,63 1572,63',
+      '1568,50 1554,50 1544,63 1558,63',
+    ])
+    expect(underlines.map(line => line.getAttribute('d'))).toEqual(['M58 65 H130', 'M1614 65 H1542'])
+    expect(nodes.map(node => node.getAttribute('points'))).toEqual([
+      '258.1,52 268.1,52 274.1,59 273.1,64 263.1,64 258.1,58 256.1,58 256.1,54',
+      '1413.9,52 1403.9,52 1397.9,59 1398.9,64 1408.9,64 1413.9,58 1415.9,58 1415.9,54',
+    ])
+    expect(flanks.map(flank => flank.getAttribute('d'))).toEqual([
+      'M383.1 74.5 H620',
+      'M1052 74.5 H1288.9',
+    ])
+    expect(beamTop?.getAttribute('d')).toBe('M620 74.5 H1052')
+    expect(beamGlow?.getAttribute('x')).toBe('570')
+    expect(beamGlow?.getAttribute('y')).toBe('69.8')
+    expect(beamGlow?.getAttribute('width')).toBe('532')
+    expect(beamGlow?.getAttribute('height')).toBe('10.5')
+    expect(beamGlow?.getAttribute('rx')).toBe('5.25')
+    expect(beamCore?.getAttribute('x')).toBe('620')
+    expect(beamCore?.getAttribute('y')).toBe('74')
+    expect(beamCore?.getAttribute('width')).toBe('432')
+    expect(beamCore?.getAttribute('height')).toBe('4')
+    expect(stops.map(stop => stop.getAttribute('stop-color'))).toEqual(expect.arrayContaining(['#39f6c8', '#7aa8ff', '#ff7bd5']))
+    expect(titleText?.textContent).toBe('SMART CAMPUS')
+    expect(animations).toHaveLength(0)
+  })
+
+  it('drives the title-7 fold from the measured title box', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-7') as Title7Element
+    element.setAttribute('title-text', 'SMART CAMPUS')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const title = element.shadowRoot?.querySelector<HTMLElement>('.title')
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 1200, height: 100 } as DOMRect)
+    vi.spyOn(title as HTMLElement, 'getBoundingClientRect').mockReturnValue({ width: 420 } as DOMRect)
+
+    element.requestUpdate()
+    await element.updateComplete
+    await element.updateComplete
+
+    const ribbon = element.shadowRoot?.querySelector('[part~="ribbon-left"]')
+    const flank = element.shadowRoot?.querySelector('[part~="horizon-flank-left"]')
+
+    expect(ribbon?.getAttribute('d')).toBe('M0 19 H445.5 L530.2 67 H481.7 L412.9 28 H0 Z')
+    expect(flank?.getAttribute('d')).toBe('M551.4 74.5 H620')
+  })
+
+  it('anchors the title-7 box to the horizon rather than to the top of the band', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-7') as Title7Element
+    element.setAttribute('title-text', 'SMART CAMPUS')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    const content = element.shadowRoot?.querySelector('.content')
+    const topOf = () => content?.getAttribute('style') ?? ''
+
+    // At the design aspect the box bottom lands on 51.6 units: 51.6 - 30.
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 1672, height: 84 } as DOMRect)
+    element.requestUpdate()
+    await element.updateComplete
+    await element.updateComplete
+    expect(topOf()).toContain('--dvk-title-7-title-top: 21.6px')
+
+    // Stretched to 10:1 the font stays width-bound, so a fixed centre would open the gap
+    // beneath the title. The anchor holds it at 51.6 of 84 instead.
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 640, height: 64 } as DOMRect)
+    element.requestUpdate()
+    await element.updateComplete
+    await element.updateComplete
+    expect(topOf()).toContain('--dvk-title-7-title-top: 27.83px')
+  })
+
+  it('keeps an explicit --dvk-title-7-title-top ahead of the anchor', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-7') as Title7Element
+    element.setAttribute('title-text', 'SMART CAMPUS')
+    element.style.setProperty('--dvk-title-7-title-top', '60%')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 1200, height: 100 } as DOMRect)
+    element.requestUpdate()
+    await element.updateComplete
+    await element.updateComplete
+
+    const content = element.shadowRoot?.querySelector('.content')
+    expect(content?.getAttribute('style')).toContain('--dvk-title-7-title-top: 60%')
+  })
+
+  it('keeps an explicit --dvk-title-7-title-size ahead of the measured font size', async () => {
+    register()
+
+    const element = document.createElement('dvk-title-7') as Title7Element
+    element.setAttribute('title-text', 'SMART CAMPUS')
+    element.style.setProperty('--dvk-title-7-title-size', '30px')
+    document.body.append(element)
+
+    await element.updateComplete
+
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 1200, height: 100 } as DOMRect)
+    element.requestUpdate()
+    await element.updateComplete
+    await element.updateComplete
+
+    const title = element.shadowRoot?.querySelector<HTMLElement>('.title')
+    expect(title?.getAttribute('style')).toContain('--dvk-title-7-title-size: 30px')
   })
 
   it('renders decoration-10 as a futuristic radar HUD', async () => {

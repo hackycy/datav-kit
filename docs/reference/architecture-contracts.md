@@ -119,9 +119,9 @@ verify the selected element's detail page instead of assuming all border boxes s
 
 ## Title Middle Span
 
-`dvk-title-4`, `dvk-title-5` and `dvk-title-6` each open a middle span that is measured from the
-title box rather than fixed at design time. All three resolve it through one internal helper,
-`resolveTitleCenterHalf` in `packages/elements/src/internal/title-center.ts`:
+`dvk-title-4`, `dvk-title-5`, `dvk-title-6` and `dvk-title-7` each open a middle span that is
+measured from the title box rather than fixed at design time. All four resolve it through one
+internal helper, `resolveTitleCenterHalf` in `packages/elements/src/internal/title-center.ts`:
 
 ```txt
 half = clamp(measuredTitleWidth / 2 * viewBoxWidth / hostWidth, 0, limit)
@@ -134,7 +134,8 @@ half = clamp(measuredTitleWidth / 2 * viewBoxWidth / hostWidth, 0, limit)
   solver overrides — no variable sets the span directly.
 - `limit` stays with each component, because each ceiling protects different side furniture: a soft
   rail reversing on itself (title-4), the slash group leaving the viewBox (title-5), the bend crossing
-  the edge ticks (title-6). Do not hoist a ceiling into the shared helper.
+  the edge ticks (title-6), the side rail reversing on its own fixed outer start (title-7). Do not
+  hoist a ceiling into the shared helper.
 - `fallback` is the value used when nothing is measurable. It must reproduce the design's own
   geometry, so a layout-less environment renders the design instead of an arbitrary width.
 
@@ -145,6 +146,11 @@ span, or the family stops being uniform.
 The middle does not mean the same shape in every variant — an interruption in the rails, a filled
 recess, or the span of a continuous baseline. Only the width solve is shared; path builders stay with
 their component.
+
+When side furniture is tied to the middle span rather than pinned to the host edge, anchor it on the
+same projected line the span's own paths use, and keep the design's clearance rather than closing it:
+title-7's node sits on the ribbon's inner line at the node's own top height, minus the prototype's
+gap, so the design aspect reproduces the prototype exactly and the node still travels with the fold.
 
 `dvk-title-1`, `dvk-title-2` and `dvk-title-3` are static designs with no measured span, so this
 mechanism applies only to variants that adapt to their title.
