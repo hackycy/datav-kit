@@ -119,8 +119,8 @@ verify the selected element's detail page instead of assuming all border boxes s
 
 ## Title Middle Span
 
-`dvk-title-4`, `dvk-title-5`, `dvk-title-6` and `dvk-title-7` each open a middle span that is
-measured from the title box rather than fixed at design time. All four resolve it through one
+`dvk-title-4`, `dvk-title-5`, `dvk-title-6`, `dvk-title-7` and `dvk-title-8` each open a middle span
+that is measured from the title box rather than fixed at design time. All five resolve it through one
 internal helper, `resolveTitleCenterHalf` in `packages/elements/src/internal/title-center.ts`:
 
 ```txt
@@ -134,8 +134,11 @@ half = clamp(measuredTitleWidth / 2 * viewBoxWidth / hostWidth, 0, limit)
   solver overrides — no variable sets the span directly.
 - `limit` stays with each component, because each ceiling protects different side furniture: a soft
   rail reversing on itself (title-4), the slash group leaving the viewBox (title-5), the bend crossing
-  the edge ticks (title-6), the side rail reversing on its own fixed outer start (title-7). Do not
-  hoist a ceiling into the shared helper.
+  the edge ticks (title-6), the side rail reversing on its own fixed outer start (title-7), the slash
+  group crossing the terminal dot matrices (title-8). Charge the furniture's *outboard extent*, not the
+  bend: title-8's blades are set back 82 units from the bend, and the dots live inside the band, so the
+  band and lower rail crossing the matrices' columns is the design and not a constraint. Do not hoist a
+  ceiling into the shared helper.
 - `fallback` is the value used when nothing is measurable. It must reproduce the design's own
   geometry, so a layout-less environment renders the design instead of an arbitrary width.
 
@@ -151,6 +154,11 @@ When side furniture is tied to the middle span rather than pinned to the host ed
 same projected line the span's own paths use, and keep the design's clearance rather than closing it:
 title-7's node sits on the ribbon's inner line at the node's own top height, minus the prototype's
 gap, so the design aspect reproduces the prototype exactly and the node still travels with the fold.
+
+A variant may mix both: title-8's band, recess, lower rail and slash blades all take their insets from
+the measured bend, while its terminal dot matrices stay pinned to the host edge. Decide per piece of
+furniture which the design intends, and say so in the component — a pinned piece that drifts with the
+frame, or a tracking piece that stays behind, is invisible in code review and obvious on screen.
 
 `dvk-title-1`, `dvk-title-2` and `dvk-title-3` are static designs with no measured span, so this
 mechanism applies only to variants that adapt to their title.

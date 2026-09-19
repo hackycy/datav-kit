@@ -40,6 +40,7 @@ import { Title4Element } from './title-4/element'
 import { Title5Element } from './title-5/element'
 import { Title6Element } from './title-6/element'
 import { Title7Element } from './title-7/element'
+import { Title8Element } from './title-8/element'
 
 export const datavElementRegistrations: DatavElementRegistration[] = [
   {
@@ -181,6 +182,10 @@ export const datavElementRegistrations: DatavElementRegistration[] = [
   {
     tagName: 'dvk-title-7',
     element: Title7Element,
+  },
+  {
+    tagName: 'dvk-title-8',
+    element: Title8Element,
   },
   {
     tagName: 'dvk-count-to',
