@@ -2,6 +2,7 @@
 import type { CountToElement, Decoration5Element, Decoration6Element, Decoration7Element, Decoration8Element, Decoration9Element, Decoration10Element, Decoration11Element, FitScreenElement, LoadingEnergyElement, LoadingOrbitElement, LoadingPulseElement, PerformanceMonitorElement, Title1Element, Title2Element, Title3Element, Title4Element, Title5Element } from '../src/index'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { defineBorderBox1, defineBorderBox2, defineBorderBox3, defineBorderBox4, defineBorderBox5, defineBorderBox6, defineBorderBox7, defineBorderBox8, defineBorderBox9, defineBorderBox10, defineBorderBox11, defineBorderBox12, defineBorderBox13, defineBorderBox14, defineBorderBox15, defineBorderBox16, defineCountTo, defineDecoration1, defineDecoration2, defineDecoration3, defineDecoration4, defineDecoration5, defineDecoration6, defineDecoration7, defineDecoration8, defineDecoration9, defineDecoration10, defineDecoration11, defineFitScreen, defineLoadingEnergy, defineLoadingOrbit, defineLoadingPulse, definePerformanceMonitor, defineTitle1, defineTitle2, defineTitle3, defineTitle4, defineTitle5, elementMetadata, register } from '../src/index'
+import { calculatePressure, collectRenderCounts } from '../src/performance-monitor/metrics'
 import { resolveRailGap } from '../src/title-2/element'
 import { resolveRecessHalf, resolveShoulderRun } from '../src/title-3/element'
 import { resolveFrameHalf, resolveShoulderRun as resolveTitle4ShoulderRun, resolveTitleSize } from '../src/title-4/element'
@@ -85,28 +86,6 @@ function createCanvasStream(): MediaStream {
     getTracks: vi.fn(() => [{ stop: vi.fn() }]),
     getVideoTracks: vi.fn(() => [{ requestFrame: vi.fn() }]),
   } as unknown as MediaStream
-}
-
-function createPointerEvent(type: string, options: {
-  button?: number
-  clientX: number
-  clientY: number
-  pointerId?: number
-}): PointerEvent {
-  const event = new Event(type, {
-    bubbles: true,
-    cancelable: true,
-    composed: true,
-  }) as PointerEvent
-
-  Object.defineProperties(event, {
-    button: { value: options.button ?? 0 },
-    clientX: { value: options.clientX },
-    clientY: { value: options.clientY },
-    pointerId: { value: options.pointerId ?? 1 },
-  })
-
-  return event
 }
 
 function emitResize(width: number, height: number): void {
@@ -296,24 +275,59 @@ describe('@datav-kit/elements', () => {
     expect(definePerformanceMonitor()).toBe(false)
   })
 
-  it('renders performance monitor as a disabled tool when enabled is false', async () => {
+  it('renders the performance monitor summary and metric rows', async () => {
     register()
+    window.localStorage.removeItem('datav-kit-performance-monitor-collapsed')
 
     const element = document.createElement('dvk-performance-monitor') as PerformanceMonitorElement
-    element.setAttribute('enabled', 'false')
     document.body.append(element)
 
     await element.updateComplete
 
-    expect(element.enabled).toBe(false)
-    expect(element.shadowRoot?.textContent).toContain('disabled')
+    const text = element.shadowRoot?.textContent ?? ''
+
+    expect(text).toContain('Runtime')
+    expect(text).toContain('FPS')
+    expect(text).toContain('pressure')
+
+    for (const label of ['long tasks', 'heap', 'nodes', 'dvk', 'svg / anim', 'video', 'canvas'])
+      expect(text).toContain(label)
+
+    element.shadowRoot?.querySelector('button')?.click()
+
+    await element.updateComplete
+
+    expect(element.collapsed).toBe(true)
+    expect(element.getAttribute('collapsed')).toBe('')
+    expect(element.shadowRoot?.querySelector('.grid')).toBeNull()
+    expect(element.shadowRoot?.textContent).not.toContain('long tasks')
   })
 
-  it('collects scoped performance inventory and excludes monitor instances', async () => {
+  it('restores and persists the collapsed state through localStorage', async () => {
+    register()
+    window.localStorage.setItem('datav-kit-performance-monitor-collapsed', 'true')
+
+    const element = document.createElement('dvk-performance-monitor') as PerformanceMonitorElement
+    document.body.append(element)
+
+    await element.updateComplete
+
+    expect(element.collapsed).toBe(true)
+    expect(element.shadowRoot?.querySelector('.grid')).toBeNull()
+
+    element.shadowRoot?.querySelector('button')?.click()
+
+    await element.updateComplete
+
+    expect(element.collapsed).toBe(false)
+    expect(element.shadowRoot?.querySelector('.grid')).not.toBeNull()
+    expect(window.localStorage.getItem('datav-kit-performance-monitor-collapsed')).toBe('false')
+  })
+
+  it('collects render counts and excludes monitor instances', () => {
     register()
 
     const target = document.createElement('section')
-    target.id = 'screen-root'
     const datav = document.createElement('dvk-test-widget')
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
     const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate')
@@ -326,61 +340,29 @@ describe('@datav-kit/elements', () => {
     target.append(datav, canvas)
     document.body.append(target)
 
-    const element = document.createElement('dvk-performance-monitor') as PerformanceMonitorElement
-    element.targetElement = target
-    document.body.append(element)
-    element.refresh()
+    const monitor = document.createElement('dvk-performance-monitor')
+    document.body.append(monitor)
 
-    await element.updateComplete
+    const counts = collectRenderCounts()
 
-    const snapshot = element.getSnapshot()
-
-    expect(snapshot.inventory.datav).toBe(1)
-    expect(snapshot.inventory.svg).toBe(1)
-    expect(snapshot.inventory.animations).toBe(1)
-    expect(snapshot.canvas.largestWidth).toBe(3840)
-    expect(snapshot.canvas.largestHeight).toBe(2160)
-    expect(snapshot.hotspots.datav).toEqual([{ owner: 'dvk-test-widget', count: 1 }])
-    expect(snapshot.hotspots.datav.find(item => item.owner === 'dvk-performance-monitor')).toBeUndefined()
+    expect(counts.svg).toBe(1)
+    expect(counts.animations).toBe(1)
+    expect(counts.canvas).toBe(1)
+    expect(counts.videos).toBe(0)
+    expect(counts.nodes).toBeGreaterThan(0)
+    expect(counts.datav).toBe(1)
   })
 
-  it('allows overlay performance monitor to be dragged and reset', async () => {
-    register()
+  it('scores pressure from dropped frames and long tasks only', () => {
+    expect(calculatePressure({ droppedRatio: 0, elapsed: 1000, longTaskMs: 0 })).toBe(0)
+    expect(calculatePressure({ droppedRatio: 0.5, elapsed: 1000, longTaskMs: 0 })).toBe(50)
+    expect(calculatePressure({ droppedRatio: 0, elapsed: 1000, longTaskMs: 300 })).toBe(30)
+    expect(calculatePressure({ droppedRatio: 0.4, elapsed: 1000, longTaskMs: 250 })).toBe(65)
 
-    const element = document.createElement('dvk-performance-monitor') as PerformanceMonitorElement
-    element.setAttribute('enabled', 'false')
-    document.body.append(element)
-    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({
-      bottom: 110,
-      height: 100,
-      left: 10,
-      right: 300,
-      top: 10,
-      width: 290,
-      x: 10,
-      y: 10,
-      toJSON: () => ({}),
-    } as DOMRect)
+    expect(calculatePressure({ droppedRatio: 1, elapsed: 1000, longTaskMs: 5000 })).toBe(100)
 
-    await element.updateComplete
-
-    const header = element.shadowRoot?.querySelector('.header')
-
-    header?.dispatchEvent(createPointerEvent('pointerdown', { clientX: 20, clientY: 30 }))
-    window.dispatchEvent(createPointerEvent('pointermove', { clientX: 120, clientY: 150 }))
-    window.dispatchEvent(createPointerEvent('pointerup', { clientX: 120, clientY: 150 }))
-
-    expect(element.style.left).toBe('110px')
-    expect(element.style.top).toBe('130px')
-    expect(element.style.right).toBe('auto')
-    expect(element.style.bottom).toBe('auto')
-
-    element.resetPosition()
-
-    expect(element.style.left).toBe('')
-    expect(element.style.top).toBe('')
-    expect(element.style.right).toBe('')
-    expect(element.style.bottom).toBe('')
+    // An empty window must stay finite instead of dividing by zero.
+    expect(calculatePressure({ droppedRatio: 0, elapsed: 0, longTaskMs: 0 })).toBe(0)
   })
 
   it('renders decoration-5 with DataV Decoration8 coordinates and reverse mode', async () => {
