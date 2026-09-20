@@ -1,52 +1,52 @@
 ---
-description: Aurora arc large-screen title header with open curved light tracks, a translucent center lens, soft orbit rails, and light-bead terminals.
+description: Recessed large-screen title header whose top guide rail steps down through a shoulder on each side into a flat bright bottom edge, around a recess that widens to follow the title.
 ---
 
 # Title 3
 
-`dvk-title-3` is an aurora arc large-screen title header for command-center dashboards, city operations screens, and data visualization systems. It uses an open curved silhouette: a soft aurora halo, two floating orbit rails, a central translucent lens, and tiny light-bead terminals for a light, spacious title focus.
+`dvk-title-3` is a recessed large-screen title header for command centers, city operations screens, and data visualization systems. Its top guide rail steps down through a shoulder on each side into a flat, brightly lit bottom edge, so the title sits inside a shallow trapezoidal recess instead of on a plain band. The recess is measured from the title box — a long name pushes the shoulders outward, a short one lets them close in — and the shoulder slant is solved against the host's aspect ratio so it keeps its angle on any screen. Use it at 56–64px tall.
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1080px; --datav-decoration-height: 86px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
   <div class="datav-decoration-shell">
-    <dvk-title-3 title-text="AURORA OPERATIONS"></dvk-title-3>
+    <dvk-title-3 title-text="态势感知"></dvk-title-3>
   </div>
 </div>
 
 ```html
-<dvk-title-3 title-text="AURORA OPERATIONS"></dvk-title-3>
+<dvk-title-3 title-text="态势感知"></dvk-title-3>
 ```
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1120px; --datav-decoration-height: 88px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
   <div class="datav-decoration-shell">
-    <dvk-title-3 colors="#39f6c8,#7aa8ff,#ff7bd5">
-      <span>极光城市运行中心</span>
+    <dvk-title-3 title-text="实时人数监控中心"></dvk-title-3>
+  </div>
+</div>
+
+```html
+<dvk-title-3 title-text="实时人数监控中心"></dvk-title-3>
+```
+
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
+  <div class="datav-decoration-shell">
+    <dvk-title-3 colors="#52f0b5,#2f8cff,#b7f8ff">
+      <span>综合态势感知平台</span>
     </dvk-title-3>
   </div>
 </div>
 
 ```html
-<dvk-title-3 colors="#39f6c8,#7aa8ff,#ff7bd5">
-  <span>极光城市运行中心</span>
+<dvk-title-3 colors="#52f0b5,#2f8cff,#b7f8ff">
+  <span>综合态势感知平台</span>
 </dvk-title-3>
-```
-
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 960px; --datav-decoration-height: 78px;">
-  <div class="datav-decoration-shell">
-    <dvk-title-3 colors="#8cfaff,#6b8dff,#b787ff" title-text="CLOUD COMMAND"></dvk-title-3>
-  </div>
-</div>
-
-```html
-<dvk-title-3 colors="#8cfaff,#6b8dff,#b787ff" title-text="CLOUD COMMAND"></dvk-title-3>
 ```
 
 ## Props
 
 | Name | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `color` | `string` | CSS variable fallback | Primary aurora green color for the main curved rails, lens glow, and title emphasis. When set as a JavaScript property, a DataV-style color array is also accepted. |
-| `secondary-color` | `string` | CSS variable fallback | Secondary cool blue color for the outer arc, lens tint, and quiet terminal marks. |
-| `accent-color` | `string` | CSS variable fallback | Accent aurora pink color for the small central arcs and right-side color drift. |
+| `color` | `string` | CSS variable fallback | Primary cyan color for the guide rails, the recess bottom edge, the outer ticks, and the title text glow. When set as a JavaScript property, a DataV-style color array is also accepted. |
+| `secondary-color` | `string` | CSS variable fallback | Secondary blue color for the recess fill, the inner rail, and the slash accents. |
+| `accent-color` | `string` | CSS variable fallback | Accent cyan color for the bright centre of the recess bottom edge. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and accent colors. |
 | `title-text` | `string` | empty | Optional centered system name. When omitted, the default slot is rendered inside the title area. |
 
@@ -60,37 +60,40 @@ description: Aurora arc large-screen title header with open curved light tracks,
 
 | Name | Meaning |
 | --- | --- |
-| `--dvk-color-primary` | Primary aurora green fallback color. |
-| `--dvk-color-secondary` | Secondary cool blue fallback color. |
-| `--dvk-title-3-accent` | Accent aurora pink fallback color. |
-| `--dvk-title-3-title-width` | Title box width. When unset the box follows its own text. Wider than the centre panel, the text overlaps the side decoration. |
-| `--dvk-title-3-title-top` | Title content vertical center. |
-| `--dvk-title-3-title-height` | Title content height. |
+| `--dvk-color-primary` | Primary cyan fallback color. |
+| `--dvk-color-secondary` | Secondary blue fallback color. |
+| `--dvk-title-3-accent` | Accent cyan fallback color for the bright centre of the bottom edge. |
+| `--dvk-title-3-glow-opacity` | Opacity of the blurred rail glow and bottom-edge glow. |
+| `--dvk-title-3-title-top` | Vertical position of the title box as a share of the host height. Defaults slightly above the recess centre so the bright bottom edge does not crowd the text. |
+| `--dvk-title-3-title-width` | Title box width, never exceeding the host. When unset the box follows its own text, and its measured width sets the recess. |
+| `--dvk-title-3-title-gap` | Padding between the title text and the recess edge. Any CSS length, defaulting to `2em` so it scales with the title font. The measured box includes it, so the recess sits one gap beyond the text. |
 | `--dvk-title-3-title-color` | Title text color. |
 | `--dvk-title-3-title-font` | Title font shorthand. |
 | `--dvk-title-3-title-letter-spacing` | Title letter spacing. |
-| `--dvk-title-3-title-glow` | Soft primary title glow. |
-| `--dvk-title-3-title-accent-glow` | Soft accent title glow. |
+| `--dvk-title-3-title-stroke` | Tight title text glow. |
+| `--dvk-title-3-title-glow` | Wide title text glow. |
 
 ## Parts
 
 | Part | Description |
 | --- | --- |
 | `graphic` | Internal SVG. |
-| `aurora-halo` | Soft curved aurora surface behind the title. |
-| `lens-glow` | Diffuse glow around the central title lens. |
-| `title-lens` | Main translucent elliptical title lens. |
-| `title-lens-inner` | Inner curved lens surface for title focus. |
-| `orbit-rail` | Shared part for the floating curved rails. |
-| `outer-rail` | Upper open arc rail. |
-| `inner-rail` | Lower quiet arc rail. |
-| `base-rail` | Subtle bottom guide arc. |
-| `accent-arc` | Small aurora accent strokes around the title. |
-| `terminal` | Shared part for each side terminal group. |
-| `left-terminal` | Left light-bead terminal group. |
-| `right-terminal` | Mirrored right light-bead terminal group. |
-| `light-bead` | Small terminal light points. |
-| `terminal-mark` | Quiet vertical terminal tick marks. |
-| `content` | Center title content wrapper. |
-| `title` | Alias part for the title content wrapper. |
+| `top-edge` | Thin gradient hairline along the very top of the header. |
+| `guide-rail` | Shared part for the straight outer guide rails beside the recess. |
+| `guide-rail-left` | Left guide rail, ending where the left shoulder begins. |
+| `guide-rail-right` | Mirrored right guide rail. |
+| `recess` | Filled trapezoidal recess surface under the title. |
+| `inner-rail` | Quiet rail running parallel to and inside the main rail. |
+| `rail` | Shared part for the main rail outline. |
+| `rail-glow` | Blurred glow copy of the main rail. |
+| `rail-core` | Crisp main rail stroke. |
+| `accent` | Shared part for the bright bottom edge of the recess. |
+| `accent-glow` | Blurred glow under the recess bottom edge. |
+| `accent-core` | Crisp bright stroke on the recess bottom edge. |
+| `slash` | Shared part for the symmetric slash accents beside the recess. |
+| `slash-left` | Left group of slash accents. |
+| `slash-right` | Mirrored right group of slash accents. |
+| `tick` | Short quiet ticks near each outer end. |
+| `content` | Title content wrapper. |
+| `title` | Title box whose measured width sets the recess. |
 | `title-text` | Generated title text when `title-text` is used. |

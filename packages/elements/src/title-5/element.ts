@@ -4,43 +4,144 @@ import { property, state } from 'lit/decorators.js'
 import { observeElementSize } from '../internal/element-size-observer'
 import { resolveTitleCenterHalf } from '../internal/title-center'
 
-const VIEW_BOX_WIDTH = 1600
-const VIEW_BOX_HEIGHT = 64
-const CENTER = 800
-const RAIL_TOP = 10.5
-const RAIL_BOTTOM = 51.5
-const SHOULDER_RUN = 26.7
-const MAX_SHOULDER_RUN = 74.7
-const DEFAULT_HALF = 265
-const INNER_INSET_X = 4
-const INNER_INSET_Y = 4.5
-const SLASH_COUNT = 6
-const SLASH_STEP = 12
-const SLASH_GAP = 6
-const SLASH_SPAN = (SLASH_COUNT - 1) * SLASH_STEP + 9
-const SLASH_INDICES = Array.from({ length: SLASH_COUNT }, (_, index) => index)
+const VIEW_BOX_WIDTH = 2048
+const VIEW_BOX_HEIGHT = 180
+const CENTER = VIEW_BOX_WIDTH / 2
 
-export function resolveRecessHalf(titleWidth: number, hostWidth: number, shoulderRun = SHOULDER_RUN): number {
+// The prototype's canvas is 2048 x 320, but its artwork and text stop at y 178 — rows
+// 184..319 are byte-identical to the page backdrop — so the band is cropped there and
+// every y below is the prototype's own value, unshifted.
+//
+// Vertical design levels. The upper rail runs in from each edge at RAIL_Y, bends down
+// through the shoulder, and lands on the luminous spine at HORIZON_Y; the band fill and
+// the dark recess sit under the rail between BAND_TOP and SHELF_BOTTOM. The band's
+// diagonal is NOT parallel to the rail: the rail falls 87 units to the horizon while the
+// band falls 84 to the shelf's bottom edge, both arriving at the same x. Do not project
+// one slope onto the other.
+const RAIL_Y = 83
+const BAND_TOP = 84
+const SHELF_TOP = 123
+const SHELF_BOTTOM = 168
+const SLASH_TOP = 138
+const SLASH_BOTTOM = 165
+const LOWER_RAIL_Y = 166
+const HORIZON_Y = 170
+const RAIL_RISE = HORIZON_Y - RAIL_Y
+
+// The spine: a broad glowing bar with a crisp core inside it, plus the soft aura pooled
+// under it. The prototype's glow rect overhangs the core by one unit on each side, which
+// is what makes the glow read as a halo rather than a thicker line.
+const SPINE_GLOW_TOP = 170.2
+const SPINE_GLOW_HEIGHT = 2.15
+const SPINE_GLOW_RADIUS = 1.1
+const SPINE_OVERHANG = 1
+const SPINE_CORE_TOP = 170.55
+const SPINE_CORE_HEIGHT = 0.8
+const SPINE_CORE_RADIUS = 0.4
+const AURA_CY = 174
+const AURA_RY = 15
+const AURA_HALF = 315
+
+// Horizontal design geometry, as insets from the shoulder's bend and foot. Everything
+// inboard of the edge furniture is a function of the measured frame; only the dot
+// matrices are pinned to the host edge.
+const SHOULDER_RUN = 70
+const SHELF_TOP_INSET = 14
+const SHELF_TOE_INSET = 49
+const LOWER_RAIL_INSET = 94
+const SLASH_SETBACK = 82
+
+// The prototype's three blades, as offsets from the bend. They are not interchangeable:
+// the top edges step 22/22 apart with widths 13/13/14, and each carries its own rightward
+// skew to the bottom edge (20/19/20) with a slightly narrower bottom.
+const SLASH_BLADES = [
+  { topLeft: -82, topRight: -69, bottomLeft: -62, bottomRight: -51 },
+  { topLeft: -60, topRight: -47, bottomLeft: -41, bottomRight: -28 },
+  { topLeft: -38, topRight: -24, bottomLeft: -18, bottomRight: -6 },
+]
+
+// The terminal dot matrices: an 8 x 3 grid pinned to each edge. The prototype's right
+// group is hand-drifted (inset ~8 units further, raised 5, a different per-column width
+// pattern and different row opacities); the component mirrors the left group instead, as
+// the rest of the title family does.
+const DOT_COLUMNS = [36, 51, 65, 79, 94, 108, 123, 138]
+const DOT_WIDTHS = [5, 5, 6, 6, 6, 5, 5, 5]
+const DOT_ROWS = [
+  { y: 123, height: 5, opacity: 0.17 },
+  { y: 138, height: 5, opacity: 0.27 },
+  { y: 153, height: 5, opacity: 0.18 },
+]
+const DOT_RADIUS = 1
+// A fixed decoration, not a palette role: the dots are a dim stamp on whatever surface is
+// behind them, so they keep the prototype's own colour rather than taking a theme colour.
+const DOT_COLOR = '#214968'
+const DOT_END = DOT_COLUMNS[DOT_COLUMNS.length - 1] + DOT_WIDTHS[DOT_WIDTHS.length - 1]
+
+// The design's own foot half-span: the prototype's rails, band, recess and blades all
+// land on x 579, so 1024 - 579 = 445. (The spine's glow rect sits one unit outboard of
+// that at 578 — see SPINE_OVERHANG.) Taking 445 rather than 445.5 is what makes the
+// unmeasurable fallback reproduce every one of the prototype's own coordinates verbatim,
+// which is what the middle-span contract asks of `fallback`.
+//
+// The matching clearance is `--dvk-title-5-title-gap`: the design's title box is 8 CJK
+// glyphs at 1.105em advance (1em glyph + .105em tracking) = 8.84em, plus two gaps, and it
+// has to come to 11.71em — 889.96 units at the 76px design font — for the foot to land on
+// 579. So the gap is (445 - 8.84em / 2) / 76 = 1.435em, and the two together close the
+// identity `box + 2 * gap = spine length`. Keep this in step with that default: it is the
+// value a measured render produces, so an unmeasurable one must not disagree with it.
+//
+// The component drops the prototype's `scaleX(1.035)` on the text, so its box is 11.8
+// units narrower per side than the rendered reference and its ink clears the spine by 109
+// units where the reference's clears it by 98. That is the price of reproducing the frame
+// exactly — the same kind of trade title-4 documents for its doubled gap.
+const DEFAULT_HALF = 445
+
+// How far the slash group must stay clear of the dot matrices. The blades (y 138..165)
+// overlap the matrices' lower two rows (y 138..158), and the blades' outer edge is
+// `bendX - SLASH_SETBACK`, so that — not the bend itself — is what the ceiling protects.
+// The band, recess and lower rail all start at x=0 and cross the matrices' columns by
+// design (the prototype paints the dots after them, so the dots sit on the dark recess),
+// and the lower rail runs at y=166, below the matrices' last row.
+const DOT_CLEARANCE = 40
+
+// The prototype's title em box: 76px at a 2048-wide canvas, line-height 1.
+const TITLE_SIZE = 76
+
+// Where the title box's own bottom sits, in viewBox units — the prototype's box top
+// (70.08) plus the 76px em box. Pinning the box *bottom* rather than its centre is what
+// keeps the title in a fixed relationship to the spine it is designed around:
+// `preserveAspectRatio="none"` stretches the artwork to any box the host is given, but the
+// text tracks the host width alone, so a fixed centre lets a stretched band carry the
+// title up and open the gap beneath it. The percent fallback for an unmeasurable host is
+// `(146.1 - 76 / 2) / 180`.
+const TITLE_BOX_BOTTOM = 146.1
+
+export function resolveShoulderRun(hostWidth: number, hostHeight: number): number {
+  if (!(hostWidth > 0) || !(hostHeight > 0))
+    return SHOULDER_RUN
+
+  return SHOULDER_RUN * VIEW_BOX_WIDTH * hostHeight / (VIEW_BOX_HEIGHT * hostWidth)
+}
+
+export function resolveFrameHalf(titleWidth: number, hostWidth: number, shoulderRun = SHOULDER_RUN): number {
   return resolveTitleCenterHalf({
     titleWidth,
     hostWidth,
     viewBoxWidth: VIEW_BOX_WIDTH,
     fallback: DEFAULT_HALF,
-    // The left slash group starts at `CENTER - half - shoulderRun - SLASH_GAP - SLASH_SPAN`,
-    // so it leaves the viewBox 75 units before the shoulder, recess or rail would.
-    limit: CENTER - shoulderRun - SLASH_GAP - SLASH_SPAN,
+    // At the ceiling the blades' outer edge sits `DOT_CLEARANCE` inboard of the matrices,
+    // so a title wide enough to push them further would print the blades over the dots.
+    limit: CENTER - DOT_END - DOT_CLEARANCE - SLASH_SETBACK - shoulderRun,
   })
 }
 
-// `preserveAspectRatio="none"` shears the shoulder slant, so the run is solved back
-// from the host aspect to keep the rendered angle at the prototype's 57 degrees.
-export function resolveShoulderRun(hostWidth: number, hostHeight: number): number {
+// The band's proportions come from the host height, but a host narrower than the design's
+// 11.4:1 would let a height-sized font overrun the frame sideways.
+export function resolveTitleSize(hostWidth: number, hostHeight: number): number {
   if (!(hostWidth > 0) || !(hostHeight > 0))
-    return SHOULDER_RUN
+    return 0
 
-  const run = SHOULDER_RUN * hostHeight * VIEW_BOX_WIDTH / (VIEW_BOX_HEIGHT * hostWidth)
-
-  return Math.min(run, MAX_SHOULDER_RUN)
+  return TITLE_SIZE * Math.min(hostHeight / VIEW_BOX_HEIGHT, hostWidth / VIEW_BOX_WIDTH)
 }
 
 let title5Id = 0
@@ -54,7 +155,7 @@ export class Title5Element extends DatavElement {
       height: 100%;
       min-width: 0;
       min-height: 0;
-      color: var(--dvk-title-5-title-color, #f3fbff);
+      color: var(--dvk-title-5-title-color, #f4fbff);
     }
 
     svg {
@@ -72,20 +173,11 @@ export class Title5Element extends DatavElement {
       vector-effect: non-scaling-stroke;
     }
 
-    .top-edge {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      pointer-events: none;
-    }
-
     .content {
       position: absolute;
-      /* y=28.5 of 64, deliberately above the recess centre (y=31) so the bright
-         bottom edge and its glow do not crowd the text. */
-      top: var(--dvk-title-5-title-top, 44.53%);
+      /* Set from the host's aspect below; 60.06% is TITLE_BOX_BOTTOM minus half the design
+         font, which is what an environment that cannot measure the host gets. */
+      top: var(--dvk-title-5-title-top, 60.06%);
       /* Both insets, so the box has a definite width for the title's percentage
          max-width to resolve against instead of a shrink-to-fit parent. */
       left: 0;
@@ -101,17 +193,30 @@ export class Title5Element extends DatavElement {
       box-sizing: border-box;
       width: var(--dvk-title-5-title-width, max-content);
       max-width: 100%;
-      padding: 0 var(--dvk-title-5-title-gap, 2em);
+      /* The prototype's own clearance, so the frame lands on its design coordinates. */
+      padding: 0 var(--dvk-title-5-title-gap, 1.435em);
       overflow: hidden;
-      color: var(--dvk-title-5-title-color, #f3fbff);
-      font: var(--dvk-title-5-title-font, 700 19px/1 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
-      letter-spacing: var(--dvk-title-5-title-letter-spacing, 0.16em);
+      /* The prototype gives the glyphs a vertical white-to-blue ramp rather than a flat
+         fill, which title-3 and title-4 both dropped. It survives here because it is pure
+         CSS: the ramp is the background, clipped to the glyphs. The title-color variable
+         is the flat fallback, used when the gradient variable is set to none. */
+      color: var(--dvk-title-5-title-color, transparent);
+      background-image: var(--dvk-title-5-title-gradient, linear-gradient(180deg, #fcfcfd 0%, #f8fbfd 25%, #edf7fd 43%, #cfe9fa 62%, #9ed1f2 79%, #63afe3 100%));
+      -webkit-background-clip: text;
+      background-clip: text;
+      font: var(--dvk-title-5-title-font, 900 var(--dvk-title-5-title-size, 44px)/1 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
+      letter-spacing: var(--dvk-title-5-title-letter-spacing, 0.105em);
       text-align: center;
       white-space: nowrap;
       text-overflow: ellipsis;
-      text-shadow:
-        0 0 5px var(--dvk-title-5-title-stroke, rgba(142, 226, 255, 0.66)),
-        0 0 12px var(--dvk-title-5-title-glow, rgba(40, 137, 255, 0.34));
+      /* 0.717px at the prototype's 76px design font, which is what its viewport-relative
+         max(0.35px, 0.035vw) resolves to at the full 2048 width. The px floor has no
+         meaning once the value scales with the font. */
+      -webkit-text-stroke: var(--dvk-title-5-title-stroke-width, .0094em) var(--dvk-title-5-title-stroke, rgba(238, 249, 255, 0.64));
+      /* The prototype's three drop-shadows, in em so they track the font. A filter rather
+         than text-shadow: the glyphs are painted by the background clip above, and
+         text-shadow's behaviour under a transparent colour is not something to rely on. */
+      filter: drop-shadow(0 .0132em 0 var(--dvk-title-5-title-glow, rgba(255, 255, 255, 0.2))) drop-shadow(0 .0263em .0263em var(--dvk-title-5-title-halo, rgba(61, 190, 249, 0.18))) drop-shadow(0 .0658em .0921em var(--dvk-title-5-title-shadow, rgba(36, 155, 229, 0.13)));
     }
 
     slot::slotted(*) {
@@ -119,7 +224,6 @@ export class Title5Element extends DatavElement {
       font: inherit;
       letter-spacing: inherit;
       text-align: inherit;
-      text-shadow: inherit;
     }
   `
 
@@ -139,17 +243,31 @@ export class Title5Element extends DatavElement {
   titleText = ''
 
   @state()
-  private recessHalf = DEFAULT_HALF
+  private frameHalf = DEFAULT_HALF
 
   @state()
   private shoulderRun = SHOULDER_RUN
 
+  @state()
+  private titleSize = 0
+
+  @state()
+  private hostHeight = 0
+
   private readonly instanceId = ++title5Id
-  private readonly fadeRailId = `dvk-title-5-fade-rail-${this.instanceId}`
-  private readonly panelFillId = `dvk-title-5-panel-fill-${this.instanceId}`
-  private readonly centerLineId = `dvk-title-5-center-line-${this.instanceId}`
+  private readonly bloomId = `dvk-title-5-bloom-${this.instanceId}`
+  private readonly bandLeftId = `dvk-title-5-band-left-${this.instanceId}`
+  private readonly bandRightId = `dvk-title-5-band-right-${this.instanceId}`
+  private readonly railLeftId = `dvk-title-5-upper-rail-left-${this.instanceId}`
+  private readonly railRightId = `dvk-title-5-upper-rail-right-${this.instanceId}`
+  private readonly lowerLeftId = `dvk-title-5-lower-rail-left-${this.instanceId}`
+  private readonly lowerRightId = `dvk-title-5-lower-rail-right-${this.instanceId}`
+  private readonly slashLeftId = `dvk-title-5-slash-left-${this.instanceId}`
+  private readonly slashRightId = `dvk-title-5-slash-right-${this.instanceId}`
+  private readonly auraId = `dvk-title-5-aura-${this.instanceId}`
+  private readonly spineId = `dvk-title-5-spine-${this.instanceId}`
   private readonly railGlowId = `dvk-title-5-rail-glow-${this.instanceId}`
-  private readonly centerGlowId = `dvk-title-5-center-glow-${this.instanceId}`
+  private readonly lineGlowId = `dvk-title-5-line-glow-${this.instanceId}`
 
   private readonly resizeController = new ResizeController(this, (size) => {
     this.syncGeometry(size.width, size.height)
@@ -178,7 +296,7 @@ export class Title5Element extends DatavElement {
   }
 
   // The host ResizeController only fires when the host box changes, so a width or font
-  // variable set at runtime would otherwise leave the recess on its previous width.
+  // variable set at runtime would otherwise leave the frame on its previous width.
   private observeTitle(): void {
     if (this.stopObservingTitle)
       return
@@ -193,12 +311,22 @@ export class Title5Element extends DatavElement {
 
   override render(): unknown {
     const [primary, secondary, accent] = this.resolveColors()
-    const half = this.recessHalf
-    const shoulderX = CENTER - half - this.shoulderRun
-    const slashStart = shoulderX - SLASH_GAP - SLASH_SPAN
-    const glowOpacity = this.resolveOpacity('--dvk-title-5-glow-opacity', 0.3)
-    const railPath = mainRailPath(half, shoulderX)
-    const accentPath = centerAccentPath(half)
+    const half = this.frameHalf
+    const run = this.shoulderRun
+    const footX = CENTER - half
+    const bendX = footX - run
+    const glowOpacity = this.resolveOpacity('--dvk-title-5-glow-opacity', 1)
+    const sizeVar = this.resolveTitleSizeVar()
+    const topVar = this.resolveTitleTopVar()
+
+    // The spine's glow rect overhangs the core by one unit on each side; both are then
+    // spread symmetrically about CENTER, which normalises the prototype's own half-unit
+    // asymmetry (its glow spans 578..1469 and its core 579..1468, centring on 1023.5).
+    const glowX = footX - SPINE_OVERHANG
+    const glowWidth = VIEW_BOX_WIDTH - 2 * glowX
+    const coreWidth = VIEW_BOX_WIDTH - 2 * footX
+    const auraHalf = AURA_HALF * half / DEFAULT_HALF
+    const recessFill = this.resolveRecess()
 
     return html`
       <svg
@@ -208,82 +336,178 @@ export class Title5Element extends DatavElement {
         aria-hidden="true"
         shape-rendering="geometricPrecision"
       >
-        <defs>${this.renderDefs(primary, secondary, accent)}</defs>
+        <defs>${this.renderDefs(primary, secondary, accent, footX, bendX, glowX, glowWidth)}</defs>
 
-        <path part="guide-rail guide-rail-left" d=${guideRailPath(shoulderX, false)} fill="none" stroke=${withAlpha(primary, 0.16)} stroke-width="1"></path>
-        <path part="guide-rail guide-rail-right" d=${guideRailPath(shoulderX, true)} fill="none" stroke=${withAlpha(primary, 0.16)} stroke-width="1"></path>
+        ${this.renderBlooms()}
+        ${this.renderBand(footX, bendX)}
+        ${this.renderRecess(footX, bendX, recessFill)}
 
-        <path part="recess" d=${recessPath(half, shoulderX)} fill=${`url(#${this.panelFillId})`}></path>
+        <path part="upper-rail upper-rail-left upper-rail-glow" d=${upperRailPath(footX, bendX, false)} fill="none" stroke=${`url(#${this.railLeftId})`} stroke-width="1.35" opacity=${glowOpacity} filter=${`url(#${this.railGlowId})`}></path>
+        <path part="upper-rail upper-rail-right upper-rail-glow" d=${upperRailPath(footX, bendX, true)} fill="none" stroke=${`url(#${this.railRightId})`} stroke-width="1.35" opacity=${glowOpacity} filter=${`url(#${this.railGlowId})`}></path>
+        <path part="upper-rail upper-rail-left upper-rail-core" d=${upperRailPath(footX, bendX, false)} fill="none" stroke=${`url(#${this.railLeftId})`} stroke-width="1.35"></path>
+        <path part="upper-rail upper-rail-right upper-rail-core" d=${upperRailPath(footX, bendX, true)} fill="none" stroke=${`url(#${this.railRightId})`} stroke-width="1.35"></path>
 
-        <path part="inner-rail" d=${innerRailPath(half, shoulderX)} fill="none" stroke=${withAlpha(secondary, 0.18)} stroke-width="1"></path>
+        <path part="lower-rail lower-rail-left" d=${lowerRailPath(bendX, false)} fill="none" stroke=${`url(#${this.lowerLeftId})`} stroke-width="1.2"></path>
+        <path part="lower-rail lower-rail-right" d=${lowerRailPath(bendX, true)} fill="none" stroke=${`url(#${this.lowerRightId})`} stroke-width="1.2"></path>
 
-        <path part="rail rail-glow" d=${railPath} fill="none" stroke=${`url(#${this.fadeRailId})`} stroke-width="4.8" opacity=${glowOpacity} filter=${`url(#${this.railGlowId})`}></path>
-        <path part="rail rail-core" d=${railPath} fill="none" stroke=${`url(#${this.fadeRailId})`} stroke-width="1.35" stroke-linejoin="miter" stroke-miterlimit="2"></path>
+        ${this.renderSlashes(bendX)}
+        ${this.renderDots()}
 
-        <path part="accent accent-glow" d=${accentPath} fill="none" stroke=${primary} stroke-width="4.2" opacity=${glowOpacity} filter=${`url(#${this.centerGlowId})`}></path>
-        <path part="accent accent-core" d=${accentPath} fill="none" stroke=${`url(#${this.centerLineId})`} stroke-width="1.55"></path>
-
-        <g part="slash slash-left" fill="none" stroke=${withAlpha(secondary, 0.42)} stroke-width="2">
-          ${SLASH_INDICES.map(index => svg`<path d=${slashPath(slashStart, index, false)}></path>`)}
-        </g>
-        <g part="slash slash-right" fill="none" stroke=${withAlpha(secondary, 0.42)} stroke-width="2">
-          ${SLASH_INDICES.map(index => svg`<path d=${slashPath(slashStart, index, true)}></path>`)}
-        </g>
-
-        <g part="tick" fill="none" stroke=${withAlpha(primary, 0.28)} stroke-width="1.2">
-          <path d="M110 27.5 H182"></path>
-          <path d="M1418 27.5 H1490"></path>
-          <path d="M92 32 H150"></path>
-          <path d="M1450 32 H1508"></path>
-        </g>
+        <ellipse part="aura" cx=${CENTER} cy=${AURA_CY} rx=${formatUnit(auraHalf)} ry=${AURA_RY} fill=${`url(#${this.auraId})`}></ellipse>
+        <rect part="spine spine-glow" x=${formatUnit(glowX)} y=${SPINE_GLOW_TOP} width=${formatUnit(glowWidth)} height=${SPINE_GLOW_HEIGHT} rx=${SPINE_GLOW_RADIUS} fill=${`url(#${this.spineId})`} opacity=${0.92 * glowOpacity} filter=${`url(#${this.lineGlowId})`}></rect>
+        <rect part="spine spine-core" x=${formatUnit(footX)} y=${SPINE_CORE_TOP} width=${formatUnit(coreWidth)} height=${SPINE_CORE_HEIGHT} rx=${SPINE_CORE_RADIUS} fill=${`url(#${this.spineId})`} opacity=".86"></rect>
       </svg>
-      <div
-        part="top-edge"
-        class="top-edge"
-        style=${`background: linear-gradient(90deg, transparent, ${withAlpha(secondary, 0.24)} 12%, ${withAlpha(primary, 0.3)} 50%, ${withAlpha(secondary, 0.24)} 88%, transparent)`}
-      ></div>
-      <div part="content" class="content">
-        <div
-          part="title"
-          class="title"
-          style=${`--dvk-title-5-title-stroke: ${withAlpha(primary, 0.66)}; --dvk-title-5-title-glow: ${withAlpha(secondary, 0.34)}`}
-        >
+      <div part="content" class="content" style=${topVar}>
+        <div part="title" class="title" style=${sizeVar}>
           ${this.titleText ? html`<span part="title-text">${this.titleText}</span>` : html`<slot></slot>`}
         </div>
       </div>
     `
   }
 
-  private renderDefs(primary: string, secondary: string, accent: string): unknown {
+  // An ambient bloom pooled around the title and the recess, painted under everything. It
+  // is load-bearing: the recess is a *darker* fill than the page, so without a lit field
+  // around it the notch has nothing to be cut out of. Its stops are the prototype's own
+  // hand-picked navies — a saturated theme colour at the same alpha reads two to three
+  // times brighter and blows the wings past the spine, so they are not palette roles.
+  //
+  // The prototype also draws a second bloom entering from the top edge, brightest right at
+  // y=0. It is dropped here: it put a hard lit boundary across the top of the band for no
+  // gain over the page it sits on, and the notch reads off this one alone.
+  private renderBlooms(): unknown {
     return svg`
-      <linearGradient id=${this.fadeRailId} x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color=${secondary} stop-opacity="0"></stop>
-        <stop offset="0.13" stop-color=${primary} stop-opacity="0.34"></stop>
-        <stop offset="0.4" stop-color=${primary} stop-opacity="0.7"></stop>
-        <stop offset="0.6" stop-color=${primary} stop-opacity="0.7"></stop>
-        <stop offset="0.87" stop-color=${primary} stop-opacity="0.34"></stop>
-        <stop offset="1" stop-color=${secondary} stop-opacity="0"></stop>
+      <rect part="bloom" width=${VIEW_BOX_WIDTH} height=${VIEW_BOX_HEIGHT} fill=${`url(#${this.bloomId})`}></rect>
+    `
+  }
+
+  private renderBand(footX: number, bendX: number): unknown {
+    return svg`
+      <path part="band band-left" d=${bandPath(footX, bendX, false)} fill=${`url(#${this.bandLeftId})`}></path>
+      <path part="band band-right" d=${bandPath(footX, bendX, true)} fill=${`url(#${this.bandRightId})`}></path>
+    `
+  }
+
+  private renderRecess(footX: number, bendX: number, fill: string): unknown {
+    return svg`
+      <path part="recess recess-left" d=${recessPath(footX, bendX, false)} fill=${fill}></path>
+      <path part="recess recess-right" d=${recessPath(footX, bendX, true)} fill=${fill}></path>
+    `
+  }
+
+  private renderSlashes(bendX: number): unknown {
+    return svg`
+      <g part="slash slash-left" fill=${`url(#${this.slashLeftId})`}>
+        ${SLASH_BLADES.map(blade => svg`<polygon points=${slashPoints(bendX, blade, false)}></polygon>`)}
+      </g>
+      <g part="slash slash-right" fill=${`url(#${this.slashRightId})`}>
+        ${SLASH_BLADES.map(blade => svg`<polygon points=${slashPoints(bendX, blade, true)}></polygon>`)}
+      </g>
+    `
+  }
+
+  private renderDots(): unknown {
+    return svg`
+      <g part="dots dots-left" fill=${DOT_COLOR}>
+        ${DOT_ROWS.map(row => svg`<g opacity=${row.opacity}>${DOT_COLUMNS.map((x, index) => svg`<rect x=${x} y=${row.y} width=${DOT_WIDTHS[index]} height=${row.height} rx=${DOT_RADIUS}></rect>`)}</g>`)}
+      </g>
+      <g part="dots dots-right" fill=${DOT_COLOR}>
+        ${DOT_ROWS.map(row => svg`<g opacity=${row.opacity}>${DOT_COLUMNS.map((x, index) => svg`<rect x=${formatUnit(VIEW_BOX_WIDTH - x - DOT_WIDTHS[index])} y=${row.y} width=${DOT_WIDTHS[index]} height=${row.height} rx=${DOT_RADIUS}></rect>`)}</g>`)}
+      </g>
+    `
+  }
+
+  private renderDefs(primary: string, secondary: string, accent: string, footX: number, bendX: number, glowX: number, glowWidth: number): unknown {
+    const lowerInner = formatUnit(bendX - LOWER_RAIL_INSET)
+
+    return svg`
+      <radialGradient id=${this.bloomId} gradientUnits="userSpaceOnUse" cx=${CENTER} cy="0" r="880.64" gradientTransform="translate(0 126.6) scale(1 0.0813)">
+        <stop offset="0" stop-color="#175684" stop-opacity=".14"></stop>
+        <stop offset=".42" stop-color="#0f3b60" stop-opacity=".1"></stop>
+        <stop offset="1" stop-color="#06111f" stop-opacity="0"></stop>
+      </radialGradient>
+
+      <linearGradient id=${this.bandLeftId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2=${formatUnit(footX)} y2="0">
+        <stop offset="0" stop-color=${secondary} stop-opacity=".002"></stop>
+        <stop offset=".43" stop-color=${secondary} stop-opacity=".013"></stop>
+        <stop offset=".72" stop-color=${secondary} stop-opacity=".062"></stop>
+        <stop offset=".91" stop-color=${secondary} stop-opacity=".1"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity=".22"></stop>
       </linearGradient>
 
-      <linearGradient id=${this.panelFillId} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color=${secondary} stop-opacity="0.01"></stop>
-        <stop offset="1" stop-color=${secondary} stop-opacity="0.04"></stop>
+      <linearGradient id=${this.bandRightId} gradientUnits="userSpaceOnUse" x1=${VIEW_BOX_WIDTH} y1="0" x2=${formatUnit(VIEW_BOX_WIDTH - footX)} y2="0">
+        <stop offset="0" stop-color=${secondary} stop-opacity=".002"></stop>
+        <stop offset=".43" stop-color=${secondary} stop-opacity=".013"></stop>
+        <stop offset=".72" stop-color=${secondary} stop-opacity=".062"></stop>
+        <stop offset=".91" stop-color=${secondary} stop-opacity=".1"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity=".22"></stop>
       </linearGradient>
 
-      <linearGradient id=${this.centerLineId} x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color=${secondary} stop-opacity="0.62"></stop>
-        <stop offset="0.18" stop-color=${primary} stop-opacity="0.94"></stop>
-        <stop offset="0.5" stop-color=${accent} stop-opacity="1"></stop>
-        <stop offset="0.82" stop-color=${primary} stop-opacity="0.94"></stop>
-        <stop offset="1" stop-color=${secondary} stop-opacity="0.62"></stop>
+      <linearGradient id=${this.railLeftId} gradientUnits="userSpaceOnUse" x1="0" y1=${RAIL_Y} x2=${formatUnit(footX)} y2=${HORIZON_Y}>
+        <stop offset="0" stop-color=${secondary} stop-opacity=".26"></stop>
+        <stop offset=".64" stop-color=${secondary} stop-opacity=".59"></stop>
+        <stop offset=".88" stop-color=${primary} stop-opacity=".67"></stop>
+        <stop offset="1" stop-color=${primary} stop-opacity="1"></stop>
       </linearGradient>
 
-      <filter id=${this.railGlowId} filterUnits="userSpaceOnUse" x="-20" y="-18" width="1640" height="100">
-        <feGaussianBlur stdDeviation="2.1"></feGaussianBlur>
+      <linearGradient id=${this.railRightId} gradientUnits="userSpaceOnUse" x1=${VIEW_BOX_WIDTH} y1=${RAIL_Y} x2=${formatUnit(VIEW_BOX_WIDTH - footX)} y2=${HORIZON_Y}>
+        <stop offset="0" stop-color=${secondary} stop-opacity=".26"></stop>
+        <stop offset=".64" stop-color=${secondary} stop-opacity=".59"></stop>
+        <stop offset=".88" stop-color=${primary} stop-opacity=".67"></stop>
+        <stop offset="1" stop-color=${primary} stop-opacity="1"></stop>
+      </linearGradient>
+
+      <linearGradient id=${this.lowerLeftId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2=${lowerInner} y2="0">
+        <stop offset="0" stop-color=${secondary} stop-opacity=".11"></stop>
+        <stop offset=".62" stop-color=${secondary} stop-opacity=".29"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity=".63"></stop>
+      </linearGradient>
+
+      <linearGradient id=${this.lowerRightId} gradientUnits="userSpaceOnUse" x1=${VIEW_BOX_WIDTH} y1="0" x2=${formatUnit(VIEW_BOX_WIDTH - (bendX - LOWER_RAIL_INSET))} y2="0">
+        <stop offset="0" stop-color=${secondary} stop-opacity=".11"></stop>
+        <stop offset=".62" stop-color=${secondary} stop-opacity=".29"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity=".63"></stop>
+      </linearGradient>
+
+      <linearGradient id=${this.slashLeftId} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color=${primary} stop-opacity=".44"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity=".45"></stop>
+      </linearGradient>
+
+      <linearGradient id=${this.slashRightId} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color=${primary} stop-opacity=".44"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity=".45"></stop>
+      </linearGradient>
+
+      <radialGradient id=${this.auraId} cx="50%" cy="50%" r="50%" gradientTransform="translate(0 .2) scale(1 .22)">
+        <stop offset="0" stop-color="#70ddff" stop-opacity=".43"></stop>
+        <stop offset=".28" stop-color="#35b6ed" stop-opacity=".18"></stop>
+        <stop offset="1" stop-color="#1e7fbb" stop-opacity="0"></stop>
+      </radialGradient>
+
+      <linearGradient id=${this.spineId} gradientUnits="userSpaceOnUse" x1=${formatUnit(footX)} y1="0" x2=${formatUnit(VIEW_BOX_WIDTH - footX)} y2="0">
+        <stop offset="0" stop-color=${secondary} stop-opacity=".4"></stop>
+        <stop offset=".12" stop-color=${secondary} stop-opacity=".91"></stop>
+        <stop offset=".34" stop-color=${primary} stop-opacity=".7"></stop>
+        <stop offset=".445" stop-color=${primary} stop-opacity=".96"></stop>
+        <stop offset=".487" stop-color=${accent} stop-opacity=".89"></stop>
+        <stop offset=".5" stop-color=${accent} stop-opacity="1"></stop>
+        <stop offset=".513" stop-color=${accent} stop-opacity=".89"></stop>
+        <stop offset=".555" stop-color=${primary} stop-opacity=".96"></stop>
+        <stop offset=".66" stop-color=${primary} stop-opacity=".7"></stop>
+        <stop offset=".88" stop-color=${secondary} stop-opacity=".91"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity=".4"></stop>
+      </linearGradient>
+
+      <filter id=${this.railGlowId} filterUnits="userSpaceOnUse" x="-24" y=${RAIL_Y - 20} width=${VIEW_BOX_WIDTH + 48} height=${RAIL_RISE + 40}>
+        <feGaussianBlur stdDeviation="1.1"></feGaussianBlur>
       </filter>
 
-      <filter id=${this.centerGlowId} filterUnits="userSpaceOnUse" x="310" y="30" width="980" height="44">
-        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
+      <filter id=${this.lineGlowId} filterUnits="userSpaceOnUse" x=${formatUnit(glowX - 24)} y=${SPINE_GLOW_TOP - 22} width=${formatUnit(glowWidth + 48)} height=${SPINE_GLOW_HEIGHT + 44}>
+        <feGaussianBlur stdDeviation="1.9" result="blur"></feGaussianBlur>
+        <feMerge>
+          <feMergeNode in="blur"></feMergeNode>
+          <feMergeNode in="SourceGraphic"></feMergeNode>
+        </feMerge>
       </filter>
     `
   }
@@ -296,13 +520,67 @@ export class Title5Element extends DatavElement {
     const height = hostHeight ?? rect?.height ?? 0
     const title = this.renderRoot.querySelector<HTMLElement>('.title')
     const nextRun = resolveShoulderRun(width, height)
-    const nextHalf = resolveRecessHalf(title?.getBoundingClientRect().width ?? 0, width, nextRun)
+    const nextHalf = resolveFrameHalf(title?.getBoundingClientRect().width ?? 0, width, nextRun)
+    const nextSize = resolveTitleSize(width, height)
 
-    if (Math.abs(nextHalf - this.recessHalf) < 0.5 && Math.abs(nextRun - this.shoulderRun) < 0.5)
+    if (
+      Math.abs(nextHalf - this.frameHalf) < 0.5
+      && Math.abs(nextRun - this.shoulderRun) < 0.5
+      && Math.abs(nextSize - this.titleSize) < 0.5
+    ) {
       return
+    }
 
-    this.recessHalf = nextHalf
+    this.frameHalf = nextHalf
     this.shoulderRun = nextRun
+    this.titleSize = nextSize
+    this.hostHeight = height
+  }
+
+  // An explicit variable wins unconditionally; otherwise the size tracks the host.
+  private resolveTitleSizeVar(): string {
+    const explicit = resolveThemeValue<string>({
+      cssVariable: '--dvk-title-5-title-size',
+      host: this,
+      fallback: '',
+    })
+
+    if (explicit)
+      return `--dvk-title-5-title-size: ${explicit}`
+
+    return this.titleSize > 0 ? `--dvk-title-5-title-size: ${Math.round(this.titleSize * 100) / 100}px` : ''
+  }
+
+  // An explicit variable wins unconditionally; otherwise the title box is anchored to the
+  // spine rather than to the top of the band. `preserveAspectRatio="none"` stretches the
+  // artwork to whatever box the host is given, so a band taller than the design's 11.4:1
+  // has more room than the text — which tracks the width alone — can fill. Anchoring the
+  // box's bottom keeps the design's clearance to the spine at every aspect instead of
+  // letting the gap grow with the stretch.
+  private resolveTitleTopVar(): string {
+    const explicit = resolveThemeValue<string>({
+      cssVariable: '--dvk-title-5-title-top',
+      host: this,
+      fallback: '',
+    })
+
+    if (explicit)
+      return `--dvk-title-5-title-top: ${explicit}`
+
+    if (!(this.hostHeight > 0) || !(this.titleSize > 0))
+      return ''
+
+    const top = TITLE_BOX_BOTTOM * this.hostHeight / VIEW_BOX_HEIGHT - this.titleSize / 2
+
+    return `--dvk-title-5-title-top: ${Math.round(top * 100) / 100}px`
+  }
+
+  private resolveRecess(): string {
+    return resolveThemeValue<string>({
+      cssVariable: '--dvk-title-5-recess',
+      host: this,
+      fallback: 'rgba(4, 16, 30, 0.72)',
+    })
   }
 
   private resolveOpacity(cssVariable: string, fallback: number): number {
@@ -321,23 +599,26 @@ export class Title5Element extends DatavElement {
     const explicitPrimary = typeof this.color === 'string' && !isJsonArrayString(this.color)
       ? this.color
       : ''
+    // The prototype's own colours are hand-picked navies picked against a #06111f page, so
+    // these fallbacks are taken from it rather than from the family — a saturated brand
+    // colour at the same alpha reads two to three times brighter across the wings.
     const primary = colorList[0] ?? resolveThemeValue({
       explicit: explicitPrimary,
       cssVariable: '--dvk-color-primary',
       host: this,
-      fallback: '#42ddff',
+      fallback: '#5ecdf0',
     })
     const secondary = colorList[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
       cssVariable: '--dvk-color-secondary',
       host: this,
-      fallback: '#1399ff',
+      fallback: '#2a78b5',
     })
     const accent = colorList[2] ?? resolveThemeValue({
       explicit: this.accentColor,
       cssVariable: '--dvk-title-5-accent',
       host: this,
-      fallback: '#b8f7ff',
+      fallback: '#effcff',
     })
 
     return [primary, secondary, accent]
@@ -368,40 +649,34 @@ export class Title5Element extends DatavElement {
   }
 }
 
-function guideRailPath(shoulderX: number, mirrored: boolean): string {
-  const outer = formatUnit(VIEW_BOX_WIDTH - shoulderX)
+function bandPath(footX: number, bendX: number, mirrored: boolean): string {
+  const x = (value: number): number => formatUnit(mirrored ? VIEW_BOX_WIDTH - value : value)
 
-  return mirrored
-    ? `M${outer} 7 H${VIEW_BOX_WIDTH}`
-    : `M0 7 H${formatUnit(shoulderX)}`
+  return `M${x(0)} ${BAND_TOP} H${x(bendX)} L${x(footX)} ${SHELF_BOTTOM} H${x(footX - SHELF_TOE_INSET)} L${x(bendX - SHELF_TOP_INSET)} ${SHELF_TOP} H${x(0)} Z`
 }
 
-function recessPath(half: number, shoulderX: number): string {
-  return `M${formatUnit(shoulderX)} ${RAIL_TOP} L${formatUnit(CENTER - half)} ${RAIL_BOTTOM} H${formatUnit(CENTER + half)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX)} ${RAIL_TOP} Z`
+function recessPath(footX: number, bendX: number, mirrored: boolean): string {
+  const x = (value: number): number => formatUnit(mirrored ? VIEW_BOX_WIDTH - value : value)
+
+  return `M${x(0)} ${SHELF_TOP} H${x(bendX - SHELF_TOP_INSET)} L${x(footX - SHELF_TOE_INSET)} ${SHELF_BOTTOM} H${x(0)} Z`
 }
 
-function mainRailPath(half: number, shoulderX: number): string {
-  return `M0 ${RAIL_TOP} H${formatUnit(shoulderX)} L${formatUnit(CENTER - half)} ${RAIL_BOTTOM} H${formatUnit(CENTER + half)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX)} ${RAIL_TOP} H${VIEW_BOX_WIDTH}`
+function upperRailPath(footX: number, bendX: number, mirrored: boolean): string {
+  const x = (value: number): number => formatUnit(mirrored ? VIEW_BOX_WIDTH - value : value)
+
+  return `M${x(0)} ${RAIL_Y} H${x(bendX)} L${x(footX)} ${HORIZON_Y}`
 }
 
-// Parallel to the main rail: corners inset 4 inward on x and 4.5 up on y. The H
-// segments carry x only — an extra number after H would draw a line across the bar.
-function innerRailPath(half: number, shoulderX: number): string {
-  const near = CENTER - half + INNER_INSET_X
-  const far = CENTER + half - INNER_INSET_X
+function lowerRailPath(bendX: number, mirrored: boolean): string {
+  const x = (value: number): number => formatUnit(mirrored ? VIEW_BOX_WIDTH - value : value)
 
-  return `M0 ${RAIL_TOP - INNER_INSET_Y} H${formatUnit(shoulderX + INNER_INSET_X)} L${formatUnit(near)} ${RAIL_BOTTOM - INNER_INSET_Y} H${formatUnit(far)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX - INNER_INSET_X)} ${RAIL_TOP - INNER_INSET_Y} H${VIEW_BOX_WIDTH}`
+  return `M${x(0)} ${LOWER_RAIL_Y} H${x(bendX - LOWER_RAIL_INSET)}`
 }
 
-function centerAccentPath(half: number): string {
-  return `M${formatUnit(CENTER - half)} ${RAIL_BOTTOM} H${formatUnit(CENTER + half)}`
-}
+function slashPoints(bendX: number, blade: typeof SLASH_BLADES[number], mirrored: boolean): string {
+  const x = (value: number): number => formatUnit(mirrored ? VIEW_BOX_WIDTH - value : value)
 
-function slashPath(start: number, index: number, mirrored: boolean): string {
-  const offset = index * SLASH_STEP
-  const x = mirrored ? VIEW_BOX_WIDTH - start - offset : start + offset
-
-  return `M${formatUnit(x)} 21 ${mirrored ? 'l-9 9' : 'l9 9'}`
+  return `${x(bendX + blade.topLeft)},${SLASH_TOP} ${x(bendX + blade.topRight)},${SLASH_TOP} ${x(bendX + blade.bottomRight)},${SLASH_BOTTOM} ${x(bendX + blade.bottomLeft)},${SLASH_BOTTOM}`
 }
 
 function formatUnit(value: number): number {
@@ -414,31 +689,4 @@ function splitColors(value: string): string[] {
 
 function isJsonArrayString(value: string): boolean {
   return value.trim().startsWith('[')
-}
-
-function withAlpha(color: string, alpha: number): string {
-  const trimmed = color.trim()
-  const clampedAlpha = Math.min(Math.max(alpha, 0), 1)
-  const hex = trimmed.match(/^#([\da-f]{3}|[\da-f]{6})$/i)
-
-  if (hex) {
-    const value = hex[1].length === 3
-      ? hex[1].split('').map(part => `${part}${part}`).join('')
-      : hex[1]
-    const red = Number.parseInt(value.slice(0, 2), 16)
-    const green = Number.parseInt(value.slice(2, 4), 16)
-    const blue = Number.parseInt(value.slice(4, 6), 16)
-
-    return `rgba(${red}, ${green}, ${blue}, ${clampedAlpha})`
-  }
-
-  const rgb = trimmed.match(/^rgba?\((.+)\)$/i)
-
-  if (rgb) {
-    const parts = rgb[1].split(',').map(part => part.trim()).filter(Boolean)
-    if (parts.length >= 3)
-      return `rgba(${parts.slice(0, 3).join(', ')}, ${clampedAlpha})`
-  }
-
-  return trimmed
 }

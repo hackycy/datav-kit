@@ -1,52 +1,52 @@
 ---
-description: Deep glass large-screen top title bar with cyber-blue mechanical wings, a central title panel, low-brightness flow line, and gold title focus.
+description: Flat rail large-screen title header built from straight horizontal rails, quiet inner guides, and short end ticks, with a title-first opening that follows the title box.
 ---
 
 # Title 2
 
-`dvk-title-2` is a deep glass large-screen top title bar based on the provided SVG. It keeps the dark blue-black background band, symmetric mechanical wing panels, thin cyber-blue rails, a restrained center flow line, and a gold title focus for command-center dashboards.
+`dvk-title-2` is a flat rail large-screen title header for command-center dashboards, city operations screens, and data visualization systems. It stays deliberately plain: straight horizontal rails, quiet inner guides, and a short bright tick at each end. The text is the first visual focus and the decoration moves aside — the center opening is measured from the title box, so a wide title pushes the rails outward and a narrow one lets them extend inward. Use it at 48–56px tall.
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 56px;">
   <div class="datav-decoration-shell">
-    <dvk-title-2 title-text="智慧指挥平台"></dvk-title-2>
+    <dvk-title-2 title-text="智慧城市运行中心" style="--dvk-title-2-title-width: 260px;"></dvk-title-2>
   </div>
 </div>
 
 ```html
-<dvk-title-2 title-text="智慧指挥平台"></dvk-title-2>
+<dvk-title-2 title-text="智慧城市运行中心" style="--dvk-title-2-title-width: 260px;"></dvk-title-2>
 ```
 
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 64px;">
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1200px; --datav-decoration-height: 56px;">
   <div class="datav-decoration-shell">
-    <dvk-title-2 colors="#7cf6ff,#2f70ff,#ffd36d">
-      <span>作战指挥中心</span>
+    <dvk-title-2 title-text="城市综合交通智能运行监测中心" style="--dvk-title-2-title-width: 380px;"></dvk-title-2>
+  </div>
+</div>
+
+```html
+<dvk-title-2 title-text="城市综合交通智能运行监测中心" style="--dvk-title-2-title-width: 380px;"></dvk-title-2>
+```
+
+<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 820px; --datav-decoration-height: 52px;">
+  <div class="datav-decoration-shell">
+    <dvk-title-2 colors="#52f0b5,#2f8cff,#b7f8ff" style="--dvk-title-2-title-width: 260px;">
+      <span>综合态势感知平台</span>
     </dvk-title-2>
   </div>
 </div>
 
 ```html
-<dvk-title-2 colors="#7cf6ff,#2f70ff,#ffd36d">
-  <span>作战指挥中心</span>
+<dvk-title-2 colors="#52f0b5,#2f8cff,#b7f8ff" style="--dvk-title-2-title-width: 260px;">
+  <span>综合态势感知平台</span>
 </dvk-title-2>
-```
-
-<div class="datav-demo datav-demo--decoration" style="--datav-decoration-width: 1080px; --datav-decoration-height: 58px;">
-  <div class="datav-decoration-shell">
-    <dvk-title-2 colors="#52f0b5,#1487ff,#f9e7a0" title-text="CITY"></dvk-title-2>
-  </div>
-</div>
-
-```html
-<dvk-title-2 colors="#52f0b5,#1487ff,#f9e7a0" title-text="CITY OPERATIONS"></dvk-title-2>
 ```
 
 ## Props
 
 | Name | Type | Default | Notes |
 | --- | --- | --- | --- |
-| `color` | `string` | CSS variable fallback | Primary cyan color for luminous rails, micro grid strokes, flow lines, and small HUD details. When set as a JavaScript property, a DataV-style color array is also accepted. |
-| `secondary-color` | `string` | CSS variable fallback | Secondary deep blue color for wing surfaces, outer strokes, and edge gradients. |
-| `accent-color` | `string` | CSS variable fallback | Accent color for the centered title text. |
+| `color` | `string` | CSS variable fallback | Primary cyan color for the main rails, the long quiet ticks, and the title edge dots. When set as a JavaScript property, a DataV-style color array is also accepted. |
+| `secondary-color` | `string` | CSS variable fallback | Secondary blue color for the inner soft rails. |
+| `accent-color` | `string` | CSS variable fallback | Accent cyan color for the short bright ticks at each end of the rail pair. |
 | `colors` | `string` | empty | Comma-separated primary, secondary, and accent colors. |
 | `title-text` | `string` | empty | Optional centered system name. When omitted, the default slot is rendered inside the title area. |
 
@@ -62,39 +62,30 @@ description: Deep glass large-screen top title bar with cyber-blue mechanical wi
 | --- | --- |
 | `--dvk-color-primary` | Primary cyan fallback color. |
 | `--dvk-color-secondary` | Secondary blue fallback color. |
-| `--dvk-title-2-accent` | Accent fallback color for the title text. |
-| `--dvk-title-2-title-width` | Title box width. When unset the box follows its own text. Wider than the centre panel, the text overlaps the side decoration. |
-| `--dvk-title-2-title-top` | Title content area top offset, aligned to the inner title panel by default. |
-| `--dvk-title-2-title-height` | Title content area height, aligned to the inner title panel by default. |
-| `--dvk-title-2-title-color` | Title text color override. |
+| `--dvk-title-2-accent` | Accent cyan fallback color for the end ticks. |
+| `--dvk-title-2-rail-opacity` | Opacity of the main rails. |
+| `--dvk-title-2-accent-opacity` | Opacity of the short bright end ticks. |
+| `--dvk-title-2-title-width` | Title box width, never exceeding the host. When unset the box follows its own text. Wider boxes push the rails outward. |
+| `--dvk-title-2-title-gap` | Padding between the title text and the rail opening. Any CSS length, defaulting to `0.8em` so it scales with the title font. The measured box includes it, so the rails open one gap beyond the text. |
+| `--dvk-title-2-title-color` | Title text color. |
 | `--dvk-title-2-title-font` | Title font shorthand. |
 | `--dvk-title-2-title-letter-spacing` | Title letter spacing. |
-| `--dvk-title-2-title-stroke` | Subtle bright text edge glow. |
-| `--dvk-title-2-title-glow` | Soft gold title glow. |
+| `--dvk-title-2-title-glow` | Soft title text glow. |
 
 ## Parts
 
 | Part | Description |
 | --- | --- |
 | `graphic` | Internal SVG. |
-| `background` | Dark blue-black background band. |
-| `micro-grid` | Low-opacity technical grid texture. |
-| `wing` | Shared part for each symmetric side wing. |
-| `left-wing` | Left mechanical wing group. |
-| `right-wing` | Right mechanical wing group. |
-| `wing-surface` | Glassy translucent side wing surface. |
-| `wing-inner-line` | Inner outline of each wing. |
-| `glass-sheen` | Subtle clipped reflection across the wing panels. |
-| `edge-line` | Brighter wing edge rail. |
-| `detail-line` | Quiet internal HUD line detail. |
-| `glow-accent` | Soft short highlight on each wing. |
-| `center-panel` | Center title structure. |
-| `title-panel` | Outer center title panel. |
-| `title-inner-panel` | Inner center title surface. |
-| `center-edge` | Bright top and bottom center panel rails. |
-| `quiet-line` | Low-opacity center panel guide line. |
-| `side-connector` | Short connector strokes between wings and title panel. |
-| `flow-line` | Horizontal center flow light below the title panel. |
+| `rail` | Shared part for the horizontal rails. |
+| `main-rail` | Upper and lower boundary rails. |
+| `soft-rail` | Quiet inner guide rails. |
+| `accent` | Shared part for the short end ticks. |
+| `accent-core` | Short bright tick near each end. |
+| `accent-tail` | Longer quiet tick beside each bright tick. |
+| `edge-dot` | Shared part for the small dot marking each side of the opening. |
+| `edge-dot-left` | Left opening dot. |
+| `edge-dot-right` | Right opening dot. |
 | `content` | Center title content wrapper. |
-| `title` | Alias part for the title content wrapper. |
+| `title` | Title box whose measured width sets the rail opening. |
 | `title-text` | Generated title text when `title-text` is used. |

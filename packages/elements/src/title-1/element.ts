@@ -2,8 +2,6 @@ import { DatavElement, resolveThemeValue } from '@datav-kit/core'
 import { css, html, svg } from 'lit'
 import { property } from 'lit/decorators.js'
 
-type Title1Side = 'left' | 'right'
-
 let title1Id = 0
 
 export class Title1Element extends DatavElement {
@@ -15,7 +13,7 @@ export class Title1Element extends DatavElement {
       height: 100%;
       min-width: 0;
       min-height: 0;
-      color: var(--dvk-color-primary, #57f3ff);
+      color: var(--dvk-title-1-title-color, #f6fffb);
     }
 
     svg {
@@ -29,27 +27,30 @@ export class Title1Element extends DatavElement {
     }
 
     path,
-    polygon,
-    rect {
+    ellipse,
+    circle,
+    line {
       vector-effect: non-scaling-stroke;
     }
 
     .content {
       position: absolute;
-      top: 50%;
+      top: var(--dvk-title-1-title-top, 50%);
       left: 50%;
       z-index: 1;
       display: grid;
       place-items: center;
       width: var(--dvk-title-1-title-width, max-content);
       max-width: 100%;
-      height: var(--dvk-title-1-title-height, 56%);
+      height: var(--dvk-title-1-title-height, 46%);
       min-height: 0;
-      color: var(--dvk-title-1-title-color, #effcff);
-      font: var(--dvk-title-1-title-font, 700 22px/1.2 system-ui, sans-serif);
-      letter-spacing: var(--dvk-title-1-title-letter-spacing, 0.04em);
+      color: var(--dvk-title-1-title-color, #f6fffb);
+      font: var(--dvk-title-1-title-font, 700 23px/1.08 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
+      letter-spacing: var(--dvk-title-1-title-letter-spacing, 0.14em);
       text-align: center;
-      text-shadow: 0 0 10px var(--dvk-title-1-title-glow, rgba(87, 243, 255, 0.32));
+      text-shadow:
+        0 0 8px var(--dvk-title-1-title-glow, rgba(57, 246, 200, 0.45)),
+        0 0 16px var(--dvk-title-1-title-accent-glow, rgba(255, 123, 213, 0.2));
       transform: translate(-50%, -50%);
       pointer-events: none;
     }
@@ -79,10 +80,13 @@ export class Title1Element extends DatavElement {
   titleText = ''
 
   private readonly instanceId = ++title1Id
-  private readonly centerSurfaceGradientId = `dvk-title-1-center-surface-${this.instanceId}`
-  private readonly sideSurfaceGradientId = `dvk-title-1-side-surface-${this.instanceId}`
+  private readonly haloGradientId = `dvk-title-1-halo-${this.instanceId}`
+  private readonly lensGradientId = `dvk-title-1-lens-${this.instanceId}`
   private readonly railGradientId = `dvk-title-1-rail-${this.instanceId}`
+  private readonly baseGradientId = `dvk-title-1-base-${this.instanceId}`
   private readonly accentGradientId = `dvk-title-1-accent-${this.instanceId}`
+  private readonly beadGradientId = `dvk-title-1-bead-${this.instanceId}`
+  private readonly softGlowId = `dvk-title-1-soft-glow-${this.instanceId}`
 
   override firstUpdated(): void {
     this.emit('dvk-ready', { tagName: 'dvk-title-1' })
@@ -94,17 +98,74 @@ export class Title1Element extends DatavElement {
     return html`
       <svg
         part="graphic"
-        viewBox="0 0 1200 72"
+        viewBox="0 0 1200 96"
         preserveAspectRatio="none"
         aria-hidden="true"
         shape-rendering="geometricPrecision"
       >
         <defs>${this.renderDefs(primary, secondary, accent)}</defs>
 
-        <rect part="ambient-glow" x="42" y="13" width="1116" height="46" rx="5" fill=${withAlpha(secondary, 0.04)}></rect>
-        ${this.renderSide('left')}
-        ${this.renderSide('right')}
-        ${this.renderCenter(accent)}
+        <path
+          part="aurora-halo"
+          d="M 188 70 C 332 7 868 7 1012 70 C 842 47 358 47 188 70 Z"
+          fill=${`url(#${this.haloGradientId})`}
+        ></path>
+        <ellipse part="lens-glow" cx="600" cy="50" rx="282" ry="36" fill=${withAlpha(primary, 0.08)} filter=${`url(#${this.softGlowId})`}></ellipse>
+        <ellipse part="title-lens" cx="600" cy="49" rx="242" ry="29" fill=${`url(#${this.lensGradientId})`}></ellipse>
+        <path
+          part="title-lens-inner"
+          d="M 398 49 C 466 27 734 27 802 49 C 735 66 465 66 398 49 Z"
+          fill=${withAlpha(secondary, 0.08)}
+          stroke=${withAlpha(primary, 0.28)}
+          stroke-width="0.8"
+        ></path>
+
+        <path
+          part="orbit-rail outer-rail"
+          d="M 66 70 C 246 15 954 15 1134 70"
+          fill="none"
+          stroke=${`url(#${this.railGradientId})`}
+          stroke-width="1.45"
+          stroke-linecap="round"
+          filter=${`url(#${this.softGlowId})`}
+        ></path>
+        <path
+          part="orbit-rail inner-rail"
+          d="M 172 76 C 346 42 854 42 1028 76"
+          fill="none"
+          stroke=${`url(#${this.railGradientId})`}
+          stroke-width="0.86"
+          stroke-linecap="round"
+          stroke-opacity="0.72"
+        ></path>
+        <path
+          part="base-rail"
+          d="M 154 78 C 356 90 844 90 1046 78"
+          fill="none"
+          stroke=${`url(#${this.baseGradientId})`}
+          stroke-width="1.2"
+          stroke-linecap="round"
+        ></path>
+        <path
+          part="accent-arc"
+          d="M 512 23 C 552 15 648 15 688 23"
+          fill="none"
+          stroke=${`url(#${this.accentGradientId})`}
+          stroke-width="2"
+          stroke-linecap="round"
+        ></path>
+        <path
+          part="accent-arc"
+          d="M 484 73 C 536 80 664 80 716 73"
+          fill="none"
+          stroke=${`url(#${this.accentGradientId})`}
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-opacity="0.68"
+        ></path>
+
+        ${this.renderTerminals('left')}
+        ${this.renderTerminals('right')}
       </svg>
       <div part="content title" class="content">
         ${this.titleText ? html`<span part="title-text">${this.titleText}</span>` : html`<slot></slot>`}
@@ -114,89 +175,69 @@ export class Title1Element extends DatavElement {
 
   private renderDefs(primary: string, secondary: string, accent: string): unknown {
     return svg`
-      <linearGradient id=${this.centerSurfaceGradientId} x1="380" y1="0" x2="820" y2="0" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color=${withAlpha(secondary, 0.08)}></stop>
-        <stop offset="18%" stop-color=${withAlpha(primary, 0.14)}></stop>
-        <stop offset="50%" stop-color=${withAlpha(primary, 0.055)}></stop>
-        <stop offset="82%" stop-color=${withAlpha(primary, 0.14)}></stop>
-        <stop offset="100%" stop-color=${withAlpha(secondary, 0.08)}></stop>
+      <linearGradient id=${this.haloGradientId} x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color=${withAlpha(secondary, 0)}></stop>
+        <stop offset="0.22" stop-color=${withAlpha(secondary, 0.12)}></stop>
+        <stop offset="0.5" stop-color=${withAlpha(primary, 0.18)}></stop>
+        <stop offset="0.78" stop-color=${withAlpha(accent, 0.12)}></stop>
+        <stop offset="1" stop-color=${withAlpha(accent, 0)}></stop>
       </linearGradient>
 
-      <linearGradient id=${this.sideSurfaceGradientId} x1="0" y1="0" x2="460" y2="0" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color=${withAlpha(secondary, 0.015)}></stop>
-        <stop offset="70%" stop-color=${withAlpha(secondary, 0.075)}></stop>
-        <stop offset="100%" stop-color=${withAlpha(primary, 0.13)}></stop>
-      </linearGradient>
+      <radialGradient id=${this.lensGradientId} cx="50%" cy="48%" r="58%">
+        <stop offset="0" stop-color=${withAlpha(primary, 0.2)}></stop>
+        <stop offset="0.46" stop-color=${withAlpha(secondary, 0.12)}></stop>
+        <stop offset="0.78" stop-color=${withAlpha(accent, 0.08)}></stop>
+        <stop offset="1" stop-color=${withAlpha(primary, 0.02)}></stop>
+      </radialGradient>
 
       <linearGradient id=${this.railGradientId} x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color=${withAlpha(secondary, 0.02)}></stop>
-        <stop offset="30%" stop-color=${secondary} stop-opacity="0.42"></stop>
-        <stop offset="50%" stop-color=${primary} stop-opacity="0.7"></stop>
-        <stop offset="70%" stop-color=${secondary} stop-opacity="0.42"></stop>
-        <stop offset="100%" stop-color=${withAlpha(secondary, 0.02)}></stop>
-      </linearGradient>
-
-      <linearGradient id=${this.accentGradientId} x1="500" y1="0" x2="700" y2="0" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color=${withAlpha(accent, 0)}></stop>
-        <stop offset="50%" stop-color=${accent} stop-opacity="0.58"></stop>
+        <stop offset="0%" stop-color=${withAlpha(secondary, 0)}></stop>
+        <stop offset="17%" stop-color=${secondary} stop-opacity="0.36"></stop>
+        <stop offset="45%" stop-color=${primary} stop-opacity="0.88"></stop>
+        <stop offset="55%" stop-color=${primary} stop-opacity="0.88"></stop>
+        <stop offset="83%" stop-color=${accent} stop-opacity="0.34"></stop>
         <stop offset="100%" stop-color=${withAlpha(accent, 0)}></stop>
       </linearGradient>
+
+      <linearGradient id=${this.baseGradientId} x1="154" y1="0" x2="1046" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color=${withAlpha(secondary, 0)}></stop>
+        <stop offset="0.28" stop-color=${secondary} stop-opacity="0.3"></stop>
+        <stop offset="0.5" stop-color="#f6fffb" stop-opacity="0.46"></stop>
+        <stop offset="0.72" stop-color=${primary} stop-opacity="0.34"></stop>
+        <stop offset="1" stop-color=${withAlpha(primary, 0)}></stop>
+      </linearGradient>
+
+      <linearGradient id=${this.accentGradientId} x1="480" y1="0" x2="720" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color=${withAlpha(accent, 0)}></stop>
+        <stop offset="0.5" stop-color=${accent} stop-opacity="0.7"></stop>
+        <stop offset="1" stop-color=${withAlpha(primary, 0)}></stop>
+      </linearGradient>
+
+      <radialGradient id=${this.beadGradientId} cx="50%" cy="50%" r="60%">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.92"></stop>
+        <stop offset="0.48" stop-color=${primary} stop-opacity="0.7"></stop>
+        <stop offset="1" stop-color=${accent} stop-opacity="0.04"></stop>
+      </radialGradient>
+
+      <filter id=${this.softGlowId} x="-20%" y="-180%" width="140%" height="460%">
+        <feGaussianBlur stdDeviation="2.8" result="blur"></feGaussianBlur>
+        <feMerge>
+          <feMergeNode in="blur"></feMergeNode>
+          <feMergeNode in="SourceGraphic"></feMergeNode>
+        </feMerge>
+      </filter>
     `
   }
 
-  private renderSide(side: Title1Side): unknown {
+  private renderTerminals(side: 'left' | 'right'): unknown {
     const transform = side === 'right' ? 'translate(1200 0) scale(-1 1)' : undefined
 
     return svg`
-      <g part=${`side ${side}-side`} transform=${transform ?? ''}>
-        <polygon
-          part="side-surface"
-          points="0,13 306,13 370,36 306,59 0,59"
-          fill=${`url(#${this.sideSurfaceGradientId})`}
-        ></polygon>
-        <path
-          part="rail main-rail"
-          d="M 28 17 H 286 L 340 36"
-          fill="none"
-          stroke=${`url(#${this.railGradientId})`}
-          stroke-width="1.05"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></path>
-        <path
-          part="rail quiet-rail"
-          d="M 28 55 H 286 L 340 36"
-          fill="none"
-          stroke=${`url(#${this.railGradientId})`}
-          stroke-width="0.48"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-opacity="0.5"
-        ></path>
-        <polygon part="surface-accent" points="118,29 252,29 276,36 252,43 118,43" fill=${`url(#${this.accentGradientId})`} opacity="0.48"></polygon>
-      </g>
-    `
-  }
-
-  private renderCenter(accent: string): unknown {
-    return svg`
-      <g part="center-panel">
-        <polygon
-          part="title-panel"
-          points="286,36 340,13 860,13 914,36 860,59 340,59"
-          fill=${`url(#${this.centerSurfaceGradientId})`}
-        ></polygon>
-        <path
-          part="center-edge"
-          d="M 360 17 H 840 M 360 55 H 840"
-          fill="none"
-          stroke=${`url(#${this.railGradientId})`}
-          stroke-width="0.72"
-          stroke-linecap="round"
-          stroke-opacity="0.62"
-        ></path>
-        <rect part="accent-core" x="510" y="12" width="180" height="4" fill=${`url(#${this.accentGradientId})`}></rect>
-        <polygon part="center-notch" points="572,59 628,59 614,64 586,64" fill=${withAlpha(accent, 0.18)}></polygon>
+      <g part=${`terminal ${side}-terminal`} transform=${transform ?? ''}>
+        <circle part="light-bead" cx="88" cy="70" r="3.4" fill=${`url(#${this.beadGradientId})`}></circle>
+        <circle part="light-bead" cx="134" cy="62" r="2.2" fill=${`url(#${this.beadGradientId})`} opacity="0.72"></circle>
+        <line part="terminal-mark" x1="116" y1="58" x2="116" y2="76" stroke=${`url(#${this.railGradientId})`} stroke-width="1.2" stroke-linecap="round" opacity="0.58"></line>
+        <line part="terminal-mark" x1="148" y1="61" x2="148" y2="74" stroke=${`url(#${this.railGradientId})`} stroke-width="0.9" stroke-linecap="round" opacity="0.4"></line>
       </g>
     `
   }
@@ -210,19 +251,19 @@ export class Title1Element extends DatavElement {
       explicit: explicitPrimary,
       cssVariable: '--dvk-color-primary',
       host: this,
-      fallback: '#57f3ff',
+      fallback: '#39f6c8',
     })
     const secondary = colorList[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
       cssVariable: '--dvk-color-secondary',
       host: this,
-      fallback: '#2f8cff',
+      fallback: '#7aa8ff',
     })
     const accent = colorList[2] ?? resolveThemeValue({
       explicit: this.accentColor,
       cssVariable: '--dvk-title-1-accent',
       host: this,
-      fallback: '#8cecff',
+      fallback: '#ff7bd5',
     })
 
     return [primary, secondary, accent]

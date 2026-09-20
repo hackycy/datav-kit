@@ -1,6 +1,47 @@
-import { DatavElement, resolveThemeValue } from '@datav-kit/core'
+import { DatavElement, ResizeController, resolveThemeValue } from '@datav-kit/core'
 import { css, html, svg } from 'lit'
-import { property } from 'lit/decorators.js'
+import { property, state } from 'lit/decorators.js'
+import { observeElementSize } from '../internal/element-size-observer'
+import { resolveTitleCenterHalf } from '../internal/title-center'
+
+const VIEW_BOX_WIDTH = 1600
+const VIEW_BOX_HEIGHT = 64
+const CENTER = 800
+const RAIL_TOP = 10.5
+const RAIL_BOTTOM = 51.5
+const SHOULDER_RUN = 26.7
+const MAX_SHOULDER_RUN = 74.7
+const DEFAULT_HALF = 265
+const INNER_INSET_X = 4
+const INNER_INSET_Y = 4.5
+const SLASH_COUNT = 6
+const SLASH_STEP = 12
+const SLASH_GAP = 6
+const SLASH_SPAN = (SLASH_COUNT - 1) * SLASH_STEP + 9
+const SLASH_INDICES = Array.from({ length: SLASH_COUNT }, (_, index) => index)
+
+export function resolveRecessHalf(titleWidth: number, hostWidth: number, shoulderRun = SHOULDER_RUN): number {
+  return resolveTitleCenterHalf({
+    titleWidth,
+    hostWidth,
+    viewBoxWidth: VIEW_BOX_WIDTH,
+    fallback: DEFAULT_HALF,
+    // The left slash group starts at `CENTER - half - shoulderRun - SLASH_GAP - SLASH_SPAN`,
+    // so it leaves the viewBox 75 units before the shoulder, recess or rail would.
+    limit: CENTER - shoulderRun - SLASH_GAP - SLASH_SPAN,
+  })
+}
+
+// `preserveAspectRatio="none"` shears the shoulder slant, so the run is solved back
+// from the host aspect to keep the rendered angle at the prototype's 57 degrees.
+export function resolveShoulderRun(hostWidth: number, hostHeight: number): number {
+  if (!(hostWidth > 0) || !(hostHeight > 0))
+    return SHOULDER_RUN
+
+  const run = SHOULDER_RUN * hostHeight * VIEW_BOX_WIDTH / (VIEW_BOX_HEIGHT * hostWidth)
+
+  return Math.min(run, MAX_SHOULDER_RUN)
+}
 
 let title3Id = 0
 
@@ -13,7 +54,7 @@ export class Title3Element extends DatavElement {
       height: 100%;
       min-width: 0;
       min-height: 0;
-      color: var(--dvk-title-3-title-color, #f6fffb);
+      color: var(--dvk-title-3-title-color, #f3fbff);
     }
 
     svg {
@@ -27,32 +68,50 @@ export class Title3Element extends DatavElement {
     }
 
     path,
-    ellipse,
-    circle,
-    line {
+    rect {
       vector-effect: non-scaling-stroke;
+    }
+
+    .top-edge {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      pointer-events: none;
     }
 
     .content {
       position: absolute;
-      top: var(--dvk-title-3-title-top, 50%);
-      left: 50%;
+      /* y=28.5 of 64, deliberately above the recess centre (y=31) so the bright
+         bottom edge and its glow do not crowd the text. */
+      top: var(--dvk-title-3-title-top, 44.53%);
+      /* Both insets, so the box has a definite width for the title's percentage
+         max-width to resolve against instead of a shrink-to-fit parent. */
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
       z-index: 1;
-      display: grid;
-      place-items: center;
+      pointer-events: none;
+      transform: translateY(-50%);
+    }
+
+    .title {
+      box-sizing: border-box;
       width: var(--dvk-title-3-title-width, max-content);
       max-width: 100%;
-      height: var(--dvk-title-3-title-height, 46%);
-      min-height: 0;
-      color: var(--dvk-title-3-title-color, #f6fffb);
-      font: var(--dvk-title-3-title-font, 700 23px/1.08 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
-      letter-spacing: var(--dvk-title-3-title-letter-spacing, 0.14em);
+      padding: 0 var(--dvk-title-3-title-gap, 2em);
+      overflow: hidden;
+      color: var(--dvk-title-3-title-color, #f3fbff);
+      font: var(--dvk-title-3-title-font, 700 19px/1 'Microsoft YaHei', 'PingFang SC', 'Noto Sans CJK SC', Arial, sans-serif);
+      letter-spacing: var(--dvk-title-3-title-letter-spacing, 0.16em);
       text-align: center;
+      white-space: nowrap;
+      text-overflow: ellipsis;
       text-shadow:
-        0 0 8px var(--dvk-title-3-title-glow, rgba(57, 246, 200, 0.45)),
-        0 0 16px var(--dvk-title-3-title-accent-glow, rgba(255, 123, 213, 0.2));
-      transform: translate(-50%, -50%);
-      pointer-events: none;
+        0 0 5px var(--dvk-title-3-title-stroke, rgba(142, 226, 255, 0.66)),
+        0 0 12px var(--dvk-title-3-title-glow, rgba(40, 137, 255, 0.34));
     }
 
     slot::slotted(*) {
@@ -79,167 +138,182 @@ export class Title3Element extends DatavElement {
   @property({ attribute: 'title-text' })
   titleText = ''
 
+  @state()
+  private recessHalf = DEFAULT_HALF
+
+  @state()
+  private shoulderRun = SHOULDER_RUN
+
   private readonly instanceId = ++title3Id
-  private readonly haloGradientId = `dvk-title-3-halo-${this.instanceId}`
-  private readonly lensGradientId = `dvk-title-3-lens-${this.instanceId}`
-  private readonly railGradientId = `dvk-title-3-rail-${this.instanceId}`
-  private readonly baseGradientId = `dvk-title-3-base-${this.instanceId}`
-  private readonly accentGradientId = `dvk-title-3-accent-${this.instanceId}`
-  private readonly beadGradientId = `dvk-title-3-bead-${this.instanceId}`
-  private readonly softGlowId = `dvk-title-3-soft-glow-${this.instanceId}`
+  private readonly fadeRailId = `dvk-title-3-fade-rail-${this.instanceId}`
+  private readonly panelFillId = `dvk-title-3-panel-fill-${this.instanceId}`
+  private readonly centerLineId = `dvk-title-3-center-line-${this.instanceId}`
+  private readonly railGlowId = `dvk-title-3-rail-glow-${this.instanceId}`
+  private readonly centerGlowId = `dvk-title-3-center-glow-${this.instanceId}`
+
+  private readonly resizeController = new ResizeController(this, (size) => {
+    this.syncGeometry(size.width, size.height)
+  })
+
+  private stopObservingTitle: (() => void) | null = null
+
+  override connectedCallback(): void {
+    super.connectedCallback()
+    this.observeTitle()
+  }
+
+  override disconnectedCallback(): void {
+    this.stopObservingTitle?.()
+    this.stopObservingTitle = null
+    super.disconnectedCallback()
+  }
 
   override firstUpdated(): void {
     this.emit('dvk-ready', { tagName: 'dvk-title-3' })
+    this.observeTitle()
+  }
+
+  override updated(): void {
+    this.syncGeometry()
+  }
+
+  // The host ResizeController only fires when the host box changes, so a width or font
+  // variable set at runtime would otherwise leave the recess on its previous width.
+  private observeTitle(): void {
+    if (this.stopObservingTitle)
+      return
+
+    const title = this.renderRoot.querySelector<HTMLElement>('.title')
+
+    if (!title)
+      return
+
+    this.stopObservingTitle = observeElementSize(title, () => this.syncGeometry())
   }
 
   override render(): unknown {
     const [primary, secondary, accent] = this.resolveColors()
+    const half = this.recessHalf
+    const shoulderX = CENTER - half - this.shoulderRun
+    const slashStart = shoulderX - SLASH_GAP - SLASH_SPAN
+    const glowOpacity = this.resolveOpacity('--dvk-title-3-glow-opacity', 0.3)
+    const railPath = mainRailPath(half, shoulderX)
+    const accentPath = centerAccentPath(half)
 
     return html`
       <svg
         part="graphic"
-        viewBox="0 0 1200 96"
+        viewBox="0 0 ${VIEW_BOX_WIDTH} ${VIEW_BOX_HEIGHT}"
         preserveAspectRatio="none"
         aria-hidden="true"
         shape-rendering="geometricPrecision"
       >
         <defs>${this.renderDefs(primary, secondary, accent)}</defs>
 
-        <path
-          part="aurora-halo"
-          d="M 188 70 C 332 7 868 7 1012 70 C 842 47 358 47 188 70 Z"
-          fill=${`url(#${this.haloGradientId})`}
-        ></path>
-        <ellipse part="lens-glow" cx="600" cy="50" rx="282" ry="36" fill=${withAlpha(primary, 0.08)} filter=${`url(#${this.softGlowId})`}></ellipse>
-        <ellipse part="title-lens" cx="600" cy="49" rx="242" ry="29" fill=${`url(#${this.lensGradientId})`}></ellipse>
-        <path
-          part="title-lens-inner"
-          d="M 398 49 C 466 27 734 27 802 49 C 735 66 465 66 398 49 Z"
-          fill=${withAlpha(secondary, 0.08)}
-          stroke=${withAlpha(primary, 0.28)}
-          stroke-width="0.8"
-        ></path>
+        <path part="guide-rail guide-rail-left" d=${guideRailPath(shoulderX, false)} fill="none" stroke=${withAlpha(primary, 0.16)} stroke-width="1"></path>
+        <path part="guide-rail guide-rail-right" d=${guideRailPath(shoulderX, true)} fill="none" stroke=${withAlpha(primary, 0.16)} stroke-width="1"></path>
 
-        <path
-          part="orbit-rail outer-rail"
-          d="M 66 70 C 246 15 954 15 1134 70"
-          fill="none"
-          stroke=${`url(#${this.railGradientId})`}
-          stroke-width="1.45"
-          stroke-linecap="round"
-          filter=${`url(#${this.softGlowId})`}
-        ></path>
-        <path
-          part="orbit-rail inner-rail"
-          d="M 172 76 C 346 42 854 42 1028 76"
-          fill="none"
-          stroke=${`url(#${this.railGradientId})`}
-          stroke-width="0.86"
-          stroke-linecap="round"
-          stroke-opacity="0.72"
-        ></path>
-        <path
-          part="base-rail"
-          d="M 154 78 C 356 90 844 90 1046 78"
-          fill="none"
-          stroke=${`url(#${this.baseGradientId})`}
-          stroke-width="1.2"
-          stroke-linecap="round"
-        ></path>
-        <path
-          part="accent-arc"
-          d="M 512 23 C 552 15 648 15 688 23"
-          fill="none"
-          stroke=${`url(#${this.accentGradientId})`}
-          stroke-width="2"
-          stroke-linecap="round"
-        ></path>
-        <path
-          part="accent-arc"
-          d="M 484 73 C 536 80 664 80 716 73"
-          fill="none"
-          stroke=${`url(#${this.accentGradientId})`}
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-opacity="0.68"
-        ></path>
+        <path part="recess" d=${recessPath(half, shoulderX)} fill=${`url(#${this.panelFillId})`}></path>
 
-        ${this.renderTerminals('left')}
-        ${this.renderTerminals('right')}
+        <path part="inner-rail" d=${innerRailPath(half, shoulderX)} fill="none" stroke=${withAlpha(secondary, 0.18)} stroke-width="1"></path>
+
+        <path part="rail rail-glow" d=${railPath} fill="none" stroke=${`url(#${this.fadeRailId})`} stroke-width="4.8" opacity=${glowOpacity} filter=${`url(#${this.railGlowId})`}></path>
+        <path part="rail rail-core" d=${railPath} fill="none" stroke=${`url(#${this.fadeRailId})`} stroke-width="1.35" stroke-linejoin="miter" stroke-miterlimit="2"></path>
+
+        <path part="accent accent-glow" d=${accentPath} fill="none" stroke=${primary} stroke-width="4.2" opacity=${glowOpacity} filter=${`url(#${this.centerGlowId})`}></path>
+        <path part="accent accent-core" d=${accentPath} fill="none" stroke=${`url(#${this.centerLineId})`} stroke-width="1.55"></path>
+
+        <g part="slash slash-left" fill="none" stroke=${withAlpha(secondary, 0.42)} stroke-width="2">
+          ${SLASH_INDICES.map(index => svg`<path d=${slashPath(slashStart, index, false)}></path>`)}
+        </g>
+        <g part="slash slash-right" fill="none" stroke=${withAlpha(secondary, 0.42)} stroke-width="2">
+          ${SLASH_INDICES.map(index => svg`<path d=${slashPath(slashStart, index, true)}></path>`)}
+        </g>
+
+        <g part="tick" fill="none" stroke=${withAlpha(primary, 0.28)} stroke-width="1.2">
+          <path d="M110 27.5 H182"></path>
+          <path d="M1418 27.5 H1490"></path>
+          <path d="M92 32 H150"></path>
+          <path d="M1450 32 H1508"></path>
+        </g>
       </svg>
-      <div part="content title" class="content">
-        ${this.titleText ? html`<span part="title-text">${this.titleText}</span>` : html`<slot></slot>`}
+      <div
+        part="top-edge"
+        class="top-edge"
+        style=${`background: linear-gradient(90deg, transparent, ${withAlpha(secondary, 0.24)} 12%, ${withAlpha(primary, 0.3)} 50%, ${withAlpha(secondary, 0.24)} 88%, transparent)`}
+      ></div>
+      <div part="content" class="content">
+        <div
+          part="title"
+          class="title"
+          style=${`--dvk-title-3-title-stroke: ${withAlpha(primary, 0.66)}; --dvk-title-3-title-glow: ${withAlpha(secondary, 0.34)}`}
+        >
+          ${this.titleText ? html`<span part="title-text">${this.titleText}</span>` : html`<slot></slot>`}
+        </div>
       </div>
     `
   }
 
   private renderDefs(primary: string, secondary: string, accent: string): unknown {
     return svg`
-      <linearGradient id=${this.haloGradientId} x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stop-color=${withAlpha(secondary, 0)}></stop>
-        <stop offset="0.22" stop-color=${withAlpha(secondary, 0.12)}></stop>
-        <stop offset="0.5" stop-color=${withAlpha(primary, 0.18)}></stop>
-        <stop offset="0.78" stop-color=${withAlpha(accent, 0.12)}></stop>
-        <stop offset="1" stop-color=${withAlpha(accent, 0)}></stop>
+      <linearGradient id=${this.fadeRailId} x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color=${secondary} stop-opacity="0"></stop>
+        <stop offset="0.13" stop-color=${primary} stop-opacity="0.34"></stop>
+        <stop offset="0.4" stop-color=${primary} stop-opacity="0.7"></stop>
+        <stop offset="0.6" stop-color=${primary} stop-opacity="0.7"></stop>
+        <stop offset="0.87" stop-color=${primary} stop-opacity="0.34"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity="0"></stop>
       </linearGradient>
 
-      <radialGradient id=${this.lensGradientId} cx="50%" cy="48%" r="58%">
-        <stop offset="0" stop-color=${withAlpha(primary, 0.2)}></stop>
-        <stop offset="0.46" stop-color=${withAlpha(secondary, 0.12)}></stop>
-        <stop offset="0.78" stop-color=${withAlpha(accent, 0.08)}></stop>
-        <stop offset="1" stop-color=${withAlpha(primary, 0.02)}></stop>
-      </radialGradient>
-
-      <linearGradient id=${this.railGradientId} x1="0" y1="0" x2="1200" y2="0" gradientUnits="userSpaceOnUse">
-        <stop offset="0%" stop-color=${withAlpha(secondary, 0)}></stop>
-        <stop offset="17%" stop-color=${secondary} stop-opacity="0.36"></stop>
-        <stop offset="45%" stop-color=${primary} stop-opacity="0.88"></stop>
-        <stop offset="55%" stop-color=${primary} stop-opacity="0.88"></stop>
-        <stop offset="83%" stop-color=${accent} stop-opacity="0.34"></stop>
-        <stop offset="100%" stop-color=${withAlpha(accent, 0)}></stop>
+      <linearGradient id=${this.panelFillId} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color=${secondary} stop-opacity="0.01"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity="0.04"></stop>
       </linearGradient>
 
-      <linearGradient id=${this.baseGradientId} x1="154" y1="0" x2="1046" y2="0" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color=${withAlpha(secondary, 0)}></stop>
-        <stop offset="0.28" stop-color=${secondary} stop-opacity="0.3"></stop>
-        <stop offset="0.5" stop-color="#f6fffb" stop-opacity="0.46"></stop>
-        <stop offset="0.72" stop-color=${primary} stop-opacity="0.34"></stop>
-        <stop offset="1" stop-color=${withAlpha(primary, 0)}></stop>
+      <linearGradient id=${this.centerLineId} x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color=${secondary} stop-opacity="0.62"></stop>
+        <stop offset="0.18" stop-color=${primary} stop-opacity="0.94"></stop>
+        <stop offset="0.5" stop-color=${accent} stop-opacity="1"></stop>
+        <stop offset="0.82" stop-color=${primary} stop-opacity="0.94"></stop>
+        <stop offset="1" stop-color=${secondary} stop-opacity="0.62"></stop>
       </linearGradient>
 
-      <linearGradient id=${this.accentGradientId} x1="480" y1="0" x2="720" y2="0" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color=${withAlpha(accent, 0)}></stop>
-        <stop offset="0.5" stop-color=${accent} stop-opacity="0.7"></stop>
-        <stop offset="1" stop-color=${withAlpha(primary, 0)}></stop>
-      </linearGradient>
+      <filter id=${this.railGlowId} filterUnits="userSpaceOnUse" x="-20" y="-18" width="1640" height="100">
+        <feGaussianBlur stdDeviation="2.1"></feGaussianBlur>
+      </filter>
 
-      <radialGradient id=${this.beadGradientId} cx="50%" cy="50%" r="60%">
-        <stop offset="0" stop-color="#ffffff" stop-opacity="0.92"></stop>
-        <stop offset="0.48" stop-color=${primary} stop-opacity="0.7"></stop>
-        <stop offset="1" stop-color=${accent} stop-opacity="0.04"></stop>
-      </radialGradient>
-
-      <filter id=${this.softGlowId} x="-20%" y="-180%" width="140%" height="460%">
-        <feGaussianBlur stdDeviation="2.8" result="blur"></feGaussianBlur>
-        <feMerge>
-          <feMergeNode in="blur"></feMergeNode>
-          <feMergeNode in="SourceGraphic"></feMergeNode>
-        </feMerge>
+      <filter id=${this.centerGlowId} filterUnits="userSpaceOnUse" x="310" y="30" width="980" height="44">
+        <feGaussianBlur stdDeviation="3"></feGaussianBlur>
       </filter>
     `
   }
 
-  private renderTerminals(side: 'left' | 'right'): unknown {
-    const transform = side === 'right' ? 'translate(1200 0) scale(-1 1)' : undefined
+  private syncGeometry(hostWidth?: number, hostHeight?: number): void {
+    const rect = hostWidth === undefined || hostHeight === undefined
+      ? this.getBoundingClientRect()
+      : undefined
+    const width = hostWidth ?? rect?.width ?? 0
+    const height = hostHeight ?? rect?.height ?? 0
+    const title = this.renderRoot.querySelector<HTMLElement>('.title')
+    const nextRun = resolveShoulderRun(width, height)
+    const nextHalf = resolveRecessHalf(title?.getBoundingClientRect().width ?? 0, width, nextRun)
 
-    return svg`
-      <g part=${`terminal ${side}-terminal`} transform=${transform ?? ''}>
-        <circle part="light-bead" cx="88" cy="70" r="3.4" fill=${`url(#${this.beadGradientId})`}></circle>
-        <circle part="light-bead" cx="134" cy="62" r="2.2" fill=${`url(#${this.beadGradientId})`} opacity="0.72"></circle>
-        <line part="terminal-mark" x1="116" y1="58" x2="116" y2="76" stroke=${`url(#${this.railGradientId})`} stroke-width="1.2" stroke-linecap="round" opacity="0.58"></line>
-        <line part="terminal-mark" x1="148" y1="61" x2="148" y2="74" stroke=${`url(#${this.railGradientId})`} stroke-width="0.9" stroke-linecap="round" opacity="0.4"></line>
-      </g>
-    `
+    if (Math.abs(nextHalf - this.recessHalf) < 0.5 && Math.abs(nextRun - this.shoulderRun) < 0.5)
+      return
+
+    this.recessHalf = nextHalf
+    this.shoulderRun = nextRun
+  }
+
+  private resolveOpacity(cssVariable: string, fallback: number): number {
+    const value = resolveThemeValue<number>({
+      cssVariable,
+      host: this,
+      fallback,
+      transform: input => Number.parseFloat(input),
+    })
+
+    return Number.isFinite(value) ? value : fallback
   }
 
   private resolveColors(): [string, string, string] {
@@ -251,19 +325,19 @@ export class Title3Element extends DatavElement {
       explicit: explicitPrimary,
       cssVariable: '--dvk-color-primary',
       host: this,
-      fallback: '#39f6c8',
+      fallback: '#42ddff',
     })
     const secondary = colorList[1] ?? resolveThemeValue({
       explicit: this.secondaryColor,
       cssVariable: '--dvk-color-secondary',
       host: this,
-      fallback: '#7aa8ff',
+      fallback: '#1399ff',
     })
     const accent = colorList[2] ?? resolveThemeValue({
       explicit: this.accentColor,
       cssVariable: '--dvk-title-3-accent',
       host: this,
-      fallback: '#ff7bd5',
+      fallback: '#b8f7ff',
     })
 
     return [primary, secondary, accent]
@@ -292,6 +366,46 @@ export class Title3Element extends DatavElement {
 
     return []
   }
+}
+
+function guideRailPath(shoulderX: number, mirrored: boolean): string {
+  const outer = formatUnit(VIEW_BOX_WIDTH - shoulderX)
+
+  return mirrored
+    ? `M${outer} 7 H${VIEW_BOX_WIDTH}`
+    : `M0 7 H${formatUnit(shoulderX)}`
+}
+
+function recessPath(half: number, shoulderX: number): string {
+  return `M${formatUnit(shoulderX)} ${RAIL_TOP} L${formatUnit(CENTER - half)} ${RAIL_BOTTOM} H${formatUnit(CENTER + half)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX)} ${RAIL_TOP} Z`
+}
+
+function mainRailPath(half: number, shoulderX: number): string {
+  return `M0 ${RAIL_TOP} H${formatUnit(shoulderX)} L${formatUnit(CENTER - half)} ${RAIL_BOTTOM} H${formatUnit(CENTER + half)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX)} ${RAIL_TOP} H${VIEW_BOX_WIDTH}`
+}
+
+// Parallel to the main rail: corners inset 4 inward on x and 4.5 up on y. The H
+// segments carry x only — an extra number after H would draw a line across the bar.
+function innerRailPath(half: number, shoulderX: number): string {
+  const near = CENTER - half + INNER_INSET_X
+  const far = CENTER + half - INNER_INSET_X
+
+  return `M0 ${RAIL_TOP - INNER_INSET_Y} H${formatUnit(shoulderX + INNER_INSET_X)} L${formatUnit(near)} ${RAIL_BOTTOM - INNER_INSET_Y} H${formatUnit(far)} L${formatUnit(VIEW_BOX_WIDTH - shoulderX - INNER_INSET_X)} ${RAIL_TOP - INNER_INSET_Y} H${VIEW_BOX_WIDTH}`
+}
+
+function centerAccentPath(half: number): string {
+  return `M${formatUnit(CENTER - half)} ${RAIL_BOTTOM} H${formatUnit(CENTER + half)}`
+}
+
+function slashPath(start: number, index: number, mirrored: boolean): string {
+  const offset = index * SLASH_STEP
+  const x = mirrored ? VIEW_BOX_WIDTH - start - offset : start + offset
+
+  return `M${formatUnit(x)} 21 ${mirrored ? 'l-9 9' : 'l9 9'}`
+}
+
+function formatUnit(value: number): number {
+  return Math.round(value * 10) / 10
 }
 
 function splitColors(value: string): string[] {

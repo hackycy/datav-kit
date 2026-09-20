@@ -37,9 +37,6 @@ import { title2Metadata } from './title-2/metadata'
 import { title3Metadata } from './title-3/metadata'
 import { title4Metadata } from './title-4/metadata'
 import { title5Metadata } from './title-5/metadata'
-import { title6Metadata } from './title-6/metadata'
-import { title7Metadata } from './title-7/metadata'
-import { title8Metadata } from './title-8/metadata'
 
 export type ElementMetadata = DatavElementMetadata
 
@@ -77,9 +74,6 @@ export const elementMetadata: ElementMetadata[] = [
   title3Metadata,
   title4Metadata,
   title5Metadata,
-  title6Metadata,
-  title7Metadata,
-  title8Metadata,
   countToMetadata,
   loadingOrbitMetadata,
   loadingEnergyMetadata,
